@@ -66,74 +66,8 @@
 #
 # ***********************************************************************
 #
-
-from mock import patch
-
-from blank2caom2 import blank_main_app, APPLICATION, COLLECTION, BlankName
-from blank2caom2 import ARCHIVE
-from caom2.diff import get_differences
-from caom2pipe import manage_composable as mc
-
-import os
-import sys
-
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-TEST_DATA_DIR = os.path.join(THIS_DIR, 'data')
-PLUGIN = os.path.join(os.path.dirname(THIS_DIR), 'main_app.py')
-
-LOOKUP = {'key': ['fileid1', 'fileid2']}
+from cfht2caom2 import CFHTName
 
 
-def pytest_generate_tests(metafunc):
-    obs_id_list = []
-    for ii in LOOKUP:
-        obs_id_list.append(ii)
-    metafunc.parametrize('test_name', obs_id_list)
-
-
-def test_main_app(test_name):
-    basename = os.path.basename(test_name)
-    neos_name = BlankName(file_name=basename)
-    output_file = '{}/actual.{}.xml'.format(TEST_DATA_DIR, basename)
-    obs_path = '{}/{}'.format(TEST_DATA_DIR, 'expected.{}.xml'.format(
-        neos_name.obs_id))
-    expected = mc.read_obs_from_file(obs_path)
-
-    with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock:
-        def get_file_info(archive, file_id):
-            return {'type': 'application/fits'}
-
-        data_client_mock.return_value.get_file_info.side_effect = get_file_info
-        sys.argv = \
-            ('{} --no_validate --local {} --observation {} {} -o {} '
-             '--plugin {} --module {} --lineage {}'.
-             format(APPLICATION, _get_local(test_name), COLLECTION,
-                    test_name, output_file, PLUGIN, PLUGIN,
-                    _get_lineage(test_name))).split()
-        print(sys.argv)
-        blank_main_app()
-
-    actual = mc.read_obs_from_file(output_file)
-    result = get_differences(expected, actual, 'Observation')
-    if result:
-        msg = 'Differences found in observation {} test name {}\n{}'. \
-            format(expected.observation_id, test_name, '\n'.join(
-            [r for r in result]))
-        raise AssertionError(msg)
-    # assert False  # cause I want to see logging messages
-
-
-def _get_lineage(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        product_id = BlankName.extract_product_id(ii)
-        fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
-        result = '{} {}'.format(result, fits)
-    return result
-
-
-def _get_local(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        result = '{} {}/{}.fits.header'.format(result, TEST_DATA_DIR, ii)
-    return result
+def test_is_valid():
+    assert CFHTName('anything').is_valid()

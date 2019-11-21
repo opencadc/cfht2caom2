@@ -67,61 +67,132 @@
 # ***********************************************************************
 #
 
+import importlib
 import logging
+import os
 import sys
 import traceback
 
-from caom2pipe import execute_composable as ec
+from caom2 import Observation
+from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2pipe import manage_composable as mc
-from blank2caom2 import APPLICATION, BlankName
+from caom2pipe import execute_composable as ec
 
 
-meta_visitors = []
-data_visitors = []
+__all__ = ['cfht_main_app', 'update', 'CFHTName', 'COLLECTION',
+           'APPLICATION', 'ARCHIVE']
 
 
-def _run():
+APPLICATION = 'cfht2caom2'
+COLLECTION = 'CFHT'
+ARCHIVE = 'CFHT'
+
+
+class CFHTName(ec.StorageName):
+    """Naming rules:
+    - support mixed-case file name storage, and mixed-case obs id values
+    - support uncompressed files in storage
     """
-    Uses a todo file to identify the work to be done.
 
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config = mc.Config()
-    config.get_executors()
-    return ec.run_by_file(config, BlankName, APPLICATION,
-                          meta_visitors, data_visitors, chooser=None)
+    CFHT_NAME_PATTERN = '*'
+
+    def __init__(self, obs_id=None, fname_on_disk=None, file_name=None):
+        self.fname_in_ad = file_name
+        self.obs_id = 'test_obs_id'
+        super(CFHTName, self).__init__(
+            'test_obs_id', COLLECTION, CFHTName.CFHT_NAME_PATTERN, fname_on_disk)
+
+    def is_valid(self):
+        return True
 
 
-def run():
-    """Wraps _run in exception handling, with sys.exit calls."""
+def accumulate_bp(bp, uri):
+    """Configure the telescope-specific ObsBlueprint at the CAOM model 
+    Observation level."""
+    logging.debug('Begin accumulate_bp.')
+    bp.configure_position_axes((1,2))
+    bp.configure_time_axis(3)
+    bp.configure_energy_axis(4)
+    bp.configure_polarization_axis(5)
+    bp.configure_observable_axis(6)
+
+    bp.set('Plane.dataProductType', 'image')
+    bp.set('Plane.calibrationLevel', 2)
+    bp.clear('Plane.metaRelease')
+    bp.add_fits_attribute('Plane.metaRelease', 'DATE-OBS')
+    bp.clear('Plane.dataRelease')
+    bp.add_fits_attribute('Plane.dataRelease', 'DATE-OBS')
+
+    logging.debug('Done accumulate_bp.')
+
+
+def update(observation, **kwargs):
+    """Called to fill multiple CAOM model elements and/or attributes, must
+    have this signature for import_module loading and execution.
+
+    :param observation A CAOM Observation model instance.
+    :param **kwargs Everything else."""
+    logging.debug('Begin update.')
+    mc.check_param(observation, Observation)
+
+    headers = None
+    if 'headers' in kwargs:
+        headers = kwargs['headers']
+    fqn = None
+    if 'fqn' in kwargs:
+        fqn = kwargs['fqn']
+
+    logging.debug('Done update.')
+    return observation
+
+
+def _build_blueprints(uris):
+    """This application relies on the caom2utils fits2caom2 ObsBlueprint
+    definition for mapping FITS file values to CAOM model element
+    attributes. This method builds the DRAO-ST blueprint for a single
+    artifact.
+
+    The blueprint handles the mapping of values with cardinality of 1:1
+    between the blueprint entries and the model attributes.
+
+    :param uris The artifact URIs for the files to be processed."""
+    module = importlib.import_module(__name__)
+    blueprints = {}
+    for uri in uris:
+        blueprint = ObsBlueprint(module=module)
+        if not ec.StorageName.is_preview(uri):
+            accumulate_bp(blueprint, uri)
+        blueprints[uri] = blueprint
+    return blueprints
+
+
+def _get_uris(args):
+    result = []
+    if args.local:
+        for ii in args.local:
+            file_id = ec.StorageName.remove_extensions(os.path.basename(ii))
+            file_name = '{}.fits'.format(file_id)
+            result.append(CFHTName(file_name=file_name).file_uri)
+    elif args.lineage:
+        for ii in args.lineage:
+            result.append(ii.split('/', 1)[1])
+    else:
+        raise mc.CadcException(
+            'Could not define uri from these args {}'.format(args))
+    return result
+
+
+def cfht_main_app():
+    args = get_gen_proc_arg_parser().parse_args()
     try:
-        result = _run()
+        uris = _get_uris(args)
+        blueprints = _build_blueprints(uris)
+        result = gen_proc(args, blueprints)
         sys.exit(result)
     except Exception as e:
-        logging.error(e)
+        logging.error('Failed {} execution for {}.'.format(APPLICATION, args))
         tb = traceback.format_exc()
         logging.debug(tb)
         sys.exit(-1)
 
-
-def _run_state():
-    """Uses a state file with a timestamp to control which entries will be
-    processed.
-    """
-    config = mc.Config()
-    config.get_executors()
-    return ec.run_from_state(config, BlankName, APPLICATION, meta_visitors,
-                             data_visitors, bookmark=None, work=None)
-
-
-def run_state():
-    """Wraps _run_state in exception handling."""
-    try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+    logging.debug('Done {} processing.'.format(APPLICATION))
