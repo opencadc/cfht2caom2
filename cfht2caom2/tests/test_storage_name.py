@@ -70,4 +70,4 @@ from cfht2caom2 import CFHTName
 
 
 def test_is_valid():
-    assert CFHTName('anything').is_valid()
+    assert CFHTName(file_name='anything').is_valid()

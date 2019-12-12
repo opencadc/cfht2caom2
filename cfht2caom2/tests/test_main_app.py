@@ -66,10 +66,11 @@
 #
 # ***********************************************************************
 #
+import glob
 
 from mock import patch
 
-from cfht2caom2 import cfht_main_app, APPLICATION, COLLECTION, CFHTName
+from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
 from caom2.diff import get_differences
 from caom2pipe import manage_composable as mc
@@ -85,18 +86,19 @@ LOOKUP = {'key': ['fileid1', 'fileid2']}
 
 
 def pytest_generate_tests(metafunc):
-    obs_id_list = []
-    for ii in LOOKUP:
-        obs_id_list.append(ii)
+    # obs_id_list = []
+    # for ii in LOOKUP:
+    #     obs_id_list.append(ii)
+    obs_id_list = glob.glob(f'{TEST_DATA_DIR}/*.fits.header')
     metafunc.parametrize('test_name', obs_id_list)
 
 
 def test_main_app(test_name):
     basename = os.path.basename(test_name)
-    neos_name = CFHTName(file_name=basename)
-    output_file = '{}/actual.{}.xml'.format(TEST_DATA_DIR, basename)
-    obs_path = '{}/{}'.format(TEST_DATA_DIR, 'expected.{}.xml'.format(
-        neos_name.obs_id))
+    cfht_name = CFHTName(file_name=basename)
+    output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
+    obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(
+        cfht_name.obs_id))
     expected = mc.read_obs_from_file(obs_path)
 
     with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock:
@@ -107,11 +109,11 @@ def test_main_app(test_name):
         sys.argv = \
             ('{} --no_validate --local {} --observation {} {} -o {} '
              '--plugin {} --module {} --lineage {}'.
-             format(APPLICATION, _get_local(test_name), COLLECTION,
-                    test_name, output_file, PLUGIN, PLUGIN,
-                    _get_lineage(test_name))).split()
+             format(APPLICATION, test_name, COLLECTION,
+                    cfht_name.obs_id, output_file, PLUGIN, PLUGIN,
+                    _get_lineage(cfht_name))).split()
         print(sys.argv)
-        cfht_main_app()
+        main_app._main_app()
 
     actual = mc.read_obs_from_file(output_file)
     result = get_differences(expected, actual, 'Observation')
@@ -123,17 +125,20 @@ def test_main_app(test_name):
     # assert False  # cause I want to see logging messages
 
 
-def _get_lineage(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        product_id = CFHTName.extract_product_id(ii)
-        fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
-        result = '{} {}'.format(result, fits)
-    return result
+def _get_lineage(cfht_name):
+    # result = ''
+    # for ii in LOOKUP[obs_id]:
+    #     product_id = CFHTName.extract_product_id(ii)
+    #     fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
+    #     result = '{} {}'.format(result, fits)
+    # return result
+    return mc.get_lineage(ARCHIVE, cfht_name.product_id,
+                          f'{cfht_name.product_id}.fits.fz')
 
 
-def _get_local(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        result = '{} {}/{}.fits.header'.format(result, TEST_DATA_DIR, ii)
-    return result
+def _get_local(test_name):
+    # result = ''
+    # for ii in LOOKUP[obs_id]:
+    #     result = '{} {}/{}.fits.header'.format(result, TEST_DATA_DIR, ii)
+    # return result
+    return f'{TEST_DATA_DIR}/{test_name}'
