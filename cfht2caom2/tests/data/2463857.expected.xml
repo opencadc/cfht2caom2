@@ -2,8 +2,7 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="cfc27747-391c-4ede-a6cc-3d3d94d688cd" caom2:lastModified="2019-12-05T01:18:39.291" caom2:maxLastModified="2019-12-05T05:19:29.463" caom2:metaChecksum="md5:09ba1b808004253e9782ef7176e47eb2" caom2:accMetaChecksum="md5:5d24ba57e80e1abd3d6b3386c2990430">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2463857</caom2:observationID>
-  <caom2:metaRelease>2019-12-04T16:56:15.000</caom2:metaRelease>
-  <!--caom2:metaRelease>2019-12-04T00:00:00.000</caom2:metaRelease!-->
+  <caom2:metaRelease>2019-12-04T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2463857</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
@@ -16,7 +15,6 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>Zenith</caom2:name>
-    <!--caom2:standard>false</caom2:standard!-->
   </caom2:target>
   <caom2:targetPosition>
     <caom2:coordsys>FK5</caom2:coordsys>
@@ -46,10 +44,8 @@
   <caom2:planes>
     <caom2:plane caom2:id="167ce281-0292-443b-87c8-a37865ee01ab" caom2:lastModified="2019-12-05T01:18:39.291" caom2:maxLastModified="2019-12-05T05:19:29.463" caom2:metaChecksum="md5:cb7d13cf85baeddaa8c8c96909e1dd57" caom2:accMetaChecksum="md5:6f4dad538c73d02ab8f01afe87ed5594">
       <caom2:productID>2463857d</caom2:productID>
-      <caom2:metaRelease>2019-12-04T16:56:15.000</caom2:metaRelease>
-      <!--caom2:metaRelease>2019-12-04T00:00:00.000</caom2:metaRelease>
-      <caom2:dataRelease>2019-12-04T00:00:00.000</caom2:dataRelease!-->
-      <caom2:dataRelease>2019-12-04T16:56:15.000</caom2:dataRelease>
+      <caom2:metaRelease>2019-12-04T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2019-12-04T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>

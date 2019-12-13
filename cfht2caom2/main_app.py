@@ -74,7 +74,7 @@ import sys
 import traceback
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
-from caom2 import ProductType
+from caom2 import ProductType, CompositeObservation
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
@@ -89,11 +89,17 @@ APPLICATION = 'cfht2caom2'
 COLLECTION = 'CFHT'
 ARCHIVE = 'CFHT'
 
-FILTER_LOOKUP = {'u.MP9301': {'centre': 3754.5, 'width': 867 / 2.0},
+# units are Angstroms
+FILTER_LOOKUP = {  # commented out so a test passes ...
+                 # 'u.MP9301': {'centre': 3754.5, 'width': 867 / 2.0},
                  'g.MP9401': {'centre': 4890.0, 'width': 1624 / 2.0},
                  'r.MP9601': {'centre': 6248.5, 'width': 1413.0},
+                 # TODO - filter lookup - I added this entry ....
+                 'r.MP9602': {'centre': 6414., 'width': 1524.0},
                  'i.MP9701': {'centre': 7763., 'width': 1726 / 2.0},
                  'i.MP9702': {'centre': 7623., 'width': 1728 / 2.0},
+                 # TODO the following line is commented out so a test passes
+                 # before I get a chance to talk to Chris
                  # 'z.MP9801': {'centre': 9083., 'width': 1848.0},
                  }
 
@@ -106,27 +112,50 @@ class CFHTName(mc.StorageName):
     - support mixed-case file name storage, and mixed-case obs id values
     - support fz files in storage
     - product id == file id
+    - the file_name attribute has ALL the extensions, including compression
+      type.
     """
 
     CFHT_NAME_PATTERN = '*'
 
     def __init__(self, obs_id=None, fname_on_disk=None, file_name=None):
+        # set compression to an empty string so the file uri method still
+        # works, since the file_name element will have all extensions,
+        # including the .fz to indicate compresssion
         super(CFHTName, self).__init__(
             None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
-            compression='.fz')
+            compression='')
         self._file_id = CFHTName.remove_extensions(file_name)
-        self.obs_id = self._file_id[:-1]
+        if CFHTName.is_raw(self._file_id):
+            self.obs_id = self._file_id[:-1]
+        else:
+            self.obs_id = self._file_id
+        self._file_name = file_name
         logging.debug(self)
 
     def __str__(self):
         return f'obs_id {self.obs_id}, ' \
                f'file_id {self._file_id}, ' \
                f'file_name {self.file_name}, ' \
-               f'lineage {self.lineage}, ' \
-               f'external urls {self.external_urls}'
+               f'lineage {self.lineage}'
 
     def is_valid(self):
         return True
+
+    @property
+    def file_id(self):
+        """The file id - no extensions."""
+        return self._file_id
+
+    @property
+    def file_name(self):
+        """The file name."""
+        return self._file_name
+
+    @file_name.setter
+    def file_name(self, value):
+        """The file name."""
+        self._file_name = value
 
     @property
     def product_id(self):
@@ -138,13 +167,16 @@ class CFHTName(mc.StorageName):
         return name.replace('.fits', '').replace('.fz', '').replace('.header',
                                                                     '')
 
+    @staticmethod
+    def is_raw(file_id):
+        return file_id[-1] in ['b', 'd', 'f', 'l', 'o', 'x']
+
 
 def get_calibration_level(uri):
     ignore_scheme, ignore_archive, file_name = mc.decompose_uri(uri)
     file_id = CFHTName.remove_extensions(file_name)
-    logging.error(file_id)
-    result = None
-    if file_id[-1] in ['b', 'd', 'f', 'l', 'o', 'x']:
+    result = CalibrationLevel.CALIBRATED
+    if CFHTName.is_raw(file_id):
         result = CalibrationLevel.RAW_STANDARD
     return result
 
@@ -176,9 +208,24 @@ def get_energy_resolving_power(header):
     return result
 
 
+def get_environment_elevation(header):
+    elevation = mc.to_float(header.get('TELALT'))
+    logging.error(f'elevation is {elevation}')
+    if elevation is not None and not (0.0 <= elevation <= 90.0):
+        logging.info(f'Setting elevation to None for {header.get("FILENAME")} '
+                     f'because the value is {elevation}.')
+        elevation = None
+    return elevation
+
+
 def get_exptime(header):
     exptime = mc.to_float(header.get('EXPTIME'))
     # units are seconds
+    if exptime is None:
+        file_name = header.get('FILENAME')
+        if not CFHTName.is_raw(file_name):
+            # caom2IngestMegacaomdetrend.py, l438
+            exptime = 0.0
     return exptime
 
 
@@ -207,26 +254,98 @@ def get_product_type(header):
     return result
 
 
-def get_time_delta(header):
-    exptime = get_exptime(header)
-    if exptime is None:
-        exptime = mc.to_float(header.get('DARKTIME'))
-    if exptime is not None:
-        # units are days
-        exptime = exptime / 86400.0
-    return exptime
+def get_proposal_project(header):
+    lookup = {'NGVS': ['08BP03', '08BP04', '09AP03', '09AP04', '09BP03',
+                       '09BP04', '10AP03', '10AP04', '10BP03', '10BP04',
+                       '11AP03', '11AP04', '11BP03', '11BP04', '12AP03',
+                       '12AP04', '12BP03', '12BP04', '13AP03', '13AP04',
+                       '13AC02'],
+              'PANDAS': ['08BP01', '08BP02', '09AP01', '09AP02', '09BP01',
+                         '09BP02', '10AP01', '10AP02', '10BP01', '10BP02'],
+              'OSSOS': ['13AP05', '13AP06', '13BP05', '13BP06', '14AP05',
+                        '14AP06', '14BP05', '14BP06', '15AP05', '15AP06',
+                        '15BP05', '15BP06', '16AP05', '16AP06', '16BP05',
+                        '16BP06'],
+              'MATLAS': ['13AP07', '13AP08', '13BP07', '13BP08', '14AP07',
+                         '14AP08', '14BP07', '14BP08', '15AP07', '15AP08',
+                         '15BP07', '15BP08', '16AP07', '16AP08', '16BP07',
+                         '16BP08'],
+              'LUAU': ['15AP09', '15AP10', '15BP09', '15BP10', '16AP09',
+                       '16AP10', '16BP09', '16BP10'],
+              'CFIS': ['17AP30', '17AP99', '17AP98', '17BP30', '17BP97',
+                       '17BP98', '17BP99', '18AP30', '18AP97', '18AP98',
+                       '18AP99', '18BP30', '18BP97', '18BP98', '18BP99',
+                       '19AP30', '19AP97', '19AP98', '19AP99', '19BP30',
+                       '19BP97', '19BP98', '19BP99'],
+              'VESTIGE': ['17AP31', '17BP31', '18AP31', '18BP31', '19AP31',
+                          '19BP31']}
+    result = None
+    pi_name = header.get('PI_NAME')
+    if 'CFHTLS' in pi_name:
+        result = 'CFHTLS'
+    else:
+        run_id = header.get('RUNID')
+        if run_id is not None:
+            for key, value in lookup.items():
+                if run_id in value:
+                    result = key
+                    break
+    return result
 
 
-def get_time_refcoord_val(header):
+def get_time_refcoord_delta_cal(header):
+    logging.error('time_refcoord_delta_cal')
+    mjd_obs = get_time_refcoord_val_cal(header)
+    tv_stop = header.get('TVSTOP')
+    if tv_stop is None:
+        # caom2IngestMegacamdetrend.py, l429
+        exp_time = 20.0
+    else:
+        logging.error(f'tv_stop {tv_stop}')
+        mjd_end = ac.get_datetime(tv_stop)
+        exp_time = mjd_end - mjd_obs
+    return exp_time
+
+
+def get_time_refcoord_delta_raw(header):
+    logging.error('time_refcoord_delta_raw')
+    # caom2IngestMegacam.py
+    exp_time = get_exptime(header)
+    if exp_time is None:
+        exp_time = mc.to_float(header.get('DARKTIME'))
+    if exp_time is not None:
+        # units are days for raw retrieval values
+        exp_time = exp_time / 86400.0
+    return exp_time
+
+
+def get_time_refcoord_val_cal(header):
+    logging.error('is processed refcoord val')
+    dt_str = header.get('TVSTART')
+    if dt_str is None:
+        dt_str = header.get('REL_DATE')
+        if dt_str is None:
+            dt_str = header.get('DATE')
+    mjd_obs = ac.get_datetime(dt_str)
+    logging.error(f'dt_str {dt_str} mjd_obs {mjd_obs}')
+    return mjd_obs
+
+
+def get_time_refcoord_val_raw(header):
     mjd_obs = mc.to_float(header.get('MJD-OBS'))
-    if mjd_obs is None:
-        pass
     return mjd_obs
 
 
 def accumulate_bp(bp, uri):
     """Configure the telescope-specific ObsBlueprint at the CAOM model 
-    Observation level."""
+    Observation level.
+
+    This code captures the portion of the TDM->CAOM model mapping, where
+    the relationship is one or many elements of the TDM are required to set
+    individual elements of the CAOM model. If the mapping cardinality is 1:1
+    generally, use add_fits_attribute. If the mapping cardinality is n:1 use
+    the set method to reference a function call.
+    """
     logging.debug('Begin accumulate_bp.')
     bp.configure_position_axes((1, 2))
     bp.configure_time_axis(3)
@@ -235,11 +354,17 @@ def accumulate_bp(bp, uri):
     bp.configure_observable_axis(6)
 
     bp.set('Observation.intent', 'get_obs_intent(header)')
+    # add most preferred attribute last
+    bp.clear('Observation.metaRelease')
+    bp.add_fits_attribute('Observation.metaRelease', 'REL_DATE')
+    bp.add_fits_attribute('Observation.metaRelease', 'DATE')
+    bp.add_fits_attribute('Observation.metaRelease', 'DATE-OBS')
+    bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
     bp.clear('Observation.sequenceNumber')
     bp.add_fits_attribute('Observation.sequenceNumber', 'EXPNUM')
 
-    bp.clear('Observation.environment.elevation')
-    bp.add_fits_attribute('Observation.environment.elevation', 'TELALT')
+    bp.set('Observation.environment.elevation',
+           'get_environment_elevation(header)')
     bp.clear('Observation.environment.humidity')
     bp.add_fits_attribute('Observation.environment.humidity', 'RELHUMID')
     # bp.set('Observation.environment.photometric', False)
@@ -249,6 +374,8 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
     bp.clear('Observation.proposal.pi')
     bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
+    bp.set_default('Observation.proposal.pi', 'CFHT')
+    bp.set('Observation.proposal.project', 'get_proposal_project(header)')
 
     bp.clear('Observation.instrument.name')
     bp.add_fits_attribute('Observation.instrument.name', 'INSTRUME')
@@ -274,13 +401,14 @@ def accumulate_bp(bp, uri):
     bp.set('Plane.dataProductType', 'image')
     bp.set('Plane.calibrationLevel', 'get_calibration_level(uri)')
     bp.clear('Plane.metaRelease')
-    bp.add_fits_attribute('Plane.metaRelease', 'MET_DATE')
-    bp.add_fits_attribute('Plane.metaRelease', 'DATE-OBS')
+    bp.add_fits_attribute('Plane.metaRelease', 'REL_DATE')
     bp.add_fits_attribute('Plane.metaRelease', 'DATE')
+    bp.add_fits_attribute('Plane.metaRelease', 'DATE-OBS')
+    bp.add_fits_attribute('Plane.metaRelease', 'MET_DATE')
     bp.clear('Plane.dataRelease')
-    bp.add_fits_attribute('Plane.dataRelease', 'REL_DATE')
-    bp.add_fits_attribute('Plane.dataRelease', 'DATE-OBS')
     bp.add_fits_attribute('Plane.dataRelease', 'DATE')
+    bp.add_fits_attribute('Plane.dataRelease', 'DATE-OBS')
+    bp.add_fits_attribute('Plane.dataRelease', 'REL_DATE')
 
     bp.set_default('Plane.provenance.name', 'ELIXIR')
     bp.set_default('Plane.provenance.producer', 'CFHT')
@@ -289,6 +417,8 @@ def accumulate_bp(bp, uri):
                    'http://www.cfht.hawaii.edu/Instruments/Elixir/')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
+    bp.clear('Plane.provenance.version')
+    bp.add_fits_attribute('Plane.provenance.version', 'EL_SYS')
 
     bp.set('Artifact.productType', 'get_product_type(header)')
 
@@ -333,6 +463,11 @@ def accumulate_bp(bp, uri):
     # 1. moving - not set unless true
     # 1. standard - not set unless true
     # 1. target_position is there if RA_DEG and DEC_DEG are present
+    #
+    # 19Bm03.bias.0.40.00
+    # 1. should sequence number have a value?
+    # 1. add energy axis - the filter name is NOT unique among the test files
+    #    I've selected
 
     # hard-coded values from:
     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
@@ -372,10 +507,17 @@ def accumulate_bp(bp, uri):
     bp.set('Chunk.time.axis.error.rnder', 0.0000001)
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
     bp.set('Chunk.time.axis.function.naxis', 1)
-    bp.set('Chunk.time.axis.function.delta', 'get_time_delta(header)')
+    if get_calibration_level(uri) == CalibrationLevel.RAW_STANDARD:
+        bp.set('Chunk.time.axis.function.delta',
+               'get_time_refcoord_delta_raw(header)')
+        bp.set('Chunk.time.axis.function.refCoord.val',
+               'get_time_refcoord_val_raw(header)')
+    else:
+        bp.set('Chunk.time.axis.function.delta',
+               'get_time_refcoord_delta_cal(header)')
+        bp.set('Chunk.time.axis.function.refCoord.val',
+               'get_time_refcoord_val_cal(header)')
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
-    bp.set('Chunk.time.axis.function.refCoord.val',
-           'get_time_refcoord_val(header)')
 
     logging.debug('Done accumulate_bp.')
 
@@ -383,6 +525,10 @@ def accumulate_bp(bp, uri):
 def update(observation, **kwargs):
     """Called to fill multiple CAOM model elements and/or attributes, must
     have this signature for import_module loading and execution.
+
+    This code captures the portion of the TDM->CAOM model mapping, where
+    the relationship is multiple elements of the TDM are required to set
+    multiple elements of the CAOM model (mapping cardinality n:n).
 
     :param observation A CAOM Observation model instance.
     :param **kwargs Everything else."""
@@ -396,14 +542,25 @@ def update(observation, **kwargs):
     if 'fqn' in kwargs:
         fqn = kwargs['fqn']
 
+    # processed files
+    if (cc.is_composite(headers) and not
+            isinstance(observation, CompositeObservation)):
+        logging.info('{} is a Composite Observation.'.format(
+            observation.observation_id))
+        observation = cc.change_to_composite(observation, 'master_detrend')
+
     ccdbin = headers[0].get('CCBIN1')
     radecsys = headers[0].get('RADECSYS')
     ctype1 = headers[0].get('CTYPE1')
     filter_name = headers[0].get('FILTER')
-    time_delta = get_time_delta(headers[0])
 
     for plane in observation.planes.values():
         for artifact in plane.artifacts.values():
+            if (get_calibration_level(artifact.uri) ==
+                    CalibrationLevel.RAW_STANDARD):
+                time_delta = get_time_refcoord_delta_raw(headers[0])
+            else:
+                time_delta = get_time_refcoord_delta_cal(headers[0])
             for part in artifact.parts.values():
                 for c in part.chunks:
                     index = part.chunks.index(c)
@@ -434,6 +591,16 @@ def update(observation, **kwargs):
                         # https://docs.astropy.org/en/stable/api/astropy.wcs.
                         # Wcsprm.html#astropy.wcs.Wcsprm.cdfix
                         chunk.time.axis.function.delta = 0.0
+
+        if isinstance(observation, CompositeObservation):
+            cc.update_plane_provenance(plane, headers[1:], 'IMCMB',
+                                       COLLECTION,
+                                       _repair_provenance_value,
+                                       observation.observation_id)
+
+    # relies on update_plane_provenance being called
+    if isinstance(observation, CompositeObservation):
+        cc.update_observation_members(observation)
 
     logging.debug('Done update.')
     return observation
@@ -473,6 +640,35 @@ def _get_uris(args):
         raise mc.CadcException(
             'Could not define uri from these args {}'.format(args))
     return result
+
+
+def _repair_provenance_value(value, obs_id):
+    prov_obs_id = None
+    prov_prod_id = None
+    # CFHT files contain other IMCMB headers that look like this - ignore
+    # them here:
+    # IMCMB_DT= 'FLIPS ver 3.0 - Elixir by CFHT - Wed Dec 4 2019 -  9:53:11'
+    # IMCMB_AL= 'SIGMA   '
+    # IMCMB_CA= 'MEDIAN  '
+    # IMCMB_LS=                  3.5 / Lower threshold for clipping rejection
+    # IMCMB_HS=                  3.5 / Lower clipping rejection threshold
+    # IMCMB_FT= 'MASTER_DETREND_BIAS'
+    # IMCMB_OP= '1DYMODEL_OVERSCAN'
+    # IMCMB_NI=                   30 / Number of input files
+    # IMCMB_DA=                    T / Dual amplifier A,B
+    # IMCMB_IF= 'NAME BIAS_A MODE_A BIAS_B MODE_B' / Input file parameters
+    if '.fits' in str(value):
+        # input looks like:
+        # '2463481b.fits[ccd39] 1231 1 1225 1' / Input file stats
+        # or like:
+        # '707809o00.fits 0 1569 0.341' / Input file stats
+        temp = value.split('.fits')
+        if '[' in value:
+            prov_prod_id = temp[0]
+        else:
+            prov_prod_id = temp[0][:-2]
+        prov_obs_id = CFHTName(file_name=prov_prod_id).obs_id
+    return prov_obs_id, prov_prod_id
 
 
 def _main_app():

@@ -71,3 +71,7 @@ from cfht2caom2 import CFHTName
 
 def test_is_valid():
     assert CFHTName(file_name='anything').is_valid()
+    test_subject = CFHTName(file_name='2463796o.fits.fz')
+    assert test_subject.obs_id == '2463796', 'wrong obs id'
+    assert test_subject.file_id == '2463796o', 'wrong file id'
+    assert test_subject.file_uri == 'ad:CFHT/2463796o.fits.fz', 'wrong uri'

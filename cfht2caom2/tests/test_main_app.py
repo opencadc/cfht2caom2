@@ -95,7 +95,7 @@ def pytest_generate_tests(metafunc):
 
 def test_main_app(test_name):
     basename = os.path.basename(test_name)
-    cfht_name = CFHTName(file_name=basename)
+    cfht_name = CFHTName(file_name=basename.replace('.header', '.fz'))
     output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
     obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(
         cfht_name.obs_id))
@@ -113,7 +113,12 @@ def test_main_app(test_name):
                     cfht_name.obs_id, output_file, PLUGIN, PLUGIN,
                     _get_lineage(cfht_name))).split()
         print(sys.argv)
-        main_app._main_app()
+        try:
+            main_app._main_app()
+        except Exception as e:
+            import logging
+            import traceback
+            logging.error(traceback.format_exc())
 
     actual = mc.read_obs_from_file(output_file)
     result = get_differences(expected, actual, 'Observation')

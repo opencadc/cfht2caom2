@@ -1,22 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-3f06-013f0dc065b8" caom2:lastModified="2017-12-04T21:51:31.810" caom2:maxLastModified="2019-11-06T06:26:59.482" caom2:metaChecksum="md5:83227eb362005293968ba44003cf0f08" caom2:accMetaChecksum="md5:18b5f8570daf9ad6fedb37574343bcb0">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>676000</caom2:observationID>
-<!--  <caom2:metaRelease>2002-12-12T08:55:18.000</caom2:metaRelease>-->
-  <caom2:metaRelease>2002-12-12T08:55:18.290</caom2:metaRelease>
+  <caom2:metaRelease>2002-12-12T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>676000</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>
-  <!--caom2:proposal>
-    <caom2:id>03AE99</caom2:id>
-    <caom2:pi>CFHT</caom2:pi>
-  </caom2:proposal!-->
   <caom2:target>
     <caom2:name>45 West</caom2:name>
-    <!--caom2:standard>false</caom2:standard>
-    <caom2:moving>false</caom2:moving!-->
   </caom2:target>
   <caom2:targetPosition>
     <caom2:coordsys>FK5</caom2:coordsys>
@@ -37,15 +31,12 @@
   </caom2:instrument>
   <caom2:environment>
     <caom2:humidity>1.85</caom2:humidity>
-    <!--caom2:photometric>false</caom2:photometric!-->
   </caom2:environment>
   <caom2:planes>
     <caom2:plane caom2:id="00000000-0000-0000-3f06-013f0dc06b55" caom2:lastModified="2013-06-04T05:54:42.693" caom2:maxLastModified="2019-11-06T06:26:59.482" caom2:metaChecksum="md5:2111bcd73aaff87994d7e114e0d3cf20" caom2:accMetaChecksum="md5:c3dabb40a4923a060d7a199bd9c36713">
       <caom2:productID>676000o</caom2:productID>
-<!--      <caom2:metaRelease>2002-12-12T08:55:18.000</caom2:metaRelease>-->
-<!--      <caom2:dataRelease>2002-12-12T00:00:00.000</caom2:dataRelease>-->
-      <caom2:metaRelease>2002-12-12T08:55:18.290</caom2:metaRelease>
-      <caom2:dataRelease>2002-12-12T08:55:18.290</caom2:dataRelease>
+      <caom2:metaRelease>2002-12-12T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2002-12-12T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>
@@ -53,9 +44,6 @@
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Elixir/</caom2:reference>
-        <!--caom2:keywords>
-          <caom2:keyword/>
-        </caom2:keywords!-->
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-3f06-013f0dc06b5b" caom2:lastModified="2017-12-04T21:51:31.810" caom2:maxLastModified="2017-12-04T21:51:31.810" caom2:metaChecksum="md5:424543ca5ab5f1d901c5df8042dbaf1d" caom2:accMetaChecksum="md5:a32e3646ffc058339741f37e75b69519">

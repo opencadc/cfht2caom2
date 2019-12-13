@@ -2,7 +2,7 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-a3f9-f9743370311f" caom2:lastModified="2017-06-07T10:35:46.233" caom2:maxLastModified="2019-11-05T23:24:32.940" caom2:metaChecksum="md5:e2eefec81480f7d21727aa555269cce0" caom2:accMetaChecksum="md5:3070de4f14e52f322f62700de174a5d2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>718955</caom2:observationID>
-  <caom2:metaRelease>2003-09-24T02:43:19.270</caom2:metaRelease>
+  <caom2:metaRelease>2003-09-24T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>718955</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
@@ -15,8 +15,6 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>morning flats</caom2:name>
-    <!--caom2:standard>false</caom2:standard>
-    <caom2:moving>false</caom2:moving!-->
   </caom2:target>
   <caom2:targetPosition>
     <caom2:coordsys>FK5</caom2:coordsys>
@@ -42,14 +40,12 @@
     <caom2:humidity>18.4</caom2:humidity>
     <caom2:elevation>89.42</caom2:elevation>
     <caom2:ambientTemp>8.68</caom2:ambientTemp>
-    <!--caom2:photometric>false</caom2:photometric!-->
   </caom2:environment>
   <caom2:planes>
     <caom2:plane caom2:id="00000000-0000-0000-3fdc-f97433789cf3" caom2:lastModified="2014-05-15T20:33:36.327" caom2:maxLastModified="2019-11-05T23:24:32.940" caom2:metaChecksum="md5:a36eab8895a522c34956672c3d31509a" caom2:accMetaChecksum="md5:7a4dc67f645c1525dd867f630640137d">
       <caom2:productID>718955l</caom2:productID>
-      <caom2:metaRelease>2003-09-24T02:43:19.270</caom2:metaRelease>
-      <caom2:dataRelease>2003-09-24T02:43:19.270</caom2:dataRelease>
-      <!--caom2:dataRelease>2003-09-24T00:00:00.000</caom2:dataRelease!-->
+      <caom2:metaRelease>2003-09-24T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2003-09-24T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>
@@ -70,33 +66,6 @@
             <caom2:part caom2:id="00000000-0000-0000-0033-f9743378a220" caom2:lastModified="2014-05-15T18:09:43.967" caom2:maxLastModified="2014-05-15T18:09:43.967" caom2:metaChecksum="md5:9f0f43325b902ec6bc528c455480fb4f" caom2:accMetaChecksum="md5:f3c9b32010e97805e86106eb7ec32a2e">
               <caom2:name>0</caom2:name>
               <caom2:chunks/>
-                <!--caom2:chunk caom2:id="00000000-0000-0000-e772-f9743378e99f" caom2:lastModified="2017-06-07T10:35:46.233" caom2:maxLastModified="2017-06-07T10:35:46.233" caom2:metaChecksum="md5:19b39e7e86de9d49ad31c6a258ec2da4" caom2:accMetaChecksum="md5:a764e62acfb86b514290baddbecda834">
-                  <caom2:productType>calibration</caom2:productType>
-                  <caom2:naxis>0</caom2:naxis>
-                  <caom2:positionAxis1>1</caom2:positionAxis1>
-                  <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>UTC</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:range>
-                        <caom2:start>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>52906.11328</caom2:val>
-                        </caom2:start>
-                        <caom2:end>
-                          <caom2:pix>1.5</caom2:pix>
-                          <caom2:val>52906.113292</caom2:val>
-                        </caom2:end>
-                      </caom2:range>
-                    </caom2:axis>
-                    <caom2:exposure>1.03999996185</caom2:exposure>
-                    <caom2:resolution>1.03999996185</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks!-->
             </caom2:part>
             <caom2:part caom2:id="00000000-0000-0000-0bc8-f9743378ea03" caom2:lastModified="2014-05-15T18:09:43.967" caom2:maxLastModified="2014-05-15T18:09:43.967" caom2:metaChecksum="md5:e228cb78928732f780773e56c554af5a" caom2:accMetaChecksum="md5:4c99a380a96d9cc6e265f1728382bfcc">
               <caom2:name>1</caom2:name>
