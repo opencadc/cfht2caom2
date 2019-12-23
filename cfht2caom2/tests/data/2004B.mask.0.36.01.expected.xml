@@ -13,8 +13,7 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>Bad Pixels Map</caom2:name>
-    <!--caom2:standard>false</caom2:standard>
-    <caom2:moving>false</caom2:moving!-->
+    <caom2:standard>false</caom2:standard>
   </caom2:target>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>

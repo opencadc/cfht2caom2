@@ -1,0 +1,339 @@
+SIMPLE  =                    T / Standard FITS                                  
+BITPIX  =                   16 / 16bit 2s complement 0..65535 (BZERO=32768)     
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 2148 / Number of pixel columns                        
+NAXIS2  =                 4128 / Number of pixel rows                           
+INHERIT =                    F / No need to inherit global keywords             
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+COMMENT                                                                         
+COMMENT Observation Summary                                                     
+COMMENT -------------------                                                     
+COMMENT                                                                         
+CMMTOBS = '-       '                                                            
+CMMTSEQ = '-       '                                                            
+OBJECT  = 'HeNe laser'                                                          
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Julie Hlavacek-Larrondo'                                             
+RUNID   = '18AC97  '                                                            
+COMMENT                                                                         
+COMMENT General                                                                 
+COMMENT -------                                                                 
+COMMENT                                                                         
+FILENAME= '2270807b'           / Base filename at acquisition                   
+PATHNAME= '/data/sessions/sitelle/18AQ08-May08/biases' / Original directory name
+DATE    = '2018-05-09T18:28:05' / UTC Date of file creation                     
+HSTTIME = 'Wed May 09 08:28:05 HST 2018' / Local time in Hawaii                 
+IMAGESWV= 'CFHT DetCom v3.6029 (Sep 26 2017)' / Image creation software version 
+OBSTYPE = 'BIAS    '           / Observation / Exposure type                    
+EXPTYPE = 'BIAS    '           / See OBSTYPE                                    
+EXPNUM  =              2270807 / CFHT odometer number                           
+OBSID   =              2270807 / See EXPNUM                                     
+EXPTIME =                  0.0 / No integration time (bias)                     
+DARKTIME=                  0.0 / Dark current time (seconds)                    
+SHUTOPEN= '2018-05-09T18:28:05.273' / Shutter blade opening time (UTC)          
+SHUTCLOS= '2018-05-09T18:28:05.273' / Shutter blade closing time (UTC)          
+COMMENT                                                                         
+COMMENT Detector                                                                
+COMMENT --------                                                                
+COMMENT                                                                         
+COMMENT file 2270807b00, raster bin 1, etype BIAS, etime 01(NA)                 
+COMMENT Image data for chip 00                                                  
+DETECTOR= 'SITELLE '           / Science Detector                               
+CCD     = 'Unknown '           / Science Detector (use DETECTOR)                
+IMAGEID =                    0 / CCD chip number                                
+CHIPID  =                    0 / Use IMAGEID instead                            
+DETSIZE = '[1:2048,1:4128]'    / Total data pixels in full mosaic               
+RASTER  = 'bin 1   '           / Active raster description                      
+CCDSUM  = '1 1     '           / Binning factors                                
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+PIXSIZE =                   15 / Pixel size for both axes (microns)             
+PIXSCAL1=               0.3220 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=               0.3220 / Pixel scale for axis 2 (arcsec/pixel)          
+AMPLIST = 'a,b,c,d,e,f,g,h'    / List of amplifiers for this image              
+CCDSIZE = '[1:2048,1:4128]'    / Detector imaging area size                     
+CCDSEC  = '[1:2148,1:4128]'    / Read out area of the detector (unbinned)       
+DATASEC = '[101:2148,1:4128]'  / Imaging area of the detector                   
+BIASSEC = '[1:100,1:4128]'     / Overscan/prescan (bias) area of the read out   
+BSECA   = '[1:50,1:1032]'      / Overscan/prescan (bias) area from Amp A        
+BSECB   = '[51:100,1:1032]'    / Overscan/prescan (bias) area from Amp B        
+BSECC   = '[1:50,1033:2064]'   / Overscan/prescan (bias) area from Amp C        
+BSECD   = '[51:100,1033:2064]' / Overscan/prescan (bias) area from Amp D        
+BSECE   = '[1:50,2065:3096]'   / Overscan/prescan (bias) area from Amp E        
+BSECF   = '[51:100,2065:3096]' / Overscan/prescan (bias) area from Amp F        
+BSECG   = '[1:50,3097:4128]'   / Overscan/prescan (bias) area from Amp G        
+BSECH   = '[51:100,3097:4128]' / Overscan/prescan (bias) area from Amp H        
+DSECA   = '[101:1124,1:1032]'  / Imaging area from Amp A                        
+DSECB   = '[1125:2148,1:1032]' / Imaging area from Amp B                        
+DSECC   = '[101:1124,1033:2064]' / Imaging area from Amp C                      
+DSECD   = '[1125:2148,1033:2064]' / Imaging area from Amp D                     
+DSECE   = '[101:1124,2065:3096]' / Imaging area from Amp E                      
+DSECF   = '[1125:2148,2065:3096]' / Imaging area from Amp F                     
+DSECG   = '[101:1124,3097:4128]' / Imaging area from Amp G                      
+DSECH   = '[1125:2148,3097:4128]' / Imaging area from Amp H                     
+CSEC1   = '[1:2148,1:2064]'    / Section in full, spliced image of chip 1       
+CSEC2   = '[1:2148,2065:4128]' / Section in full, spliced image of chip 2       
+DSEC1   = '[101:2148,1:2064]'  / Section in full, spliced image of chip 1       
+DSEC2   = '[101:2148,2065:4128]' / Section in full, spliced image of chip 2     
+BSEC1   = '[1:100,1:2064]'     / Section in full, spliced image of chip 1       
+BSEC2   = '[1:100,2065:4128]'  / Section in full, spliced image of chip 2       
+MAXLIN  =                65535 / Maximum linearity value (ADU)                  
+SATURATE=                65535 / Saturation value (ADU)                         
+DARKCUR =                    0 / Dark current (e-/pixel/hour)                   
+CONSWV  = 'SIT=1657,SIT=403'   / Controller software DSPID and SERNO versions   
+DETSTAT = 'detector temp unknown'                                               
+DETTEM  =              -1000.0                                                  
+CRPIX1  =                512.0 / WCS Coordinate reference pixel                 
+CRPIX2  =                516.0 / WCS Coordinate reference pixel                 
+CD1_1   =          8.94444E-05 / WCS Coordinate scale matrix                    
+CD1_2   =              0.00000 / WCS Coordinate scale matrix                    
+CD2_1   =              0.00000 / WCS Coordinate scale matrix                    
+CD2_2   =          8.94444E-05 / WCS Coordinate scale matrix                    
+COMMENT                                                                         
+COMMENT Telescope                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'manual  '           / Telescope Control System status                
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+DATE-OBS= '2018-05-09'         / Date at start of observation (UTC)             
+UTIME   = '18:28:04.33'        / Time at start of observation (UTC)             
+UTC-OBS = '18:28:04.33'        / Time at start of observation (UTC)             
+TIME-OBS= '18:28:05.273'       / Time at start of observation (UTC)             
+MJDATE  =        58247.7694945 / Modified Julian Date at start of observation   
+MJD-OBS =        58247.7694945 / Modified Julian Date at start of observation   
+SIDTIME = '23:16:16.73'        / Sidereal time at start of observation          
+LST-OBS = '23:16:16.73'        / Sidereal time at start of exposure             
+DATEEND = '2018-05-09'         / Date at end of observation (UTC)               
+UTCEND  = '18:28:05.33'        / Time at end of observation (UTC)               
+TIMEEND = '18:28:05.273'       / Time at end of observation (UTC)               
+MJDEND  =        58247.7695061 / Modified Julian Date at end of observation     
+LSTEND  = '23:16:17.73'        / Sidereal time at end of exposure               
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+COMMENT RA/DEC are current actual telescope position                            
+COMMENT including handset corrections                                           
+RA      = '23:16:16.38'        / Telescope right ascension                      
+DEC     = '19:45:31.6'         / Telescope declination                          
+HA      = '0:00:00.35'         / Telescope hour angle at start of exposure      
+HAEND   = '0:00:01.35'         / Telescope hour angle at end of exposure        
+INSTZRA =                 0.00 / Instrument zero for RA in arc seconds          
+INSTZDEC=                 0.00 / Instrument zero for Dec in arc seconds         
+RA_DEG  =           349.068250 / Telescope right ascension in degrees           
+DEC_DEG =            19.758778 / Telescope declination in degrees               
+COMMENT OBJxxx are original target position                                     
+COMMENT plus proper motion and precession                                       
+OBJNAME = 'newGSC  '           / Target name                                    
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '20:11:55.94'        / Target right ascension                         
+OBJDEC  = '38:17:30.2'         / Target declination                             
+OBJRAPM =                 0.00 / Target right ascension proper motion in as/yr  
+OBJDECPM=                 0.00 / Target declination proper motion in as/yr      
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'Cass    '           / TCS guider name                                
+GUIEQUIN=               2000.0 / TCS guider equinox                             
+GUIRADEC= 'FK5     '           / TCS guider system for equinox                  
+GUIRA   = '20:13:35.13'        / TCS guider right ascension                     
+GUIDEC  = '38:17:12.0'         / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = 'auto GSC: 0'        / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =             -154.000 / Telescope bonnette guide probe X position      
+YPROBE  =               -0.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =              397.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.061 / Airmass at start of observation                
+TELALT  =              89.9255 / Telescope altitude at start of observation, deg
+TELAZ   =             179.6968 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                  0.1 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=                60.00 / Angle from object to moon at start in degrees  
+MOONPHAS=                -0.28 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'True    '           / Moon up? True or False                         
+MOONALT =                57.70 / Moon altitude at start in degrees              
+MOONAZ  =               195.90 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+CALFOCUS=               14.070 / Telescope focus calculated from model in mm    
+DEFOCUS =                0.000 / Telescope defocus from calculated in mm        
+FOCUSPOS=                14426 / Telescope focus encoder readout in microns     
+TELFOCUS=                14426 / Telescope focus encoder readout in microns     
+FOCSTART=               13.921 / First focus value in focus sequence in mm      
+FOCSTEP =                  1.0 / Delta focus sequence step size in mm           
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= '0266 13:47:34.952641' / TCS GPS read out in BCD                      
+TCSGPSTM=             13.79304 / TCS GPS clock time in decimal hours            
+TCSRBUSS= '22:53:40.000'       / TCS RBUSS clock time                           
+TCSEPICS= '20180509 13:47:07.958' / TCS EPICS clock time                        
+TCSAMODE= 'M       '           / TCS acquire mode - T/O/G/g/P for t/o/g coords  
+TCSMJD  =        58247.5747097 / TCS MJD                                        
+TCSLST  =             18.58368 / TCS LST in decimal hours                       
+TCSAPHA =            -24.39552 / TCS apparent hour angle in degrees             
+TCSAPDEC=             38.34359 / TCS apparent declination in degrees            
+TCSOBHA =            -24.38999 / TCS observed hour angle in degrees             
+TCSOBDEC=             38.34054 / TCS observed declination in degrees            
+TCSENHA =                    0 / TCS hour angle absolute encoder in bits        
+TCSENDEC=                    0 / TCS declination absolute encoder in bits       
+TCSEDHA =            -24.38093 / TCS hour angle absolute encoder in degrees     
+TCSEDDEC=             38.34719 / TCS declination absolute encoder in degrees    
+TCSINHA =                  -24 / TCS hour angle incremental encoder in bits     
+TCSINDEC=                   38 / TCS declination incremental encoder in bits    
+TCSSEHA =                 0.06 / TCS hour angle servo error in arcsec           
+TCSSEDEC=                -0.01 / TCS declination servo error in arcsec          
+TCSGEHA =                 0.00 / TCS hour angle guider error in arcsec          
+TCSGEDEC=                 0.00 / TCS declination guider error in arcsec         
+TCSPMHA =              349.203 / TCS hour angle pointing model output in arcsec 
+TCSPMDEC=              143.835 / TCS declination pointing model output in arcsec
+TCSAMHA =                0.000 / TCS hour angle encoder model in arcsec         
+TCSAMDEC=                5.339 / TCS declination encoder model in arcsec        
+TCSVMHA =                0.000 / TCS hour angle virtual encoder model in arcsec 
+TCSVMDEC=                0.000 / TCS declination virtual encoder model in arcsec
+TCSCREEP=                0.000 / TCS declination creep model in arcsec          
+TCSMVRA =               0.0000 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=               0.0000 / TCS declination acquisition move in arcsec     
+TCSMVX  =            -9999.900 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =            -9999.900 / TCS secondary guider acquisition y move in mm  
+COMMENT                                                                         
+COMMENT Instrument Description                                                  
+COMMENT ----------------------                                                  
+COMMENT                                                                         
+INSTRUME= 'SITELLE '           / Instrument Name                                
+INSTMODE= 'IMAGING '           / Instrument Mode                                
+FILTERID=                    0 / wheel position                                 
+FILTER  = 'C3      '           / description of filter                          
+FILTERBW=                 45.0 / filter bandwidth (nm)                          
+FILTERWL=                529.0 / filter wavelength (nm)                         
+FILTERLB=                511.0 / lower bound of filter (nm)                     
+FILTERUB=                556.0 / upper bound of filter (nm)                     
+COMMENT                                                                         
+COMMENT SITELLE parameters                                                      
+COMMENT ------------------                                                      
+SITAGV  = '$Revision: 1.36 $ $Locker: baril $ Jul 31 2017 13:23:57' / sitelle ag
+SITGOV  = '$Revision: 1.20 $ $Locker:  $ Oct  5 2017 11:37:52' / sitgo version  
+SITTARGT= 'Closed  '           / Target wheel position (closed/calibration/sky) 
+SITLAMP = 'Off     '           / Lamp status (Off/White/HeNe)                   
+SITNEXL =             -452.507 / Nexline position at exposure start (counts)    
+SITPZ1V =                -9999 / Piezo 1 DAC commanded voltage average (0..65535
+SITPZ1VS=             -9999.90 / Piezo 1 DAC voltage standard deviation         
+SITPZ1  =           -9999.9000 / Piezo 1 position average (fringes)             
+SITPZ1SD=           -9999.9000 / Piezo 1 position standard deviation (fringes)  
+SITPZ1MN=           -9999.9000 / Piezo 1 position minimum (fringes)             
+SITPZ1MX=           -9999.9000 / Piezo 1 position maximum (fringes)             
+SITPZ2V =                -9999 / Piezo 2 DAC commanded voltage average (0..65535
+SITPZ2VS=             -9999.90 / Piezo 2 DAC voltage standard deviation         
+SITPZ2  =           -9999.9000 / Piezo 2 position average (fringes)             
+SITPZ2SD=           -9999.9000 / Piezo 2 position standard deviation (fringes)  
+SITPZ2MN=           -9999.9000 / Piezo 2 position minimum (fringes)             
+SITPZ2MX=           -9999.9000 / Piezo 2 position maximum (fringes)             
+SITPZ3V =                -9999 / Piezo 3 DAC commanded voltage average (0..65535
+SITPZ3VS=             -9999.90 / Piezo 3 DAC voltage standard deviation         
+SITPZ3  =           -9999.9000 / Piezo 3 position average (fringes)             
+SITPZ3SD=           -9999.9000 / Piezo 3 position standard deviation (fringes)  
+SITPZ3MN=           -9999.9000 / Piezo 3 position minimum (fringes)             
+SITPZ3MX=           -9999.9000 / Piezo 3 position maximum (fringes)             
+SITSTEP =                    0 / Step number in scan (-STEPS*LFTFR..STEPS)      
+SITSTEPS=                    0 / Number of steps expected in scan (0..STEPS)    
+SITFRING=               0.0000 / Requested fringe for this step                 
+SITFRGNM=              1550.92 / Size of one fringe (nanometers)                
+SITSTPSZ=               0.0000 / Size of one step (fringes)                     
+SITLFTFR=                   25 / Fraction of scan to left of ZPD (%)            
+SITZPDCT=                    0 / Count of steps done first at ZPD (-n/2..n/2)   
+SITRCALT=               1.0000 / Time between servo recalibrations (min)        
+SITRCALD=              10.0000 / Max distance between recalibrations (fringes)  
+SITORDER=                    8 / Folding order for Fourier transform            
+SITRESOL=              1000.00 / Requested resolving power (R) for scan         
+SITLAMIN=             648.0000 / Requested minimum lambda for scan (nanometers) 
+COMMENT                                                                         
+COMMENT Observatory configuration                                               
+COMMENT -------------------------                                               
+COMMENT                                                                         
+DOMESHUT= 'CLOSED  '           / Dome shutter state (OPEN/CLOSED)               
+MIRRCOV = 'CLOSED  '           / Mirror cover state (OPEN/CLOSED)               
+WINDSCR =                    0 / Windscreen elevation in degrees                
+DOMELOUV= 'Null    '           / Dome louver state (OPEN/CLOSED)                
+VENTMODE= 'MANUAL  '           / Dome venting control mode                      
+VENTL1  = 'UNKNOWN:23:0:0'     / Dome vent L1 door and vane configuration       
+VENTL2  = 'UNKNOWN:0:0:0'      / Dome vent L2 door and vane configuration       
+VENTL3  = 'UNKNOWN:0:0:0'      / Dome vent L3 door and vane configuration       
+VENTL4  = 'UNKNOWN:0:0:0'      / Dome vent L4 door and vane configuration       
+VENTL5  = 'UNKNOWN:0:0:0'      / Dome vent L5 door and vane configuration       
+VENTL6  = 'UNKNOWN:0:0:0'      / Dome vent L6 door and vane configuration       
+VENTR1  = 'UNKNOWN:0:0:0'      / Dome vent R1 door and vane configuration       
+VENTR2  = 'UNKNOWN:0:0:0'      / Dome vent R2 door and vane configuration       
+VENTR3  = 'UNKNOWN:0:0:11'     / Dome vent R3 door and vane configuration       
+VENTR4  = 'UNKNOWN:0:0:0'      / Dome vent R4 door and vane configuration       
+VENTR5  = 'UNKNOWN:0:0:0'      / Dome vent R5 door and vane configuration       
+VENTR6  = 'UNKNOWN:0:0:0'      / Dome vent R6 door and vane configuration       
+TESPMIRE=                -0.20 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 4.11 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 4.01 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 4.00 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=               851.29 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 4.10 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=             -9999.90 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=               855.06 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 4.40 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 4.38 / 06 temp, air, top ring west deg C              
+TEANRLSB=                12.56 / 19 temp, air, north rail support beam deg C    
+TESHRSET=                18.89 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 4.11 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 3.78 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 4.58 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 4.06 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 4.31 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 4.52 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                 8.10 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                 8.00 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=               165.40 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 5.09 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 4.40 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 5.53 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                 4.35 / 61 temp, surface, floor above control room degC
+TESPIERN=                 6.70 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 5.50 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 6.70 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 6.33 / 86 temp, air, weather tower deg C              
+WINDSPED=                 0.01 / 84 wind speed, weather tower knots             
+WINDDIR =               197.89 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                49.20 / 87 relative humidity, weather tower %          
+PRESSURE=               620.27 / 31 barometric pressure, control room mb        
+DDSEEMEN=             -9999.90 / Dome DIMM mean seeing, arc seconds             
+DDSEEMED=             -9999.90 / Dome DIMM median seeing, arc seconds           
+DDSEEMOD=             -9999.90 / Dome DIMM mode seeing, arc seconds             
+DDSEESTD=             -9999.90 / Dome DIMM seeing deviation, arc seconds        
+WMSEEMEN=             -9999.90 / Weather tower MASS mean seeing, arc seconds    
+WMSEEMED=             -9999.90 / Weather tower MASS median seeing, arc seconds  
+WMSEEMOD=             -9999.90 / Weather tower MASS mode seeing, arc seconds    
+WMSEESTD=             -9999.90 / Weather tower MASS seeing deviation, arc second
+WDSEEMEN=             -9999.90 / Weather tower DIMM mean seeing, arc seconds    
+WDSEEMED=             -9999.90 / Weather tower DIMM median seeing, arc seconds  
+WDSEEMOD=             -9999.90 / Weather tower DIMM mode seeing, arc seconds    
+WDSEESTD=             -9999.90 / Weather tower DIMM seeing deviation, arc second
+SPOZPMEN=             -9999.90 / SkyProbe (orig) mean absorption, magnitude     
+SPOZPMED=             -9999.90 / SkyProbe (orig) median absorption, magnitude   
+SPOZPMOD=             -9999.90 / SkyProbe (orig) mode absorption, magnitude     
+SPOZPSTD=             -9999.90 / SkyProbe (orig) absorption deviation, magnitude
+QRUNID  = '18AQ08  '           / queue run id                                   
+QOBSERVE= 'Callie Crowder'     / queue observer                                 
+QCOORD  = 'Laurie Rousseau-Nepton' / queue coordinator                          
+QID     = 55550500000000062312 / queue id                                       
+QOBSEQID= 55201400000000238665 / queue ob sequence id                           
+QICSEQID= 55251200000000269603 / queue ic sequence id                           
+QOBITER =                    6 / queue ob iteration                             
+REL_DATE= '2020-08-31T00:00:00' / queue release date                            
+MET_DATE= '2018-05-09T00:00:00' / queue metadata release date                   
+QOGLABEL= 'OG2     '           / queue observing group label                    
+QOBLABEL= 'OB2     '           / queue observing block label                    
+QICLABEL= 'IC2     '           / queue instrument configuration label           
+CRUNID  = '18As01  '           / Elixir camera run ID                           
+END

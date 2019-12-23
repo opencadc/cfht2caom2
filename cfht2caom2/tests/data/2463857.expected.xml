@@ -15,13 +15,14 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>Zenith</caom2:name>
+    <caom2:standard>false</caom2:standard>
   </caom2:target>
   <caom2:targetPosition>
     <caom2:coordsys>FK5</caom2:coordsys>
-    <caom2:equinox>2000.0</caom2:equinox>
+    <caom2:equinox>2019.93</caom2:equinox>
     <caom2:coordinates>
-      <caom2:cval1>167.627792</caom2:cval1>
-      <caom2:cval2>19.759028</caom2:cval2>
+      <caom2:cval1>156.4958333333333</caom2:cval1>
+      <caom2:cval2>19.983333333333334</caom2:cval2>
     </caom2:coordinates>
   </caom2:targetPosition>
   <caom2:telescope>

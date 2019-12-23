@@ -1,10 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:CompositeObservation" caom2:id="baa83e2b-b366-4e76-9b05-b8ae9e17539e" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:07c86d4b26f57fb32dd7ddb7effe5304" caom2:accMetaChecksum="md5:3fc07cf60751d9482c871c30b99fa35c">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:CompositeObservation" caom2:id="f7e4887b-bab2-46c9-9bb5-625997838465">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>19Bm03.bias.0.40.00</caom2:observationID>
-<!--  <caom2:metaRelease>2019-12-04T09:54:35.000</caom2:metaRelease>-->
   <caom2:metaRelease>2019-11-28T00:00:00.000</caom2:metaRelease>
-  <caom2:sequenceNumber>2463132</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>master_detrend</caom2:name>
   </caom2:algorithm>
@@ -16,13 +14,14 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>Zenith</caom2:name>
+    <caom2:standard>false</caom2:standard>
   </caom2:target>
   <caom2:targetPosition>
     <caom2:coordsys>FK5</caom2:coordsys>
     <caom2:equinox>2000.0</caom2:equinox>
     <caom2:coordinates>
-      <caom2:cval1>155.61675</caom2:cval1>
-      <caom2:cval2>19.759111</caom2:cval2>
+      <caom2:cval1>144.41666666666666</caom2:cval1>
+      <caom2:cval2>19.991666666666667</caom2:cval2>
     </caom2:coordinates>
   </caom2:targetPosition>
   <caom2:telescope>
@@ -43,7 +42,7 @@
     <caom2:ambientTemp>2.42</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="c5cb849a-497e-4c8b-84ac-b2cdc90ae811" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:b942d0f07be6f1e07c2db99dc3890191" caom2:accMetaChecksum="md5:13ae59be950f4529a27952fcaec6b22d">
+    <caom2:plane caom2:id="95c17f38-49f2-47a0-ae45-e9aae80a4a33">
       <caom2:productID>19Bm03.bias.0.40.00</caom2:productID>
       <caom2:metaRelease>2019-11-28T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2019-12-04T09:54:35.000</caom2:dataRelease>
@@ -57,82 +56,55 @@
         <caom2:runID>19Bm03</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Elixir/</caom2:reference>
         <caom2:inputs>
-          <caom2:planeURI>caom:CFHT/2463133/2463133b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463440/2463440b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463140/2463140b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463848/2463848b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463477/2463477b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463441/2463441b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463478/2463478b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463446/2463446b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463139/2463139b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463847/2463847b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463136/2463136b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463444/2463444b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463482/2463482b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463445/2463445b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463442/2463442b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463481/2463481b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463135/2463135b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463852/2463852b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463438/2463438b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463132/2463132b</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2463476/2463476b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463480/2463480b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463475/2463475b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463439/2463439b</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2463479/2463479b</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2463134/2463134b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463440/2463440b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463442/2463442b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463847/2463847b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463135/2463135b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463132/2463132b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463446/2463446b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463140/2463140b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463139/2463139b</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2463137/2463137b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463439/2463439b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463444/2463444b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463136/2463136b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463438/2463438b</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2463138/2463138b</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2463443/2463443b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463475/2463475b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463441/2463441b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463445/2463445b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463480/2463480b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463478/2463478b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463848/2463848b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463134/2463134b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463477/2463477b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463482/2463482b</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2463846/2463846b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463852/2463852b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463481/2463481b</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2463133/2463133b</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="c7d1881b-f97b-4725-a324-ec824bcdba50" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:aedffe763b0b452a0c81d06bac5cc022" caom2:accMetaChecksum="md5:c6327952179842e625b775e6d5e680f2">
+        <caom2:artifact caom2:id="3b2b982c-4ec3-45f0-97bd-39251034c9b8">
           <caom2:uri>ad:CFHT/19Bm03.bias.0.40.00.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentChecksum>md5:934261f8a1635fe8be6f14e5868ee694</caom2:contentChecksum>
           <caom2:parts>
-            <caom2:part caom2:id="25de05c6-92b6-43bd-a5f5-26ec11fe1a1b" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:54496b81af72c6684cbe65310ee37924" caom2:accMetaChecksum="md5:3417b44208804d945cb5a80271ecd86c">
+            <caom2:part caom2:id="5a55f3c4-8e3f-41a8-9366-bccaf8aef1d2">
               <caom2:name>0</caom2:name>
               <caom2:chunks/>
             </caom2:part>
-            <caom2:part caom2:id="d1baaa09-eb20-4775-92c4-e0da6ac27cc0" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:fad16e1df4885691d79e97d5a260ee54" caom2:accMetaChecksum="md5:a07c173cb1faf9f9abfc5339cda8cb1c">
+            <caom2:part caom2:id="af0fa79b-8c48-44f8-bef4-0ada302e6d0d">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="85bd8317-bec5-44b9-9ee0-c59f2d5ccde9">
+                <caom2:chunk caom2:id="05858cd5-62a7-4f48-9bba-14552fd1ebfe">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -159,618 +131,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="3accbce8-ac30-4709-801a-649c023cdeed" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:b28a8b60db450a98ee13a2ac4372a6ba" caom2:accMetaChecksum="md5:aab33b9b2f1a32cc1ee32acef1855d73">
-              <caom2:name>10</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="fe7a39f1-644c-46b0-a3f3-e5e9a4e5ca18">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="7e6f8d00-5fbd-443e-9bc0-974cfe1ab1d1" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:a3a003bb68ab5e18d1955ee07d823e91" caom2:accMetaChecksum="md5:bb765fd8c13d84968ff7d449595d5b0e">
-              <caom2:name>11</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="bfecb628-561b-4851-9944-efa6a9bb7af8">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="f9725439-30d8-4f40-9975-cbf6862b92a6" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:cbc066115e5e06969645e273c28dcc97" caom2:accMetaChecksum="md5:a03181ed1e69080cd46097b78b77f266">
-              <caom2:name>12</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="5f25b2ff-6f8f-402f-8504-83fbe5e7efed">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="ec4b1339-9ff3-4f93-8388-04c667c99306" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:d8f7dfea6bc163c0864cbc976e8dbea6" caom2:accMetaChecksum="md5:4e97ea1bd1296a9eb2f865fa16ae5f24">
-              <caom2:name>13</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="23998ec5-0151-4de5-b8f7-f982ce1ea23b">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="241c3ee4-806a-461f-9a60-7230ce7999ed" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:4fd0ba09199c80ca09be1d600c510974" caom2:accMetaChecksum="md5:da4909dccd78553f24a938ea623f00b4">
-              <caom2:name>14</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="a5be7ae5-7a59-4e82-a94d-00654e555844">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="0882a1b8-14fa-486d-9171-6abdf04bc7c9" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:de3741b9e4063e3f652f35d0b06ea229" caom2:accMetaChecksum="md5:5f659a78eafb9d6e4e40036725b65b4c">
-              <caom2:name>15</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="4a073204-1edd-4b61-9bbb-d80dd480c7f1">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="d0d45bbf-5d11-485d-a7c3-b480dbbff832" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:5a3ea6f9628bceab62de2d9cc230ca04" caom2:accMetaChecksum="md5:115093bf23680083d241c14747a75a6d">
-              <caom2:name>16</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="e2fc31ac-fec7-420f-8b4d-8b01e83c2399">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="10537d1f-e52e-4a21-a41c-185f3ac8df2d" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:0812e135c6e9a31a2232b0a7049c86a3" caom2:accMetaChecksum="md5:41868d53056acc01e7afe729c8d45e6d">
-              <caom2:name>17</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="2562c14f-f135-4c57-b5f9-f904524af488">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="a0bacceb-37df-43a3-b6a7-68eaf380c24b" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:4f1f7f581291e21f79b923b0e97a8cf0" caom2:accMetaChecksum="md5:ba9df9fbd090c08cfc253b507c4e2903">
-              <caom2:name>18</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="e1fbdb26-2557-49fa-9daf-c69ef5f6369c">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="1540d9b5-3470-42a9-b084-06087a460ae8" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:7e4eebe2a41f489bd2859a994297139a" caom2:accMetaChecksum="md5:1d402c849b721b46c833e615089ea8a8">
-              <caom2:name>19</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="180dccef-4495-4677-9d8e-0b2bed4e233d">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="7e68ce6a-c022-4d15-b645-00eb105c7827" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:176b7aee94a21ec645a074a54dd05080" caom2:accMetaChecksum="md5:b530dfba4dc037ec442008d734b4c302">
+            <caom2:part caom2:id="e0ddd759-09b8-434b-b952-e7674c14c09b">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="af5c267b-c340-4246-9f15-7f288a896935">
+                <caom2:chunk caom2:id="f165c259-e694-4262-b713-2b2f039551f4">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -797,618 +163,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="62bfdee4-b962-492b-a6b6-f2d4a065f7be" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:18148cff8d1307dbf865daf7dba7029b" caom2:accMetaChecksum="md5:35e702655b88294fad29037e10ed9507">
-              <caom2:name>20</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="5497f989-2549-4caf-97d6-0dd966d77709">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="85884167-8855-411e-ad58-e267fc96546a" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:4a55149395119416292ec465120d106a" caom2:accMetaChecksum="md5:aae8d673d686bb2d18cb4f996bc6c506">
-              <caom2:name>21</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="fea1ff9c-813a-48ba-9e7b-2ecd47ef99d4">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="6734711b-629f-46ab-9995-91a60944cef6" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:77b98a24244c691f1d1694876ae90b1a" caom2:accMetaChecksum="md5:2735833466ceb23b4fa51dc3de59c675">
-              <caom2:name>22</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="528edc2d-0a75-4ed4-8f92-dc392c56df76">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="ac127ac7-9211-4295-b15b-e162ca1b6f45" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:a83be8f9237a0f610297fc68c1f23c2d" caom2:accMetaChecksum="md5:e7277a9f7646ea87804aa71aef258e2e">
-              <caom2:name>23</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="5bc693b7-ffde-4975-b599-582edc2dccfb">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="c3493e8d-5bac-4b8e-a714-3788ea8f0332" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:a51cb4d5a146e37f0346400768505faa" caom2:accMetaChecksum="md5:53061d295145d17e7e0794b63746e1cf">
-              <caom2:name>24</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="8010abb4-de98-45c8-b1e2-6aaa4d0f84ee">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="c9fa3acb-5b57-420b-a522-5235969e0c4c" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:180b8603594e7d2269b783a349c07074" caom2:accMetaChecksum="md5:8d5563e08e633ebf841b098a7df20de5">
-              <caom2:name>25</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="b894c159-e342-4997-ab89-3af322438994">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="65200153-7cf6-42b3-a713-fc1cfba3fd90" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:bfb3792e9d4ff3eadedcba302640f304" caom2:accMetaChecksum="md5:8c81ede714cc51c12a2e9dedeaa695fb">
-              <caom2:name>26</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="d3589590-acfc-4b39-9e04-df1dfe86529d">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="de4a3ccd-a2b0-4a19-a55b-0c0ddd3032dd" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:9ae9678f7557caf7617af5e84ba95a45" caom2:accMetaChecksum="md5:606f8c5edef54c113149ea7bc162ec0e">
-              <caom2:name>27</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="0fb89b83-643b-461f-91de-30ae5b295707">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="e7a595b3-fb06-46a3-b961-b4883bca5fd9" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:1cd0e6a1394b1d94f2bf2a945a454f40" caom2:accMetaChecksum="md5:1d0e7ec9801ab0ae2eedd7aaa94966a8">
-              <caom2:name>28</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="350cbfed-c4a1-46dd-b13e-bc642916d79e">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="8b38bbfd-25cf-48f4-9079-ac4bb8fdc06f" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:7ee4b032a52a77ef4b2f41bff1f49e32" caom2:accMetaChecksum="md5:61e4dd4d8dab878cf283ea1e988b2de5">
-              <caom2:name>29</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="fe47a236-9ff6-435c-a494-69f1dccfaf17">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="0cc0be3b-18f3-4b86-a677-c00ee8a10dcf" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:70e267f2acf10136d113c37627865977" caom2:accMetaChecksum="md5:1a013af21a105642a0b38e31e31a4cbd">
+            <caom2:part caom2:id="499db936-a6b0-4afb-8f53-27f239c2a109">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="dc2a1368-e6f3-47ca-aeae-5e9c95609591">
+                <caom2:chunk caom2:id="8505eb75-d4f5-4124-a53e-99089f80214c">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1435,618 +195,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="4ff81c3c-1f5d-4f5c-a834-c4e5a3f61889" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:c07d0fdaae51ef24f10228aa49eab622" caom2:accMetaChecksum="md5:bc9f3c63946f606ed192b3fd91240d69">
-              <caom2:name>30</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="4e49062c-13dd-437a-ae4d-ff74fdf92a1b">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="f951a4cb-6e59-4600-a8d5-2ccc88ee7c6e" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:bb4539558724043867013c31c4969d94" caom2:accMetaChecksum="md5:d6ffefec756c609edfcaad096005bc35">
-              <caom2:name>31</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="221d913b-1b0e-45d9-b492-dddc13eccafe">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="b3279526-2672-401e-823f-c6cf74997566" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:417ee7a88e788709fae2fa3e913eda34" caom2:accMetaChecksum="md5:82a1268172be3454c59f43454bb3c992">
-              <caom2:name>32</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="7cf07515-58f0-401a-b212-6ad312ca217f">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="83893852-c3ee-4e5b-87aa-ffa449b517f0" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:fd9d1d3d1db41aabb16ad36d3ab5b22c" caom2:accMetaChecksum="md5:bae2bf04058f4d962175ee6a49ed5021">
-              <caom2:name>33</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="de5c92d7-741e-4e32-9ce2-7ada5f8c1d7c">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="da8afe85-b4d4-4a1b-aebd-55d36bf5e088" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:e03bf3070997ac8a4196ceff2c858ed8" caom2:accMetaChecksum="md5:3a5309e49faa2c84bf0162c894a8b85d">
-              <caom2:name>34</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="81dcf3d4-187c-4c42-adde-2c2e0ed12cba">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="955ee185-b54f-4deb-b7b0-37a4763c57ff" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:b907d96b0af9dbb0d5427d1e699a5d84" caom2:accMetaChecksum="md5:2d3d57a57bb242f0796c649192934d66">
-              <caom2:name>35</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="242afc79-8af6-481d-838f-bdba8156614c">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="9e4f6689-9ca3-47a9-96a3-66ee54868b23" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:053e40ab9a81bb08ada6db607d538040" caom2:accMetaChecksum="md5:cfdc4b8881b6c73c4370d7a9c23faa49">
-              <caom2:name>36</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="05052ad2-11cb-4529-ae7d-04c6f40b562d">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="6c690431-ffac-4fe8-a376-2791c3220489" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:b9cedff90da479e8b18739684f1dbe98" caom2:accMetaChecksum="md5:0511d95074620b05e646fcf09de810c0">
-              <caom2:name>37</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="49715361-7f87-4cbb-9f8b-8743b7a9099b">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="cb537a04-5998-48c0-8b4f-607089771f95" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:6bafffac6ebd31a0516941528dc23cdf" caom2:accMetaChecksum="md5:4979925886fce9d1f71b6d22afbb2923">
-              <caom2:name>38</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="92331049-ca23-4213-b80c-3b2caf0aedba">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="f9a2bc16-f92d-4ee7-9efd-075b7245501d" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:2fd50738304480dd88176ecadce141d5" caom2:accMetaChecksum="md5:103d4e601b5627279028ab39608dba79">
-              <caom2:name>39</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="37ae6b8a-1140-4450-bda7-c39653dc8cb8">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="91994ef4-b15b-4ac6-b35d-007fbd14af79" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:8b55a6a6397b27d6be4fb07749697449" caom2:accMetaChecksum="md5:8eec2a877d9e7c0bd709b7bf5058b2a0">
+            <caom2:part caom2:id="e9e4ce3b-b3d9-4402-94cf-9abe0148e986">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="e3383494-e607-4fa1-9879-4a1b62fb06df">
+                <caom2:chunk caom2:id="c880b27d-3379-49a7-9888-4b0121031b74">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2073,96 +227,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="3d3fb9cc-fb99-499c-b956-32c04bba5fef" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:675ddc6261e5f80d59dc69005ae2d968" caom2:accMetaChecksum="md5:46f2c33548e3a0ef194568c68564d991">
-              <caom2:name>40</caom2:name>
-              <caom2:chunks>
-                <caom2:chunk caom2:id="29f3d396-6374-4f63-89c5-5025b18e69d4">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>10.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>58813.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
-                  </caom2:time>
-                </caom2:chunk>
-              </caom2:chunks>
-            </caom2:part>
-            <caom2:part caom2:id="94d2ad8b-ef97-4898-8799-e4158e2519fa" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:d857df86edf9c649d8b63c92e5b27033" caom2:accMetaChecksum="md5:c5e370617165f15b3b8c8b39ed36da28">
+            <caom2:part caom2:id="19ac0468-866c-4290-a3dc-ddf51e50ccd2">
               <caom2:name>5</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="df362508-9001-476b-be65-801acfa5173a">
+                <caom2:chunk caom2:id="d56c9398-3a1b-4bc3-ad0b-da90e84d1355">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2189,38 +259,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="b0a89a2b-46c7-4268-9de2-dbaede54afa6" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:e7b16ed900d5e7aa4ed661b4750d714d" caom2:accMetaChecksum="md5:f217a8e72f414306f37da1784e0d550a">
+            <caom2:part caom2:id="52cdf3b4-7a08-4ea1-8dc1-da795dd895e4">
               <caom2:name>6</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="792a05c7-4cee-42b3-8db3-dde77aa97b5f">
+                <caom2:chunk caom2:id="53777855-ef6d-4594-9df4-a043e0b62296">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2247,38 +291,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="75d1c252-4449-4877-a90d-d5226bad1eb1" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:c96120597695f7270b6e5eca62e56aeb" caom2:accMetaChecksum="md5:d41585455c77c8062cf9ea8a087c1d43">
+            <caom2:part caom2:id="5d450597-8208-4660-93af-38cb07879a2c">
               <caom2:name>7</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="f3b0cb18-2698-4dbd-8098-eb97ca5c2502">
+                <caom2:chunk caom2:id="3dcb8d7e-7cf1-4d4e-9563-50ba6e160286">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2305,38 +323,12 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="27ded946-c907-4500-ad14-6cf5d270c023" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:b0102121cb6e3b1797096322623d46cd" caom2:accMetaChecksum="md5:087fe9261094a3512a1eefed9e6f0b36">
+            <caom2:part caom2:id="35605655-44c1-4d6d-b780-e4f1673be3cf">
               <caom2:name>8</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="007e1447-2dcd-4b0d-a51c-7f07866eb5f9">
+                <caom2:chunk caom2:id="3f7fd54d-088c-43b4-990a-b19b2ac78cd2">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2363,38 +355,1004 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="c1574037-8ce5-4320-9fa0-8907797b71f2" caom2:lastModified="2019-12-05T19:31:10.001" caom2:maxLastModified="2019-12-05T19:31:10.001" caom2:metaChecksum="md5:aaca1d10e3352df68aa2e5331fea5cd2" caom2:accMetaChecksum="md5:834b019a85c1b7d7cadfbba1a30e854b">
+            <caom2:part caom2:id="ca63ee47-8f15-4a02-a7ec-d2a6f30b0dd8">
               <caom2:name>9</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="83ff22a8-b8cf-4368-8f25-758bdf27136d">
+                <caom2:chunk caom2:id="4499277e-d241-4616-a9c0-d30559d2645c">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <caom2:energy>
+                  <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
-                        <caom2:syser>1.0</caom2:syser>
-                        <caom2:rnder>1.0</caom2:rnder>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.5240000000000001e-07</caom2:delta>
+                        <caom2:delta>10.0</caom2:delta>
                         <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.414e-07</caom2:val>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>r.MP9602</caom2:bandpassName>
-                    <caom2:resolvingPower>4.208661417322834</caom2:resolvingPower>
-                  </caom2:energy>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="d6a14660-7888-4714-befe-ee09924cda09">
+              <caom2:name>10</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="422bd75f-fc43-4b69-94e1-c6d7e8679a19">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="44f065ad-0be7-4e5f-bb64-627c8f4c7321">
+              <caom2:name>11</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="7bb96eea-ab62-4226-822c-23e878bb460a">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="abea49e6-d2c5-47aa-abf8-4044944cd114">
+              <caom2:name>12</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="1fb4f23d-d8ad-4641-9333-1519c6d05932">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="728d17c9-d22c-4576-b301-87fe5d3e04c8">
+              <caom2:name>13</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="8cbd0079-7777-48e9-80b8-ab0518ac02ab">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="07244fdc-294f-4a40-bb9d-c99b39f1a4a8">
+              <caom2:name>14</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="a427b4c0-f4cc-4b6d-a714-fec296b8f512">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="ac1c6a67-735a-4179-ab4e-1d3df1b9dbcc">
+              <caom2:name>15</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="1b58e2ff-a45b-4726-a6fc-2520129594e4">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="5df778d0-0060-4b14-b8a8-8302d3f75c83">
+              <caom2:name>16</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="ac26cfac-7262-4f0b-a7da-d7ca404a3b92">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="b0f40dc1-510b-48b0-b314-40f202580f91">
+              <caom2:name>17</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="19d59e4e-a25f-404e-ab6e-570096fbe454">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="020fbc22-439e-4ca9-8303-33c82c8a95e2">
+              <caom2:name>18</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="d6a8b541-02e0-4374-bff4-c349b9b0fd9b">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="81dc3c95-1dc4-4be1-ab58-4fdbd166e927">
+              <caom2:name>19</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="cb955e9c-4215-4068-8c15-dfd7f1415c25">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="2739b27b-5b99-4f97-80bb-5c72b930cafb">
+              <caom2:name>20</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="aa1bfbee-7df2-45fc-bb87-096adf406d25">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="d0b4001d-3e28-40d2-91f1-2db5486bab72">
+              <caom2:name>21</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="594981b5-564a-4f57-94eb-5c2446dfaf71">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="47a8fead-c705-478d-b4cc-b0ba318c79a5">
+              <caom2:name>22</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="13acbc71-53e1-4259-ad85-e1354405e6f9">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="160c46d2-8d72-430c-8f30-c5fc5bab2871">
+              <caom2:name>23</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="0a4b56fa-8bbd-48e9-8390-e7d38acab3cb">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="a4db821d-8b51-4386-af94-c4dee6b7b9c0">
+              <caom2:name>24</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="a05a79aa-257e-4e6b-acd3-e032d91b45dd">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="78a4629d-b50d-472f-a58d-48e2f192eaee">
+              <caom2:name>25</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="830d56a1-c6e2-4262-8f19-0b0fd252fabb">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="7cb566ee-8aea-415c-b7b7-de63d571935e">
+              <caom2:name>26</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="25b451bb-8335-4125-ba71-692a18bc879f">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="78a45d26-8511-442f-9e6f-466dbccb978b">
+              <caom2:name>27</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="d1c19e14-6b1b-4308-b076-a59be75eb849">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="91ae2d85-230e-4def-ace0-46676a194449">
+              <caom2:name>28</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="3d61a4f6-1a6d-4149-a8c1-c1ceef84de7e">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="b74bfdef-1877-454a-9d0c-7f0f9d525782">
+              <caom2:name>29</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="a887e2fd-5dd8-481a-84e3-fd1aa21b161a">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="2154e6fc-16a6-41d1-8c57-e79dc8bb3f39">
+              <caom2:name>30</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="2d67a84a-6ec6-4023-bf0f-a677d38bda81">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="575f4906-06b7-4be0-af79-a8114a30b8e3">
+              <caom2:name>31</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="d08f9fe9-c4a3-4806-894f-82327f76046a">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="607f08fb-31ee-47d1-a016-b7314fc3b8d4">
+              <caom2:name>32</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="3247a8a8-cff8-48cd-a8e9-a9349bbe4cc8">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="e3677ebe-cc0c-4565-bc43-459027350663">
+              <caom2:name>33</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="98189bcc-f69a-4bf5-913d-9a1ccebe9c23">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="557a742e-0f13-4235-8574-3e6e8593ca6e">
+              <caom2:name>34</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="5efb8e95-7bc6-4dd2-b70e-5ab43b271e75">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="73eb16f6-04e3-4d7e-a8b2-7203f54f7161">
+              <caom2:name>35</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="1ca1922e-0dec-4f62-988f-881cb5f7540f">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="975179d6-6ab9-42bd-8020-9abac16db7c3">
+              <caom2:name>36</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="081ccdf3-0010-4b6e-94dc-187ec96f0fc2">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="7ad5f33d-4326-4cf5-8102-73507c39238a">
+              <caom2:name>37</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="18acdcf2-cec6-41e3-a162-c08d38d51b8c">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="ed7cd9c2-9c97-4eb8-8ecb-247cfee9121a">
+              <caom2:name>38</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="59623359-c27f-491e-9cf4-8b42a10fdf95">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="dd91c375-92a4-448b-8bb8-e7dc3974232d">
+              <caom2:name>39</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="44b8dda6-79af-4745-abc0-3a9269911405">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
+                  <caom2:time>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>TIME</caom2:ctype>
+                        <caom2:cunit>d</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1e-07</caom2:syser>
+                        <caom2:rnder>1e-07</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>10.0</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>58813.0</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:exposure>0.0</caom2:exposure>
+                    <caom2:resolution>0.0</caom2:resolution>
+                  </caom2:time>
+                </caom2:chunk>
+              </caom2:chunks>
+            </caom2:part>
+            <caom2:part caom2:id="c199b348-16ae-47f8-bf54-e4ee62e993f9">
+              <caom2:name>40</caom2:name>
+              <caom2:chunks>
+                <caom2:chunk caom2:id="d13ba323-3bab-4532-9a1e-69f1a96b01fc">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2427,35 +1385,35 @@
     </caom2:plane>
   </caom2:planes>
   <caom2:members>
-    <caom2:observationURI>caom:CFHT/2463444</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463481</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463137</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463848</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463140</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463439</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463445</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463446</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463136</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463475</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463132</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463137</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463438</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463846</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463476</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463134</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463847</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463477</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463133</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463440</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463479</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463480</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463443</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463442</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463135</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463134</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463139</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463478</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463136</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463138</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463442</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463482</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463140</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463438</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463441</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463477</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2463852</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463439</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463135</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463848</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463445</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463476</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463443</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463482</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463444</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463440</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463132</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463441</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463481</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463479</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463847</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2463480</caom2:observationURI>
   </caom2:members>
 </caom2:Observation>

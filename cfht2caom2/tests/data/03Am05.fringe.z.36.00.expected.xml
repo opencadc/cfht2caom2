@@ -2,7 +2,6 @@
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>03Am05.fringe.z.36.00</caom2:observationID>
   <caom2:metaRelease>2003-06-23T00:00:00.000</caom2:metaRelease>
-  <caom2:sequenceNumber>707294</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>master_detrend</caom2:name>
   </caom2:algorithm>
@@ -15,17 +14,8 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>F9</caom2:name>
-<!--    <caom2:standard>false</caom2:standard>-->
-<!--    <caom2:moving>false</caom2:moving>-->
+    <caom2:standard>false</caom2:standard>
   </caom2:target>
-  <caom2:targetPosition>
-    <caom2:coordsys>FK5</caom2:coordsys>
-    <caom2:equinox>2000.0</caom2:equinox>
-    <caom2:coordinates>
-      <caom2:cval1>263.5375</caom2:cval1>
-      <caom2:cval2>41.814694</caom2:cval2>
-    </caom2:coordinates>
-  </caom2:targetPosition>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
     <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
@@ -101,33 +91,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107f9a" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:4762f8ac417d1629cccd2fc8514d9b00" caom2:accMetaChecksum="md5:a9449861e147595fcef74fca21d4eb58">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -159,33 +149,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fc8" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:d7e2b6cee836c07e47c20e94a8d2ca07" caom2:accMetaChecksum="md5:56ff7dcdca14b559ff425d5c29fdda6d">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -217,33 +207,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fcc" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:358c8e9aad9aabe3596c7226fd5672de" caom2:accMetaChecksum="md5:9d443702ff86c0401456ab6d8ac8f107">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -275,33 +265,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fd0" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:45fa13e0b65171ccb73a845c1e55c1f0" caom2:accMetaChecksum="md5:246fecab2385d231c33281f49c36656d">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -333,33 +323,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fd4" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:579871a2aafd41f1b765834abc48ce17" caom2:accMetaChecksum="md5:68f9ab9c58912af498a5f815da972069">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -391,33 +381,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fd8" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:418549df82ee3c89378202a0e4445660" caom2:accMetaChecksum="md5:580fb67a0d5742d482a86b5cf7e5a994">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -449,33 +439,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fdb" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:c8a82357dc24020eba423b360b3a1370" caom2:accMetaChecksum="md5:77c4c09d86b112b9bad0b3e914b2764c">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -507,33 +497,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fdf" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:c9604ef8a1a13290aac721fbea04a42d" caom2:accMetaChecksum="md5:db0522a94d0dbf01297e093109c4d894">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -565,33 +555,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fe2" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:0fe169557049a4d2e4f87841b3409a7e" caom2:accMetaChecksum="md5:b37824f4efe862e321c0bb4738475a71">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -623,33 +613,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fe6" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:e0a78edb9aef567a5ab30c239986fcde" caom2:accMetaChecksum="md5:b4bbba33f26de399a346dd0b4165e1ec">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -681,33 +671,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fef" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:9cf79ffc9040aca526c95c12c5b4dd79" caom2:accMetaChecksum="md5:bcef3b50de144538047696b51b10dbe4">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -739,33 +729,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fa5" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:0c3b672b611c5984003fd93328ca094c" caom2:accMetaChecksum="md5:ee745fe92803dce3d8089342faa4ad52">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -797,33 +787,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107ff2" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:a0a0a89f296c20034e498ea11811ce4c" caom2:accMetaChecksum="md5:d11c3135cce48d3df4693257c1178147">
                   <caom2:naxis>2</caom2:naxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -855,33 +845,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107ff5" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:22fc78dca411936f5e7a232faa7d6e7b" caom2:accMetaChecksum="md5:8eb5305bc0014e75fed6abf5d0147c71">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-<!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-<!--                  <caom2:energy>-->
-<!--                    <caom2:axis>-->
-<!--                      <caom2:axis>-->
-<!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-<!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-<!--                      </caom2:axis>-->
-<!--                      <caom2:error>-->
-<!--                        <caom2:syser>1.0</caom2:syser>-->
-<!--                        <caom2:rnder>1.0</caom2:rnder>-->
-<!--                      </caom2:error>-->
-<!--                      <caom2:function>-->
-<!--                        <caom2:naxis>1</caom2:naxis>-->
-<!--                        <caom2:delta>1848.0</caom2:delta>-->
-<!--                        <caom2:refCoord>-->
-<!--                          <caom2:pix>1.0</caom2:pix>-->
-<!--                          <caom2:val>9083.0</caom2:val>-->
-<!--                        </caom2:refCoord>-->
-<!--                      </caom2:function>-->
-<!--                    </caom2:axis>-->
-<!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-<!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-<!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-<!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-<!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-<!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -913,33 +903,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107ff9" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:429fd327f81f923937d26dd7cd7f61ba" caom2:accMetaChecksum="md5:810eb08157b446608a5e40724967a257">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -971,33 +961,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107ffc" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:3b0318aeab9ab37361a3a879a0868f5a" caom2:accMetaChecksum="md5:ccdff7db3df8e5f609cae8d04636f473">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1029,33 +1019,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108000" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:b67704b7af07ba76e9cc1bcd2598d2ac" caom2:accMetaChecksum="md5:bb55865ca390271781d658715532ac8b">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1087,33 +1077,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108003" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:43f080ac9d8dda6e72cb6eb3f40d589f" caom2:accMetaChecksum="md5:b8e7c58c8106ddeeddcd4d92e0b16823">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1145,33 +1135,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108007" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:dc24acba3ed9ba5c66a6b95db0054b69" caom2:accMetaChecksum="md5:0fe4a112cab137214a7301e6a4777023">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1203,33 +1193,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a010800b" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:6be2482cacbf1ebc65d3acd472d8904a" caom2:accMetaChecksum="md5:fc40cb62d711f9404e0f637ddc5d2a56">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1261,33 +1251,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a010800e" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:17a7781dfc8aca3df941072864c7860d" caom2:accMetaChecksum="md5:b4ca1bdafb2878dd7801cdbafc5d24b6">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1319,33 +1309,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108012" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:2ea79f1656cdbe7415cb02b6a6d86d10" caom2:accMetaChecksum="md5:2be678e59b3710246c0075bb29d534ac">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1377,33 +1367,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107faa" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:0bd5a6c344584aa74082fe50d09ce12f" caom2:accMetaChecksum="md5:d2dd875dc21bf95043ec30026697a1a5">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1435,33 +1425,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108015" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:853b953f3b1addb16385d922ce83f4fa" caom2:accMetaChecksum="md5:a1e442c9b437818f5d5b07f121420bbc">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1493,33 +1483,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108019" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:b6d67d0df8482bbce631c4e7c2af7598" caom2:accMetaChecksum="md5:3ad6a3c371a542cda95a34077040e199">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1551,33 +1541,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a010801c" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:8c6b31486dc1efcc6e81e82d483aff15" caom2:accMetaChecksum="md5:bbfe8f09980df5da734cf8887e2a9b44">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1609,33 +1599,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a010801f" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:796ca769f3213dd61c92f9ccab3735fb" caom2:accMetaChecksum="md5:f9c82692e7ac71dbbcfb8006781323e8">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1667,33 +1657,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108023" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:c948795bbc44675e818e1cf6a0de1642" caom2:accMetaChecksum="md5:d4add76a6a55046656d0ae0e4e936021">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1725,33 +1715,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0108026" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:bdd482202091021ca33c8a03d7a7cc3a" caom2:accMetaChecksum="md5:8fd59a0b0993749de11405ec82b04d1d">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1783,33 +1773,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a010802a" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:b6c0b48b8eb69517f383f6a1ab6eabbc" caom2:accMetaChecksum="md5:3feccfb1ebf90153aa846635af9fb8a2">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1841,33 +1831,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107faf" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:3864a050cd3228db10c6e9d9624bb8fa" caom2:accMetaChecksum="md5:e0c19cca86170d698f2618f6986dafee">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1899,33 +1889,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fb4" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:de85fbad464593ed6ebc453067f6c74b" caom2:accMetaChecksum="md5:7e3b153b2733858a841f74ec77a87b92">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1957,33 +1947,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fb8" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:8436f5f0ac97ed8055e951b31f8bad78" caom2:accMetaChecksum="md5:ab1db2a62d276b58018502d5649ee1b8">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2015,33 +2005,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fbc" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:9136dad951087899d3792c61901fae73" caom2:accMetaChecksum="md5:8e48ac04520514581e77805419c42ce9">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2073,33 +2063,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fc0" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:17c01a18a18c074faedd23d2a4d5a0a2" caom2:accMetaChecksum="md5:6ce69f8b3df8fd4c7afd3c2fb9e6d189">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -2131,33 +2121,33 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-247c-0140a0107fc4" caom2:lastModified="2013-08-21T08:49:33.083" caom2:maxLastModified="2013-08-21T08:49:33.083" caom2:metaChecksum="md5:a8889d1019a92f4ade828812789e3c17" caom2:accMetaChecksum="md5:61f0da1825f8a388e0a1c5e146a66fe2">
                   <caom2:naxis>2</caom2:naxis>
+                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
-                  <!--                  <caom2:energyAxis>4</caom2:energyAxis>-->
-                  <!--                  <caom2:energy>-->
-                  <!--                    <caom2:axis>-->
-                  <!--                      <caom2:axis>-->
-                  <!--                        <caom2:ctype>WAVE</caom2:ctype>-->
-                  <!--                        <caom2:cunit>Angstrom</caom2:cunit>-->
-                  <!--                      </caom2:axis>-->
-                  <!--                      <caom2:error>-->
-                  <!--                        <caom2:syser>1.0</caom2:syser>-->
-                  <!--                        <caom2:rnder>1.0</caom2:rnder>-->
-                  <!--                      </caom2:error>-->
-                  <!--                      <caom2:function>-->
-                  <!--                        <caom2:naxis>1</caom2:naxis>-->
-                  <!--                        <caom2:delta>1848.0</caom2:delta>-->
-                  <!--                        <caom2:refCoord>-->
-                  <!--                          <caom2:pix>1.0</caom2:pix>-->
-                  <!--                          <caom2:val>9083.0</caom2:val>-->
-                  <!--                        </caom2:refCoord>-->
-                  <!--                      </caom2:function>-->
-                  <!--                    </caom2:axis>-->
-                  <!--                    <caom2:specsys>TOPOCENT</caom2:specsys>-->
-                  <!--                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>-->
-                  <!--                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>-->
-                  <!--                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>-->
-                  <!--                    <caom2:resolvingPower>4.92</caom2:resolvingPower>-->
-                  <!--                  </caom2:energy>-->
+                  <caom2:energy>
+                    <caom2:axis>
+                      <caom2:axis>
+                        <caom2:ctype>WAVE</caom2:ctype>
+                        <caom2:cunit>m</caom2:cunit>
+                      </caom2:axis>
+                      <caom2:error>
+                        <caom2:syser>1.0</caom2:syser>
+                        <caom2:rnder>1.0</caom2:rnder>
+                      </caom2:error>
+                      <caom2:function>
+                        <caom2:naxis>1</caom2:naxis>
+                        <caom2:delta>3.7318979824276e-07</caom2:delta>
+                        <caom2:refCoord>
+                          <caom2:pix>1.0</caom2:pix>
+                          <caom2:val>1.0134051008786002e-06</caom2:val>
+                        </caom2:refCoord>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:specsys>TOPOCENT</caom2:specsys>
+                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
+                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
+                    <caom2:bandpassName>z.MP9801</caom2:bandpassName>
+                    <caom2:resolvingPower>2.7155219827830877</caom2:resolvingPower>
+                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>

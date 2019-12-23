@@ -74,11 +74,14 @@ import sys
 import traceback
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
-from caom2 import ProductType, CompositeObservation
+from caom2 import ProductType, CompositeObservation, TypedList, Chunk
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
+from caom2utils import FitsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
+
+from cfht2caom2 import metadata as md
 
 
 __all__ = ['cfht_main_app', 'update', 'CFHTName', 'COLLECTION',
@@ -88,20 +91,6 @@ __all__ = ['cfht_main_app', 'update', 'CFHTName', 'COLLECTION',
 APPLICATION = 'cfht2caom2'
 COLLECTION = 'CFHT'
 ARCHIVE = 'CFHT'
-
-# units are Angstroms
-FILTER_LOOKUP = {  # commented out so a test passes ...
-                 # 'u.MP9301': {'centre': 3754.5, 'width': 867 / 2.0},
-                 'g.MP9401': {'centre': 4890.0, 'width': 1624 / 2.0},
-                 'r.MP9601': {'centre': 6248.5, 'width': 1413.0},
-                 # TODO - filter lookup - I added this entry ....
-                 'r.MP9602': {'centre': 6414., 'width': 1524.0},
-                 'i.MP9701': {'centre': 7763., 'width': 1726 / 2.0},
-                 'i.MP9702': {'centre': 7623., 'width': 1728 / 2.0},
-                 # TODO the following line is commented out so a test passes
-                 # before I get a chance to talk to Chris
-                 # 'z.MP9801': {'centre': 9083., 'width': 1848.0},
-                 }
 
 # All comments denoted 'CW' are copied from
 # ssh://goliaths@gimli3/srv/cadc/git/wcaom2archive
@@ -169,7 +158,7 @@ class CFHTName(mc.StorageName):
 
     @staticmethod
     def is_raw(file_id):
-        return file_id[-1] in ['b', 'd', 'f', 'l', 'o', 'x']
+        return file_id[-1] in ['a', 'b', 'c', 'd', 'f', 'l', 'o', 'x']
 
 
 def get_calibration_level(uri):
@@ -181,38 +170,72 @@ def get_calibration_level(uri):
     return result
 
 
-def get_energy_function_delta(header):
-    filter = header.get('FILTER')
-    temp = FILTER_LOOKUP.get(filter)
+def get_energy_ctype(header):
     result = None
-    if temp is not None:
-        result = temp.get('width')
+    if _has_energy(header):
+        result = 'WAVE'
+    return result
+
+
+def get_energy_function_delta(header):
+    result = None
+    if _has_energy(header):
+        if _is_sitelle_energy(header):
+            # units in file are nm, units in blueprint are Angstroms
+            result = 10.0 * mc.to_float(header.get('FILTERBW'))
+        else:
+            filter_name = header.get('FILTER')
+            instrument = _get_instrument(header)
+            temp = md.filter_cache.get_svo_filter(instrument, filter_name)
+            result = ac.FilterMetadataCache.get_fwhm(temp)
+    return result
+
+
+def get_energy_function_pix(header):
+    result = None
+    if _has_energy(header):
+        result = 1.0
+        if _is_sitelle_energy(header):
+            result = 0.5
     return result
 
 
 def get_energy_function_val(header):
-    filter = header.get('FILTER')
-    temp = FILTER_LOOKUP.get(filter)
     result = None
-    if temp is not None:
-        result = temp.get('centre')
+    if _has_energy(header):
+        if _is_sitelle_energy(header):
+            # units in file are nm, units in blueprint are Angstroms
+            result = 10.0 * mc.to_float(header.get('FILTERLB'))
+        else:
+            filter_name = header.get('FILTER')
+            instrument = _get_instrument(header)
+            temp = md.filter_cache.get_svo_filter(instrument, filter_name)
+            result = ac.FilterMetadataCache.get_central_wavelength(temp)
     return result
 
 
 def get_energy_resolving_power(header):
-    delta = get_energy_function_delta(header)
-    val = get_energy_function_val(header)
     result = None
-    if delta is not None and val is not None:
-        result = val/delta
+    if _has_energy(header):
+        delta = get_energy_function_delta(header)
+        val = get_energy_function_val(header)
+        result = None
+        if delta is not None and val is not None:
+            result = val/delta
+        instrument = _get_instrument(header)
+        if instrument == 'SITELLE':
+            sitresol = header.get('SITRESOL')
+            if sitresol is not None and sitresol > 0.0:
+                result = sitresol
+            if result is None:
+                result = 1.0
     return result
 
 
 def get_environment_elevation(header):
     elevation = mc.to_float(header.get('TELALT'))
-    logging.error(f'elevation is {elevation}')
     if elevation is not None and not (0.0 <= elevation <= 90.0):
-        logging.info(f'Setting elevation to None for {header.get("FILENAME")} '
+        logging.info(f'Setting elevation to None for {_get_filename(header)} '
                      f'because the value is {elevation}.')
         elevation = None
     return elevation
@@ -222,21 +245,36 @@ def get_exptime(header):
     exptime = mc.to_float(header.get('EXPTIME'))
     # units are seconds
     if exptime is None:
-        file_name = header.get('FILENAME')
-        if not CFHTName.is_raw(file_name):
+        file_name = _get_filename(header)
+        if file_name is not None and not CFHTName.is_raw(file_name):
             # caom2IngestMegacaomdetrend.py, l438
             exptime = 0.0
     return exptime
 
 
+def get_instrument_keywords(header):
+    inst_mode = header.get('INSTMODE')
+    temp = header.get('SITSTEP')
+    sit_step = None
+    if temp is not None:
+        sit_step = f'SITSTEP={temp}'
+    temp = header.get('SITSTEPS')
+    sit_steps = None
+    if temp is not None:
+        sit_steps = f'SITSTEPS={temp}'
+    result = ','.join(filter(None, (inst_mode, sit_step, sit_steps)))
+    if 'Unknown' in result:
+        result = 'Unknown'
+    return result
+
+
 def get_obs_intent(header):
     result = ObservationIntentType.CALIBRATION
-    obs_type = header.get('OBSTYPE')
+    obs_type = _get_obstype(header)
     if obs_type == 'OBJECT':
         run_id = header.get('RUNID')
-        logging.error(f'run_id {run_id} obs_type {obs_type}')
         if run_id is None or len(run_id) < 4:
-            file_name = header.get('FILENAME')
+            file_name = _get_filename(header)
             if file_name is not None:
                 if file_name[-1] == 'o':
                     result = ObservationIntentType.SCIENCE
@@ -278,10 +316,12 @@ def get_proposal_project(header):
                        '19AP30', '19AP97', '19AP98', '19AP99', '19BP30',
                        '19BP97', '19BP98', '19BP99'],
               'VESTIGE': ['17AP31', '17BP31', '18AP31', '18BP31', '19AP31',
-                          '19BP31']}
+                          '19BP31'],
+              'SIGNALS': ['18BP41', '19AP41', '19BP41', '20AP41', '20BP41',
+                          '21AP41', '21BP41', '22AP41']}
     result = None
     pi_name = header.get('PI_NAME')
-    if 'CFHTLS' in pi_name:
+    if pi_name is not None and 'CFHTLS' in pi_name:
         result = 'CFHTLS'
     else:
         run_id = header.get('RUNID')
@@ -293,8 +333,59 @@ def get_proposal_project(header):
     return result
 
 
+def get_provenance_name(header):
+    instrument = _get_instrument(header)
+    result = 'ORBS'
+    if instrument == 'MegaPrime':
+        result = 'ELIXIR'
+    return result
+
+
+def get_provenance_reference(header):
+    instrument = _get_instrument(header)
+    # Sitelle
+    result = 'http://ascl.net/1409.007'
+    if instrument == 'MegaPrime':
+        result = 'http://www.cfht.hawaii.edu/Instruments/Elixir/'
+    return result
+
+
+def get_target_position_cval1(header):
+    ra, ignore_dec = _get_ra_dec(header)
+    return ra
+
+
+def get_target_position_cval2(header):
+    ignore_ra, dec = _get_ra_dec(header)
+    return dec
+
+
+def get_target_standard(header):
+    obs_type = _get_obstype(header)
+    run_id = _get_run_id(header)
+    result = None
+    if run_id is not None:
+        run_id_type = run_id[3].lower()
+        if run_id_type == 'q' and obs_type == 'OBJECT':
+            obj_name = header.get('OBJECT').lower()
+            instrument = _get_instrument(header)
+            if instrument == 'SITELLE':
+                if 'std' in obj_name:
+                    result = True
+                else:
+                    result = False
+            else:
+                if ('flat' in obj_name or 'focus' in obj_name or
+                        'zenith' in obj_name):
+                    result = False
+                else:
+                    result = True
+        else:
+            result = False
+    return result
+
+
 def get_time_refcoord_delta_cal(header):
-    logging.error('time_refcoord_delta_cal')
     mjd_obs = get_time_refcoord_val_cal(header)
     tv_stop = header.get('TVSTOP')
     if tv_stop is None:
@@ -308,7 +399,6 @@ def get_time_refcoord_delta_cal(header):
 
 
 def get_time_refcoord_delta_raw(header):
-    logging.error('time_refcoord_delta_raw')
     # caom2IngestMegacam.py
     exp_time = get_exptime(header)
     if exp_time is None:
@@ -320,7 +410,6 @@ def get_time_refcoord_delta_raw(header):
 
 
 def get_time_refcoord_val_cal(header):
-    logging.error('is processed refcoord val')
     dt_str = header.get('TVSTART')
     if dt_str is None:
         dt_str = header.get('REL_DATE')
@@ -334,6 +423,63 @@ def get_time_refcoord_val_cal(header):
 def get_time_refcoord_val_raw(header):
     mjd_obs = mc.to_float(header.get('MJD-OBS'))
     return mjd_obs
+
+
+def _get_filename(header):
+    return header.get('FILENAME')
+
+
+def _get_instrument(header):
+    return header.get('INSTRUME')
+
+
+def _get_obstype(header):
+    return header.get('OBSTYPE')
+
+
+def _get_ra_dec(header):
+    obj_ra = header.get('OBJRA')
+    obj_dec = header.get('OBJDEC')
+    obj_ra_dec = header.get('OBJRADEC')
+    if obj_ra_dec is not None:
+        obj_ra_dec = obj_ra_dec.lower()
+    ra = None
+    dec = None
+    if obj_ra is not None and obj_dec is not None and obj_ra_dec is not None:
+        if obj_ra_dec == 'gappt':
+            # SF 18-12-19
+            # seb 4:01 PM
+            # this is a flat. i have the impression in this case you can
+            # ignore the ra/dec stuff
+            logging.warning(f'OBSRADEC is GAPPT for {_get_filename(header)}')
+        else:
+            ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
+    return ra, dec
+
+
+def _get_run_id(header):
+    run_id = header.get('RUNID')
+    if (run_id is not None and (len(run_id) < 3 or len(run_id) > 9 or
+                                run_id == 'CFHT')):
+        # a well-known default value that indicates the past
+        run_id = '17BE'
+    return run_id
+
+
+def _has_energy(header):
+    obs_type = _get_obstype(header)
+    return obs_type not in ['BIAS', 'DARK']
+
+
+def _is_sitelle_energy(header):
+    instrument = _get_instrument(header)
+    result = False
+    if instrument == 'SITELLE':
+        file_name = _get_filename(header)
+        if (file_name is not None and
+                file_name[-1] in ['o', 'f', 'a', 'x', 'c']):
+            result = True
+    return result
 
 
 def accumulate_bp(bp, uri):
@@ -360,8 +506,11 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Observation.metaRelease', 'DATE')
     bp.add_fits_attribute('Observation.metaRelease', 'DATE-OBS')
     bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
+
+    file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
     bp.clear('Observation.sequenceNumber')
-    bp.add_fits_attribute('Observation.sequenceNumber', 'EXPNUM')
+    if CFHTName.is_raw(file_id):
+        bp.add_fits_attribute('Observation.sequenceNumber', 'EXPNUM')
 
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
@@ -379,18 +528,20 @@ def accumulate_bp(bp, uri):
 
     bp.clear('Observation.instrument.name')
     bp.add_fits_attribute('Observation.instrument.name', 'INSTRUME')
+    bp.set('Observation.instrument.keywords',
+           'get_instrument_keywords(header)')
 
-    # bp.set('Observation.target.standard', False)
-    # bp.set('Observation.target.moving', False)
+    bp.set('Observation.target.standard', 'get_target_standard(header)')
 
     bp.clear('Observation.target_position.coordsys')
-    bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
+    bp.add_fits_attribute('Observation.target_position.coordsys', 'OBJRADEC')
     bp.clear('Observation.target_position.equinox')
-    bp.add_fits_attribute('Observation.target_position.equinox', 'EQUINOX')
-    bp.clear('Observation.target_position.point.cval1')
-    bp.add_fits_attribute('Observation.target_position.point.cval1', 'RA_DEG')
-    bp.clear('Observation.target_position.point.cval2')
-    bp.add_fits_attribute('Observation.target_position.point.cval2', 'DEC_DEG')
+    bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQN')
+    bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQUIN')
+    bp.set('Observation.target_position.point.cval1',
+           'get_target_position_cval1(header)')
+    bp.set('Observation.target_position.point.cval2',
+           'get_target_position_cval2(header)')
 
     bp.set('Observation.telescope.name', 'CFHT 3.6m')
     x, y, z = ac.get_geocentric_location('cfht')
@@ -410,11 +561,10 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Plane.dataRelease', 'DATE-OBS')
     bp.add_fits_attribute('Plane.dataRelease', 'REL_DATE')
 
-    bp.set_default('Plane.provenance.name', 'ELIXIR')
+    bp.set('Plane.provenance.name', 'get_provenance_name(header)')
     bp.set_default('Plane.provenance.producer', 'CFHT')
     bp.set_default('Plane.provenance.project', 'STANDARD PIPELINE')
-    bp.set_default('Plane.provenance.reference',
-                   'http://www.cfht.hawaii.edu/Instruments/Elixir/')
+    bp.set('Plane.provenance.reference', 'get_provenance_reference(header)')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
     bp.clear('Plane.provenance.version')
@@ -428,16 +578,10 @@ def accumulate_bp(bp, uri):
     #
     # 1. Obs.metarelease
     # 2. Plane.metarelease
-    # 3. Telescope.location
     # 4. removed preview and thumbnail artifacts
     # 5. removed blank telescope keywords
     # 6. removed content length
-    #
-    # 1013337
-    # 1. targetPosition.coordsys - FK5 RADECSYS says GAPPT
-    # 1. targetPosition.equinox - 2000.0, EQUINOXX says 2008.58
-    # 1. how the target position get set? and why is it only set for
-    #    some observations?
+    # 7. stored energy units are m, not Angstroms
     #
     # 1000003
     # why is there a numbered energyAxis (4), but no energy values?
@@ -456,6 +600,7 @@ def accumulate_bp(bp, uri):
     # 1. Photometric - why is sometimes false and sometimes undefined
     # 1. Moving - why is it sometimes false and sometimes undefined
     # 1. metaRelease values have times on them
+    # 1. proposal title - is there another source of information for that?
     #
     # To stop the noise:
     # 1. always have elevation
@@ -468,19 +613,56 @@ def accumulate_bp(bp, uri):
     # 1. should sequence number have a value?
     # 1. add energy axis - the filter name is NOT unique among the test files
     #    I've selected
+    #
+    # 2270807
+    # 1. There are two artifacts, one for 2270807b.fits.fz, and one for
+    #    2270807b.fits. Should there be? - Seb's issue to resolve.
+
+    # CW/SF Conversation 17-12-19
+    #
+    # 1. If there is no MET_DATE keyword, use the proposal id to determine
+    # the year and the semester, then for semester A, date is 08-31, and
+    # for semester B, date is 02-28.
+    #
+    # 2. Telescope position - ok to use astropy.EarthLocation.of_site('cfht')
+    #
+    # 3. Target position - set it if the keywords OBJRA, OBJDEC, OBJEQN,
+    #    OBJRADEC are present, otherwise leave it blank.
+    #
+    # 4. Set humitidy, ambient temperature if the source keywords are
+    #    present. They should be the same across multiple planes.
+    #
+    # 5. photometric - should be undefined
+    #
+    # 6. target.moving - should be undefined
+    #
+    # 7. target.standard - there is MegaCam logic that should be implemented
+    #
+    # 8. proposal title comes from a CFHT page scrape
+    #
+    # 9. File names like 19Bm30.bias.0.40.00 should not have sequence numbers.
+    #    They are master calibration files.
+    #
+    # 10. filter information - ok to use
+    # http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php?mode=browse&
+    # gname=CFHT&gname2=Megaprime
+    # There are a couple of cases of filter values that are not at SVO,
+    # because one is a pinhole mask, and one was a test filter, so hard-code
+    # results for those.
 
     # hard-coded values from:
     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
     #
-    bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
+    bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
     bp.set('Chunk.energy.axis.axis.cunit', 'Angstrom')
     bp.set('Chunk.energy.axis.error.rnder', 1.0)
     bp.set('Chunk.energy.axis.error.syser', 1.0)
     bp.set('Chunk.energy.axis.function.delta',
            'get_energy_function_delta(header)')
     bp.set('Chunk.energy.axis.function.naxis', 1)
-    bp.set('Chunk.energy.axis.function.refCoord.pix', 1)
+    bp.set('Chunk.energy.axis.function.refCoord.pix',
+           'get_energy_function_pix(header)')
     bp.set('Chunk.energy.axis.function.refCoord.val',
            'get_energy_function_val(header)')
     bp.clear('Chunk.energy.bandpassName')
@@ -490,6 +672,8 @@ def accumulate_bp(bp, uri):
     bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
     bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
 
+    # bp.set_default('Chunk.position.axis.axis1.ctype', 'RA')
+    # bp.set_default('Chunk.position.axis.axis2.ctype', 'DEC')
     bp.set('Chunk.position.axis.axis1.cunit', 'deg')
     bp.set('Chunk.position.axis.axis2.cunit', 'deg')
     bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
@@ -549,48 +733,78 @@ def update(observation, **kwargs):
             observation.observation_id))
         observation = cc.change_to_composite(observation, 'master_detrend')
 
-    ccdbin = headers[0].get('CCBIN1')
-    radecsys = headers[0].get('RADECSYS')
-    ctype1 = headers[0].get('CTYPE1')
-    filter_name = headers[0].get('FILTER')
+    idx = _update_observation_metadata(observation, headers, fqn)
+    ccdbin = headers[idx].get('CCBIN1')
+    radecsys = headers[idx].get('RADECSYS')
+    ctype1 = headers[idx].get('CTYPE1')
+    filter_name = headers[idx].get('FILTER')
+    instrument = _get_instrument(headers[idx])
 
     for plane in observation.planes.values():
         for artifact in plane.artifacts.values():
             if (get_calibration_level(artifact.uri) ==
                     CalibrationLevel.RAW_STANDARD):
-                time_delta = get_time_refcoord_delta_raw(headers[0])
+                time_delta = get_time_refcoord_delta_raw(headers[idx])
             else:
-                time_delta = get_time_refcoord_delta_cal(headers[0])
+                time_delta = get_time_refcoord_delta_cal(headers[idx])
             for part in artifact.parts.values():
                 for c in part.chunks:
-                    index = part.chunks.index(c)
-                    chunk = part.chunks[index]
-                    # CW
-                    # Ignore position wcs if a calibration file (except 'x'
-                    # type calibration) and/or position info not in header or
-                    # binned 8x8
-                    if (plane.product_id[-1] in ['b', 'l', 'd', 'f'] or
-                            ccdbin == 8 or radecsys is None or ctype1 is None):
-                        cc.reset_position(chunk)
-
-                    # CW
-                    # Ignore energy wcs if some type of calibration file or
-                    # filter='None' or 'Open' or cdelt4=0.0 (no filter match)
-                    if (filter_name is None or filter_name == 'Open' or
-                            filter_name not in FILTER_LOOKUP or
-                            plane.product_id[-1] in ['b', 'l', 'd']):
-                        cc.reset_energy(chunk)
+                    chunk_idx = part.chunks.index(c)
+                    chunk = part.chunks[chunk_idx]
 
                     if (time_delta == 0.0 and
                             chunk.time.axis.function.delta == 1.0):
                         # undo the effects of the astropy cdfix call on a
                         # matrix, in fits2caom2.WcsParser, which sets the
                         # diagonal element of the matrix to unity if all
-                        # keywords associated with a given axis were omitted.
+                        # keywords associated with a given axis were
+                        # omitted.
                         # See:
-                        # https://docs.astropy.org/en/stable/api/astropy.wcs.
-                        # Wcsprm.html#astropy.wcs.Wcsprm.cdfix
+                        # https://docs.astropy.org/en/stable/api/astropy.
+                        # wc.Wcsprm.html#astropy.wcs.Wcsprm.cdfix
                         chunk.time.axis.function.delta = 0.0
+
+                    if (chunk.energy is not None and
+                            chunk.energy.bandpass_name in ['NONE', 'Open']):
+                        # CW
+                        # If no or "open" filter then set filtername to
+                        # null
+                        chunk.energy.bandpass_name = None
+
+                    if instrument == 'MegaPrime':
+                        # CW
+                        # Ignore position wcs if a calibration file (except 'x'
+                        # type calibration) and/or position info not in header
+                        # or binned 8x8
+                        if (plane.product_id[-1] in ['b', 'l', 'd', 'f'] or
+                                ccdbin == 8 or radecsys is None or
+                                ctype1 is None):
+                            cc.reset_position(chunk)
+
+                        # CW
+                        # Ignore energy wcs if some type of calibration file
+                        # or filter='None' or 'Open' or cdelt4=0.0 (no filter
+                        # match)
+                        cdelt_value = -1.0
+                        if (chunk.energy is not None and
+                                chunk.energy.axis is not None and
+                                chunk.energy.axis.function is not None):
+                            cdelt_value = chunk.energy.axis.function.delta
+                        if (filter_name is None or filter_name == 'Open' or
+                                cdelt_value == 0.0 or
+                                plane.product_id[-1] in ['b', 'l', 'd']):
+                            cc.reset_energy(chunk)
+
+                    elif instrument == 'SITELLE':
+                        if chunk.energy_axis is not None:
+                            # CW, SF 18-12-19 - SITELLE biases and darks have
+                            # no energy, all other observation types do
+                            if observation.type in ['BIAS', 'DARK']:
+                                cc.reset_energy(chunk)
+                            else:
+                                chunk.energy_axis = 3
+                        if chunk.time_axis is not None:
+                            chunk.time_axis = 4
 
         if isinstance(observation, CompositeObservation):
             cc.update_plane_provenance(plane, headers[1:], 'IMCMB',
@@ -604,6 +818,88 @@ def update(observation, **kwargs):
 
     logging.debug('Done update.')
     return observation
+
+
+def _update_observation_metadata(obs, headers, fqn):
+    """
+    Why this method exists:
+
+    There are CFHT files that have almost no metadata in the primary HDU, but
+    all the needed metadata in subsequent HDUs.
+
+    It's not possible to apply extension
+    numbers for non-chunk blueprint entries, so that means that to use the
+    information captured in the blueprint, the header that's provided
+    must be manipulated instead. There is only access to the header
+    information in this extension of the fitscaom2 module (i.e. this file)
+    during the execution of the 'update' step of fits2caom2 execution.
+    Hence the self-referential implementation. Maybe it will result in an
+    infinite loop and I'll be sad.
+    """
+
+    # notes to myself
+    # - can only set blueprint extension stuff for chunk bits
+    # - need to do the extension/header replacement here for the
+    #   Observation, but the chunk level blueprint has been hosed by the
+    #   previous settings
+    # - the correct values are set in extension 1 for the chunk
+    #   and need to be accessible as extension 0 for the observation, plane,
+    #   artifact
+    # - so then - do I need the blueprint before it's been modified?
+    #   maybe instead of storing the blueprint I just call accumulatee_bp?
+
+    # and I'm back trying to figure out how to undo the doing ...
+    # the first time through, the CD4_4 value is set from CDELT4,
+    # the second time through, it is not, because
+
+    # check for files with primary headers that have NO information
+    # - e.g. 2445848a
+    idx = 0
+    run_id = headers[0].get('RUNID')
+    if run_id is None:
+        idx = 1
+
+        logging.warning(f'Resetting the header/blueprint '
+                        f'relationship for {obs.observation_id}')
+
+        # use the fqn to define the URI
+        product_id = CFHTName.remove_extensions(os.path.basename(fqn))
+        uri = mc.build_uri(ARCHIVE,
+                           os.path.basename(fqn).replace('.header', '.fz'))
+        module = importlib.import_module(__name__)
+        bp = ObsBlueprint(module=module)
+        accumulate_bp(bp, uri)
+
+        # re-read the headers from disk, because the first pass through
+        # caom2gen will have modified the header content based on the
+        # original blueprint  # TODO this is not a long-term implementation
+        # the execution goes through and sets the CDELT4 value, then from
+        # that sets the CD4_4 value. Then the second time through, the
+        # CD4_4 value update is expressly NOT done, because the CD4_4 value
+        # is already set from the first pass-through - need to figure out a
+        # way to fix this .... sigh
+        logging.error(f'fqn {fqn}')
+        unmodified_headers = get_cadc_headers(f'file://{fqn}')
+
+        # make a list of length 1, because then
+        # fits2caom2.FitsParser.augment_observation won't try to read the
+        # headers from a file on disk
+        # print('{!r}'.format(headers[1]))
+        # parser = FitsParser([headers[1]], bp, uri)
+        parser = FitsParser([unmodified_headers[1]], bp, uri)
+        parser.augment_observation(obs, uri, product_id)
+
+        # re-home the chunk information to be consistent with accepted CAOM
+        # patterns of part/chunk relationship - i.e. part 0 never has chunks
+        for plane in obs.planes.values():
+            for artifact in plane.artifacts.values():
+                if artifact.uri == uri:
+                    part0 = artifact.parts['0']
+                    part1 = artifact.parts['1']
+                    part1.chunks[0] = part0.chunks[0]
+                    part0.chunks = TypedList(Chunk, )
+
+    return idx
 
 
 def _build_blueprints(uris):
@@ -630,8 +926,8 @@ def _get_uris(args):
     result = []
     if args.local:
         for ii in args.local:
-            file_id = mc.StorageName.remove_extensions(os.path.basename(ii))
-            file_name = '{}.fits'.format(file_id)
+            file_id = CFHTName.remove_extensions(os.path.basename(ii))
+            file_name = '{}.fits.fz'.format(file_id)
             result.append(CFHTName(file_name=file_name).file_uri)
     elif args.lineage:
         for ii in args.lineage:
@@ -683,11 +979,10 @@ def cfht_main_app():
     args = get_gen_proc_arg_parser().parse_args()
     try:
         result = _main_app()
+        logging.debug('Done {} processing.'.format(APPLICATION))
         sys.exit(result)
     except Exception as e:
         logging.error('Failed {} execution for {}.'.format(APPLICATION, args))
         tb = traceback.format_exc()
         logging.debug(tb)
         sys.exit(-1)
-
-    logging.debug('Done {} processing.'.format(APPLICATION))

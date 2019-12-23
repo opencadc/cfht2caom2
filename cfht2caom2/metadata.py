@@ -66,101 +66,61 @@
 #
 # ***********************************************************************
 #
-import glob
-import logging
 
-from astropy.io.votable import parse_single_table
+from caom2pipe import astro_composable as ac
 
-from mock import patch
+# key is CFHT metadata
+# value is SVO url piece
+FILTER_REPAIR_LOOKUP = {
+    # MegaPrime
+    'u.MP9302': 'u_sdss',
+    'u.MP9301': 'u',
+    'CaHK.MP9303': 'CaHK',
+    'g.MP9401': 'g',
+    'g.MP9402': 'g_sdss',
+    'OIII.MP9501': 'OIII',
+    'OIII.MP9502': 'OIII_off',
+    'gri.MP9605': 'gri',
+    'Halpha.MP7604': 'Halpha_off',
+    'Halpha.MP7605': 'Halpha_on',
+    'Halpha.MP9603': 'Halpha',
+    'Halpha.MP9604': 'Halpha_Off_2',
+    'r.MP9601': 'r',
+    'r.MP9602': 'r_sdss',
+    'i.MP9701': 'i1',
+    'i.MP9702': 'i',
+    'i.MP9703': 'i_sdss',
+    'TiO.MP7701': 'TiO',
+    'CN.MP7803': 'CN',
+    'NB920.MP7902': 'NB920',
+    'z.MP9801': 'z',
+    'z.MP9901': 'z_sdss'}
 
-from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
-from cfht2caom2 import ARCHIVE
-from caom2.diff import get_differences
-from caom2pipe import manage_composable as mc
+INSTRUMENT_REPAIR_LOOKUP = {}
 
-import os
-import sys
+# CW/SF 17-12-19 - content from conversation
+# CW
+# #If no or "open" filter or pinhole mask, put in 20% on-off cuts from
+# MegaCam_QE_data.txt
+#
+CFHT_CACHE = {
+    # pinhole mask, so use full energy range
+    'PHG.MP9999': {'cw': 6200., 'fwhm': 6000.},
+    # test filter - just use full energy range
+    'N393.MP1111': {'cw': 6200., 'fwhm': 6000.},
+    # CFH12K filter
+    'OIII:MP7504': {'cw': 0.0, 'fwhm': 0.0},
+    'NONE': {'cw': 6200., 'fwhm': 6000.},
+    'OPEN': {'cw': 6200., 'fwhm': 6000.},
+    # SITELLE - not available at SVO
+    'C1': {'cw': None, 'fwhm': None},
+    'C2': {'cw': None, 'fwhm': None},
+    'C3': {'cw': None, 'fwhm': None},
+    'C4': {'cw': None, 'fwhm': None},
+    'SN1': {'cw': None, 'fwhm': None},
+    'SN2': {'cw': None, 'fwhm': None},
+    'SN3': {'cw': None, 'fwhm': None}}
 
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-TEST_DATA_DIR = os.path.join(THIS_DIR, 'data')
-PLUGIN = os.path.join(os.path.dirname(THIS_DIR), 'main_app.py')
-
-LOOKUP = {'key': ['fileid1', 'fileid2']}
-
-
-def pytest_generate_tests(metafunc):
-    # obs_id_list = []
-    # for ii in LOOKUP:
-    #     obs_id_list.append(ii)
-    obs_id_list = glob.glob(f'{TEST_DATA_DIR}/*.fits.header')
-    metafunc.parametrize('test_name', obs_id_list)
-
-
-def test_main_app(test_name):
-    basename = os.path.basename(test_name)
-    cfht_name = CFHTName(file_name=basename.replace('.header', '.fz'))
-    output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
-    obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(
-        cfht_name.obs_id))
-    expected = mc.read_obs_from_file(obs_path)
-
-    with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
-        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
-        def get_file_info(archive, file_id):
-            return {'type': 'application/fits'}
-
-        data_client_mock.return_value.get_file_info.side_effect = get_file_info
-        vo_mock.side_effect = _vo_mock
-
-        sys.argv = \
-            ('{} --no_validate --local {} --observation {} {} -o {} '
-             '--plugin {} --module {} --lineage {}'.
-             format(APPLICATION, test_name, COLLECTION,
-                    cfht_name.obs_id, output_file, PLUGIN, PLUGIN,
-                    _get_lineage(cfht_name))).split()
-        print(sys.argv)
-        try:
-            main_app._main_app()
-        except Exception as e:
-            import logging
-            import traceback
-            logging.error(traceback.format_exc())
-
-    actual = mc.read_obs_from_file(output_file)
-    result = get_differences(expected, actual, 'Observation')
-    if result:
-        msg = 'Differences found in observation {} test name {}\n{}'. \
-            format(expected.observation_id, test_name, '\n'.join(
-            [r for r in result]))
-        raise AssertionError(msg)
-    # assert False  # cause I want to see logging messages
-
-
-def _get_lineage(cfht_name):
-    # result = ''
-    # for ii in LOOKUP[obs_id]:
-    #     product_id = CFHTName.extract_product_id(ii)
-    #     fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
-    #     result = '{} {}'.format(result, fits)
-    # return result
-    return mc.get_lineage(ARCHIVE, cfht_name.product_id,
-                          f'{cfht_name.product_id}.fits.fz')
-
-
-def _get_local(test_name):
-    # result = ''
-    # for ii in LOOKUP[obs_id]:
-    #     result = '{} {}/{}.fits.header'.format(result, TEST_DATA_DIR, ii)
-    # return result
-    return f'{TEST_DATA_DIR}/{test_name}'
-
-
-def _vo_mock(url):
-    try:
-        x = url.split('/')
-        filter_name = x[-1].replace('&VERB=0', '')
-        votable = parse_single_table(
-            f'{TEST_DATA_DIR}/votable/{filter_name}.xml')
-        return votable, None
-    except Exception as e:
-        logging.error(f'get_vo_table failure for url {url}')
+filter_cache = ac.FilterMetadataCache(FILTER_REPAIR_LOOKUP,
+                                      INSTRUMENT_REPAIR_LOOKUP,
+                                      'CFHT', CFHT_CACHE, 'NONE')

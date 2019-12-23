@@ -15,15 +15,8 @@
   </caom2:proposal>
   <caom2:target>
     <caom2:name>morning flats</caom2:name>
+    <caom2:standard>false</caom2:standard>
   </caom2:target>
-  <caom2:targetPosition>
-    <caom2:coordsys>FK5</caom2:coordsys>
-    <caom2:equinox>2000.0</caom2:equinox>
-    <caom2:coordinates>
-      <caom2:cval1>247.81225</caom2:cval1>
-      <caom2:cval2>19.999556</caom2:cval2>
-    </caom2:coordinates>
-  </caom2:targetPosition>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
     <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
