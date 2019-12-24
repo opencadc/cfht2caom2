@@ -69,14 +69,17 @@
 
 import importlib
 import logging
+import math
 import os
 import sys
 import traceback
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, CompositeObservation, TypedList, Chunk
+from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
+from caom2 import SpatialWCS
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
-from caom2utils import FitsParser, get_cadc_headers
+from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
@@ -806,6 +809,11 @@ def update(observation, **kwargs):
                         if chunk.time_axis is not None:
                             chunk.time_axis = 4
 
+                        if (plane.product_id[-1] in ['a', 'o', 'x'] and
+                                chunk.position is None):
+                            _update_position(chunk, headers[idx],
+                                             observation.observation_id)
+
         if isinstance(observation, CompositeObservation):
             cc.update_plane_provenance(plane, headers[1:], 'IMCMB',
                                        COLLECTION,
@@ -900,6 +908,42 @@ def _update_observation_metadata(obs, headers, fqn):
                     part0.chunks = TypedList(Chunk, )
 
     return idx
+
+
+def _update_position(chunk, header, obs_id):
+    logging.debug(f'Begin _update_position for {obs_id}')
+    # from caom2IngestSitelle.py l894
+    obs_ra = header.get('RA_DEG')
+    obs_dec = header.get('DEC_DEG')
+    if obs_ra is None or obs_dec is None:
+        logging.error(
+            'RA_DEG {obs_ra} DEC_DEG {obs_dec} for {obs_id} are not set.')
+        return
+
+    pix_scale2 = mc.to_float(header.get('PIXSCAL2'))
+    delta_dec = (1024.0 * pix_scale2) / 3600.0
+    obs_dec_bl = obs_dec - delta_dec
+    obs_dec_tr = obs_dec + delta_dec
+
+    pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
+    # obs_dec_tr == obs_dec_tl
+    delta_ra_top = (1024.0 * pix_scale1) / (
+                3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0)))
+    delta_ra_bot = (1024.0 * pix_scale1) / (
+                3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0)))
+    obs_ra_bl = obs_ra + delta_ra_bot
+    obs_ra_tr = obs_ra - delta_ra_top
+
+    axis = CoordAxis2D(Axis('RA', 'deg'), Axis('DEC', 'deg'))
+    axis.range = CoordRange2D(Coord2D(RefCoord(0.5, obs_ra_bl),
+                                      RefCoord(0.5, obs_dec_bl)),
+                              Coord2D(RefCoord(2048.5, obs_ra_tr),
+                                      RefCoord(2048.5, obs_dec_tr)))
+    position = SpatialWCS(axis)
+    position.coordsys = 'FK5'
+    position.equinox = 2000.0
+    chunk.position = position
+    logging.debug(f'End _update_position for {obs_id}')
 
 
 def _build_blueprints(uris):
