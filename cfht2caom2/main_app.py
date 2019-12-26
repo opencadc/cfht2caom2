@@ -77,7 +77,7 @@ import traceback
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, CompositeObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
-from caom2 import SpatialWCS
+from caom2 import SpatialWCS, DataProductType
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
@@ -113,7 +113,7 @@ class CFHTName(mc.StorageName):
     def __init__(self, obs_id=None, fname_on_disk=None, file_name=None):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
-        # including the .fz to indicate compresssion
+        # including the .fz to indicate compression
         super(CFHTName, self).__init__(
             None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
             compression='')
@@ -163,6 +163,11 @@ class CFHTName(mc.StorageName):
     def is_raw(file_id):
         return file_id[-1] in ['a', 'b', 'c', 'd', 'f', 'l', 'o', 'x']
 
+    @staticmethod
+    def get_suffix(uri):
+        file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
+        return file_id[-1]
+
 
 def get_calibration_level(uri):
     ignore_scheme, ignore_archive, file_name = mc.decompose_uri(uri)
@@ -176,16 +181,31 @@ def get_calibration_level(uri):
 def get_energy_ctype(header):
     result = None
     if _has_energy(header):
-        result = 'WAVE'
+        result = header.get('CTYPE3')
+        if result is None:
+            result = 'WAVE'
     return result
 
 
-def get_energy_function_delta(header):
+def get_energy_cunit(header):
     result = None
     if _has_energy(header):
-        if _is_sitelle_energy(header):
-            # units in file are nm, units in blueprint are Angstroms
-            result = 10.0 * mc.to_float(header.get('FILTERBW'))
+        result = header.get('CUNIT3')
+        if result is None:
+            result = 'Angstrom'
+    return result
+
+
+def get_energy_function_delta(params):
+    result = None
+    header = params.get('header')
+    uri = params.get('uri')
+    if _has_energy(header):
+        if _is_sitelle_energy(header, uri):
+            result = header.get('CDELT3')
+            if result is None:
+                # units in file are nm, units in blueprint are Angstroms
+                result = 10.0 * mc.to_float(header.get('FILTERBW'))
         else:
             filter_name = header.get('FILTER')
             instrument = _get_instrument(header)
@@ -194,21 +214,41 @@ def get_energy_function_delta(header):
     return result
 
 
-def get_energy_function_pix(header):
-    result = None
-    if _has_energy(header):
-        result = 1.0
-        if _is_sitelle_energy(header):
-            result = 0.5
+def get_energy_function_naxis(params):
+    result = 1.0
+    header = params.get('header')
+    uri = params.get('uri')
+    if _is_sitelle_energy(header, uri):
+        result = header.get('NAXIS3')
+        if result is None:
+            result = 1.0
     return result
 
 
-def get_energy_function_val(header):
+def get_energy_function_pix(params):
     result = None
+    header = params.get('header')
+    uri = params.get('uri')
     if _has_energy(header):
-        if _is_sitelle_energy(header):
-            # units in file are nm, units in blueprint are Angstroms
-            result = 10.0 * mc.to_float(header.get('FILTERLB'))
+        result = 1.0
+        if _is_sitelle_energy(header, uri):
+            result = header.get('CRPIX3')
+            if result is None:
+                result = 0.5
+    return result
+
+
+def get_energy_function_val(params):
+    result = None
+    logging.error('val called')
+    header = params.get('header')
+    uri = params.get('uri')
+    if _has_energy(header):
+        if _is_sitelle_energy(header, uri):
+            result = header.get('CRVAL3')
+            if result is None:
+                # units in file are nm, units in blueprint are Angstroms
+                result = 10.0 * mc.to_float(header.get('FILTERLB'))
         else:
             filter_name = header.get('FILTER')
             instrument = _get_instrument(header)
@@ -217,11 +257,12 @@ def get_energy_function_val(header):
     return result
 
 
-def get_energy_resolving_power(header):
+def get_energy_resolving_power(params):
     result = None
+    header = params.get('header')
     if _has_energy(header):
-        delta = get_energy_function_delta(header)
-        val = get_energy_function_val(header)
+        delta = get_energy_function_delta(params)
+        val = get_energy_function_val(params)
         result = None
         if delta is not None and val is not None:
             result = val/delta
@@ -419,7 +460,6 @@ def get_time_refcoord_val_cal(header):
         if dt_str is None:
             dt_str = header.get('DATE')
     mjd_obs = ac.get_datetime(dt_str)
-    logging.error(f'dt_str {dt_str} mjd_obs {mjd_obs}')
     return mjd_obs
 
 
@@ -474,13 +514,12 @@ def _has_energy(header):
     return obs_type not in ['BIAS', 'DARK']
 
 
-def _is_sitelle_energy(header):
+def _is_sitelle_energy(header, uri):
     instrument = _get_instrument(header)
     result = False
     if instrument == 'SITELLE':
-        file_name = _get_filename(header)
-        if (file_name is not None and
-                file_name[-1] in ['o', 'f', 'a', 'x', 'c']):
+        suffix = CFHTName.get_suffix(uri)
+        if suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
             result = True
     return result
 
@@ -514,12 +553,16 @@ def accumulate_bp(bp, uri):
     bp.clear('Observation.sequenceNumber')
     if CFHTName.is_raw(file_id):
         bp.add_fits_attribute('Observation.sequenceNumber', 'EXPNUM')
+    else:
+        # this is currently only true for SITELLE processed, which only
+        # works in this bit of code because the SITELLE scan obs ids keep their
+        # trailing 'p'
+        bp.set('Observation.sequenceNumber', file_id[:-1])
 
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
     bp.clear('Observation.environment.humidity')
     bp.add_fits_attribute('Observation.environment.humidity', 'RELHUMID')
-    # bp.set('Observation.environment.photometric', False)
 
     # TODO title is select title from runid_title where proposal_id = 'runid'
     bp.clear('Observation.proposal.id')
@@ -572,6 +615,7 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
     bp.clear('Plane.provenance.version')
     bp.add_fits_attribute('Plane.provenance.version', 'EL_SYS')
+    bp.add_fits_attribute('Plane.provenance.version', 'ORBSVER')
 
     bp.set('Artifact.productType', 'get_product_type(header)')
 
@@ -658,25 +702,24 @@ def accumulate_bp(bp, uri):
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
     #
     bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
-    bp.set('Chunk.energy.axis.axis.cunit', 'Angstrom')
+    bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
     bp.set('Chunk.energy.axis.error.rnder', 1.0)
     bp.set('Chunk.energy.axis.error.syser', 1.0)
     bp.set('Chunk.energy.axis.function.delta',
-           'get_energy_function_delta(header)')
-    bp.set('Chunk.energy.axis.function.naxis', 1)
+           'get_energy_function_delta(params)')
+    bp.set('Chunk.energy.axis.function.naxis',
+           'get_energy_function_naxis(params)')
     bp.set('Chunk.energy.axis.function.refCoord.pix',
-           'get_energy_function_pix(header)')
+           'get_energy_function_pix(params)')
     bp.set('Chunk.energy.axis.function.refCoord.val',
-           'get_energy_function_val(header)')
+           'get_energy_function_val(params)')
     bp.clear('Chunk.energy.bandpassName')
     bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
-    bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(header)')
+    bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(params)')
     bp.set('Chunk.energy.specsys', 'TOPOCENT')
     bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
     bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
 
-    # bp.set_default('Chunk.position.axis.axis1.ctype', 'RA')
-    # bp.set_default('Chunk.position.axis.axis2.ctype', 'DEC')
     bp.set('Chunk.position.axis.axis1.cunit', 'deg')
     bp.set('Chunk.position.axis.axis2.cunit', 'deg')
     bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
@@ -730,11 +773,15 @@ def update(observation, **kwargs):
         fqn = kwargs['fqn']
 
     # processed files
-    if (cc.is_composite(headers) and not
-            isinstance(observation, CompositeObservation)):
-        logging.info('{} is a Composite Observation.'.format(
+    is_composite, composite_type = _is_composite(
+        headers, observation.observation_id)
+    if is_composite and not isinstance(observation, CompositeObservation):
+        logging.info('{} will be changed to a Composite Observation.'.format(
             observation.observation_id))
-        observation = cc.change_to_composite(observation, 'master_detrend')
+        algorithm_name = 'master_detrend'
+        if observation.observation_id[-1] == 'p':
+            algorithm_name = 'scan'
+        observation = cc.change_to_composite(observation, algorithm_name)
 
     idx = _update_observation_metadata(observation, headers, fqn)
     ccdbin = headers[idx].get('CCBIN1')
@@ -744,6 +791,11 @@ def update(observation, **kwargs):
     instrument = _get_instrument(headers[idx])
 
     for plane in observation.planes.values():
+        if observation.algorithm.name == 'scan':
+            plane.data_product_type = DataProductType.CUBE
+            if plane.provenance is not None:
+                plane.provenance.last_executed = mc.make_time(
+                    headers[idx].get('DATE'))
         for artifact in plane.artifacts.values():
             if (get_calibration_level(artifact.uri) ==
                     CalibrationLevel.RAW_STANDARD):
@@ -815,10 +867,16 @@ def update(observation, **kwargs):
                                              observation.observation_id)
 
         if isinstance(observation, CompositeObservation):
-            cc.update_plane_provenance(plane, headers[1:], 'IMCMB',
-                                       COLLECTION,
-                                       _repair_provenance_value,
-                                       observation.observation_id)
+            if composite_type == 'IMCMB':
+                cc.update_plane_provenance(plane, headers[1:],
+                                           composite_type, COLLECTION,
+                                           _repair_imcmb_provenance_value,
+                                           observation.observation_id)
+            else:
+                cc.update_plane_provenance_single(
+                    plane, headers, composite_type, COLLECTION,
+                    _repair_comment_provenance_value,
+                    observation.observation_id)
 
     # relies on update_plane_provenance being called
     if isinstance(observation, CompositeObservation):
@@ -826,6 +884,22 @@ def update(observation, **kwargs):
 
     logging.debug('Done update.')
     return observation
+
+
+def _is_composite(headers, obs_id):
+    result = False
+    composite_type = ''
+    if cc.is_composite(headers):
+        result = True
+        composite_type = 'IMCMB'
+    else:
+        file_type = headers[0].get('FILETYPE')
+        if file_type is not None and 'alibrat' in file_type:
+            logging.info(
+                f'Treating {obs_id} with filetype {file_type} as composite. ')
+            result = True
+            composite_type = 'COMMENT'
+    return result, composite_type
 
 
 def _update_observation_metadata(obs, headers, fqn):
@@ -982,7 +1056,25 @@ def _get_uris(args):
     return result
 
 
-def _repair_provenance_value(value, obs_id):
+def _repair_comment_provenance_value(value, obs_id):
+    results = []
+    # COMMENT headers with provenance:
+    # COMMENT Scan member=2445653o st=174 iq=1.2200 bk=5.5214 ex=0.024000 ...
+    # COMMENT Flat member=2445211f
+    # COMMENT Standard member=2445849o
+    if 'member=' in str(value):
+        for entry in value:
+            if 'Scan member' in entry:
+                temp = str(entry).split('member=')
+                prov_prod_id = temp[1].split()[0]
+                prov_obs_id = CFHTName(file_name=prov_prod_id).obs_id
+                # 0 - observation
+                # 1 - plane
+                results.append([prov_obs_id, prov_prod_id])
+    return results
+
+
+def _repair_imcmb_provenance_value(value, obs_id):
     prov_obs_id = None
     prov_prod_id = None
     # CFHT files contain other IMCMB headers that look like this - ignore

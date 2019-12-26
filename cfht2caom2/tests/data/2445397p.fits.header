@@ -1,0 +1,422 @@
+SIMPLE  =                    T / conforms to FITS standard                      
+BITPIX  =                  -32 / array data type                                
+NAXIS   =                    3 / number of array dimensions                     
+NAXIS1  =                 2048                                                  
+NAXIS2  =                 2064                                                  
+NAXIS3  =                  219                                                  
+EXTEND  =                    T                                                  
+DATE    = '2019-10-24'         / Creation date                                  
+MASK    = 'False   '                                                            
+FILETYPE= 'Calibrated Spectrum Cube' / Type of file                             
+OBSERVAT= 'CFHT    '           / Observatory name                               
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+INSTRUME= 'SITELLE '           / Instrument Name                                
+ORBSVER = '' / ORBS version                                                     
+OPTNAME = 'M31_Field1_SN2_19B' / Name of the option file                        
+OBJECT  = 'M31_Field1'         / Object Name                                    
+EXPTIME =                 45.5 / Integration time (seconds)                     
+FILTER  = 'SN2     '           / description of filter                          
+ORDER   =                  6.0 / Order of spectral folding                      
+STEP    =          1679.956544 / Step size in nm                                
+STEPNB  =                  219 / Number of steps                                
+TARGETR = '0:44:9.96'          / Target Right Ascension                         
+TARGETD = '+41:36:41.80'       / Target Declination                             
+TARGETX =               1023.5 / Target estimated X coordinate                  
+TARGETY =               1031.5 / Target estimated Y coordinate                  
+CAMERA  = 'MERGED_DATA'        / Merged data from CAM1 and CAM2                 
+BINNING =                    1 / Binning of the camera                          
+CALIBNM =                543.5 / Wavelength of the calibration laser in nm      
+CALIBOR =                   11 / Folding order of the calibration laser cube    
+CALIBST =             3255.231 / Step size of the calibration laser cube        
+WCSAXES =                    3 / Number of coordinate axes                      
+CTYPE1  = 'RA---TAN-SIP'       / TAN (gnomonic) projection + SIP distortions    
+CRVAL1  =              11.0415 / [deg] Coordinate value at reference point      
+CUNIT1  = 'deg     '           / Units of coordinate increment and value        
+CRPIX1  =        1077.08705104 / Pixel coordinate of reference point            
+CTYPE2  = 'DEC--TAN-SIP'       / TAN (gnomonic) projection + SIP distortions    
+CRVAL2  =        41.6116111111 / [deg] Coordinate value at reference point      
+CUNIT2  = 'deg     '           / Units of coordinate increment and value        
+CRPIX2  =        1031.05512298 / Pixel coordinate of reference point            
+WAVTYPE = 'WAVENUMBER'         / Spectral axis type: wavenumber or wavelength   
+CTYPE3  = 'WAVN    '           / wavenumber in cm-1                             
+CRVAL3  =    18539.43700462575 / Minimum wavenumber in cm-1                     
+CUNIT3  = 'cm-1    '                                                            
+CRPIX3  =                  1.0 / Pixel coordinate of reference point            
+CDELT3  =    14.10916058190698 / cm-1 per pixel                                 
+APODIZ  = '1.0     '           / Apodization function                           
+AXISCORR=    1.038181617266559 / Spectral axis correction coeff                 
+CD1_1   =   -8.75818069728E-05 / Coordinate transformation matrix element       
+CD1_2   = -9.8298326631199E-07 / Coordinate transformation matrix element       
+CD2_1   = -9.8298326631199E-07 / Coordinate transformation matrix element       
+CD2_2   =    8.75818069728E-05 / Coordinate transformation matrix element       
+RADESYS = 'FK5     '           / Equatorial coordinate system                   
+EQUINOX =               2000.0 / Equinox of coordinates                         
+BP_0_0  =    0.415569113117507                                                  
+BP_0_1  = -0.00883399043982210                                                  
+A_3_1   = 2.25602069449593E-12                                                  
+A_3_0   = -1.2926245763466E-08                                                  
+BP_0_4  = -1.1582297852147E-12                                                  
+BP_0_2  = 9.07219182333373E-07                                                  
+B_3_0   = 4.59008386165433E-10                                                  
+B_3_1   = 4.10558410086939E-12                                                  
+BP_1_2  = 6.93705049974683E-10                                                  
+BP_3_1  = -4.1055841008693E-12                                                  
+BP_3_0  = -4.5900838616543E-10                                                  
+BP_2_2  = -3.0039899815069E-12                                                  
+BP_1_1  = 1.39511691111306E-06                                                  
+B_1_2   = -6.9370504997468E-10                                                  
+B_1_3   = -5.5772736089372E-13                                                  
+B_1_0   = 0.000201304911638065                                                  
+B_1_1   = -1.3951169111130E-06                                                  
+B_2_1   = -1.3537952746850E-08                                                  
+B_2_0   = -4.2357618613837E-07                                                  
+BP_2_1  = 1.35379527468507E-08                                                  
+B_2_2   = 3.00398998150694E-12                                                  
+BP_1_3  = 5.57727360893723E-13                                                  
+B_ORDER =                    4                                                  
+A_ORDER =                    4                                                  
+B_0_4   = 1.15822978521471E-12                                                  
+B_0_3   = -1.2164702078479E-08                                                  
+B_0_2   = -9.0721918233337E-07                                                  
+B_0_1   = 0.008833990439822109                                                  
+B_0_0   =   -0.415569113117507                                                  
+BP_0_3  = 1.21647020784798E-08                                                  
+A_4_0   = 1.75854071575104E-12                                                  
+BP_ORDER=                    4                                                  
+AP_4_0  = -1.7585407157510E-12                                                  
+B_4_0   = 2.23141742550967E-13                                                  
+BP_4_0  = -2.2314174255096E-13                                                  
+AP_ORDER=                    4                                                  
+BP_2_0  = 4.23576186138377E-07                                                  
+AP_3_0  = 1.29262457634662E-08                                                  
+AP_3_1  = -2.2560206944959E-12                                                  
+A_1_1   = -2.6471357727605E-06                                                  
+A_1_0   =  0.00953015319812428                                                  
+A_1_3   = 3.23608713003676E-12                                                  
+A_1_2   = -1.4129188665278E-08                                                  
+A_0_4   = 1.91077014428633E-14                                                  
+AP_2_2  = -8.0059093837403E-13                                                  
+AP_2_1  = 6.88423700180385E-10                                                  
+AP_2_0  = 1.69839712937398E-07                                                  
+A_0_0   =    1.154409494778175                                                  
+A_0_1   = -0.00012684837496531                                                  
+A_0_2   = -4.7686400037644E-08                                                  
+A_0_3   = -1.5941450986083E-10                                                  
+A_2_2   = 8.00590938374038E-13                                                  
+BP_1_0  = -0.00020130491163806                                                  
+A_2_0   = -1.6983971293739E-07                                                  
+A_2_1   = -6.8842370018038E-10                                                  
+AP_1_0  = -0.00953015319812428                                                  
+AP_1_1  = 2.64713577276058E-06                                                  
+AP_1_2  = 1.41291886652782E-08                                                  
+AP_1_3  = -3.2360871300367E-12                                                  
+AP_0_4  = -1.9107701442863E-14                                                  
+AP_0_1  = 0.000126848374965313                                                  
+AP_0_0  =   -1.154409494778175                                                  
+AP_0_3  = 1.59414509860832E-10                                                  
+AP_0_2  = 4.76864000376445E-08                                                  
+STDNAME = 'GD108   '           / Name of the standard star                      
+STDPATH = 'GD108_SN2.merged.s' / Path to the standard star file                 
+FLAMBDA = 1.32288250227478E-16 / mean energy/ADU [erg/cm^2/A/ADU]               
+BSCALE  =                1E+17 / Normalisation factor for FITS readout          
+BUNIT   = 'FLUX    '           / 1e-17 Flux unit [erg/cm^2/s/A]                 
+ZPDINDEX=                   44                                                  
+WAVCALIB=                    T                                                  
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Laurie Rousseau-Nepton'                                              
+RUNID   = '19BP41  '                                                            
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+PIXSIZE =                   15 / Pixel size for both axes (microns)             
+PIXSCAL1=                0.322 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=                0.322 / Pixel scale for axis 2 (arcsec/pixel)          
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+OBSTYPE = 'OBJECT  '           / Observation / Exposure type                    
+OBJNAME = 'M31_Field1'         / Target name                                    
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '0:44:09.96'         / Target right ascension                         
+OBJDEC  = '41:36:41.8'         / Target declination                             
+OBJRAPM =                  0.0 / Target right ascension proper motion in as/yr  
+OBJDECPM=                  0.0 / Target declination proper motion in as/yr      
+FOCUSID = 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+INSTMODE= 'SCAN    '           / Instrument Mode                                
+FILTERID=                    5 / wheel position                                 
+FILTERBW=                 31.0 / filter bandwidth (nm)                          
+FILTERWL=                497.5 / filter wavelength (nm)                         
+FILTERLB=                482.0 / lower bound of filter (nm)                     
+FILTERUB=                513.0 / upper bound of filter (nm)                     
+SITRESOL=               1000.0 / Requested resolving power (R) for scan         
+SITLAMIN=                484.0 / Requested minimum lambda for scan (nanometers) 
+QRUNID  = '19BQ06  '           / queue run id                                   
+QOBSERVE= 'Callie Crowder'     / queue observer                                 
+QCOORD  = 'Simon Prunet'       / queue coordinator                              
+QID     = 55700500000000068450 / queue id                                       
+QOBSEQID= 55301400000000298341 / queue ob sequence id                           
+QICSEQID= 55351200000000333745 / queue ic sequence id                           
+REL_DATE= '2019-10-01T00:00:00' / queue release date                            
+QOGLABEL= 'OG13    '           / queue observing group label                    
+QOBLABEL= 'OB12    '           / queue observing block label                    
+QICLABEL= 'IC2     '           / queue instrument configuration label           
+CRUNID  = '19Bs02  '           / Elixir camera run ID                           
+DATE-OBS= '2019-10-01'         / Date at start of observation (UTC)             
+UTIME   = '8:00:40.95'         / Time at start of observation (UTC)             
+UTC-OBS = '8:00:40.95'         / Time at start of observation (UTC)             
+TIME-OBS= '8:00:42.108'        / Time at start of observation (UTC)             
+MJDATE  =        58757.3338073 / Modified Julian Date at start of observation   
+MJD-OBS =        58757.3338073 / Modified Julian Date at start of observation   
+SIDTIME = '22:17:53.53'        / Sidereal time at start of observation          
+LST-OBS = '22:17:53.53'        / Sidereal time at start of exposure             
+DATEEND = '2019-10-01'         / Date at end of observation (UTC)               
+UTCEND  = '11:44:42.25'        / Time at end of observation (UTC)               
+TIMEEND = '11:44:42.144'       / Time at end of observation (UTC)               
+MJDEND  =        58757.4893779 / Modified Julian Date at end of observation     
+LSTEND  = '2:02:31.63'         / Sidereal time at end of exposure               
+LASERPOS= 'zenith  '           / If zenith or target laser map used             
+LASERMOD= 'cam1    '           / If merged or cam1 laser map used               
+PHASEPOS= 'none    '           / If zenith or target phase map used, or none    
+PHASEMOD= 'none    '           / If merged or cam1 phase map used, or none      
+OBJMASK1= 'none    '           / Mask file used for cam1                        
+OBJMASK2= 'none    '           / Mask file used for cam2                        
+COMMENT Scan member=2445397o st=-44 iq=0.9580 bk=5.3645 ex=0.000000 px=0.0000   
+COMMENT Scan member=2445398o st=-43 iq=1.0430 bk=5.3937 ex=0.006000 px=0.1770   
+COMMENT Scan member=2445399o st=-42 iq=0.9660 bk=5.3527 ex=-0.001000 px=0.1660  
+COMMENT Scan member=2445400o st=-41 iq=0.8650 bk=5.3591 ex=-0.007000 px=0.3420  
+COMMENT Scan member=2445401o st=-40 iq=0.8270 bk=5.3300 ex=0.000000 px=0.3290   
+COMMENT Scan member=2445402o st=-39 iq=0.8350 bk=5.3275 ex=-0.004000 px=0.1910  
+COMMENT Scan member=2445403o st=-38 iq=0.7550 bk=5.3736 ex=-0.006000 px=0.0520  
+COMMENT Scan member=2445404o st=-37 iq=0.7450 bk=5.3233 ex=-0.013000 px=0.1920  
+COMMENT Scan member=2445405o st=-36 iq=0.7420 bk=5.3527 ex=-0.005000 px=0.2890  
+COMMENT Scan member=2445406o st=-35 iq=0.7790 bk=5.3356 ex=-0.009000 px=0.0840  
+COMMENT Scan member=2445407o st=-34 iq=0.8280 bk=5.3552 ex=-0.024000 px=0.2370  
+COMMENT Scan member=2445408o st=-33 iq=0.8250 bk=5.3652 ex=-0.010000 px=0.1440  
+COMMENT Scan member=2445409o st=-32 iq=0.7440 bk=5.3382 ex=-0.006000 px=0.1640  
+COMMENT Scan member=2445410o st=-31 iq=0.7120 bk=5.3317 ex=-0.011000 px=0.3580  
+COMMENT Scan member=2445411o st=-30 iq=0.8040 bk=5.3442 ex=-0.008000 px=0.5750  
+COMMENT Scan member=2445412o st=-29 iq=0.9110 bk=5.3541 ex=-0.002000 px=1.0200  
+COMMENT Scan member=2445413o st=-28 iq=0.9370 bk=5.3258 ex=-0.010000 px=0.5870  
+COMMENT Scan member=2445414o st=-27 iq=0.9590 bk=5.3517 ex=-0.014000 px=0.7740  
+COMMENT Scan member=2445415o st=-26 iq=0.9420 bk=5.3410 ex=-0.011000 px=1.0110  
+COMMENT Scan member=2445416o st=-25 iq=0.8920 bk=5.3666 ex=-0.008000 px=1.3600  
+COMMENT Scan member=2445417o st=-24 iq=0.8680 bk=5.3446 ex=-0.018000 px=0.9160  
+COMMENT Scan member=2445418o st=-23 iq=0.9430 bk=5.3494 ex=-0.004000 px=0.5000  
+COMMENT Scan member=2445419o st=-22 iq=0.9840 bk=5.3314 ex=-0.007000 px=0.6620  
+COMMENT Scan member=2445420o st=-21 iq=0.9250 bk=5.3090 ex=-0.019000 px=1.2830  
+COMMENT Scan member=2445421o st=-20 iq=0.8960 bk=5.3359 ex=-0.016000 px=0.8980  
+COMMENT Scan member=2445422o st=-19 iq=0.9190 bk=5.3362 ex=-0.011000 px=0.8300  
+COMMENT Scan member=2445423o st=-18 iq=0.9700 bk=5.3554 ex=-0.007000 px=0.7690  
+COMMENT Scan member=2445424o st=-17 iq=1.0560 bk=5.3794 ex=-0.009000 px=1.1660  
+COMMENT Scan member=2445425o st=-16 iq=1.0030 bk=5.3349 ex=-0.016000 px=2.1490  
+COMMENT Scan member=2445426o st=-15 iq=0.9740 bk=5.3459 ex=-0.013000 px=1.6620  
+COMMENT Scan member=2445427o st=-14 iq=1.0320 bk=5.3510 ex=-0.016000 px=1.4490  
+COMMENT Scan member=2445438o st=-13 iq=1.1370 bk=5.3613 ex=-0.017000 px=1.3340  
+COMMENT Scan member=2445439o st=-12 iq=1.1020 bk=5.3669 ex=-0.011000 px=1.2230  
+COMMENT Scan member=2445440o st=-11 iq=1.1670 bk=5.3673 ex=-0.010000 px=1.3900  
+COMMENT Scan member=2445441o st=-10 iq=1.0880 bk=5.3426 ex=-0.017000 px=1.1110  
+COMMENT Scan member=2445442o st=-9 iq=1.0950 bk=5.3595 ex=-0.021000 px=1.3390   
+COMMENT Scan member=2445443o st=-8 iq=1.0010 bk=5.3544 ex=-0.036000 px=1.2330   
+COMMENT Scan member=2445444o st=-7 iq=0.9200 bk=5.3641 ex=-0.029000 px=1.3130   
+COMMENT Scan member=2445445o st=-6 iq=0.9660 bk=5.3674 ex=-0.029000 px=1.3810   
+COMMENT Scan member=2445446o st=-5 iq=0.9690 bk=5.3946 ex=-0.025000 px=1.3970   
+COMMENT Scan member=2445447o st=-4 iq=1.0850 bk=5.3550 ex=-0.024000 px=1.2930   
+COMMENT Scan member=2445448o st=-3 iq=1.0990 bk=5.3677 ex=-0.010000 px=1.3400   
+COMMENT Scan member=2445449o st=-2 iq=1.1150 bk=5.3741 ex=-0.005000 px=0.5620   
+COMMENT Scan member=2445450o st=-1 iq=1.0260 bk=5.3760 ex=0.002000 px=1.1970    
+COMMENT Scan member=2445451o st=0 iq=1.0310 bk=5.3963 ex=-0.051000 px=1.5800    
+COMMENT Scan member=2445452o st=1 iq=0.9950 bk=5.3922 ex=0.004000 px=1.4570     
+COMMENT Scan member=2445453o st=2 iq=1.0820 bk=5.3980 ex=0.016000 px=1.2780     
+COMMENT Scan member=2445454o st=3 iq=1.0970 bk=5.3668 ex=0.012000 px=0.9290     
+COMMENT Scan member=2445455o st=4 iq=1.1370 bk=5.3857 ex=0.016000 px=1.7320     
+COMMENT Scan member=2445456o st=5 iq=1.0580 bk=5.3626 ex=0.004000 px=1.4420     
+COMMENT Scan member=2445457o st=6 iq=1.1810 bk=5.4194 ex=0.015000 px=1.2600     
+COMMENT Scan member=2445458o st=7 iq=1.2490 bk=5.4001 ex=0.014000 px=1.3780     
+COMMENT Scan member=2445459o st=8 iq=1.2400 bk=5.3969 ex=0.022000 px=1.5180     
+COMMENT Scan member=2445460o st=9 iq=1.2000 bk=5.4282 ex=0.028000 px=1.8460     
+COMMENT Scan member=2445461o st=10 iq=1.3140 bk=5.3912 ex=0.020000 px=1.3120    
+COMMENT Scan member=2445462o st=11 iq=1.2660 bk=5.4213 ex=0.012000 px=0.8260    
+COMMENT Scan member=2445463o st=12 iq=1.3060 bk=5.4163 ex=0.018000 px=1.2210    
+COMMENT Scan member=2445464o st=13 iq=1.2910 bk=5.4368 ex=0.012000 px=1.0110    
+COMMENT Scan member=2445465o st=14 iq=1.2930 bk=5.4190 ex=0.011000 px=1.0340    
+COMMENT Scan member=2445466o st=15 iq=1.2060 bk=5.4071 ex=0.014000 px=0.8440    
+COMMENT Scan member=2445467o st=16 iq=1.4440 bk=5.4546 ex=0.036000 px=0.8290    
+COMMENT Scan member=2445468o st=17 iq=1.4130 bk=5.4497 ex=0.038000 px=1.6910    
+COMMENT Scan member=2445469o st=18 iq=1.2530 bk=5.4363 ex=0.018000 px=1.5670    
+COMMENT Scan member=2445470o st=19 iq=1.2500 bk=5.4401 ex=0.007000 px=0.9730    
+COMMENT Scan member=2445471o st=20 iq=1.2330 bk=5.4533 ex=0.005000 px=0.8130    
+COMMENT Scan member=2445472o st=21 iq=1.1440 bk=5.4586 ex=0.010000 px=1.1890    
+COMMENT Scan member=2445473o st=22 iq=1.1510 bk=5.4478 ex=0.007000 px=1.2830    
+COMMENT Scan member=2445474o st=23 iq=1.2200 bk=5.4431 ex=0.013000 px=1.2900    
+COMMENT Scan member=2445475o st=24 iq=1.3880 bk=5.4731 ex=0.020000 px=0.9280    
+COMMENT Scan member=2445476o st=25 iq=1.2680 bk=5.4659 ex=0.023000 px=1.9160    
+COMMENT Scan member=2445477o st=26 iq=1.2030 bk=5.4266 ex=0.019000 px=1.9790    
+COMMENT Scan member=2445478o st=27 iq=1.0860 bk=5.4135 ex=0.013000 px=1.5450    
+COMMENT Scan member=2445479o st=28 iq=1.3220 bk=5.4644 ex=0.017000 px=1.1630    
+COMMENT Scan member=2445480o st=29 iq=1.1400 bk=5.4468 ex=0.018000 px=1.4960    
+COMMENT Scan member=2445481o st=30 iq=1.1470 bk=5.4477 ex=0.015000 px=1.5660    
+COMMENT Scan member=2445482o st=31 iq=1.2010 bk=5.4247 ex=0.015000 px=1.4450    
+COMMENT Scan member=2445483o st=32 iq=1.0550 bk=5.4482 ex=0.010000 px=1.1010    
+COMMENT Scan member=2445484o st=33 iq=1.0080 bk=5.4763 ex=0.010000 px=1.3660    
+COMMENT Scan member=2445485o st=34 iq=1.1030 bk=5.4720 ex=0.015000 px=1.6590    
+COMMENT Scan member=2445486o st=35 iq=1.1260 bk=5.4727 ex=0.017000 px=1.4830    
+COMMENT Scan member=2445487o st=36 iq=1.0810 bk=5.4492 ex=0.010000 px=1.0120    
+COMMENT Scan member=2445488o st=37 iq=1.1580 bk=5.4577 ex=0.005000 px=1.6060    
+COMMENT Scan member=2445489o st=38 iq=1.0600 bk=5.4696 ex=0.012000 px=40.9270   
+COMMENT Scan member=2445490o st=39 iq=1.0650 bk=5.4686 ex=0.009000 px=1.3520    
+COMMENT Scan member=2445491o st=40 iq=0.9870 bk=5.4688 ex=0.013000 px=1.5080    
+COMMENT Scan member=2445492o st=41 iq=1.1150 bk=5.4754 ex=0.018000 px=1.6690    
+COMMENT Scan member=2445493o st=42 iq=1.1590 bk=5.4776 ex=0.023000 px=1.8020    
+COMMENT Scan member=2445494o st=43 iq=1.3160 bk=5.4291 ex=0.019000 px=1.6480    
+COMMENT Scan member=2445495o st=44 iq=1.3270 bk=5.4816 ex=0.013000 px=1.0380    
+COMMENT Scan member=2445496o st=45 iq=1.1440 bk=5.4555 ex=0.011000 px=1.4670    
+COMMENT Scan member=2445497o st=46 iq=1.1850 bk=5.4586 ex=0.015000 px=1.4550    
+COMMENT Scan member=2445498o st=47 iq=1.2810 bk=5.4627 ex=0.015000 px=1.4180    
+COMMENT Scan member=2445499o st=48 iq=1.1860 bk=5.4657 ex=0.002000 px=1.1590    
+COMMENT Scan member=2445500o st=49 iq=1.1590 bk=5.4723 ex=0.004000 px=1.2720    
+COMMENT Scan member=2445501o st=50 iq=1.1100 bk=5.4566 ex=0.013000 px=1.6660    
+COMMENT Scan member=2445502o st=51 iq=1.1610 bk=5.4894 ex=0.017000 px=1.6010    
+COMMENT Scan member=2445503o st=52 iq=1.0890 bk=5.4514 ex=0.004000 px=0.9740    
+COMMENT Scan member=2445504o st=53 iq=0.9940 bk=5.4616 ex=0.003000 px=1.5280    
+COMMENT Scan member=2445505o st=54 iq=0.8970 bk=5.4649 ex=0.011000 px=1.4950    
+COMMENT Scan member=2445506o st=55 iq=0.9510 bk=5.4244 ex=0.007000 px=1.3280    
+COMMENT Scan member=2445507o st=56 iq=0.8650 bk=5.4420 ex=-0.003000 px=0.9810   
+COMMENT Scan member=2445508o st=57 iq=0.9010 bk=5.4406 ex=0.003000 px=0.9890    
+COMMENT Scan member=2445509o st=58 iq=1.0380 bk=5.4630 ex=0.012000 px=1.5970    
+COMMENT Scan member=2445510o st=59 iq=0.9820 bk=5.4588 ex=0.003000 px=1.1880    
+COMMENT Scan member=2445511o st=60 iq=0.9630 bk=5.4935 ex=-0.021000 px=0.9260   
+COMMENT Scan member=2445512o st=61 iq=0.9540 bk=5.4731 ex=0.007000 px=0.9710    
+COMMENT Scan member=2445513o st=62 iq=1.1790 bk=5.4742 ex=0.016000 px=1.4440    
+COMMENT Scan member=2445514o st=63 iq=1.2640 bk=5.5023 ex=0.014000 px=1.0770    
+COMMENT Scan member=2445515o st=64 iq=1.4180 bk=5.4746 ex=-0.004000 px=0.4520   
+COMMENT Scan member=2445516o st=65 iq=1.1600 bk=5.4472 ex=-0.017000 px=1.8680   
+COMMENT Scan member=2445517o st=66 iq=1.2170 bk=5.4340 ex=-0.022000 px=1.6450   
+COMMENT Scan member=2445518o st=67 iq=1.1210 bk=5.4468 ex=-0.027000 px=1.8180   
+COMMENT Scan member=2445519o st=68 iq=1.0960 bk=5.4253 ex=-0.026000 px=2.9260   
+COMMENT Scan member=2445520o st=69 iq=0.9470 bk=5.4030 ex=-0.018000 px=4.9450   
+COMMENT Scan member=2445521o st=70 iq=1.0970 bk=5.4312 ex=0.017000 px=5.4670    
+COMMENT Scan member=2445522o st=71 iq=1.0650 bk=5.4332 ex=0.077000 px=6.3360    
+COMMENT Scan member=2445546o st=79 iq=1.4190 bk=5.5398 ex=0.001000 px=1.5730    
+COMMENT Scan member=2445547o st=80 iq=1.4040 bk=5.5341 ex=0.005000 px=1.7950    
+COMMENT Scan member=2445548o st=81 iq=1.3540 bk=5.4944 ex=0.004000 px=2.0750    
+COMMENT Scan member=2445549o st=82 iq=1.1330 bk=5.4674 ex=-0.013000 px=2.0370   
+COMMENT Scan member=2445550o st=83 iq=1.0900 bk=5.4396 ex=-0.020000 px=2.0810   
+COMMENT Scan member=2445551o st=84 iq=1.0770 bk=5.4769 ex=-0.020000 px=2.1480   
+COMMENT Scan member=2445552o st=85 iq=1.0380 bk=5.4720 ex=-0.015000 px=1.9350   
+COMMENT Scan member=2445553o st=86 iq=1.0420 bk=5.4696 ex=-0.011000 px=2.0390   
+COMMENT Scan member=2445554o st=87 iq=1.0890 bk=5.4281 ex=-0.021000 px=1.9550   
+COMMENT Scan member=2445555o st=88 iq=1.0470 bk=5.4350 ex=-0.021000 px=1.8900   
+COMMENT Scan member=2445556o st=89 iq=1.1590 bk=5.4552 ex=-0.017000 px=1.9990   
+COMMENT Scan member=2445557o st=90 iq=1.0310 bk=5.4836 ex=-0.013000 px=2.2160   
+COMMENT Scan member=2445558o st=91 iq=1.0410 bk=5.4590 ex=-0.017000 px=1.9130   
+COMMENT Scan member=2445559o st=92 iq=1.0520 bk=5.4560 ex=-0.019000 px=2.0720   
+COMMENT Scan member=2445560o st=93 iq=1.1740 bk=5.4621 ex=-0.003000 px=0.7370   
+COMMENT Scan member=2445561o st=94 iq=1.0260 bk=5.4283 ex=0.003000 px=1.6270    
+COMMENT Scan member=2445562o st=95 iq=1.3170 bk=5.4638 ex=0.018000 px=1.6790    
+COMMENT Scan member=2445563o st=96 iq=1.1350 bk=5.4490 ex=0.008000 px=1.2100    
+COMMENT Scan member=2445564o st=97 iq=1.2150 bk=5.4295 ex=-0.069000 px=0.8610   
+COMMENT Scan member=2445565o st=98 iq=1.1410 bk=5.4458 ex=0.015000 px=1.5980    
+COMMENT Scan member=2445566o st=99 iq=1.2040 bk=5.4294 ex=0.016000 px=1.7410    
+COMMENT Scan member=2445567o st=100 iq=1.2370 bk=5.4519 ex=0.014000 px=1.4520   
+COMMENT Scan member=2445568o st=101 iq=1.2140 bk=5.4653 ex=0.008000 px=40.1280  
+COMMENT Scan member=2445569o st=102 iq=1.3550 bk=5.4843 ex=0.012000 px=1.2730   
+COMMENT Scan member=2445570o st=103 iq=1.4610 bk=5.4531 ex=0.014000 px=1.5020   
+COMMENT Scan member=2445571o st=104 iq=1.4190 bk=5.4364 ex=0.025000 px=1.8290   
+COMMENT Scan member=2445572o st=105 iq=1.2020 bk=5.4616 ex=0.015000 px=0.6860   
+COMMENT Scan member=2445573o st=106 iq=1.1780 bk=5.4569 ex=-0.069000 px=1.0210  
+COMMENT Scan member=2445574o st=107 iq=1.2620 bk=5.5211 ex=0.012000 px=1.6780   
+COMMENT Scan member=2445575o st=108 iq=1.2210 bk=5.5150 ex=0.015000 px=1.3860   
+COMMENT Scan member=2445576o st=109 iq=1.2270 bk=5.5024 ex=0.014000 px=0.6590   
+COMMENT Scan member=2445577o st=110 iq=1.1790 bk=5.4494 ex=0.004000 px=1.3020   
+COMMENT Scan member=2445578o st=111 iq=1.2940 bk=5.5305 ex=0.017000 px=0.9830   
+COMMENT Scan member=2445579o st=112 iq=1.2580 bk=5.4900 ex=0.018000 px=1.2650   
+COMMENT Scan member=2445580o st=113 iq=1.2610 bk=5.4807 ex=0.009000 px=0.8770   
+COMMENT Scan member=2445581o st=114 iq=1.2040 bk=5.4697 ex=0.011000 px=0.6800   
+COMMENT Scan member=2445582o st=115 iq=1.1980 bk=5.4479 ex=0.012000 px=1.3190   
+COMMENT Scan member=2445583o st=116 iq=1.1320 bk=5.4716 ex=0.008000 px=1.0770   
+COMMENT Scan member=2445584o st=117 iq=1.2050 bk=5.4454 ex=0.012000 px=1.0660   
+COMMENT Scan member=2445585o st=118 iq=1.2080 bk=5.4608 ex=0.007000 px=0.7980   
+COMMENT Scan member=2445586o st=119 iq=1.3370 bk=5.5007 ex=0.014000 px=1.1850   
+COMMENT Scan member=2445587o st=120 iq=1.4070 bk=5.4920 ex=0.026000 px=1.4520   
+COMMENT Scan member=2445588o st=121 iq=1.3750 bk=5.5270 ex=0.011000 px=1.0630   
+COMMENT Scan member=2445589o st=122 iq=1.2420 bk=5.4888 ex=0.014000 px=0.8180   
+COMMENT Scan member=2445591o st=124 iq=1.3550 bk=5.5080 ex=0.013000 px=1.0480   
+COMMENT Scan member=2445593o st=126 iq=1.5420 bk=5.5096 ex=0.030000 px=0.9050   
+COMMENT Scan member=2445594o st=127 iq=1.2710 bk=5.4839 ex=0.014000 px=1.3530   
+COMMENT Scan member=2445595o st=128 iq=1.1940 bk=5.4627 ex=0.011000 px=1.2910   
+COMMENT Scan member=2445596o st=129 iq=1.3810 bk=5.4725 ex=0.006000 px=0.7760   
+COMMENT Scan member=2445597o st=130 iq=1.1050 bk=5.4898 ex=0.005000 px=0.5930   
+COMMENT Scan member=2445598o st=131 iq=1.1150 bk=5.4763 ex=0.011000 px=1.1120   
+COMMENT Scan member=2445599o st=132 iq=1.3410 bk=5.4651 ex=0.017000 px=1.5690   
+COMMENT Scan member=2445600o st=133 iq=1.2470 bk=5.5396 ex=0.018000 px=1.1700   
+COMMENT Scan member=2445601o st=134 iq=1.2260 bk=5.5162 ex=0.004000 px=0.3590   
+COMMENT Scan member=2445602o st=135 iq=1.2120 bk=5.4802 ex=0.007000 px=0.6490   
+COMMENT Scan member=2445603o st=136 iq=1.2480 bk=5.4577 ex=0.016000 px=1.6460   
+COMMENT Scan member=2445604o st=137 iq=1.1540 bk=5.5265 ex=0.027000 px=1.9480   
+COMMENT Scan member=2445605o st=138 iq=1.2240 bk=5.4940 ex=0.017000 px=1.1310   
+COMMENT Scan member=2445606o st=139 iq=1.2540 bk=5.4957 ex=0.020000 px=0.9440   
+COMMENT Scan member=2445607o st=140 iq=1.3300 bk=5.4905 ex=0.032000 px=2.4280   
+COMMENT Scan member=2445608o st=141 iq=1.2690 bk=5.5106 ex=0.051000 px=2.9970   
+COMMENT Scan member=2445609o st=142 iq=1.2680 bk=5.4939 ex=0.029000 px=1.7380   
+COMMENT Scan member=2445610o st=143 iq=1.3280 bk=5.5092 ex=0.028000 px=1.5020   
+COMMENT Scan member=2445612o st=72 iq=1.2760 bk=5.4999 ex=0.023000 px=1.3080    
+COMMENT Scan member=2445613o st=73 iq=1.3290 bk=5.5377 ex=0.034000 px=1.7870    
+COMMENT Scan member=2445614o st=74 iq=1.2280 bk=5.5031 ex=0.026000 px=1.4230    
+COMMENT Scan member=2445615o st=75 iq=1.1850 bk=5.4823 ex=0.014000 px=1.3830    
+COMMENT Scan member=2445616o st=76 iq=1.1880 bk=5.5088 ex=0.018000 px=1.3400    
+COMMENT Scan member=2445617o st=77 iq=1.1860 bk=5.4879 ex=0.022000 px=1.3040    
+COMMENT Scan member=2445618o st=78 iq=1.2820 bk=5.5139 ex=0.036000 px=1.6520    
+COMMENT Scan member=2445619o st=123 iq=1.3810 bk=5.5031 ex=-0.022000 px=1.2910  
+COMMENT Scan member=2445620o st=125 iq=1.2530 bk=5.4974 ex=0.018000 px=1.3220   
+COMMENT Scan member=2445621o st=166 iq=1.1960 bk=5.4701 ex=0.024000 px=1.4050   
+COMMENT Scan member=2445623o st=144 iq=1.0840 bk=5.4885 ex=0.010000 px=1.2200   
+COMMENT Scan member=2445624o st=145 iq=1.1530 bk=5.5042 ex=0.013000 px=1.0360   
+COMMENT Scan member=2445625o st=146 iq=1.1880 bk=5.5143 ex=0.027000 px=1.1520   
+COMMENT Scan member=2445626o st=147 iq=1.2570 bk=5.5108 ex=0.034000 px=1.4490   
+COMMENT Scan member=2445627o st=148 iq=1.2390 bk=5.4940 ex=0.022000 px=1.5270   
+COMMENT Scan member=2445628o st=149 iq=1.2010 bk=5.4946 ex=0.018000 px=0.9140   
+COMMENT Scan member=2445629o st=150 iq=1.2500 bk=5.4964 ex=0.020000 px=1.4080   
+COMMENT Scan member=2445630o st=151 iq=1.2030 bk=5.4993 ex=0.018000 px=1.2860   
+COMMENT Scan member=2445631o st=152 iq=1.2610 bk=5.5043 ex=0.015000 px=1.0230   
+COMMENT Scan member=2445632o st=153 iq=1.1700 bk=5.5176 ex=0.018000 px=1.1820   
+COMMENT Scan member=2445633o st=154 iq=1.2600 bk=5.4943 ex=0.017000 px=40.7270  
+COMMENT Scan member=2445634o st=155 iq=1.3370 bk=5.4991 ex=0.020000 px=1.2850   
+COMMENT Scan member=2445635o st=156 iq=1.2900 bk=5.5214 ex=0.027000 px=1.2310   
+COMMENT Scan member=2445636o st=157 iq=1.2600 bk=5.5258 ex=0.023000 px=0.9600   
+COMMENT Scan member=2445637o st=158 iq=1.3230 bk=5.5174 ex=0.026000 px=1.1010   
+COMMENT Scan member=2445638o st=159 iq=1.2740 bk=5.4992 ex=0.025000 px=1.2690   
+COMMENT Scan member=2445639o st=160 iq=1.2890 bk=5.5198 ex=0.029000 px=1.2590   
+COMMENT Scan member=2445640o st=161 iq=1.3430 bk=5.5171 ex=0.022000 px=1.0330   
+COMMENT Scan member=2445641o st=162 iq=1.2810 bk=5.5438 ex=0.034000 px=1.4710   
+COMMENT Scan member=2445642o st=163 iq=1.2720 bk=5.5093 ex=0.026000 px=1.3080   
+COMMENT Scan member=2445643o st=164 iq=1.2640 bk=5.5309 ex=0.021000 px=1.0920   
+COMMENT Scan member=2445644o st=165 iq=1.2940 bk=5.5310 ex=0.025000 px=0.8600   
+COMMENT Scan member=2445646o st=167 iq=1.3430 bk=5.5250 ex=-0.013000 px=1.2600  
+COMMENT Scan member=2445647o st=168 iq=1.3030 bk=5.5200 ex=0.031000 px=1.0490   
+COMMENT Scan member=2445648o st=169 iq=1.3140 bk=5.5458 ex=0.032000 px=0.9330   
+COMMENT Scan member=2445649o st=170 iq=1.4100 bk=5.5241 ex=0.006000 px=0.9600   
+COMMENT Scan member=2445650o st=171 iq=1.3510 bk=5.5649 ex=0.033000 px=1.1400   
+COMMENT Scan member=2445651o st=172 iq=1.3860 bk=5.5343 ex=0.038000 px=1.0110   
+COMMENT Scan member=2445652o st=173 iq=1.2990 bk=5.5310 ex=0.029000 px=1.2890   
+COMMENT Scan member=2445653o st=174 iq=1.2200 bk=5.5214 ex=0.024000 px=1.1910   
+COMMENT Flat member=2445211f                                                    
+COMMENT Flat member=2445212f                                                    
+COMMENT Flat member=2445213f                                                    
+COMMENT Flat member=2445214f                                                    
+COMMENT Flat member=2445215f                                                    
+COMMENT Flat member=2445891f                                                    
+COMMENT Standard member=2445849o                                                
+COMMENT Standard member=2445850o                                                
+COMMENT Standard member=2445851o                                                
+COMMENT Standard member=2445852o                                                
+COMMENT Standard member=2445853o                                                
+COMMENT Standard member=2445854o                                                
+COMMENT Standard member=2445855o                                                
+COMMENT Standard member=2445856o                                                
+COMMENT Standard member=2445857o                                                
+COMMENT Standard member=2445858o                                                
+COMMENT Standard member=2445859o                                                
+COMMENT Init INIT_ANGLE=2.3 INIT_DX=-2.8 INIT_DY=0.4                            
+END                                                                             

@@ -1,0 +1,214 @@
+SIMPLE  =                    T / conforms to FITS standard                      
+BITPIX  =                  -32 / array data type                                
+NAXIS   =                    3 / number of array dimensions                     
+NAXIS1  =                 2048                                                  
+NAXIS2  =                 2064                                                  
+NAXIS3  =                   69                                                  
+EXTEND  =                    T                                                  
+DATE    = '2016-08-09'         / Creation date                                  
+MASK    = 'False   '                                                            
+FILETYPE= 'Calibrated Spectrum Cube' / Type of file                             
+OBSERVAT= 'CFHT    '           / Observatory name                               
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+INSTRUME= 'SITELLE '           / Instrument Name                                
+ORBSVER = '4.0-DR1-beta'       / ORBS version                                   
+OPTNAME = 'ngc6822.sn1.job.op' / Name of the option file                        
+OBJECT  = 'NGC6822 '           / Object Name                                    
+EXPTIME =                138.7 / Integration time (seconds)                     
+FILTER  = 'SN1     '           / description of filter                          
+ORDER   =                  8.0 / Order of spectral folding                      
+STEP    =           1647.07704 / Step size in nm                                
+STEPNB  =                   69 / Number of steps                                
+TARGETR = '19:44:46.68'        / Target Right Ascension                         
+TARGETD = '-14:45:19.1'        / Target Declination                             
+TARGETX =               1023.5 / Target estimated X coordinate                  
+TARGETY =               1031.5 / Target estimated Y coordinate                  
+CAMERA  = 'MERGED_DATA'        / Merged data from CAM1 and CAM2                 
+BINNING =                    1 / Binning of the camera                          
+CALIBNM =                543.5 / Wavelength of the calibration laser in nm      
+CALIBOR =                 11.0 / Folding order of the calibration laser cube    
+CALIBST =             3255.231 / Step size of the calibration laser cube        
+WCSAXES =                    3 / Number of coordinate axes                      
+CTYPE1  = 'RA---TAN'           / Right ascension, gnomonic projection           
+CRVAL1  =             296.1945 / [deg] Coordinate value at reference point      
+CUNIT1  = 'deg     '           / Units of coordinate increment and value        
+CRPIX1  =        1076.25151515 / Pixel coordinate of reference point            
+CDELT1  = -8.9889633446399E-05 / [deg] Coordinate increment at reference point  
+CTYPE2  = 'DEC--TAN'           / Declination, gnomonic projection               
+CRVAL2  =       -14.7553055556 / [deg] Coordinate value at reference point      
+CUNIT2  = 'deg     '           / Units of coordinate increment and value        
+CRPIX2  =        1034.62727273 / Pixel coordinate of reference point            
+CDELT2  = 8.98896334463999E-05 / [deg] Coordinate increment at reference point  
+WAVTYPE = 'WAVENUMBER'         / Spectral axis type: wavenumber or wavelength   
+CTYPE3  = 'WAVN    '           / wavenumber in cm-1                             
+CRVAL3  =        25195.2215425 / Minimum wavenumber in cm-1                     
+CUNIT3  = 'cm-1    '                                                            
+CRPIX3  =                  1.0 / Pixel coordinate of reference point            
+CDELT3  =        45.6435172872 / cm-1 per pixel                                 
+APODIZ  = '1.0     '           / Apodization function                           
+AXISCORR=        1.03746177301 / Spectral axis correction coeff                 
+PC1_1   =       0.999831972722 / Coordinate transformation matrix element       
+PC1_2   =      0.0183310207543 / Coordinate transformation matrix element       
+PC2_1   =     -0.0183310207543 / Coordinate transformation matrix element       
+PC2_2   =       0.999831972722 / Coordinate transformation matrix element       
+RADESYS = 'ICRS    '           / Equatorial coordinate system                   
+STDNAME = 'GD71    '           / Name of the standard star                      
+STDPATH = 'GD71_SN1.merged.st' / Path to the standard star file                 
+FLAMBDA =     8.9599411208E-16 / mean energy/ADU [erg/cm^2/A/ADU]               
+BUNIT   = 'FLUX    '           / Flux unit [erg/cm^2/s/A]                       
+ZPDINDEX=                   14                                                  
+WAVCALIB=                    T                                                  
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Laurie Rousseau-Nepton'                                              
+RUNID   = '16AC23  '                                                            
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+PIXSIZE =                   15 / Pixel size for both axes (microns)             
+PIXSCAL1=                0.322 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=                0.322 / Pixel scale for axis 2 (arcsec/pixel)          
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+EQUINOX =               2000.0 / Equinox of coordinates                         
+OBSTYPE = 'OBJECT  '           / Observation / Exposure type                    
+OBJNAME = 'NGC6822 '           / Target name                                    
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '19:44:46.48'        / Target right ascension                         
+OBJDEC  = '-14:45:19.2'        / Target declination                             
+OBJRAPM =                  0.0 / Target right ascension proper motion in as/yr  
+OBJDECPM=                  0.0 / Target declination proper motion in as/yr      
+FOCUSID = 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+INSTMODE= 'SCAN    '           / Instrument Mode                                
+FILTERID=                    2 / wheel position                                 
+FILTERBW=                 23.0 / filter bandwidth (nm)                          
+FILTERWL=                385.6 / filter wavelength (nm)                         
+FILTERLB=                374.1 / lower bound of filter (nm)                     
+FILTERUB=                397.1 / upper bound of filter (nm)                     
+SITRESOL=                400.0 / Requested resolving power (R) for scan         
+SITLAMIN=                363.0 / Requested minimum lambda for scan (nanometers) 
+QRUNID  = '16AQ18  '           / queue run id                                   
+QOBSERVE= 'Peter Forshay'      / queue observer                                 
+QCOORD  = 'Simon Prunet'       / queue coordinator                              
+QID     = 55400500000000052415 / queue id                                       
+QOBSEQID= 55101400000000183615 / queue ob sequence id                           
+QICSEQID= 55151200000000212943 / queue ic sequence id                           
+REL_DATE= '2017-08-31T00:00:00' / queue release date                            
+QOGLABEL= 'OG3     '           / queue observing group label                    
+QOBLABEL= 'OB27    '           / queue observing block label                    
+QICLABEL= 'IC3     '           / queue instrument configuration label           
+CRUNID  = '16As03  '           / Elixir camera run ID                           
+DATE-OBS= '2016-07-09'         / Date at start of observation (UTC)             
+UTIME   = '9:54:12.90'         / Time at start of observation (UTC)             
+UTC-OBS = '9:54:12.90'         / Time at start of observation (UTC)             
+TIME-OBS= '9:54:13.972'        / Time at start of observation (UTC)             
+MJDATE  =        57578.4126493 / Modified Julian Date at start of observation   
+MJD-OBS =        57578.4126493 / Modified Julian Date at start of observation   
+SIDTIME = '18:43:25.35'        / Sidereal time at start of observation          
+LST-OBS = '18:43:25.35'        / Sidereal time at start of exposure             
+DATEEND = '2016-07-09'         / Date at end of observation (UTC)               
+UTCEND  = '12:39:15.24'        / Time at end of observation (UTC)               
+TIMEEND = '12:39:15.244'       / Time at end of observation (UTC)               
+MJDEND  =        57578.5272597 / Modified Julian Date at end of observation     
+LSTEND  = '21:28:54.80'        / Sidereal time at end of exposure               
+LASERPOS= 'zenith  '           / If zenith or target laser map used             
+LASERMOD= 'cam1    '           / If merged or cam1 laser map used               
+PHASEPOS= 'none    '           / If zenith or target phase map used, or none    
+PHASEMOD= 'none    '           / If merged or cam1 phase map used, or none      
+OBJMASK1= 'none    '           / Mask file used for cam1                        
+OBJMASK2= 'none    '           / Mask file used for cam2                        
+COMMENT Scan member=1944968o st=-14 iq=1.1202 bk=1.1430 ex=0.000000 px=0.0000   
+COMMENT Scan member=1944969o st=-13 iq=1.0821 bk=1.1427 ex=-0.002096 px=0.0903  
+COMMENT Scan member=1944970o st=-12 iq=0.9852 bk=1.1432 ex=-0.007052 px=0.2622  
+COMMENT Scan member=1944971o st=-11 iq=1.0552 bk=1.1442 ex=-0.010885 px=0.2503  
+COMMENT Scan member=1944972o st=-10 iq=0.9832 bk=1.1473 ex=-0.005793 px=0.3607  
+COMMENT Scan member=1944973o st=-9 iq=0.9360 bk=1.1552 ex=-0.007341 px=0.2911   
+COMMENT Scan member=1944974o st=-8 iq=0.9504 bk=1.1488 ex=-0.008138 px=0.3665   
+COMMENT Scan member=1944975o st=-7 iq=1.0010 bk=1.1529 ex=-0.009551 px=0.4245   
+COMMENT Scan member=1944976o st=-6 iq=0.9749 bk=1.1538 ex=-0.008881 px=0.4701   
+COMMENT Scan member=1944977o st=-5 iq=1.0847 bk=1.1558 ex=-0.005353 px=0.5084   
+COMMENT Scan member=1944978o st=-4 iq=0.9875 bk=1.1574 ex=-0.012391 px=0.7040   
+COMMENT Scan member=1944979o st=-3 iq=0.9850 bk=1.1452 ex=-0.010512 px=0.5807   
+COMMENT Scan member=1944980o st=-2 iq=1.0738 bk=1.1403 ex=-0.011014 px=0.7236   
+COMMENT Scan member=1944981o st=-1 iq=1.0395 bk=1.1426 ex=-0.016453 px=0.7600   
+COMMENT Scan member=1944982o st=0 iq=0.9760 bk=1.1368 ex=-0.007264 px=0.5243    
+COMMENT Scan member=1944983o st=1 iq=0.9534 bk=1.1299 ex=-0.003981 px=0.5796    
+COMMENT Scan member=1944984o st=2 iq=1.0801 bk=1.1443 ex=-0.015028 px=0.6614    
+COMMENT Scan member=1944985o st=3 iq=1.0179 bk=1.1399 ex=-0.023088 px=0.6950    
+COMMENT Scan member=1944986o st=4 iq=0.9418 bk=1.1359 ex=-0.017639 px=0.8207    
+COMMENT Scan member=1944987o st=5 iq=0.9024 bk=1.1268 ex=-0.015084 px=0.7131    
+COMMENT Scan member=1944988o st=6 iq=0.9840 bk=1.1302 ex=-0.013025 px=0.8231    
+COMMENT Scan member=1944989o st=7 iq=1.0047 bk=1.1371 ex=-0.008346 px=0.8500    
+COMMENT Scan member=1944990o st=8 iq=1.0322 bk=1.1331 ex=-0.003212 px=0.9702    
+COMMENT Scan member=1944991o st=9 iq=1.1620 bk=1.1402 ex=0.026812 px=0.9989     
+COMMENT Scan member=1944992o st=10 iq=1.0707 bk=1.1343 ex=0.043777 px=0.8961    
+COMMENT Scan member=1944993o st=11 iq=1.0493 bk=1.1302 ex=0.049660 px=0.9908    
+COMMENT Scan member=1944994o st=12 iq=1.0684 bk=1.1250 ex=0.024832 px=1.0432    
+COMMENT Scan member=1944995o st=13 iq=1.0782 bk=1.1341 ex=0.001059 px=1.0949    
+COMMENT Scan member=1944996o st=14 iq=1.0172 bk=1.1326 ex=-0.004560 px=1.1854   
+COMMENT Scan member=1944997o st=15 iq=1.0303 bk=1.1191 ex=0.018757 px=1.1904    
+COMMENT Scan member=1944998o st=16 iq=0.9915 bk=1.1076 ex=-0.008105 px=1.1941   
+COMMENT Scan member=1944999o st=17 iq=0.9872 bk=1.0994 ex=-0.004159 px=1.4079   
+COMMENT Scan member=1945000o st=18 iq=0.9784 bk=1.1065 ex=-0.002306 px=1.3423   
+COMMENT Scan member=1945001o st=19 iq=0.9642 bk=1.1123 ex=-0.008301 px=1.3969   
+COMMENT Scan member=1945002o st=20 iq=1.0091 bk=1.1094 ex=0.001796 px=1.3278    
+COMMENT Scan member=1945003o st=21 iq=1.0157 bk=1.1013 ex=0.014268 px=1.4594    
+COMMENT Scan member=1945004o st=22 iq=0.9404 bk=1.0800 ex=-0.000686 px=1.4177   
+COMMENT Scan member=1945005o st=23 iq=1.0186 bk=1.0777 ex=-0.005047 px=1.4799   
+COMMENT Scan member=1945006o st=24 iq=0.9346 bk=1.0763 ex=-0.005123 px=1.4818   
+COMMENT Scan member=1945007o st=25 iq=0.9515 bk=1.0775 ex=-0.008924 px=1.5201   
+COMMENT Scan member=1945008o st=26 iq=0.9515 bk=1.0773 ex=-0.000449 px=1.4677   
+COMMENT Scan member=1945009o st=27 iq=0.9089 bk=1.0719 ex=-0.004907 px=1.6052   
+COMMENT Scan member=1945010o st=28 iq=0.8539 bk=1.0629 ex=0.027467 px=1.6013    
+COMMENT Scan member=1945011o st=29 iq=0.8285 bk=1.0568 ex=0.050783 px=1.5640    
+COMMENT Scan member=1945012o st=30 iq=0.8738 bk=1.0552 ex=0.024938 px=1.6352    
+COMMENT Scan member=1945013o st=31 iq=0.8646 bk=1.0558 ex=0.028264 px=1.7487    
+COMMENT Scan member=1945014o st=32 iq=0.8514 bk=1.0494 ex=0.051380 px=1.7482    
+COMMENT Scan member=1945015o st=33 iq=0.8644 bk=1.0448 ex=0.175104 px=1.8811    
+COMMENT Scan member=1945016o st=34 iq=0.8578 bk=1.0440 ex=0.176938 px=1.8069    
+COMMENT Scan member=1945017o st=35 iq=0.9293 bk=1.0465 ex=0.095177 px=1.9376    
+COMMENT Scan member=1945018o st=36 iq=0.9490 bk=1.0461 ex=0.033921 px=2.0659    
+COMMENT Scan member=1945019o st=37 iq=0.8992 bk=1.0430 ex=0.013797 px=2.0175    
+COMMENT Scan member=1945020o st=38 iq=0.9160 bk=1.0420 ex=0.035209 px=2.1086    
+COMMENT Scan member=1945021o st=39 iq=0.9187 bk=1.0395 ex=0.085291 px=2.1126    
+COMMENT Scan member=1945022o st=40 iq=0.8724 bk=1.0378 ex=0.027095 px=2.1551    
+COMMENT Scan member=1945023o st=41 iq=0.9033 bk=1.0359 ex=0.026069 px=2.1492    
+COMMENT Scan member=1945024o st=42 iq=0.8689 bk=1.0366 ex=0.010811 px=2.2164    
+COMMENT Scan member=1945025o st=43 iq=0.8900 bk=1.0365 ex=0.039864 px=2.2081    
+COMMENT Scan member=1945026o st=44 iq=0.9454 bk=1.0414 ex=0.047517 px=2.1902    
+COMMENT Scan member=1945027o st=45 iq=0.9267 bk=1.0427 ex=0.041281 px=2.2252    
+COMMENT Scan member=1945028o st=46 iq=0.8907 bk=1.0448 ex=0.018737 px=2.1536    
+COMMENT Scan member=1945029o st=47 iq=0.8910 bk=1.0387 ex=0.018745 px=2.2914    
+COMMENT Scan member=1945030o st=48 iq=0.9093 bk=1.0413 ex=0.034081 px=2.3091    
+COMMENT Scan member=1945031o st=49 iq=0.8689 bk=1.0387 ex=0.022604 px=2.3768    
+COMMENT Scan member=1945032o st=50 iq=0.9338 bk=1.0368 ex=0.049032 px=2.5813    
+COMMENT Scan member=1945033o st=51 iq=0.8268 bk=1.0233 ex=0.025965 px=2.2555    
+COMMENT Scan member=1945034o st=52 iq=0.8688 bk=1.0279 ex=0.026934 px=2.3521    
+COMMENT Scan member=1945035o st=53 iq=0.8641 bk=1.0196 ex=0.029581 px=2.2912    
+COMMENT Scan member=1945036o st=54 iq=0.8353 bk=1.0177 ex=0.032280 px=2.2606    
+COMMENT Flat member=1944814f                                                    
+COMMENT Flat member=1944815f                                                    
+COMMENT Flat member=1950410f                                                    
+COMMENT Flat member=1950411f                                                    
+COMMENT Flat member=1950412f                                                    
+COMMENT Flat member=1950413f                                                    
+COMMENT Flat member=1950414f                                                    
+COMMENT Flat member=1951177f                                                    
+COMMENT Flat member=1951178f                                                    
+COMMENT Flat member=1951179f                                                    
+COMMENT Flat member=1951180f                                                    
+COMMENT Flat member=1951181f                                                    
+COMMENT Standard member=1944865o                                                
+COMMENT Standard member=1944866o                                                
+COMMENT Standard member=1944867o                                                
+COMMENT Standard member=1944868o                                                
+COMMENT Standard member=1944869o                                                
+COMMENT Standard member=1944870o                                                
+COMMENT Standard member=1944871o                                                
+COMMENT Standard member=1944872o                                                
+COMMENT Standard member=1944873o                                                
+COMMENT Standard member=1944874o                                                
+COMMENT Standard member=1944875o                                                
+END                                                                             
