@@ -285,8 +285,16 @@ def get_environment_elevation(header):
     return elevation
 
 
-def get_exptime(header):
+def get_exptime(params):
+    header = params.get('header')
     exptime = mc.to_float(header.get('EXPTIME'))
+    instrument = _get_instrument(header)
+    if instrument == 'SITELLE':
+        uri = params.get('uri')
+        suffix = CFHTName.get_suffix(uri)
+        if suffix == 'p':
+            num_steps = header.get('STEPNB')
+            exptime = exptime * num_steps
     # units are seconds
     if exptime is None:
         file_name = _get_filename(header)
@@ -430,22 +438,32 @@ def get_target_standard(header):
 
 
 def get_time_refcoord_delta_cal(header):
-    mjd_obs = get_time_refcoord_val_cal(header)
-    tv_stop = header.get('TVSTOP')
-    if tv_stop is None:
-        # caom2IngestMegacamdetrend.py, l429
-        exp_time = 20.0
+    instrument = _get_instrument(header)
+    if instrument == 'SITELLE':
+        mjd_start = _get_mjd_start(header)
+        mjd_end = mc.to_float(header.get('MJDEND'))
+        if mjd_end is None:
+            exp_time = mjd_start
+        else:
+            # caom2IngestSitelle.py, l704
+            exp_time = mjd_end - mjd_start
     else:
-        logging.error(f'tv_stop {tv_stop}')
-        mjd_end = ac.get_datetime(tv_stop)
-        exp_time = mjd_end - mjd_obs
+        mjd_obs = get_time_refcoord_val_cal(header)
+        tv_stop = header.get('TVSTOP')
+        if tv_stop is None:
+            # caom2IngestMegacamdetrend.py, l429
+            exp_time = 20.0
+        else:
+            mjd_end = ac.get_datetime(tv_stop)
+            exp_time = mjd_end - mjd_obs
     return exp_time
 
 
-def get_time_refcoord_delta_raw(header):
+def get_time_refcoord_delta_raw(params):
     # caom2IngestMegacam.py
-    exp_time = get_exptime(header)
+    exp_time = get_exptime(params)
     if exp_time is None:
+        header = params.get('header')
         exp_time = mc.to_float(header.get('DARKTIME'))
     if exp_time is not None:
         # units are days for raw retrieval values
@@ -454,12 +472,17 @@ def get_time_refcoord_delta_raw(header):
 
 
 def get_time_refcoord_val_cal(header):
-    dt_str = header.get('TVSTART')
-    if dt_str is None:
-        dt_str = header.get('REL_DATE')
+    # header = params.get('header')
+    instrument = _get_instrument(header)
+    if instrument == 'SITELLE':
+        mjd_obs = _get_mjd_start(header)
+    else:
+        dt_str = header.get('TVSTART')
         if dt_str is None:
-            dt_str = header.get('DATE')
-    mjd_obs = ac.get_datetime(dt_str)
+            dt_str = header.get('REL_DATE')
+            if dt_str is None:
+                dt_str = header.get('DATE')
+        mjd_obs = ac.get_datetime(dt_str)
     return mjd_obs
 
 
@@ -474,6 +497,21 @@ def _get_filename(header):
 
 def _get_instrument(header):
     return header.get('INSTRUME')
+
+
+def _get_mjd_start(header):
+    mjd_obs = mc.to_float(header.get('MJD-OBS'))
+    if mjd_obs is None:
+        date_str = header.get('DATE-OBS')
+        if date_str is None:
+            dt_str = header.get('DATE')
+            mjd_obs = ac.get_datetime(dt_str)
+        else:
+            time_str = header.get('TIME-OBS')
+            date_obs = ac.get_datetime(date_str)
+            time_obs = ac.get_datetime(time_str)
+            mjd_obs = date_obs + time_obs
+    return mjd_obs
 
 
 def _get_obstype(header):
@@ -729,8 +767,8 @@ def accumulate_bp(bp, uri):
     bp.clear('Chunk.position.coordsys')
     bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
 
-    bp.set('Chunk.time.exposure', 'get_exptime(header)')
-    bp.set('Chunk.time.resolution', 'get_exptime(header)')
+    bp.set('Chunk.time.exposure', 'get_exptime(params)')
+    bp.set('Chunk.time.resolution', 'get_exptime(params)')
     bp.set('Chunk.time.timesys', 'UTC')
     bp.set('Chunk.time.axis.axis.ctype', 'TIME')
     bp.set('Chunk.time.axis.axis.cunit', 'd')
@@ -739,7 +777,7 @@ def accumulate_bp(bp, uri):
     bp.set('Chunk.time.axis.function.naxis', 1)
     if get_calibration_level(uri) == CalibrationLevel.RAW_STANDARD:
         bp.set('Chunk.time.axis.function.delta',
-               'get_time_refcoord_delta_raw(header)')
+               'get_time_refcoord_delta_raw(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
                'get_time_refcoord_val_raw(header)')
     else:
