@@ -904,6 +904,12 @@ def update(observation, **kwargs):
                             _update_position(chunk, headers[idx],
                                              observation.observation_id)
 
+                        if (plane.product_id[-1] == 'p' and
+                                chunk.position.axis.function is None):
+                            _update_position_function(
+                                chunk, headers[idx],
+                                observation.observation_id, idx)
+
         if isinstance(observation, CompositeObservation):
             if composite_type == 'IMCMB':
                 cc.update_plane_provenance(plane, headers[1:],
@@ -1056,6 +1062,39 @@ def _update_position(chunk, header, obs_id):
     position.equinox = 2000.0
     chunk.position = position
     logging.debug(f'End _update_position for {obs_id}')
+
+
+def _update_position_function(chunk, header, obs_id, extension):
+    logging.debug(f'Begin _update_position_function for {obs_id}')
+    cd1_1 = header.get('CD1_1')
+    # caom2IngestSitelle.py, l745
+    # CW
+    # Be able to handle any of the 3 wcs systems used
+    if cd1_1 is None:
+        pc1_1 = header.get('PC1_1')
+        if pc1_1 is not None:
+            cdelt1 = mc.to_float(header.get('CDELT1'))
+            if cdelt1 is None:
+                cd1_1 = mc.to_float(header.get('PC1_1'))
+                cd1_2 = mc.to_float(header.get('PC1_2'))
+                cd2_1 = mc.to_float(header.get('PC2_1'))
+                cd2_2 = mc.to_float(header.get('PC2_2'))
+            else:
+                cdelt2 = mc.to_float(header.get('CDELT2'))
+                cd1_1 = cdelt1 * mc.to_float(header.get('PC1_1'))
+                cd1_2 = cdelt1 * mc.to_float(header.get('PC1_2'))
+                cd2_1 = cdelt2 * mc.to_float(header.get('PC2_1'))
+                cd2_2 = cdelt2 * mc.to_float(header.get('PC2_2'))
+            header['CD1_1'] = cd1_1
+            header['CD1_2'] = cd1_2
+            header['CD2_1'] = cd2_1
+            header['CD2_2'] = cd2_2
+
+    wcs_parser = WcsParser(header, obs_id, extension)
+    if chunk is None:
+        chunk = Chunk()
+    wcs_parser.augment_position(chunk)
+    logging.debug(f'End _update_position_function for {obs_id}')
 
 
 def _build_blueprints(uris):

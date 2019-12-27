@@ -12,10 +12,10 @@
     <caom2:id>19BP41</caom2:id>
     <caom2:pi>Laurie Rousseau-Nepton</caom2:pi>
     <caom2:project>SIGNALS</caom2:project>
-    <caom2:title>SIGNALS</caom2:title>
+<!--    <caom2:title>SIGNALS</caom2:title>-->
   </caom2:proposal>
   <caom2:target>
-    <caom2:name>m31_field1</caom2:name>
+    <caom2:name>M31_Field1</caom2:name>
     <caom2:standard>false</caom2:standard>
   </caom2:target>
   <caom2:targetPosition>
@@ -337,7 +337,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVN</caom2:ctype>
-                        <caom2:cunit>cm-1</caom2:cunit>
+                        <caom2:cunit>1 / m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -345,10 +345,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>219</caom2:naxis>
-                        <caom2:delta>14.109</caom2:delta>
+                        <caom2:delta>1410.916058190698</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>18539.437</caom2:val>
+                          <caom2:val>1853943.700462575</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -356,7 +356,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>SN2</caom2:bandpassName>
-                    <caom2:resolvingPower>1.0</caom2:resolvingPower>
+                    <caom2:resolvingPower>1000.0</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -385,24 +385,6 @@
               </caom2:chunks>
             </caom2:part>
           </caom2:parts>
-        </caom2:artifact>
-        <caom2:artifact caom2:id="00000000-0000-0000-8a06-910876ef89bc" caom2:lastModified="2019-11-26T17:59:31.604" caom2:maxLastModified="2019-11-26T17:59:31.604" caom2:metaChecksum="md5:0293b649d345d6bc5463f5af9f472db0" caom2:accMetaChecksum="md5:85d4f314e53bd66a6927682dd8b55f28">
-          <caom2:uri>ad:CFHT/2445397v.fits</caom2:uri>
-          <caom2:productType>auxiliary</caom2:productType>
-          <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentLength>16920000</caom2:contentLength>
-          <caom2:contentChecksum>md5:f387c278e77fff10d43aae7371befa29</caom2:contentChecksum>
-          <caom2:parts/>
-        </caom2:artifact>
-        <caom2:artifact caom2:id="00000000-0000-0000-b0d2-b274400d9ebb" caom2:lastModified="2019-11-26T19:52:43.275" caom2:maxLastModified="2019-11-26T19:52:43.275" caom2:metaChecksum="md5:82fb4e14f30a8d28bb17703e00ca391b" caom2:accMetaChecksum="md5:c8c373b0fb727b36fd53440af58df04d">
-          <caom2:uri>ad:CFHT/2445397z.hdf5</caom2:uri>
-          <caom2:productType>auxiliary</caom2:productType>
-          <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentType>application/x-hdf</caom2:contentType>
-          <caom2:contentLength>3770598844</caom2:contentLength>
-          <caom2:contentChecksum>md5:03b936f303e3a2ccdbe761187e744b3a</caom2:contentChecksum>
-          <caom2:parts/>
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>
