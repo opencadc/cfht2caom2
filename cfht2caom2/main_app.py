@@ -149,9 +149,12 @@ class CFHTName(mc.StorageName):
         """The file name."""
         self._file_name = value
 
-    @property
-    def product_id(self):
-        return self._file_id
+    # @property
+    def product_id(self, instrument):
+        result = self._file_id
+        if self._file_id[-1] in ['g', 'o'] and instrument == 'WIRCam':
+            result = f'{self._file_id[:-1]}og'
+        return result
 
     @staticmethod
     def remove_extensions(name):
@@ -161,12 +164,28 @@ class CFHTName(mc.StorageName):
 
     @staticmethod
     def is_raw(file_id):
-        return file_id[-1] in ['a', 'b', 'c', 'd', 'f', 'l', 'o', 'x']
+        return file_id[-1] in \
+               ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
 
     @staticmethod
     def get_suffix(uri):
         file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
         return file_id[-1]
+
+
+def get_bandpass_name(header):
+    instrument = _get_instrument(header)
+    result = header.get('FILTER')
+    if instrument == 'WIRCam':
+        wheel_a = header.get('WHEELADE')
+        wheel_b = header.get('WHEELBDE')
+        if wheel_a == 'Open' and wheel_b != 'Open':
+            result = wheel_b
+        elif wheel_b == 'Open' and wheel_a != 'Open':
+            result = wheel_a
+        elif wheel_a == 'Open' and wheel_b == 'Open':
+            result = 'Open'
+    return result
 
 
 def get_calibration_level(uri):
@@ -198,8 +217,7 @@ def get_energy_cunit(header):
 
 def get_energy_function_delta(params):
     result = None
-    header = params.get('header')
-    uri = params.get('uri')
+    header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
         if _is_sitelle_energy(header, uri):
             result = header.get('CDELT3')
@@ -216,8 +234,7 @@ def get_energy_function_delta(params):
 
 def get_energy_function_naxis(params):
     result = 1.0
-    header = params.get('header')
-    uri = params.get('uri')
+    header, suffix, uri = _decompose_params(params)
     if _is_sitelle_energy(header, uri):
         result = header.get('NAXIS3')
         if result is None:
@@ -227,8 +244,7 @@ def get_energy_function_naxis(params):
 
 def get_energy_function_pix(params):
     result = None
-    header = params.get('header')
-    uri = params.get('uri')
+    header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
         result = 1.0
         if _is_sitelle_energy(header, uri):
@@ -241,8 +257,7 @@ def get_energy_function_pix(params):
 def get_energy_function_val(params):
     result = None
     logging.error('val called')
-    header = params.get('header')
-    uri = params.get('uri')
+    header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
         if _is_sitelle_energy(header, uri):
             result = header.get('CRVAL3')
@@ -259,7 +274,7 @@ def get_energy_function_val(params):
 
 def get_energy_resolving_power(params):
     result = None
-    header = params.get('header')
+    header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
         delta = get_energy_function_delta(params)
         val = get_energy_function_val(params)
@@ -286,12 +301,10 @@ def get_environment_elevation(header):
 
 
 def get_exptime(params):
-    header = params.get('header')
+    header, suffix, uri = _decompose_params(params)
     exptime = mc.to_float(header.get('EXPTIME'))
     instrument = _get_instrument(header)
     if instrument == 'SITELLE':
-        uri = params.get('uri')
-        suffix = CFHTName.get_suffix(uri)
         if suffix == 'p':
             num_steps = header.get('STEPNB')
             exptime = exptime * num_steps
@@ -321,6 +334,9 @@ def get_instrument_keywords(header):
 
 
 def get_obs_intent(header):
+    # CW
+    # Determine Observation.intent = obs.intent = "science" or "calibration"
+    # phot & astr std & acquisitions/align are calibration.
     result = ObservationIntentType.CALIBRATION
     obs_type = _get_obstype(header)
     if obs_type == 'OBJECT':
@@ -336,15 +352,19 @@ def get_obs_intent(header):
     return result
 
 
-def get_product_type(header):
+def get_product_type(params):
+    header, suffix, ignore = _decompose_params(params)
     result = ProductType.SCIENCE
     obs_type = get_obs_intent(header)
     if obs_type == ObservationIntentType.CALIBRATION:
-            result = ProductType.CALIBRATION
+        result = ProductType.CALIBRATION
+    if suffix in ['m', 'w', 'y']:
+        result = ProductType.AUXILIARY
     return result
 
 
 def get_proposal_project(header):
+    # TODO - put in a configuration file, cause it changes by semester
     lookup = {'NGVS': ['08BP03', '08BP04', '09AP03', '09AP04', '09BP03',
                        '09BP04', '10AP03', '10AP04', '10BP03', '10BP04',
                        '11AP03', '11AP04', '11BP03', '11BP04', '12AP03',
@@ -370,7 +390,18 @@ def get_proposal_project(header):
               'VESTIGE': ['17AP31', '17BP31', '18AP31', '18BP31', '19AP31',
                           '19BP31'],
               'SIGNALS': ['18BP41', '19AP41', '19BP41', '20AP41', '20BP41',
-                          '21AP41', '21BP41', '22AP41']}
+                          '21AP41', '21BP41', '22AP41'],
+              'WIRDS': ['06AC01', '06AC99', '06BC31', '06BF97', '07AC20',
+                        '07AF34', '07BC99', '07BF98', '07BF97', '08AC98',
+                        '08AC99', '08AF97', '08BC99', '08BF99'],
+              'IPMOS': ['06AF01', '06BF23', '07AF22', '07AF99', '07BF99',
+                        '08AF98', '08BF98'],
+              'TETrEs': ['10BP21', '11BP21', '12AP21', '12BP21'],
+              'CFHQSIR': ['10BP22', '11AP22', '11BP22', '11BP23', '12AD95',
+                          '12AP22', '12AP23', '12BP22', '12BP23', '13AF20'
+                          '13AC14'],
+              'CIPP': ['17AP32', '17BP32', '18AP32', '18BP32', '19AP32',
+                       '19BP32']}
     result = None
     pi_name = header.get('PI_NAME')
     if pi_name is not None and 'CFHTLS' in pi_name:
@@ -390,6 +421,8 @@ def get_provenance_name(header):
     result = 'ORBS'
     if instrument == 'MegaPrime':
         result = 'ELIXIR'
+    elif instrument == 'WIRCam':
+        result = 'IIWI'
     return result
 
 
@@ -399,6 +432,8 @@ def get_provenance_reference(header):
     result = 'http://ascl.net/1409.007'
     if instrument == 'MegaPrime':
         result = 'http://www.cfht.hawaii.edu/Instruments/Elixir/'
+    elif instrument == 'WIRCam':
+        result = 'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'
     return result
 
 
@@ -463,7 +498,7 @@ def get_time_refcoord_delta_raw(params):
     # caom2IngestMegacam.py
     exp_time = get_exptime(params)
     if exp_time is None:
-        header = params.get('header')
+        header, suffix, uri = _decompose_params(params)
         exp_time = mc.to_float(header.get('DARKTIME'))
     if exp_time is not None:
         # units are days for raw retrieval values
@@ -489,6 +524,13 @@ def get_time_refcoord_val_cal(header):
 def get_time_refcoord_val_raw(header):
     mjd_obs = mc.to_float(header.get('MJD-OBS'))
     return mjd_obs
+
+
+def _decompose_params(params):
+    header = params.get('header')
+    uri = params.get('uri')
+    suffix = CFHTName.get_suffix(uri)
+    return header, suffix, uri
 
 
 def _get_filename(header):
@@ -545,6 +587,19 @@ def _get_run_id(header):
         # a well-known default value that indicates the past
         run_id = '17BE'
     return run_id
+
+
+def _get_types(params):
+    header, suffix, ignore = _decompose_params(params)
+    dp_result = DataProductType.IMAGE
+    pt_result = ProductType.SCIENCE
+    obs_type = get_obs_intent(header)
+    if obs_type == ObservationIntentType.CALIBRATION:
+        pt_result = ProductType.CALIBRATION
+    if suffix in ['m', 'w', 'y']:
+        dp_result = DataProductType.AUXILIARY
+        pt_result = ProductType.AUXILIARY
+    return dp_result, pt_result
 
 
 def _has_energy(header):
@@ -655,7 +710,7 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Plane.provenance.version', 'EL_SYS')
     bp.add_fits_attribute('Plane.provenance.version', 'ORBSVER')
 
-    bp.set('Artifact.productType', 'get_product_type(header)')
+    bp.set('Artifact.productType', 'get_product_type(params)')
 
     # Changes made to metadata
     #
@@ -751,8 +806,7 @@ def accumulate_bp(bp, uri):
            'get_energy_function_pix(params)')
     bp.set('Chunk.energy.axis.function.refCoord.val',
            'get_energy_function_val(params)')
-    bp.clear('Chunk.energy.bandpassName')
-    bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
+    bp.set('Chunk.energy.bandpassName', 'get_bandpass_name(header)')
     bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(params)')
     bp.set('Chunk.energy.specsys', 'TOPOCENT')
     bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
@@ -837,7 +891,9 @@ def update(observation, **kwargs):
         for artifact in plane.artifacts.values():
             if (get_calibration_level(artifact.uri) ==
                     CalibrationLevel.RAW_STANDARD):
-                time_delta = get_time_refcoord_delta_raw(headers[idx])
+                params = {'uri': artifact.uri,
+                          'header': headers[idx]}
+                time_delta = get_time_refcoord_delta_raw(params)
             else:
                 time_delta = get_time_refcoord_delta_cal(headers[idx])
             for part in artifact.parts.values():
@@ -860,7 +916,7 @@ def update(observation, **kwargs):
                     if (chunk.energy is not None and
                             chunk.energy.bandpass_name in ['NONE', 'Open']):
                         # CW
-                        # If no or "open" filter then set filtername to
+                        # If no or "open" filter then set filter name to
                         # null
                         chunk.energy.bandpass_name = None
 
@@ -909,6 +965,15 @@ def update(observation, **kwargs):
                             _update_position_function(
                                 chunk, headers[idx],
                                 observation.observation_id, idx)
+
+                    elif instrument == 'WIRCam':
+                        if chunk.time is not None:
+                            _update_wircam_time(
+                                chunk, headers[idx],
+                                observation.observation_id)
+
+                        if plane.product_id[-1] in ['f']:
+                            cc.reset_position(chunk)
 
         if isinstance(observation, CompositeObservation):
             if composite_type == 'IMCMB':
@@ -1095,6 +1160,16 @@ def _update_position_function(chunk, header, obs_id, extension):
         chunk = Chunk()
     wcs_parser.augment_position(chunk)
     logging.debug(f'End _update_position_function for {obs_id}')
+
+
+def _update_wircam_time(chunk, header, obs_id):
+    logging.debug(f'Begin _update_wircam_time for {obs_id}')
+    n_exp = header.get('NEXP')
+    if (n_exp is not None and chunk.time.axis is not None and
+            chunk.time.axis.function is not None):
+        # caom2IngestWircam.py, l843
+        chunk.time.axis.function.naxis = mc.to_int(n_exp)
+    logging.debug(f'End _update_wircam_time for {obs_id}')
 
 
 def _build_blueprints(uris):

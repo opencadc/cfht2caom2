@@ -12,17 +12,25 @@
     <caom2:id>19BP32</caom2:id>
     <caom2:pi>Michael Liu</caom2:pi>
     <caom2:project>CIPP</caom2:project>
-    <caom2:title>CIPP</caom2:title>
+<!--    <caom2:title>CIPP</caom2:title>-->
   </caom2:proposal>
   <caom2:target>
     <caom2:name>2M1047+40</caom2:name>
     <caom2:standard>false</caom2:standard>
   </caom2:target>
+  <caom2:targetPosition>
+    <caom2:coordsys>FK5</caom2:coordsys>
+    <caom2:equinox>2000.0</caom2:equinox>
+    <caom2:coordinates>
+      <caom2:cval1>161.70220833333332</caom2:cval1>
+      <caom2:cval2>40.34675</caom2:cval2>
+    </caom2:coordinates>
+  </caom2:targetPosition>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
-    <caom2:geoLocationX>-5464228.6</caom2:geoLocationX>
-    <caom2:geoLocationY>-2493778.2</caom2:geoLocationY>
-    <caom2:geoLocationZ>2150937.8</caom2:geoLocationZ>
+    <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
+    <caom2:geoLocationY>-2493489.8730419003</caom2:geoLocationY>
+    <caom2:geoLocationZ>2151085.1695058867</caom2:geoLocationZ>
   </caom2:telescope>
   <caom2:instrument>
     <caom2:name>WIRCam</caom2:name>
@@ -46,178 +54,12 @@
         <caom2:runID>19Bw02</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
       </caom2:provenance>
-      <caom2:position>
-        <caom2:bounds xsi:type="caom2:Polygon">
-          <caom2:points>
-            <caom2:point>
-              <caom2:cval1>161.467958229965</caom2:cval1>
-              <caom2:cval2>40.16722185315609</caom2:cval2>
-            </caom2:point>
-            <caom2:point>
-              <caom2:cval1>161.46741004453025</caom2:cval1>
-              <caom2:cval2>40.52558680743617</caom2:cval2>
-            </caom2:point>
-            <caom2:point>
-              <caom2:cval1>161.93735570577675</caom2:cval1>
-              <caom2:cval2>40.525997769052964</caom2:cval2>
-            </caom2:point>
-            <caom2:point>
-              <caom2:cval1>161.93612017680994</caom2:cval1>
-              <caom2:cval2>40.16776835377025</caom2:cval2>
-            </caom2:point>
-          </caom2:points>
-          <caom2:samples>
-            <caom2:vertices>
-              <caom2:vertex>
-                <caom2:cval1>161.69444809156766</caom2:cval1>
-                <caom2:cval2>40.35333611853902</caom2:cval2>
-                <caom2:type>2</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.4680584030433</caom2:cval1>
-                <caom2:cval2>40.353063975800154</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.46741004453023</caom2:cval1>
-                <caom2:cval2>40.52558680743616</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.69438033776137</caom2:cval1>
-                <caom2:cval2>40.52586048391854</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>0.0</caom2:cval1>
-                <caom2:cval2>0.0</caom2:cval2>
-                <caom2:type>0</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.69372579539572</caom2:cval1>
-                <caom2:cval2>40.167493145506114</caom2:cval2>
-                <caom2:type>2</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.467958229965</caom2:cval1>
-                <caom2:cval2>40.167221853156086</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.46731253481664</caom2:cval1>
-                <caom2:cval2>40.339744679434396</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.69365751424806</caom2:cval1>
-                <caom2:cval2>40.340017508945174</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>0.0</caom2:cval1>
-                <caom2:cval2>0.0</caom2:cval2>
-                <caom2:type>0</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.93612017680996</caom2:cval1>
-                <caom2:cval2>40.16776835377026</caom2:cval2>
-                <caom2:type>2</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.7103507747456</caom2:cval1>
-                <caom2:cval2>40.16796754325576</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.71032400389169</caom2:cval1>
-                <caom2:cval2>40.34049191822697</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.93667083095525</caom2:cval1>
-                <caom2:cval2>40.340291379917986</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>0.0</caom2:cval1>
-                <caom2:cval2>0.0</caom2:cval2>
-                <caom2:type>0</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.93680147114372</caom2:cval1>
-                <caom2:cval2>40.35347475390768</caom2:cval2>
-                <caom2:type>2</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.71041039954602</caom2:cval1>
-                <caom2:cval2>40.353675594668545</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.71038402078716</caom2:cval1>
-                <caom2:cval2>40.52619996311463</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>161.93735570577675</caom2:cval1>
-                <caom2:cval2>40.52599776905298</caom2:cval2>
-                <caom2:type>1</caom2:type>
-              </caom2:vertex>
-              <caom2:vertex>
-                <caom2:cval1>0.0</caom2:cval1>
-                <caom2:cval2>0.0</caom2:cval2>
-                <caom2:type>0</caom2:type>
-              </caom2:vertex>
-            </caom2:vertices>
-          </caom2:samples>
-        </caom2:bounds>
-        <caom2:dimension>
-          <caom2:naxis1>4246</caom2:naxis1>
-          <caom2:naxis2>4257</caom2:naxis2>
-        </caom2:dimension>
-        <caom2:sampleSize>0.30326652659309505</caom2:sampleSize>
-      </caom2:position>
-      <caom2:energy>
-        <caom2:bounds>
-          <caom2:lower>2.1060000000000002e-06</caom2:lower>
-          <caom2:upper>2.138e-06</caom2:upper>
-          <caom2:samples>
-            <caom2:sample>
-              <caom2:lower>2.1060000000000002e-06</caom2:lower>
-              <caom2:upper>2.138e-06</caom2:upper>
-            </caom2:sample>
-          </caom2:samples>
-        </caom2:bounds>
-        <caom2:dimension>1</caom2:dimension>
-        <caom2:resolvingPower>66.3125</caom2:resolvingPower>
-        <caom2:sampleSize>3.199999999999986e-08</caom2:sampleSize>
-        <caom2:bandpassName>H2.WC8304</caom2:bandpassName>
-        <caom2:emBand>Infrared</caom2:emBand>
-      </caom2:energy>
-      <caom2:time>
-        <caom2:bounds>
-          <caom2:lower>58814.6680532</caom2:lower>
-          <caom2:upper>58814.668087922226</caom2:upper>
-          <caom2:samples>
-            <caom2:sample>
-              <caom2:lower>58814.6680532</caom2:lower>
-              <caom2:upper>58814.668087922226</caom2:upper>
-            </caom2:sample>
-          </caom2:samples>
-        </caom2:bounds>
-        <caom2:dimension>1</caom2:dimension>
-        <caom2:resolution>3.0</caom2:resolution>
-        <caom2:sampleSize>3.4722223062999547e-05</caom2:sampleSize>
-        <caom2:exposure>3.0</caom2:exposure>
-      </caom2:time>
-      <caom2:polarization/>
       <caom2:artifacts>
         <caom2:artifact caom2:id="55c762e7-688d-4af0-9adc-ff88ee24f001" caom2:lastModified="2019-11-27T16:26:38.227" caom2:maxLastModified="2019-11-27T16:26:38.227" caom2:metaChecksum="md5:c0dd58faba03311cbbead5c40c8c30b7" caom2:accMetaChecksum="md5:0539a397912509cca3d5687c55ebc0e1">
           <caom2:uri>ad:CFHT/2462928a.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentLength>12954240</caom2:contentLength>
           <caom2:contentChecksum>md5:cbc6dfecce2f62289413360b801a2c2d</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="786ae3c5-e98c-4cca-81e6-fcb1ecd9dfd5" caom2:lastModified="2019-11-27T16:26:38.227" caom2:maxLastModified="2019-11-27T16:26:38.227" caom2:metaChecksum="md5:2ce98736dbd5a85140ebe7196a1459ae" caom2:accMetaChecksum="md5:b173aa3e7f0f51807016e339f4ada23e">
@@ -279,7 +121,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -287,10 +129,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>320.0</caom2:delta>
+                        <caom2:delta>2.9453592639700004e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>21220.0</caom2:val>
+                          <caom2:val>2.13016814833e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -298,7 +140,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>H2.WC8304</caom2:bandpassName>
-                    <caom2:resolvingPower>66.3125</caom2:resolvingPower>
+                    <caom2:resolvingPower>72.3228631015553</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -381,7 +223,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -389,10 +231,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>320.0</caom2:delta>
+                        <caom2:delta>2.9453592639700004e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>21220.0</caom2:val>
+                          <caom2:val>2.13016814833e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -400,7 +242,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>H2.WC8304</caom2:bandpassName>
-                    <caom2:resolvingPower>66.3125</caom2:resolvingPower>
+                    <caom2:resolvingPower>72.3228631015553</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -483,7 +325,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -491,10 +333,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>320.0</caom2:delta>
+                        <caom2:delta>2.9453592639700004e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>21220.0</caom2:val>
+                          <caom2:val>2.13016814833e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -502,7 +344,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>H2.WC8304</caom2:bandpassName>
-                    <caom2:resolvingPower>66.3125</caom2:resolvingPower>
+                    <caom2:resolvingPower>72.3228631015553</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -585,7 +427,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -593,10 +435,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>320.0</caom2:delta>
+                        <caom2:delta>2.9453592639700004e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>21220.0</caom2:val>
+                          <caom2:val>2.13016814833e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -604,7 +446,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>H2.WC8304</caom2:bandpassName>
-                    <caom2:resolvingPower>66.3125</caom2:resolvingPower>
+                    <caom2:resolvingPower>72.3228631015553</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>

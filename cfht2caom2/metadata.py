@@ -96,11 +96,13 @@ FILTER_REPAIR_LOOKUP = {
     'z.MP9801': 'z',
     'z.MP9901': 'z_sdss'}
 
-INSTRUMENT_REPAIR_LOOKUP = {}
+# key is CFHT metadata
+# value is SVO url piece
+INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
 
 # CW/SF 17-12-19 - content from conversation
 # CW
-# #If no or "open" filter or pinhole mask, put in 20% on-off cuts from
+# If no or "open" filter or pinhole mask, put in 20% on-off cuts from
 # MegaCam_QE_data.txt
 #
 CFHT_CACHE = {

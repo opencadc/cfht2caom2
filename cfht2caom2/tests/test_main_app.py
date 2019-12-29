@@ -143,8 +143,11 @@ def _get_lineage(cfht_name):
     #     fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
     #     result = '{} {}'.format(result, fits)
     # return result
-    return mc.get_lineage(ARCHIVE, cfht_name.product_id,
-                          f'{cfht_name.product_id}.fits.fz')
+    instrument = ''
+    if cfht_name.obs_id in ['2157095', '']:
+        instrument = 'WIRCam'
+    return mc.get_lineage(ARCHIVE, cfht_name.product_id(instrument),
+                          f'{cfht_name.file_name}')
 
 
 def _get_local(test_name):

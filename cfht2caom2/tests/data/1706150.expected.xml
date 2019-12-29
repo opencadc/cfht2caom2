@@ -1,7 +1,7 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-2365-0145da474ba3" caom2:lastModified="2017-06-07T08:57:41.123" caom2:maxLastModified="2019-11-05T23:20:03.794" caom2:metaChecksum="md5:3c46d1155803a8f00a3922bfd01ea8f4" caom2:accMetaChecksum="md5:d883f80412b5dbc21ebcbfda821d7c52">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1706150</caom2:observationID>
-  <caom2:metaRelease>2014-05-08T05:03:43.000</caom2:metaRelease>
+  <caom2:metaRelease>2014-05-08T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>1706150</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
@@ -15,13 +15,12 @@
   <caom2:target>
     <caom2:name>TwilightFlats</caom2:name>
     <caom2:standard>false</caom2:standard>
-    <caom2:moving>false</caom2:moving>
   </caom2:target>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
-    <caom2:geoLocationX>-5464228.6</caom2:geoLocationX>
-    <caom2:geoLocationY>-2493778.2</caom2:geoLocationY>
-    <caom2:geoLocationZ>2150937.8</caom2:geoLocationZ>
+    <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
+    <caom2:geoLocationY>-2493489.8730419003</caom2:geoLocationY>
+    <caom2:geoLocationZ>2151085.1695058867</caom2:geoLocationZ>
   </caom2:telescope>
   <caom2:instrument>
     <caom2:name>WIRCam</caom2:name>
@@ -30,12 +29,11 @@
     <caom2:humidity>9.38</caom2:humidity>
     <caom2:elevation>89.5967</caom2:elevation>
     <caom2:ambientTemp>6.3</caom2:ambientTemp>
-    <caom2:photometric>false</caom2:photometric>
   </caom2:environment>
   <caom2:planes>
     <caom2:plane caom2:id="00000000-0000-0000-2365-0145da474c5e" caom2:lastModified="2014-05-08T05:21:17.360" caom2:maxLastModified="2019-11-05T23:20:03.794" caom2:metaChecksum="md5:0b25fa4d0f225f6dc366eff383dbd979" caom2:accMetaChecksum="md5:67b9499f807f6e2d2b801fe4df328e40">
       <caom2:productID>1706150f</caom2:productID>
-      <caom2:metaRelease>2014-05-08T05:03:43.000</caom2:metaRelease>
+      <caom2:metaRelease>2014-05-08T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2014-05-08T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
@@ -46,75 +44,12 @@
         <caom2:runID>14Aw02</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
       </caom2:provenance>
-      <caom2:position/>
-      <caom2:energy>
-        <caom2:bounds>
-          <caom2:lower>1.182e-06</caom2:lower>
-          <caom2:upper>1.192e-06</caom2:upper>
-          <caom2:samples>
-            <caom2:sample>
-              <caom2:lower>1.182e-06</caom2:lower>
-              <caom2:upper>1.192e-06</caom2:upper>
-            </caom2:sample>
-          </caom2:samples>
-        </caom2:bounds>
-        <caom2:dimension>1</caom2:dimension>
-        <caom2:resolvingPower>118.7</caom2:resolvingPower>
-        <caom2:sampleSize>9.999999999999904e-09</caom2:sampleSize>
-        <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
-        <caom2:emBand>Infrared</caom2:emBand>
-      </caom2:energy>
-      <caom2:time>
-        <caom2:bounds>
-          <caom2:lower>56785.2109244</caom2:lower>
-          <caom2:upper>56785.21099384445</caom2:upper>
-          <caom2:samples>
-            <caom2:sample>
-              <caom2:lower>56785.2109244</caom2:lower>
-              <caom2:upper>56785.21099384445</caom2:upper>
-            </caom2:sample>
-          </caom2:samples>
-        </caom2:bounds>
-        <caom2:dimension>1</caom2:dimension>
-        <caom2:resolution>6.0</caom2:resolution>
-        <caom2:sampleSize>6.944444612599909e-05</caom2:sampleSize>
-        <caom2:exposure>6.0</caom2:exposure>
-      </caom2:time>
-      <caom2:polarization/>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-849f-eac3861adcbc" caom2:lastModified="2017-12-13T15:11:12.123" caom2:maxLastModified="2017-12-13T15:11:12.123" caom2:metaChecksum="md5:0139276989cf03277455fbe942a904c0" caom2:accMetaChecksum="md5:ee33fe080d46494929f8a6834036f336">
-          <caom2:uri>ad:CFHT/1706150_preview_1024.jpg</caom2:uri>
-          <caom2:productType>preview</caom2:productType>
-          <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentType>image/jpeg</caom2:contentType>
-          <caom2:contentLength>199019</caom2:contentLength>
-          <caom2:contentChecksum>md5:e9723e93c17488b21f12cc3438c70d48</caom2:contentChecksum>
-          <caom2:parts/>
-        </caom2:artifact>
-        <caom2:artifact caom2:id="00000000-0000-0000-bfb8-e59b3999c34c" caom2:lastModified="2017-12-13T15:11:12.123" caom2:maxLastModified="2017-12-13T15:11:12.123" caom2:metaChecksum="md5:b6145d846ef998e0ee676955e7300ad5" caom2:accMetaChecksum="md5:3ddcde28c35bb098f53d150ebb9acda5">
-          <caom2:uri>ad:CFHT/1706150_preview_256.jpg</caom2:uri>
-          <caom2:productType>thumbnail</caom2:productType>
-          <caom2:releaseType>meta</caom2:releaseType>
-          <caom2:contentType>image/jpeg</caom2:contentType>
-          <caom2:contentLength>15396</caom2:contentLength>
-          <caom2:contentChecksum>md5:46ea825c32126abd7acbb84a939c92b4</caom2:contentChecksum>
-          <caom2:parts/>
-        </caom2:artifact>
-        <caom2:artifact caom2:id="00000000-0000-0000-8b94-0602484479cf" caom2:lastModified="2017-12-13T15:11:12.123" caom2:maxLastModified="2017-12-13T15:11:12.123" caom2:metaChecksum="md5:5d774bf85142ba9c3e492fb0f68f4172" caom2:accMetaChecksum="md5:f1016b92b5f92be1ffdf28d0dbd47c60">
-          <caom2:uri>ad:CFHT/1706150_preview_zoom_1024.jpg</caom2:uri>
-          <caom2:productType>preview</caom2:productType>
-          <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentType>image/jpeg</caom2:contentType>
-          <caom2:contentLength>322388</caom2:contentLength>
-          <caom2:contentChecksum>md5:b87151c6256557ffd320628d48a8d80d</caom2:contentChecksum>
-          <caom2:parts/>
-        </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-2365-0145da474c64" caom2:lastModified="2017-12-13T15:11:12.123" caom2:maxLastModified="2017-12-13T15:11:12.123" caom2:metaChecksum="md5:45facbd3a12da60a49b291184b6eafe8" caom2:accMetaChecksum="md5:d9a7b63b900bbe0ce479de167effedf1">
           <caom2:uri>ad:CFHT/1706150f.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentLength>20669760</caom2:contentLength>
           <caom2:contentChecksum>md5:77d24d0d5a0bcc1ced5b19f605704e2e</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="00000000-0000-0000-2365-0145da474c66" caom2:lastModified="2014-05-08T05:21:17.360" caom2:maxLastModified="2014-05-08T05:21:17.360" caom2:metaChecksum="md5:55752f32c0996672f5478b96e0a08370" caom2:accMetaChecksum="md5:3416f28bfb4f3a4c6cad0ea7d1470f45">
@@ -132,7 +67,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -140,10 +75,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>100.0</caom2:delta>
+                        <caom2:delta>1.13365930599e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>11870.0</caom2:val>
+                          <caom2:val>1.1892682965300001e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -151,7 +86,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
-                    <caom2:resolvingPower>118.7</caom2:resolvingPower>
+                    <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -190,7 +125,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -198,10 +133,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>100.0</caom2:delta>
+                        <caom2:delta>1.13365930599e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>11870.0</caom2:val>
+                          <caom2:val>1.1892682965300001e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -209,7 +144,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
-                    <caom2:resolvingPower>118.7</caom2:resolvingPower>
+                    <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -248,7 +183,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -256,10 +191,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>100.0</caom2:delta>
+                        <caom2:delta>1.13365930599e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>11870.0</caom2:val>
+                          <caom2:val>1.1892682965300001e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -267,7 +202,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
-                    <caom2:resolvingPower>118.7</caom2:resolvingPower>
+                    <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -306,7 +241,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>Angstrom</caom2:cunit>
+                        <caom2:cunit>m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -314,10 +249,10 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>100.0</caom2:delta>
+                        <caom2:delta>1.13365930599e-08</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>11870.0</caom2:val>
+                          <caom2:val>1.1892682965300001e-06</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -325,7 +260,7 @@
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
-                    <caom2:resolvingPower>118.7</caom2:resolvingPower>
+                    <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
