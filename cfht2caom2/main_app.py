@@ -77,7 +77,7 @@ import traceback
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, CompositeObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
-from caom2 import SpatialWCS, DataProductType
+from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
@@ -113,11 +113,12 @@ class CFHTName(mc.StorageName):
     def __init__(self, obs_id=None, fname_on_disk=None, file_name=None):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
-        # including the .fz to indicate compression
+        # including the .fz to indicate compression  # TODO no longer true
         super(CFHTName, self).__init__(
             None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
             compression='')
         self._file_id = CFHTName.remove_extensions(file_name)
+        # if CFHTName.is_raw(self._file_id) or self._file_id[-1] == 'p':
         if CFHTName.is_raw(self._file_id):
             self.obs_id = self._file_id[:-1]
         else:
@@ -352,6 +353,34 @@ def get_obs_intent(header):
     return result
 
 
+def get_obs_sequence_number(params):
+    header, suffix, uri = _decompose_params(params)
+    file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
+    result = None
+    exp_num = header.get('EXPNUM')
+    # if CFHTName.is_raw(file_id) or file_id[-1] == 'p':
+    if CFHTName.is_raw(file_id):  # TODO
+        result = exp_num
+    else:
+        instrument = _get_instrument(header)
+        if instrument == 'SITELLE':
+            result = mc.to_int(file_id[:-1])
+    return result
+
+
+def get_obs_type(params):
+    header, suffix, uri = _decompose_params(params)
+    result = header.get('OBSTYPE')
+    instrument = _get_instrument(header)
+    if instrument == 'WIRCam':
+        # caom2IngestWircamdetrend.py, l369
+        if 'weight' in uri:
+            result = 'WEIGHT'
+        elif 'badpix' in uri or 'hotpix' in uri or 'deadpix' in uri:
+            result = 'BPM'
+    return result
+
+
 def get_product_type(params):
     header, suffix, ignore = _decompose_params(params)
     result = ProductType.SCIENCE
@@ -413,6 +442,28 @@ def get_proposal_project(header):
                 if run_id in value:
                     result = key
                     break
+    return result
+
+
+def get_provenance_keywords(params):
+    header, suffix, ignore = _decompose_params(params)
+    instrument = _get_instrument(header)
+    result = None
+    if instrument == 'WIRCam' and suffix in ['p', 's']:
+        # caom2IngestWircam.py, l1063
+        if suffix == 'p':
+            result = 'skysubtraction=yes'
+        else:
+            result = 'skysubtraction=no'
+    return result
+
+
+def get_provenance_last_executed(header):
+    result = header.get('PROCDATE')
+    if result is not None:
+        # format like 2018-06-05HST17:21:20, which default code doesn't
+        # understand
+        result = mc.make_time(result)
     return result
 
 
@@ -478,15 +529,19 @@ def get_time_refcoord_delta_cal(header):
         mjd_start = _get_mjd_start(header)
         mjd_end = mc.to_float(header.get('MJDEND'))
         if mjd_end is None:
-            exp_time = mjd_start
+            exp_time = header.get('EXPTIME')
+            if exp_time is None:
+                exp_time = mjd_start
         else:
             # caom2IngestSitelle.py, l704
             exp_time = mjd_end - mjd_start
+            logging.error(f'exp_time {exp_time}')
     else:
         mjd_obs = get_time_refcoord_val_cal(header)
         tv_stop = header.get('TVSTOP')
         if tv_stop is None:
             # caom2IngestMegacamdetrend.py, l429
+            # caom2IngestWircamdetrned.py, l422
             exp_time = 20.0
         else:
             mjd_end = ac.get_datetime(tv_stop)
@@ -507,11 +562,15 @@ def get_time_refcoord_delta_raw(params):
 
 
 def get_time_refcoord_val_cal(header):
-    # header = params.get('header')
     instrument = _get_instrument(header)
     if instrument == 'SITELLE':
         mjd_obs = _get_mjd_start(header)
     else:
+        # CW
+        # caom2IngestWircamdetrend.py, l388
+        # Time - set exptime as time of one image, start and stop dates
+        # as one pixel so this means crval3 is not equal to exptime
+        # if TVSTART  not defined, use release_date as mjdstart
         dt_str = header.get('TVSTART')
         if dt_str is None:
             dt_str = header.get('REL_DATE')
@@ -642,15 +701,8 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Observation.metaRelease', 'DATE-OBS')
     bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
 
-    file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
-    bp.clear('Observation.sequenceNumber')
-    if CFHTName.is_raw(file_id):
-        bp.add_fits_attribute('Observation.sequenceNumber', 'EXPNUM')
-    else:
-        # this is currently only true for SITELLE processed, which only
-        # works in this bit of code because the SITELLE scan obs ids keep their
-        # trailing 'p'
-        bp.set('Observation.sequenceNumber', file_id[:-1])
+    bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
+    bp.set('Observation.type', 'get_obs_type(params)')
 
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
@@ -700,6 +752,9 @@ def accumulate_bp(bp, uri):
     bp.add_fits_attribute('Plane.dataRelease', 'DATE-OBS')
     bp.add_fits_attribute('Plane.dataRelease', 'REL_DATE')
 
+    bp.set('Plane.provenance.keywords', 'get_provenance_keywords(params)')
+    bp.set('Plane.provenance.lastExecuted',
+           'get_provenance_last_executed(header)')
     bp.set('Plane.provenance.name', 'get_provenance_name(header)')
     bp.set_default('Plane.provenance.producer', 'CFHT')
     bp.set_default('Plane.provenance.project', 'STANDARD PIPELINE')
@@ -709,6 +764,7 @@ def accumulate_bp(bp, uri):
     bp.clear('Plane.provenance.version')
     bp.add_fits_attribute('Plane.provenance.version', 'EL_SYS')
     bp.add_fits_attribute('Plane.provenance.version', 'ORBSVER')
+    bp.add_fits_attribute('Plane.provenance.version', 'IIWIVER')
 
     bp.set('Artifact.productType', 'get_product_type(params)')
 
@@ -972,7 +1028,8 @@ def update(observation, **kwargs):
                                 chunk, headers[idx],
                                 observation.observation_id)
 
-                        if plane.product_id[-1] in ['f']:
+                        if (plane.product_id[-1] in ['f'] or
+                                observation.type == 'WEIGHT'):
                             cc.reset_position(chunk)
 
         if isinstance(observation, CompositeObservation):
@@ -986,6 +1043,8 @@ def update(observation, **kwargs):
                     plane, headers, composite_type, COLLECTION,
                     _repair_comment_provenance_value,
                     observation.observation_id)
+        if instrument == 'WIRCam' and plane.product_id[-1] == 'p':
+            _update_plane_provenance_p(plane, observation.observation_id)
 
     # relies on update_plane_provenance being called
     if isinstance(observation, CompositeObservation):
@@ -1091,6 +1150,17 @@ def _update_observation_metadata(obs, headers, fqn):
                     part0.chunks = TypedList(Chunk, )
 
     return idx
+
+
+def _update_plane_provenance_p(plane, obs_id):
+    logging.debug(f'Begin _update_plane_provenance_p for {obs_id}')
+    # caom2IngestWircam.py, l193
+    obs_member_str = mc.CaomName.make_obs_uri_from_obs_id(COLLECTION,
+                                                          obs_id)
+    obs_member = ObservationURI(obs_member_str)
+    plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}og')
+    plane.provenance.inputs.add(plane_uri)
+    logging.debug(f'End _update_plane_provenance_p for {obs_id}')
 
 
 def _update_position(chunk, header, obs_id):

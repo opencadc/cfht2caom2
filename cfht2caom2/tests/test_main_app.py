@@ -105,7 +105,7 @@ def test_main_app(test_name):
     expected = mc.read_obs_from_file(obs_path)
 
     with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
-        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
+       patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
         def get_file_info(archive, file_id):
             return {'type': 'application/fits'}
 
