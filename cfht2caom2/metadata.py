@@ -94,7 +94,9 @@ FILTER_REPAIR_LOOKUP = {
     'CN.MP7803': 'CN',
     'NB920.MP7902': 'NB920',
     'z.MP9801': 'z',
-    'z.MP9901': 'z_sdss'}
+    'z.MP9901': 'z_sdss',
+    # WIRCam
+    'BrG': 'Brackett_gamma'}
 
 # key is CFHT metadata
 # value is SVO url piece
@@ -112,8 +114,9 @@ CFHT_CACHE = {
     'N393.MP1111': {'cw': 6200., 'fwhm': 6000.},
     # CFH12K filter
     'OIII:MP7504': {'cw': 0.0, 'fwhm': 0.0},
-    'NONE': {'cw': 6200., 'fwhm': 6000.},
-    'OPEN': {'cw': 6200., 'fwhm': 6000.},
+    # 'NONE': {'cw': 6200., 'fwhm': 6000.},
+    # 'OPEN': {'cw': 6200., 'fwhm': 6000.},
+    'MegaPrime.None': {'cw': 6200., 'fwhm': 6000.},
     # SITELLE - not available at SVO
     'C1': {'cw': None, 'fwhm': None},
     'C2': {'cw': None, 'fwhm': None},
@@ -121,7 +124,9 @@ CFHT_CACHE = {
     'C4': {'cw': None, 'fwhm': None},
     'SN1': {'cw': None, 'fwhm': None},
     'SN2': {'cw': None, 'fwhm': None},
-    'SN3': {'cw': None, 'fwhm': None}}
+    'SN3': {'cw': None, 'fwhm': None},
+    # WIRCam
+    'WIRCam.None': {'cw': 17000.0, 'fwhm': 14000.0}}
 
 filter_cache = ac.FilterMetadataCache(FILTER_REPAIR_LOOKUP,
                                       INSTRUMENT_REPAIR_LOOKUP,

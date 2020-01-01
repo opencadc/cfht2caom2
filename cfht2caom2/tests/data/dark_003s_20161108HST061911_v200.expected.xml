@@ -1,7 +1,7 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-677f-015d38715a5c" caom2:lastModified="2017-07-12T20:15:41.093" caom2:maxLastModified="2017-11-22T08:57:10.060" caom2:metaChecksum="md5:3c71f7824839e3e1afe93150deafc87f" caom2:accMetaChecksum="md5:2bda9997127d60f73023b5d50f986cab">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>dark_003s_20161108HST061911_v200</caom2:observationID>
-  <caom2:metaRelease>2016-11-08T16:19:11.000</caom2:metaRelease>
+  <caom2:metaRelease>2016-11-08T00:00:00.000</caom2:metaRelease>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
@@ -14,22 +14,34 @@
   <caom2:target>
     <caom2:name>Darks</caom2:name>
     <caom2:standard>false</caom2:standard>
-    <caom2:moving>false</caom2:moving>
   </caom2:target>
+  <caom2:targetPosition>
+    <caom2:coordsys>FK5</caom2:coordsys>
+    <caom2:equinox>2000.0</caom2:equinox>
+    <caom2:coordinates>
+      <caom2:cval1>89.75037499999999</caom2:cval1>
+      <caom2:cval2>-14.132194444444444</caom2:cval2>
+    </caom2:coordinates>
+  </caom2:targetPosition>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
-    <caom2:geoLocationX>-5464228.6</caom2:geoLocationX>
-    <caom2:geoLocationY>-2493778.2</caom2:geoLocationY>
-    <caom2:geoLocationZ>2150937.8</caom2:geoLocationZ>
+    <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
+    <caom2:geoLocationY>-2493489.8730419003</caom2:geoLocationY>
+    <caom2:geoLocationZ>2151085.1695058867</caom2:geoLocationZ>
   </caom2:telescope>
   <caom2:instrument>
     <caom2:name>WIRCam</caom2:name>
   </caom2:instrument>
+  <caom2:environment>
+    <caom2:humidity>46.16</caom2:humidity>
+    <caom2:elevation>89.9228</caom2:elevation>
+    <caom2:ambientTemp>2.45</caom2:ambientTemp>
+  </caom2:environment>
   <caom2:planes>
     <caom2:plane caom2:id="00000000-0000-0000-677f-015d38715e0e" caom2:lastModified="2017-07-12T20:15:41.093" caom2:maxLastModified="2017-11-22T08:57:10.060" caom2:metaChecksum="md5:a40e73f48717113a5ae810ba15940006" caom2:accMetaChecksum="md5:fdd443628a0eb1376b92c2bfc425b1b7">
       <caom2:productID>dark_003s_20161108HST061911_v200</caom2:productID>
-      <caom2:metaRelease>2016-11-08T16:19:11.000</caom2:metaRelease>
-      <caom2:dataRelease>2016-11-08T16:19:11.000</caom2:dataRelease>
+      <caom2:metaRelease>2016-11-08T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2016-11-08T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>2</caom2:calibrationLevel>
       <caom2:provenance>
@@ -39,33 +51,14 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>16Bw03</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
+        <caom2:lastExecuted>2016-11-21T17:11:51.000</caom2:lastExecuted>
       </caom2:provenance>
-      <caom2:position/>
-      <caom2:energy/>
-      <caom2:time>
-        <caom2:bounds>
-          <caom2:lower>57700.6799884</caom2:lower>
-          <caom2:upper>57720.6799884</caom2:upper>
-          <caom2:samples>
-            <caom2:sample>
-              <caom2:lower>57700.6799884</caom2:lower>
-              <caom2:upper>57720.6799884</caom2:upper>
-            </caom2:sample>
-          </caom2:samples>
-        </caom2:bounds>
-        <caom2:dimension>1</caom2:dimension>
-        <caom2:resolution>3.0</caom2:resolution>
-        <caom2:sampleSize>20.0</caom2:sampleSize>
-        <caom2:exposure>3.0</caom2:exposure>
-      </caom2:time>
-      <caom2:polarization/>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-677f-015d38715e1a" caom2:lastModified="2017-11-22T08:57:10.060" caom2:maxLastModified="2017-11-22T08:57:10.060" caom2:metaChecksum="md5:c24297c5db1fecb402b0b92b05672c79" caom2:accMetaChecksum="md5:2994d60214be6c42041875d814acf0cf">
           <caom2:uri>ad:CFHT/dark_003s_20161108HST061911_v200.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentLength>10874880</caom2:contentLength>
           <caom2:contentChecksum>md5:2bac0bcad9749abb971e09bdd38f6213</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="00000000-0000-0000-677f-015d38715e1c" caom2:lastModified="2017-07-12T20:15:41.093" caom2:maxLastModified="2017-07-12T20:15:41.093" caom2:metaChecksum="md5:a0d2d47f125cca2b452de5235b63cc2a" caom2:accMetaChecksum="md5:7bb49da13534961910e07059aa073994">

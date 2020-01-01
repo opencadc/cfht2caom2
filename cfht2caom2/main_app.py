@@ -378,6 +378,8 @@ def get_obs_type(params):
             result = 'WEIGHT'
         elif 'badpix' in uri or 'hotpix' in uri or 'deadpix' in uri:
             result = 'BPM'
+        elif suffix == 'g' and result is None:
+            result = 'GUIDE'
     return result
 
 
@@ -768,84 +770,6 @@ def accumulate_bp(bp, uri):
 
     bp.set('Artifact.productType', 'get_product_type(params)')
 
-    # Changes made to metadata
-    #
-    # raw image
-    #
-    # 1. Obs.metarelease
-    # 2. Plane.metarelease
-    # 4. removed preview and thumbnail artifacts
-    # 5. removed blank telescope keywords
-    # 6. removed content length
-    # 7. stored energy units are m, not Angstroms
-    #
-    # 1000003
-    # why is there a numbered energyAxis (4), but no energy values?
-    # if I don't comment out the named filter, there are energy values
-    # for this file
-    #
-    # 2463854
-    # 1. the non-primary hdus are BINTABLEs, which means there should be no
-    #    chunk metadata for them, if I'm remembering my NEOSSat lessons
-    #    correctly - so, this is NOT true for CFHT, since the extensions
-    #    are *compressed* images, which is not the same thing as a true
-    #    BINTABLE.
-    #
-    # Questions:
-    # 1. Elevation - why is it sometimes there, and sometimes not?
-    # 1. Photometric - why is sometimes false and sometimes undefined
-    # 1. Moving - why is it sometimes false and sometimes undefined
-    # 1. metaRelease values have times on them
-    # 1. proposal title - is there another source of information for that?
-    #
-    # To stop the noise:
-    # 1. always have elevation
-    # 1. photometric - not set unless true
-    # 1. moving - not set unless true
-    # 1. standard - not set unless true
-    # 1. target_position is there if RA_DEG and DEC_DEG are present
-    #
-    # 19Bm03.bias.0.40.00
-    # 1. should sequence number have a value?
-    # 1. add energy axis - the filter name is NOT unique among the test files
-    #    I've selected
-    #
-    # 2270807
-    # 1. There are two artifacts, one for 2270807b.fits.fz, and one for
-    #    2270807b.fits. Should there be? - Seb's issue to resolve.
-
-    # CW/SF Conversation 17-12-19
-    #
-    # 1. If there is no MET_DATE keyword, use the proposal id to determine
-    # the year and the semester, then for semester A, date is 08-31, and
-    # for semester B, date is 02-28.
-    #
-    # 2. Telescope position - ok to use astropy.EarthLocation.of_site('cfht')
-    #
-    # 3. Target position - set it if the keywords OBJRA, OBJDEC, OBJEQN,
-    #    OBJRADEC are present, otherwise leave it blank.
-    #
-    # 4. Set humitidy, ambient temperature if the source keywords are
-    #    present. They should be the same across multiple planes.
-    #
-    # 5. photometric - should be undefined
-    #
-    # 6. target.moving - should be undefined
-    #
-    # 7. target.standard - there is MegaCam logic that should be implemented
-    #
-    # 8. proposal title comes from a CFHT page scrape
-    #
-    # 9. File names like 19Bm30.bias.0.40.00 should not have sequence numbers.
-    #    They are master calibration files.
-    #
-    # 10. filter information - ok to use
-    # http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php?mode=browse&
-    # gname=CFHT&gname2=Megaprime
-    # There are a couple of cases of filter values that are not at SVO,
-    # because one is a pinhole mask, and one was a test filter, so hard-code
-    # results for those.
-
     # hard-coded values from:
     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
@@ -1023,13 +947,16 @@ def update(observation, **kwargs):
                                 observation.observation_id, idx)
 
                     elif instrument == 'WIRCam':
-                        if chunk.time is not None:
+                        if (chunk.time is not None and
+                                observation.type not in
+                                ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
                             _update_wircam_time(
                                 chunk, headers[idx],
                                 observation.observation_id)
 
                         if (plane.product_id[-1] in ['f'] or
-                                observation.type == 'WEIGHT'):
+                                observation.type in
+                                ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
                             cc.reset_position(chunk)
 
         if isinstance(observation, CompositeObservation):
