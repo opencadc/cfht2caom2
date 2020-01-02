@@ -67,6 +67,47 @@
 # ***********************************************************************
 #
 
+"""
+CFHT Cardinality:
+
+CW - 02-01-20
+The CADC page describing file types:
+http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/cfht/extensions.html
+
+For Espadons, Sitelle and Spirou there are composite observations made up from
+several exposures. These composite observations are given the ‘p’ ending to
+distinguish them from the simple observations that are based on a single
+exposure.
+
+For WIRcam, based on the CAOM model the o and g are included as separate
+artifacts of the same plane because they correspond to different groups of
+raw pixels on the detector. This has caused much trouble for the need to
+connect them in etransfer. For SPIRou we did some combining of file types
+within a plane e.g. ‘v’ within ‘e’, and CFHT say they would prefer to keep
+them separate so we should do that.
+
+Conversation with CW/SF 02-01-19:
+- SITELLE - has hdf5 files, but there is currently no way of extracting WCS
+            information from them
+          - there will be (eventually) a fits file for every hdf5 file
+          - copy the fits wcs to the hdf5 wcs, depending on the order of
+            arrival of the files
+- SPIROU - no hdf5 files, but there are two file types that have binary table
+           extensions that won't support cut-outs
+- WIRCam - no hdf5 files
+         - 'g' are cubes of guide window(s)
+- 'p' files:
+    - MegaCam/WIRCam - 'p' is a processed file that is an additional plane to
+            a SimpleObservation
+    - SITELLE - 'p' is processed + Composite - a different observation
+    - SPIROU/Espadons - 'p' is polarized + Composite (TBC on Composite), a
+      different observation
+    - there are other processed files for single exposures
+    - users want 'p' files
+
+- conclusion - one plane / file, because users want to see one row / file in
+  the results tab
+"""
 import importlib
 import logging
 import math
@@ -118,8 +159,7 @@ class CFHTName(mc.StorageName):
             None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
             compression='')
         self._file_id = CFHTName.remove_extensions(file_name)
-        # if CFHTName.is_raw(self._file_id) or self._file_id[-1] == 'p':
-        if CFHTName.is_raw(self._file_id):
+        if CFHTName.for_obs_id(self._file_id):
             self.obs_id = self._file_id[:-1]
         else:
             self.obs_id = self._file_id
@@ -164,7 +204,11 @@ class CFHTName(mc.StorageName):
                                                                     '')
 
     @staticmethod
-    def is_raw(file_id):
+    def for_obs_id(file_id):
+        return CFHTName.for_raw(file_id) or file_id[-1] in ['p']
+
+    @staticmethod
+    def for_raw(file_id):
         return file_id[-1] in \
                ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
 
@@ -193,7 +237,7 @@ def get_calibration_level(uri):
     ignore_scheme, ignore_archive, file_name = mc.decompose_uri(uri)
     file_id = CFHTName.remove_extensions(file_name)
     result = CalibrationLevel.CALIBRATED
-    if CFHTName.is_raw(file_id):
+    if CFHTName.for_raw(file_id):
         result = CalibrationLevel.RAW_STANDARD
     return result
 
@@ -312,7 +356,7 @@ def get_exptime(params):
     # units are seconds
     if exptime is None:
         file_name = _get_filename(header)
-        if file_name is not None and not CFHTName.is_raw(file_name):
+        if file_name is not None and not CFHTName.for_obs_id(file_name):
             # caom2IngestMegacaomdetrend.py, l438
             exptime = 0.0
     return exptime
@@ -358,8 +402,7 @@ def get_obs_sequence_number(params):
     file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
     result = None
     exp_num = header.get('EXPNUM')
-    # if CFHTName.is_raw(file_id) or file_id[-1] == 'p':
-    if CFHTName.is_raw(file_id):  # TODO
+    if CFHTName.for_obs_id(file_id):
         result = exp_num
     else:
         instrument = _get_instrument(header)
@@ -543,7 +586,7 @@ def get_time_refcoord_delta_cal(header):
         tv_stop = header.get('TVSTOP')
         if tv_stop is None:
             # caom2IngestMegacamdetrend.py, l429
-            # caom2IngestWircamdetrned.py, l422
+            # caom2IngestWircamdetrend.py, l422
             exp_time = 20.0
         else:
             mjd_end = ac.get_datetime(tv_stop)
@@ -583,7 +626,7 @@ def get_time_refcoord_val_cal(header):
 
 
 def get_time_refcoord_val_raw(header):
-    mjd_obs = mc.to_float(header.get('MJD-OBS'))
+    mjd_obs = _get_mjd_obs(header)
     return mjd_obs
 
 
@@ -602,8 +645,12 @@ def _get_instrument(header):
     return header.get('INSTRUME')
 
 
+def _get_mjd_obs(header):
+    return mc.to_float(header.get('MJD-OBS'))
+
+
 def _get_mjd_start(header):
-    mjd_obs = mc.to_float(header.get('MJD-OBS'))
+    mjd_obs = _get_mjd_obs(header)
     if mjd_obs is None:
         date_str = header.get('DATE-OBS')
         if date_str is None:
@@ -678,7 +725,7 @@ def _is_sitelle_energy(header, uri):
     return result
 
 
-def accumulate_bp(bp, uri):
+def accumulate_bp(bp, uri, instrument):
     """Configure the telescope-specific ObsBlueprint at the CAOM model 
     Observation level.
 
@@ -809,12 +856,16 @@ def accumulate_bp(bp, uri):
     bp.set('Chunk.time.axis.error.rnder', 0.0000001)
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
     bp.set('Chunk.time.axis.function.naxis', 1)
-    if get_calibration_level(uri) == CalibrationLevel.RAW_STANDARD:
+    suffix = CFHTName.get_suffix(uri)
+    # if get_calibration_level(uri) == CalibrationLevel.RAW_STANDARD:
+    if CFHTName.for_obs_id(suffix):
+        logging.error('raw')
         bp.set('Chunk.time.axis.function.delta',
                'get_time_refcoord_delta_raw(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
                'get_time_refcoord_val_raw(header)')
     else:
+        logging.error('cal')
         bp.set('Chunk.time.axis.function.delta',
                'get_time_refcoord_delta_cal(header)')
         bp.set('Chunk.time.axis.function.refCoord.val',
@@ -1169,6 +1220,10 @@ def _update_wircam_time(chunk, header, obs_id):
     logging.debug(f'End _update_wircam_time for {obs_id}')
 
 
+def _identify_instrument(uri):
+    return 'SITELLE'
+
+
 def _build_blueprints(uris):
     """This application relies on the caom2utils fits2caom2 ObsBlueprint
     definition for mapping FITS file values to CAOM model element
@@ -1182,9 +1237,10 @@ def _build_blueprints(uris):
     module = importlib.import_module(__name__)
     blueprints = {}
     for uri in uris:
+        instrument = _identify_instrument(uri)
         blueprint = ObsBlueprint(module=module)
         if not mc.StorageName.is_preview(uri):
-            accumulate_bp(blueprint, uri)
+            accumulate_bp(blueprint, uri, instrument)
         blueprints[uri] = blueprint
     return blueprints
 
