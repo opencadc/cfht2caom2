@@ -67,7 +67,17 @@
 # ***********************************************************************
 #
 
+from enum import Enum
+
 from caom2pipe import astro_composable as ac
+
+
+class Inst(Enum):
+    MEGACAM = 'MegaCam'
+    MEGAPRIME = 'MetaPrime'
+    SITELLE = 'SITELLE'
+    WIRCAM = 'WIRCam'
+
 
 # key is CFHT metadata
 # value is SVO url piece

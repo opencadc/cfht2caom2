@@ -151,15 +151,20 @@ class CFHTName(mc.StorageName):
 
     CFHT_NAME_PATTERN = '*'
 
-    def __init__(self, obs_id=None, fname_on_disk=None, file_name=None):
+    def __init__(self, obs_id=None, fname_on_disk=None, file_name=None,
+                 instrument=None, ad_uri=None):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
         # including the .fz to indicate compression  # TODO no longer true
         super(CFHTName, self).__init__(
             None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
             compression='')
+        self._instrument = md.Inst(instrument)
+        if ad_uri is not None and file_name is None:
+            file_name = mc.CaomName(ad_uri).file_name
         self._file_id = CFHTName.remove_extensions(file_name)
-        if CFHTName.for_obs_id(self._file_id):
+        self._suffix = self._file_id[-1]
+        if self.is_simple:
             self.obs_id = self._file_id[:-1]
         else:
             self.obs_id = self._file_id
@@ -190,11 +195,22 @@ class CFHTName(mc.StorageName):
         """The file name."""
         self._file_name = value
 
-    # @property
-    def product_id(self, instrument):
+    @property
+    def product_id(self):
         result = self._file_id
-        if self._file_id[-1] in ['g', 'o'] and instrument == 'WIRCam':
+        if (self._file_id[-1] in ['g', 'o'] and
+                self._instrument is md.Inst.WIRCAM):
             result = f'{self._file_id[:-1]}og'
+        return result
+
+    @property
+    def is_simple(self):
+        result = False
+        if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
+                or
+                (self._suffix == 'p' and
+                 self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM])):
+            result = True
         return result
 
     @staticmethod
@@ -203,25 +219,11 @@ class CFHTName(mc.StorageName):
         return name.replace('.fits', '').replace('.fz', '').replace('.header',
                                                                     '')
 
-    @staticmethod
-    def for_obs_id(file_id):
-        return CFHTName.for_raw(file_id) or file_id[-1] in ['p']
-
-    @staticmethod
-    def for_raw(file_id):
-        return file_id[-1] in \
-               ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
-
-    @staticmethod
-    def get_suffix(uri):
-        file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
-        return file_id[-1]
-
 
 def get_bandpass_name(header):
     instrument = _get_instrument(header)
     result = header.get('FILTER')
-    if instrument == 'WIRCam':
+    if instrument is md.Inst.WIRCAM:
         wheel_a = header.get('WHEELADE')
         wheel_b = header.get('WHEELBDE')
         if wheel_a == 'Open' and wheel_b != 'Open':
@@ -327,7 +329,7 @@ def get_energy_resolving_power(params):
         if delta is not None and val is not None:
             result = val/delta
         instrument = _get_instrument(header)
-        if instrument == 'SITELLE':
+        if instrument is md.Inst.SITELLE:
             sitresol = header.get('SITRESOL')
             if sitresol is not None and sitresol > 0.0:
                 result = sitresol
@@ -349,7 +351,7 @@ def get_exptime(params):
     header, suffix, uri = _decompose_params(params)
     exptime = mc.to_float(header.get('EXPTIME'))
     instrument = _get_instrument(header)
-    if instrument == 'SITELLE':
+    if instrument is md.Inst.SITELLE:
         if suffix == 'p':
             num_steps = header.get('STEPNB')
             exptime = exptime * num_steps
@@ -399,15 +401,14 @@ def get_obs_intent(header):
 
 def get_obs_sequence_number(params):
     header, suffix, uri = _decompose_params(params)
-    file_id = CFHTName.remove_extensions(mc.CaomName(uri).file_id)
+    instrument = _get_instrument(header)
+    cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
     result = None
     exp_num = header.get('EXPNUM')
-    if CFHTName.for_obs_id(file_id):
+    if cfht_name.is_simple:
         result = exp_num
-    else:
-        instrument = _get_instrument(header)
-        if instrument == 'SITELLE':
-            result = mc.to_int(file_id[:-1])
+    elif instrument is md.Inst.SITELLE and suffix == 'p' and exp_num is None:
+        result = cfht_name.file_id[:-1]
     return result
 
 
@@ -415,7 +416,7 @@ def get_obs_type(params):
     header, suffix, uri = _decompose_params(params)
     result = header.get('OBSTYPE')
     instrument = _get_instrument(header)
-    if instrument == 'WIRCam':
+    if instrument is md.Inst.WIRCAM:
         # caom2IngestWircamdetrend.py, l369
         if 'weight' in uri:
             result = 'WEIGHT'
@@ -494,7 +495,7 @@ def get_provenance_keywords(params):
     header, suffix, ignore = _decompose_params(params)
     instrument = _get_instrument(header)
     result = None
-    if instrument == 'WIRCam' and suffix in ['p', 's']:
+    if instrument is md.Inst.WIRCAM and suffix in ['p', 's']:
         # caom2IngestWircam.py, l1063
         if suffix == 'p':
             result = 'skysubtraction=yes'
@@ -515,9 +516,9 @@ def get_provenance_last_executed(header):
 def get_provenance_name(header):
     instrument = _get_instrument(header)
     result = 'ORBS'
-    if instrument == 'MegaPrime':
+    if instrument is md.Inst.MEGAPRIME:
         result = 'ELIXIR'
-    elif instrument == 'WIRCam':
+    elif instrument is md.Inst.WIRCAM:
         result = 'IIWI'
     return result
 
@@ -526,9 +527,9 @@ def get_provenance_reference(header):
     instrument = _get_instrument(header)
     # Sitelle
     result = 'http://ascl.net/1409.007'
-    if instrument == 'MegaPrime':
+    if instrument is md.Inst.MEGAPRIME:
         result = 'http://www.cfht.hawaii.edu/Instruments/Elixir/'
-    elif instrument == 'WIRCam':
+    elif instrument is md.Inst.WIRCAM:
         result = 'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'
     return result
 
@@ -552,7 +553,7 @@ def get_target_standard(header):
         if run_id_type == 'q' and obs_type == 'OBJECT':
             obj_name = header.get('OBJECT').lower()
             instrument = _get_instrument(header)
-            if instrument == 'SITELLE':
+            if instrument is md.Inst.SITELLE:
                 if 'std' in obj_name:
                     result = True
                 else:
@@ -568,9 +569,9 @@ def get_target_standard(header):
     return result
 
 
-def get_time_refcoord_delta_cal(header):
+def get_time_refcoord_delta_composite(header):
     instrument = _get_instrument(header)
-    if instrument == 'SITELLE':
+    if instrument is md.Inst.SITELLE:
         mjd_start = _get_mjd_start(header)
         mjd_end = mc.to_float(header.get('MJDEND'))
         if mjd_end is None:
@@ -582,7 +583,7 @@ def get_time_refcoord_delta_cal(header):
             exp_time = mjd_end - mjd_start
             logging.error(f'exp_time {exp_time}')
     else:
-        mjd_obs = get_time_refcoord_val_cal(header)
+        mjd_obs = get_time_refcoord_val_composite(header)
         tv_stop = header.get('TVSTOP')
         if tv_stop is None:
             # caom2IngestMegacamdetrend.py, l429
@@ -594,7 +595,7 @@ def get_time_refcoord_delta_cal(header):
     return exp_time
 
 
-def get_time_refcoord_delta_raw(params):
+def get_time_refcoord_delta_simple(params):
     # caom2IngestMegacam.py
     exp_time = get_exptime(params)
     if exp_time is None:
@@ -606,9 +607,9 @@ def get_time_refcoord_delta_raw(params):
     return exp_time
 
 
-def get_time_refcoord_val_cal(header):
+def get_time_refcoord_val_composite(header):
     instrument = _get_instrument(header)
-    if instrument == 'SITELLE':
+    if instrument is md.Inst.SITELLE:
         mjd_obs = _get_mjd_start(header)
     else:
         # CW
@@ -625,7 +626,7 @@ def get_time_refcoord_val_cal(header):
     return mjd_obs
 
 
-def get_time_refcoord_val_raw(header):
+def get_time_refcoord_val_simple(header):
     mjd_obs = _get_mjd_obs(header)
     return mjd_obs
 
@@ -642,7 +643,7 @@ def _get_filename(header):
 
 
 def _get_instrument(header):
-    return header.get('INSTRUME')
+    return md.Inst(header.get('INSTRUME'))
 
 
 def _get_mjd_obs(header):
@@ -718,7 +719,7 @@ def _has_energy(header):
 def _is_sitelle_energy(header, uri):
     instrument = _get_instrument(header)
     result = False
-    if instrument == 'SITELLE':
+    if instrument is md.Inst.SITELLE:
         suffix = CFHTName.get_suffix(uri)
         if suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
             result = True
@@ -856,20 +857,17 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.time.axis.error.rnder', 0.0000001)
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
     bp.set('Chunk.time.axis.function.naxis', 1)
-    suffix = CFHTName.get_suffix(uri)
-    # if get_calibration_level(uri) == CalibrationLevel.RAW_STANDARD:
-    if CFHTName.for_obs_id(suffix):
-        logging.error('raw')
+    cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+    if cfht_name.is_simple:
         bp.set('Chunk.time.axis.function.delta',
-               'get_time_refcoord_delta_raw(params)')
+               'get_time_refcoord_delta_simple(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
-               'get_time_refcoord_val_raw(header)')
+               'get_time_refcoord_val_simple(header)')
     else:
-        logging.error('cal')
         bp.set('Chunk.time.axis.function.delta',
-               'get_time_refcoord_delta_cal(header)')
+               'get_time_refcoord_delta_composite(header)')
         bp.set('Chunk.time.axis.function.refCoord.val',
-               'get_time_refcoord_val_cal(header)')
+               'get_time_refcoord_val_composite(header)')
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
     logging.debug('Done accumulate_bp.')
@@ -924,9 +922,9 @@ def update(observation, **kwargs):
                     CalibrationLevel.RAW_STANDARD):
                 params = {'uri': artifact.uri,
                           'header': headers[idx]}
-                time_delta = get_time_refcoord_delta_raw(params)
+                time_delta = get_time_refcoord_delta_simple(params)
             else:
-                time_delta = get_time_refcoord_delta_cal(headers[idx])
+                time_delta = get_time_refcoord_delta_composite(headers[idx])
             for part in artifact.parts.values():
                 for c in part.chunks:
                     chunk_idx = part.chunks.index(c)
@@ -951,7 +949,7 @@ def update(observation, **kwargs):
                         # null
                         chunk.energy.bandpass_name = None
 
-                    if instrument == 'MegaPrime':
+                    if instrument is md.Inst.MEGAPRIME:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
                         # type calibration) and/or position info not in header
@@ -997,7 +995,7 @@ def update(observation, **kwargs):
                                 chunk, headers[idx],
                                 observation.observation_id, idx)
 
-                    elif instrument == 'WIRCam':
+                    elif instrument is md.Inst.WIRCAM:
                         if (chunk.time is not None and
                                 observation.type not in
                                 ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
@@ -1021,7 +1019,7 @@ def update(observation, **kwargs):
                     plane, headers, composite_type, COLLECTION,
                     _repair_comment_provenance_value,
                     observation.observation_id)
-        if instrument == 'WIRCam' and plane.product_id[-1] == 'p':
+        if instrument is md.Inst.WIRCAM and plane.product_id[-1] == 'p':
             _update_plane_provenance_p(plane, observation.observation_id)
 
     # relies on update_plane_provenance being called
@@ -1221,7 +1219,13 @@ def _update_wircam_time(chunk, header, obs_id):
 
 
 def _identify_instrument(uri):
-    return 'SITELLE'
+    logging.error(f'uri is {uri}')
+    result = md.Inst.SITELLE # 1944968p, 2445397p
+    if '2463796o' in uri:
+        result = md.Inst.MEGACAM
+    elif '2281792p' in uri or '2157095o' in uri:
+        result = md.Inst.WIRCAM
+    return result
 
 
 def _build_blueprints(uris):

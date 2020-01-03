@@ -98,7 +98,9 @@ def pytest_generate_tests(metafunc):
 
 def test_main_app(test_name):
     basename = os.path.basename(test_name)
-    cfht_name = CFHTName(file_name=basename.replace('.header', '.fz'))
+    instrument = main_app._identify_instrument(basename)
+    cfht_name = CFHTName(file_name=basename.replace('.header', '.fz'),
+                         instrument=instrument)
     output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
     obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(
         cfht_name.obs_id))
@@ -143,10 +145,7 @@ def _get_lineage(cfht_name):
     #     fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
     #     result = '{} {}'.format(result, fits)
     # return result
-    instrument = ''
-    if cfht_name.obs_id in ['2157095', '']:
-        instrument = 'WIRCam'
-    return mc.get_lineage(ARCHIVE, cfht_name.product_id(instrument),
+    return mc.get_lineage(ARCHIVE, cfht_name.product_id,
                           f'{cfht_name.file_name}')
 
 
