@@ -318,44 +318,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -739,33 +701,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -1149,33 +1084,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -1559,33 +1467,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -1969,33 +1850,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -2379,33 +2233,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -2789,33 +2616,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -3199,33 +2999,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -3609,33 +3382,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -4019,33 +3765,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -4429,33 +4148,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -4839,33 +4531,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -5249,33 +4914,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -5659,33 +5297,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -6069,33 +5680,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -6479,33 +6063,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -6889,33 +6446,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -7299,33 +6829,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -7709,33 +7212,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -8119,33 +7595,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -8529,33 +7978,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -8939,33 +8361,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -9349,33 +8744,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -9759,33 +9127,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -10169,33 +9510,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -10579,33 +9893,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -10989,33 +10276,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -11399,33 +10659,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -11809,33 +11042,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -12219,33 +11425,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -12629,33 +11808,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -13039,33 +12191,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -13449,33 +12574,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -13859,33 +12957,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -14269,33 +13340,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -14679,33 +13723,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -15089,33 +14106,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -15499,33 +14489,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -15909,33 +14872,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -16319,33 +15255,6 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
 XTENSION= 'BINTABLE'           / binary table extension                         
 BITPIX  =                    8 / 8-bit bytes                                    
@@ -16729,31 +15638,4 @@ COMMENT    27 28 29 30 31 32 33 34 35
 COMMENT    ab ab ab ab ab ab ab ab ab                                           
 COMMENT    __________________________                                           
 COMMENT The two upper rows of CCDs are flipped, a=A amp, b=B amp                
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
