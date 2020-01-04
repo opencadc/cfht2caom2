@@ -75,6 +75,7 @@ from mock import patch
 
 from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
+from cfht2caom2 import metadata as md
 from caom2.diff import get_differences
 from caom2pipe import manage_composable as mc
 
@@ -99,7 +100,11 @@ def pytest_generate_tests(metafunc):
 def test_main_app(test_name):
     basename = os.path.basename(test_name)
     instrument = main_app._identify_instrument(basename)
-    cfht_name = CFHTName(file_name=basename.replace('.header', '.fz'),
+    extension = '.fz'
+    if instrument is md.Inst.ESPADONS:
+        extension = '.gz'
+    cfht_name = CFHTName(file_name=basename.replace('.header',
+                                                    extension),
                          instrument=instrument)
     output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
     obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(

@@ -73,6 +73,7 @@ from caom2pipe import astro_composable as ac
 
 
 class Inst(Enum):
+    ESPADONS = 'ESPaDOnS'
     MEGACAM = 'MegaCam'
     MEGAPRIME = 'MetaPrime'
     SITELLE = 'SITELLE'
@@ -110,7 +111,7 @@ FILTER_REPAIR_LOOKUP = {
 
 # key is CFHT metadata
 # value is SVO url piece
-INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
+INSTRUMENT_REPAIR_LOOKUP = {Inst.WIRCAM: 'Wircam'}
 
 # CW/SF 17-12-19 - content from conversation
 # CW

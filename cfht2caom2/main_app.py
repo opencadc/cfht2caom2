@@ -207,17 +207,21 @@ class CFHTName(mc.StorageName):
     def is_simple(self):
         result = False
         if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
-                or
-                (self._suffix == 'p' and
-                 self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM])):
+                or self.simple_by_suffix):
             result = True
         return result
+
+    @property
+    def simple_by_suffix(self):
+        return (self._suffix == 'p' and self._instrument in [md.Inst.MEGACAM,
+                                                             md.Inst.WIRCAM])
 
     @staticmethod
     def remove_extensions(name):
         """How to get the file_id from a file_name."""
-        return name.replace('.fits', '').replace('.fz', '').replace('.header',
-                                                                    '')
+        # ESPaDOnS files have a .gz extension ;)
+        return name.replace('.fits', '').replace('.fz', '').replace(
+            '.header', '').replace('.gz', '')
 
 
 def get_bandpass_name(header):
@@ -235,11 +239,12 @@ def get_bandpass_name(header):
     return result
 
 
-def get_calibration_level(uri):
-    ignore_scheme, ignore_archive, file_name = mc.decompose_uri(uri)
-    file_id = CFHTName.remove_extensions(file_name)
+def get_calibration_level(params):
+    header, suffix, uri = _decompose_params(params)
+    instrument = _get_instrument(header)
+    cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
     result = CalibrationLevel.CALIBRATED
-    if CFHTName.for_raw(file_id):
+    if cfht_name.is_simple and not cfht_name.simple_by_suffix:
         result = CalibrationLevel.RAW_STANDARD
     return result
 
@@ -427,12 +432,21 @@ def get_obs_type(params):
     return result
 
 
+def get_plane_data_product_type(header):
+    instrument = _get_instrument(header)
+    result = DataProductType.IMAGE
+    if instrument is md.Inst.ESPADONS:
+        result = DataProductType.SPECTRUM
+    return result
+
+
 def get_product_type(params):
     header, suffix, ignore = _decompose_params(params)
     result = ProductType.SCIENCE
     obs_type = get_obs_intent(header)
     if obs_type == ObservationIntentType.CALIBRATION:
         result = ProductType.CALIBRATION
+    logging.error(f'suffix is {suffix}')
     if suffix in ['m', 'w', 'y']:
         result = ProductType.AUXILIARY
     return result
@@ -514,24 +528,34 @@ def get_provenance_last_executed(header):
 
 
 def get_provenance_name(header):
+    result = None
     instrument = _get_instrument(header)
-    result = 'ORBS'
-    if instrument is md.Inst.MEGAPRIME:
+    if instrument is md.Inst.ESPADONS:
+        comments = header.get('COMMENT')
+        if comments is not None:
+            if 'COMMENT Upena' in comments:
+                result = 'UPENA'
+            elif 'COMMENT Opera' in comments:
+                result = 'OPERA'
+    elif instrument is md.Inst.MEGAPRIME:
         result = 'ELIXIR'
+    elif instrument is md.Inst.SITELLE:
+        result = 'ORBS'
     elif instrument is md.Inst.WIRCAM:
         result = 'IIWI'
     return result
 
 
 def get_provenance_reference(header):
+    lookup = {
+        md.Inst.ESPADONS:
+            'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/',
+        md.Inst.MEGAPRIME: 'http://www.cfht.hawaii.edu/Instruments/Elixir/',
+        md.Inst.SITELLE: 'http://ascl.net/1409.007',
+        md.Inst.WIRCAM:
+            'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'}
     instrument = _get_instrument(header)
-    # Sitelle
-    result = 'http://ascl.net/1409.007'
-    if instrument is md.Inst.MEGAPRIME:
-        result = 'http://www.cfht.hawaii.edu/Instruments/Elixir/'
-    elif instrument is md.Inst.WIRCAM:
-        result = 'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'
-    return result
+    return lookup.get(instrument)
 
 
 def get_target_position_cval1(header):
@@ -634,7 +658,8 @@ def get_time_refcoord_val_simple(header):
 def _decompose_params(params):
     header = params.get('header')
     uri = params.get('uri')
-    suffix = CFHTName.get_suffix(uri)
+    instrument = _get_instrument(header)
+    suffix = CFHTName(ad_uri=uri, instrument=instrument)._suffix
     return header, suffix, uri
 
 
@@ -713,6 +738,9 @@ def _get_types(params):
 
 def _has_energy(header):
     obs_type = _get_obstype(header)
+    # from conversation with CW, SF
+    # also from caom2IngestEspadons.py, l393, despite an existing example
+    # with energy information
     return obs_type not in ['BIAS', 'DARK']
 
 
@@ -790,8 +818,8 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Observation.telescope.geoLocationY', y)
     bp.set('Observation.telescope.geoLocationZ', z)
 
-    bp.set('Plane.dataProductType', 'image')
-    bp.set('Plane.calibrationLevel', 'get_calibration_level(uri)')
+    bp.set('Plane.dataProductType', 'get_plane_data_product_type(header)')
+    bp.set('Plane.calibrationLevel', 'get_calibration_level(params)')
     bp.clear('Plane.metaRelease')
     bp.add_fits_attribute('Plane.metaRelease', 'REL_DATE')
     bp.add_fits_attribute('Plane.metaRelease', 'DATE')
@@ -918,10 +946,10 @@ def update(observation, **kwargs):
                 plane.provenance.last_executed = mc.make_time(
                     headers[idx].get('DATE'))
         for artifact in plane.artifacts.values():
-            if (get_calibration_level(artifact.uri) ==
+            params = {'uri': artifact.uri,
+                      'header': headers[idx]}
+            if (get_calibration_level(params) ==
                     CalibrationLevel.RAW_STANDARD):
-                params = {'uri': artifact.uri,
-                          'header': headers[idx]}
                 time_delta = get_time_refcoord_delta_simple(params)
             else:
                 time_delta = get_time_refcoord_delta_composite(headers[idx])
@@ -949,7 +977,11 @@ def update(observation, **kwargs):
                         # null
                         chunk.energy.bandpass_name = None
 
-                    if instrument is md.Inst.MEGAPRIME:
+                    if instrument is md.Inst.ESPADONS:
+                        if chunk.time is not None:
+                            # consistent with caom2IngestEspadons.py
+                            chunk.time_axis = 5
+                    elif instrument is md.Inst.MEGAPRIME:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
                         # type calibration) and/or position info not in header
@@ -973,7 +1005,7 @@ def update(observation, **kwargs):
                                 plane.product_id[-1] in ['b', 'l', 'd']):
                             cc.reset_energy(chunk)
 
-                    elif instrument == 'SITELLE':
+                    elif instrument is md.Inst.SITELLE:
                         if chunk.energy_axis is not None:
                             # CW, SF 18-12-19 - SITELLE biases and darks have
                             # no energy, all other observation types do
@@ -1089,12 +1121,18 @@ def _update_observation_metadata(obs, headers, fqn):
                         f'relationship for {obs.observation_id}')
 
         # use the fqn to define the URI
+        # TODO - leaking name structure here
         product_id = CFHTName.remove_extensions(os.path.basename(fqn))
+        extension = '.fz'
+        instrument = _get_instrument(headers[idx])
+        if instrument is md.Inst.ESPADONS:
+            extension = '.gz'
         uri = mc.build_uri(ARCHIVE,
-                           os.path.basename(fqn).replace('.header', '.fz'))
+                           os.path.basename(fqn).replace('.header',
+                                                         extension))
         module = importlib.import_module(__name__)
         bp = ObsBlueprint(module=module)
-        accumulate_bp(bp, uri)
+        accumulate_bp(bp, uri, instrument)
 
         # re-read the headers from disk, because the first pass through
         # caom2gen will have modified the header content based on the
@@ -1104,7 +1142,6 @@ def _update_observation_metadata(obs, headers, fqn):
         # CD4_4 value update is expressly NOT done, because the CD4_4 value
         # is already set from the first pass-through - need to figure out a
         # way to fix this .... sigh
-        logging.error(f'fqn {fqn}')
         unmodified_headers = get_cadc_headers(f'file://{fqn}')
 
         # make a list of length 1, because then
@@ -1225,6 +1262,8 @@ def _identify_instrument(uri):
         result = md.Inst.MEGACAM
     elif '2281792p' in uri or '2157095o' in uri:
         result = md.Inst.WIRCAM
+    elif '1001063b' in uri:
+        result = md.Inst.ESPADONS
     return result
 
 
@@ -1253,9 +1292,9 @@ def _get_uris(args):
     result = []
     if args.local:
         for ii in args.local:
-            file_id = CFHTName.remove_extensions(os.path.basename(ii))
-            file_name = '{}.fits.fz'.format(file_id)
-            result.append(CFHTName(file_name=file_name).file_uri)
+            # TODO hack that leaks naming format - sigh ... :(
+            file_uri = mc.build_uri(ARCHIVE, os.path.basename(ii))
+            result.append(file_uri)
     elif args.lineage:
         for ii in args.lineage:
             result.append(ii.split('/', 1)[1])
