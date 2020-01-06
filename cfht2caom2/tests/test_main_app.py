@@ -103,8 +103,8 @@ def test_main_app(test_name):
     extension = '.fz'
     if instrument is md.Inst.ESPADONS:
         extension = '.gz'
-    cfht_name = CFHTName(file_name=basename.replace('.header',
-                                                    extension),
+    file_name = basename.replace('.header', extension)
+    cfht_name = CFHTName(file_name=file_name,
                          instrument=instrument)
     output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
     obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(

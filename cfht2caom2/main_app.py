@@ -119,6 +119,7 @@ from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, CompositeObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
 from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
+from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
@@ -216,6 +217,10 @@ class CFHTName(mc.StorageName):
         return (self._suffix == 'p' and self._instrument in [md.Inst.MEGACAM,
                                                              md.Inst.WIRCAM])
 
+    @property
+    def suffix(self):
+        return self._suffix
+
     @staticmethod
     def remove_extensions(name):
         """How to get the file_id from a file_name."""
@@ -271,7 +276,10 @@ def get_energy_function_delta(params):
     result = None
     header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
-        if _is_sitelle_energy(header, uri):
+        if _is_espadons_energy(header, uri):
+            # caom2IngestEspadons.py l639
+            result = 0.0031764
+        elif _is_sitelle_energy(header, uri):
             result = header.get('CDELT3')
             if result is None:
                 # units in file are nm, units in blueprint are Angstroms
@@ -287,7 +295,10 @@ def get_energy_function_delta(params):
 def get_energy_function_naxis(params):
     result = 1.0
     header, suffix, uri = _decompose_params(params)
-    if _is_sitelle_energy(header, uri):
+    if _is_espadons_energy(header, uri):
+        # caom2IngestEspadons.py l636
+        result = 213542
+    elif _is_sitelle_energy(header, uri):
         result = header.get('NAXIS3')
         if result is None:
             result = 1.0
@@ -299,7 +310,10 @@ def get_energy_function_pix(params):
     header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
         result = 1.0
-        if _is_sitelle_energy(header, uri):
+        if _is_espadons_energy(header, uri):
+            # caom2IngestEspadons.py l637
+            result = 0.5
+        elif _is_sitelle_energy(header, uri):
             result = header.get('CRPIX3')
             if result is None:
                 result = 0.5
@@ -311,7 +325,10 @@ def get_energy_function_val(params):
     logging.error('val called')
     header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
-        if _is_sitelle_energy(header, uri):
+        if _is_espadons_energy(header, uri):
+            # caom2IngestEspadons.py l638
+            result = 370.0
+        elif _is_sitelle_energy(header, uri):
             result = header.get('CRVAL3')
             if result is None:
                 # units in file are nm, units in blueprint are Angstroms
@@ -334,7 +351,24 @@ def get_energy_resolving_power(params):
         if delta is not None and val is not None:
             result = val/delta
         instrument = _get_instrument(header)
-        if instrument is md.Inst.SITELLE:
+        if instrument is md.Inst.ESPADONS:
+            instmode = header.get('INSTMODE')
+            if instmode is None or 'R=' not in instmode:
+                # CW - Default if resolving power value not in header
+                # caom2IngestEspadons.py, l377
+                result = 65000
+            else:
+                # CW - This string is already in instrument keywords but also
+                # need to extract resolving power from it:
+                # 'Spectroscopy, star only, R=80,000'
+                temp = instmode.split('R=')
+                values = temp[1].split(',')
+                if len(values) == 1:
+                    result = values[0]
+                else:
+                    result = values[0] + values[1]
+                result = mc.to_float(result)
+        elif instrument is md.Inst.SITELLE:
             sitresol = header.get('SITRESOL')
             if sitresol is not None and sitresol > 0.0:
                 result = sitresol
@@ -528,7 +562,7 @@ def get_provenance_last_executed(header):
 
 
 def get_provenance_name(header):
-    result = None
+    result = 'TCS'  # ESPaDOnS
     instrument = _get_instrument(header)
     if instrument is md.Inst.ESPADONS:
         comments = header.get('COMMENT')
@@ -543,6 +577,13 @@ def get_provenance_name(header):
         result = 'ORBS'
     elif instrument is md.Inst.WIRCAM:
         result = 'IIWI'
+    return result
+
+
+def get_provenance_project(header):
+    result = 'STANDARD PIPELINE'
+    if get_provenance_name(header) == 'TCS':
+        result = None
     return result
 
 
@@ -744,12 +785,22 @@ def _has_energy(header):
     return obs_type not in ['BIAS', 'DARK']
 
 
+def _is_espadons_energy(header, uri):
+    instrument = _get_instrument(header)
+    result = False
+    if instrument is md.Inst.ESPADONS:
+        cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+        if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'o', 'x']:
+            result = True
+    return result
+
+
 def _is_sitelle_energy(header, uri):
     instrument = _get_instrument(header)
     result = False
     if instrument is md.Inst.SITELLE:
-        suffix = CFHTName.get_suffix(uri)
-        if suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
+        cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+        if cfht_name.suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
             result = True
     return result
 
@@ -835,7 +886,7 @@ def accumulate_bp(bp, uri, instrument):
            'get_provenance_last_executed(header)')
     bp.set('Plane.provenance.name', 'get_provenance_name(header)')
     bp.set_default('Plane.provenance.producer', 'CFHT')
-    bp.set_default('Plane.provenance.project', 'STANDARD PIPELINE')
+    bp.set('Plane.provenance.project', 'get_provenance_project(header)')
     bp.set('Plane.provenance.reference', 'get_provenance_reference(header)')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
@@ -981,6 +1032,9 @@ def update(observation, **kwargs):
                         if chunk.time is not None:
                             # consistent with caom2IngestEspadons.py
                             chunk.time_axis = 5
+                        _update_espadons_energy(
+                            chunk, plane.product_id[-1], headers, idx,
+                            artifact.uri, observation.observation_id)
                     elif instrument is md.Inst.MEGAPRIME:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1076,6 +1130,28 @@ def _is_composite(headers, obs_id):
             result = True
             composite_type = 'COMMENT'
     return result, composite_type
+
+
+def _update_espadons_energy(chunk, suffix, headers, idx, uri, obs_id):
+    logging.debug(f'Begin _update_espadons_energy for {obs_id}')
+    if suffix in ['a', 'c', 'f', 'o', 'x']:
+        params = {'header': headers[idx],
+                  'uri': uri}
+        naxis1 = get_energy_function_naxis(params)
+        cdelt1 = get_energy_function_delta(params)
+        crval1 = get_energy_function_val(params)
+        resolving_power = get_energy_resolving_power(params)
+        axis = Axis('WAVE', 'nm')
+        ref_coord_1 = RefCoord(0.5, crval1)
+        ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1)*cdelt1)
+        coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
+        coord_axis = CoordAxis1D(axis=axis, range=coord_range)
+        chunk.energy = SpectralWCS(coord_axis,
+                                   specsys='TOPOCENT',
+                                   ssyssrc='TOPOCENT',
+                                   resolving_power=resolving_power)
+        chunk.energy_axis = 1
+    logging.debug(f'End _update_espadons_energy for {obs_id}')
 
 
 def _update_observation_metadata(obs, headers, fqn):
@@ -1256,13 +1332,14 @@ def _update_wircam_time(chunk, header, obs_id):
 
 
 def _identify_instrument(uri):
+    # TODO - make this a header read when I get to it ...
     logging.error(f'uri is {uri}')
     result = md.Inst.SITELLE # 1944968p, 2445397p
     if '2463796o' in uri:
         result = md.Inst.MEGACAM
     elif '2281792p' in uri or '2157095o' in uri:
         result = md.Inst.WIRCAM
-    elif '1001063b' in uri:
+    elif '1001063b' in uri or '1001836x' in uri:
         result = md.Inst.ESPADONS
     return result
 
