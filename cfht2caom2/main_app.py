@@ -366,7 +366,7 @@ def get_energy_resolving_power(params):
                 if len(values) == 1:
                     result = values[0]
                 else:
-                    result = values[0] + values[1]
+                    result = f'{values[0]}{values[1]}'
                 result = mc.to_float(result)
         elif instrument is md.Inst.SITELLE:
             sitresol = header.get('SITRESOL')
@@ -524,7 +524,25 @@ def get_proposal_project(header):
                           '12AP22', '12AP23', '12BP22', '12BP23', '13AF20'
                           '13AC14'],
               'CIPP': ['17AP32', '17BP32', '18AP32', '18BP32', '19AP32',
-                       '19BP32']}
+                       '19BP32'],
+              'MAPP': ['08BP11', '08BP12', '09AP11', '09AP12', '09BP11',
+                       '09BP12', '10AP11', '10AP12', '10BP11', '10BP12',
+                       '11AP11', '11AP12', '11BP11', '11BP12', '12AP11',
+                       '12AP12', '12BP11', '12BP12'],
+              'MIMES': ['08BP13', '08BP14', '09AP13', '09AP14', '09BP13',
+                        '09BP14', '10AP13', '10AP14', '10BP13', '10BP14',
+                        '11AP13', '11AP14', '11BP13', '11BP14', '12AP13',
+                        '12AP14', '12BP13', '12BP14'],
+              'BINAMICS': ['13AP15', '13AP16', '13BP15', '13BP16', '14AP15',
+                           '14AP16', '14BP15', '14BP16', '15AP15', '15AP16',
+                           '15BP15', '15BP16', '16AP15', '16AP16', '16BP15',
+                           '16BP16'],
+              'MATYSSE': ['13AP17', '13AP18', '13BP17', '13BP18', '14AP17',
+                          '14AP18', '14BP17', '14BP18', '15AP17', '15AP18',
+                          '15BP17', '15BP18', '16AP17', '16AP18', '16BP17',
+                          '16BP18'],
+              'HMS': ['15AP19', '15AP20', '15BP19', '15BP20', '16AP19',
+                      '16AP20', '16BP19', '16BP20']}
     result = None
     pi_name = header.get('PI_NAME')
     if pi_name is not None and 'CFHTLS' in pi_name:
@@ -827,6 +845,8 @@ def accumulate_bp(bp, uri, instrument):
     bp.clear('Observation.metaRelease')
     bp.add_fits_attribute('Observation.metaRelease', 'REL_DATE')
     bp.add_fits_attribute('Observation.metaRelease', 'DATE')
+    # caom2IngestEspadons.py, l625
+    bp.add_fits_attribute('Observation.metaRelease', 'DATE-OB1')
     bp.add_fits_attribute('Observation.metaRelease', 'DATE-OBS')
     bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
 
@@ -921,10 +941,32 @@ def accumulate_bp(bp, uri, instrument):
 
     bp.set('Chunk.position.axis.axis1.cunit', 'deg')
     bp.set('Chunk.position.axis.axis2.cunit', 'deg')
+
+    if instrument is md.Inst.ESPADONS:
+        # constants from caom2espadons.config
+        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
+        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
+        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
+        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
+        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
+        bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
+        bp.add_fits_attribute(
+            'Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG')
+        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
+        bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
+        bp.add_fits_attribute(
+            'Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG')
+        # CW
+        # Fibre size is 1.6", i.e. 0.000444 deg
+        bp.set('Chunk.position.axis.function.cd11', -0.000444)
+        bp.set('Chunk.position.axis.function.cd12', 0.0)
+        bp.set('Chunk.position.axis.function.cd21', 0.0)
+        bp.set('Chunk.position.axis.function.cd22', 0.000444)
     bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
     bp.set('Chunk.position.axis.error1.syser', 0.0000278)
     bp.set('Chunk.position.axis.error2.rnder', 0.0000278)
     bp.set('Chunk.position.axis.error2.syser', 0.0000278)
+
     bp.clear('Chunk.position.coordsys')
     bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
 
@@ -1035,6 +1077,13 @@ def update(observation, **kwargs):
                         _update_espadons_energy(
                             chunk, plane.product_id[-1], headers, idx,
                             artifact.uri, observation.observation_id)
+
+                        if chunk.position is not None:
+                            if plane.product_id[-1] == 'o':
+                                chunk.position_axis_1 = 3
+                                chunk.position_axis_2 = 4
+                            else:
+                                cc.reset_position(chunk)
                     elif instrument is md.Inst.MEGAPRIME:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1339,7 +1388,7 @@ def _identify_instrument(uri):
         result = md.Inst.MEGACAM
     elif '2281792p' in uri or '2157095o' in uri:
         result = md.Inst.WIRCAM
-    elif '1001063b' in uri or '1001836x' in uri:
+    elif '1001063b' in uri or '1001836x' in uri or '1003681' in uri:
         result = md.Inst.ESPADONS
     return result
 
