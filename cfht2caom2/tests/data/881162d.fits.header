@@ -1,0 +1,156 @@
+SIMPLE  =                    T / Standard FITS                                  
+BITPIX  =                   16 / 16bit 2s complement 0..65535 (BZERO=32768)     
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 2080 / Number of pixel columns                        
+NAXIS2  =                 4640 / Number of pixels rows                          
+PCOUNT  =                    0 / No 'random' parameters                         
+GCOUNT  =                    1 / Only one group                                 
+COMMENT                                                                         
+COMMENT Observation summary                                                     
+COMMENT -------------------                                                     
+COMMENT file 881162d00, raster FULL, etype DARK, etime 600, filter Unknown      
+COMMENT                                                                         
+CMMTOBS = 'Automatic calibration'                                               
+CMMTSEQ = '        '                                                            
+OBJECT  = 'Dark    '                                                            
+OBSERVER= 'JEFF    '                                                            
+PI_NAME = 'JEFF    '                                                            
+RUNID   = 'SMEARING'                                                            
+COMMENT                                                                         
+COMMENT Image data for chip 00                                                  
+COMMENT                                                                         
+FILENAME= '881162d '           / Base filename at acquisition                   
+PATHNAME= '/data/noeau/espadons/raw/27Nov06' / Original directory name at acquis
+EXTNAME = 'chip00  '           / Extension name                                 
+DATE    = '2006-11-28T01:58:17' / UTC Date of file creation                     
+HSTTIME = 'Mon Nov 27 15:58:17 HST 2006' / Local time in Hawaii                 
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+IMAGESWV= 'CFHT DetCom v3.60.2 (Dec 01 2005)' / Image creation software version 
+DETECTOR= 'EEV1    '           / Science Detector                               
+INSTRUME= 'ESPaDOnS'           / Instrument Name                                
+INSTMODE= 'Polarimetry, R=65,000' / Instrument Mode                             
+CCD     = 'Unknown '                                                            
+IMAGEID =                    0 / CCD chip number                                
+CHIPID  =                    0 / Use IMAGEID instead                            
+MAXLIN  =                65535                                                  
+SATURATE=                65535                                                  
+INHERIT =                    F / No need to inherit global keywords             
+TIMESYS = 'UTC     '           / Time System for DATExxxx                       
+TSYSOBS = 'UTC     '           / Time System for TIMExxx                        
+DATE-OBS= '2006-10-28'         / Date at start of observation (unix)            
+TIME-OBS= '1:48:17.024'        / Time at start of observation (unix)            
+DATEEND = '2006-10-28'         / Date at end of observation (unix)              
+TIMEEND = '1:58:17.032'        / Time at end of observation (unix)              
+OBSTYPE = 'DARK    '           / Observation/ Exposure type                     
+EXPTYPE = 'DARK    '           / OBSTYPE is the new name for this               
+EXPNUM  =               881162 / CFHT odometer number                           
+OBSID   =               881162 / CFHT odometer number                           
+EXPTIME =               600.00 / Integration time (seconds)                     
+DARKTIME=               600.00 / Dark current time (seconds)                    
+COMMENT                                                                         
+COMMENT Detector array and CCD Information                                      
+COMMENT ----------------------------------                                      
+CCDSUM  = '1 1     '           / Binning factors                                
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+RASTER  = 'FULL    '                                                            
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+CONSWV  = 'E2A=137,DCU=49'     / Controller DSPID and SERNO versions            
+DETSTAT = 'ok      '           / Detector temp range (-142..-138)               
+DETTEM  =               -139.8 / Detector temp deg C = 773 + -0.292 * 3126      
+CCDSIZE = '[1:2048,1:4608]'                                                     
+CCDSEC  = '[1:2044,1:4605]'                                                     
+DATASEC = '[6:2049,5:4609]'                                                     
+BIASSEC = '[2050:2080,2:4640]' / Overscan area of frame                         
+SHUTOPEN=               0.0000 / Shutter not activated                          
+SHUTCLOS=               0.0000 / Shutter not activated                          
+FILTER  = 'Unknown '           / Name of filter in position                     
+FILTERID=                   -1 / Filter index (see also FILTER)                 
+FFLAMPON= 'OFF     '           / flatfield lamp status ON/OFF                   
+FFLAMP1 =                    5 / flatfield lamp 1 intensity                     
+FFLAMP2 =                   12 / flatfield lamp 2 intensity                     
+CLAMPON = 'OFF     '           / comparison lamp status ON/OFF                  
+COMMENT                                                                         
+COMMENT ESPaDOnS Cassegrain Unit                                                
+COMMENT ------------------------                                                
+COMMENT                                                                         
+EADCPOS = 'OUT     '           / ESPaDOnS ADC position IN/OUT of beam           
+EADC1BEG= '0       '           / ADC prism 1 position at start of exposure      
+EADC2BEG= '0       '           / ADC prism 2 position at start of exposure      
+EADC1END= '0       '           / ADC prism 1 position at end of exposure        
+EADC2END= '0       '           / ADC prism 2 position at end of exposure        
+ECALIBWH= 'P2      '           / ESPaDOnS calibration wheel position (# and deg)
+ERHOMB1 = 'P1      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB2 = 'P1      '           / ESPaDOnS rhomb 2 position (# and deg)          
+EFABPERO= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EWEDWOL = 'WOL     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+ETEMPPOL=               -20.95 / ESPaDOnS polarimeter temperature deg C         
+ETEMPCB =                 1.97 / ESPaDOnS calibration box temperature deg C     
+COMMENT                                                                         
+COMMENT ESPaDOnS Guider                                                         
+COMMENT ---------------                                                         
+COMMENT                                                                         
+EGUIDING= 'OFF     '           / ESPaDOnS guiding state ON/OFF                  
+EGUISEE =             -9999.90 / ESPaDOnS guider seeing estimate                
+COMMENT                                                                         
+COMMENT ESPaDOnS Spectrograph                                                   
+COMMENT ---------------------                                                   
+COMMENT                                                                         
+ECAMFOC =                -3.50 / ESPaDOnS camera focus position (mm)            
+EHARTPOS= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+ESLIPOS = 'P2      '           / ESPaDOnS slicer bench position (# and mm)      
+EHALOPOS= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOGEN= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+ESLICER = 'P2      '           / ESPaDOnS slicer position (# and deg)           
+EDEKKER = 'P4      '           / ESPaDOnS dekker position (# and mm)            
+EEMSHUT = 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSTATE= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMCNTS =               411284 / ESPaDOnS exposure meter counts at end          
+ETSP1BEG=                13.97 / ESPaDOnS down mirror temp at start (deg C)     
+ETSP2BEG=                14.06 / ESPaDOnS camera temp at start (deg C)          
+ETSP3BEG=                14.14 / ESPaDOnS up mirror temp at start (deg C)       
+ETSP4BEG=                13.22 / ESPaDOnS hygrometer temp at start (deg C)      
+EPRSPBEG=                 3.07 / ESPaDOnS relative pressure at start (mb)       
+ERHSPBEG=                35.38 / ESPaDOnS relative humidity at start (%)        
+ETSP1END=                13.95 / ESPaDOnS down mirror temp at end (deg C)       
+ETSP2END=                14.06 / ESPaDOnS camera temp at end (deg C)            
+ETSP3END=                14.12 / ESPaDOnS up mirror temp at end (deg C)         
+ETSP4END=                13.26 / ESPaDOnS hygrometer temp at end (deg C)        
+EPRSPEND=                 3.05 / ESPaDOnS relative pressure at end (mb)         
+ERHSPEND=                35.58 / ESPaDOnS relative humidity at end (%)          
+EREADSPD= 'XSlow: 3.30e noise, 0.77e/ADU, 90s' / ESPaDOnS det read out xslow/slo
+TESPMIRE=                -1.49 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                -1.27 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                -1.52 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                -0.83 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=                -1.34 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                -0.65 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=                -1.29 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                -0.64 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                -1.60 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 0.25 / 06 temp, air, top ring west deg C              
+TEANRLSB=                10.31 / 19 temp, air, north rail support beam deg C    
+TESHRSET=              9999.00 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                -0.18 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                -0.43 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                -0.22 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                -0.12 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 0.02 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                -0.58 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                 4.18 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                 4.15 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=                 6.19 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                -1.68 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                -2.72 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                -0.40 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=               -11.02 / 61 temp, surface, floor above control room degC
+TESPIERN=                -2.14 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                -0.62 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 0.59 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 0.66 / 86 temp, air, weather tower deg C              
+WINDSPED=                 6.12 / 84 wind speed, weather tower knots             
+WINDDIR =               324.08 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                82.23 / 87 relative humidity, weather tower %          
+PRESSURE=               614.25 / 31 barometric pressure, control room mb        
+END

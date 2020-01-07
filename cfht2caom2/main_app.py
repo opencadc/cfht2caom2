@@ -717,6 +717,19 @@ def get_time_refcoord_val_composite(header):
 
 def get_time_refcoord_val_simple(header):
     mjd_obs = _get_mjd_obs(header)
+    if mjd_obs is None:
+        instrument = _get_instrument(header)
+        if instrument is md.Inst.ESPADONS:
+            date_obs = header.get('DATE-OBS')
+            time_obs = header.get('TIME-OBS')
+            if (date_obs is None or time_obs is None or
+                    date_obs == '1970-01-01' or date_obs == '1970-00-01'):
+                hst_time = header.get('HSTTIME)')
+                # fmt 'Mon Nov 27 15:58:17 HST 2006'
+                mjd_obs = ac.get_datetime(hst_time)
+            else:
+                mjd_obs_str = f'{date_obs}T{time_obs}'
+                mjd_obs = ac.get_datetime(mjd_obs_str)
     return mjd_obs
 
 
@@ -1397,7 +1410,7 @@ def _identify_instrument(uri):
         result = md.Inst.WIRCAM
     elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
             '1219059' in uri or '1883829c' in uri or '2460602a' in uri or
-            '760296f' in uri):
+            '760296f' in uri or '881162d' in uri):
         result = md.Inst.ESPADONS
     return result
 
