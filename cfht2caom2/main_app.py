@@ -322,7 +322,6 @@ def get_energy_function_pix(params):
 
 def get_energy_function_val(params):
     result = None
-    logging.error('val called')
     header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
         if _is_espadons_energy(header, uri):
@@ -356,7 +355,7 @@ def get_energy_resolving_power(params):
             if instmode is None or 'R=' not in instmode:
                 # CW - Default if resolving power value not in header
                 # caom2IngestEspadons.py, l377
-                result = 65000
+                result = 65000.0
             else:
                 # CW - This string is already in instrument keywords but also
                 # need to extract resolving power from it:
@@ -480,7 +479,6 @@ def get_product_type(params):
     obs_type = get_obs_intent(header)
     if obs_type == ObservationIntentType.CALIBRATION:
         result = ProductType.CALIBRATION
-    logging.error(f'suffix is {suffix}')
     if suffix in ['m', 'w', 'y']:
         result = ProductType.AUXILIARY
     return result
@@ -619,11 +617,19 @@ def get_provenance_reference(header):
 
 def get_target_position_cval1(header):
     ra, ignore_dec = _get_ra_dec(header)
+    if ra is None:
+        instrument = _get_instrument(header)
+        if instrument is md.Inst.ESPADONS:
+            ra = header.get('RA_DEG')
     return ra
 
 
 def get_target_position_cval2(header):
     ignore_ra, dec = _get_ra_dec(header)
+    if dec is None:
+        instrument = _get_instrument(header)
+        if instrument is md.Inst.ESPADONS:
+            dec = header.get('DEC_DEG')
     return dec
 
 
@@ -1079,7 +1085,7 @@ def update(observation, **kwargs):
                             artifact.uri, observation.observation_id)
 
                         if chunk.position is not None:
-                            if plane.product_id[-1] == 'o':
+                            if plane.product_id[-1] in ['a', 'o']:
                                 chunk.position_axis_1 = 3
                                 chunk.position_axis_2 = 4
                             else:
@@ -1197,6 +1203,7 @@ def _update_espadons_energy(chunk, suffix, headers, idx, uri, obs_id):
         coord_axis = CoordAxis1D(axis=axis, range=coord_range)
         chunk.energy = SpectralWCS(coord_axis,
                                    specsys='TOPOCENT',
+                                   ssysobs='TOPOCENT',
                                    ssyssrc='TOPOCENT',
                                    resolving_power=resolving_power)
         chunk.energy_axis = 1
@@ -1388,7 +1395,9 @@ def _identify_instrument(uri):
         result = md.Inst.MEGACAM
     elif '2281792p' in uri or '2157095o' in uri:
         result = md.Inst.WIRCAM
-    elif '1001063b' in uri or '1001836x' in uri or '1003681' in uri:
+    elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
+            '1219059' in uri or '1883829c' in uri or '2460602a' in uri or
+            '760296f' in uri):
         result = md.Inst.ESPADONS
     return result
 
