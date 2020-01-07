@@ -247,41 +247,4 @@ WINDSPED=                 5.28 / 84 wind speed, weather tower knots
 WINDDIR =                93.92 / 85 wind direction, weather tower deg (N=0 E=90)
 RELHUMID=                29.76 / 87 relative humidity, weather tower %          
 PRESSURE=               616.89 / 31 barometric pressure, control room mb        
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
-COMMENT  Reserved space.  This line can be used to add a new FITS card.         
 END                                                                             
