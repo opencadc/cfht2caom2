@@ -200,6 +200,7 @@ class CFHTName(mc.StorageName):
     @property
     def product_id(self):
         result = self._file_id
+        # TODO this has changed
         if (self._file_id[-1] in ['g', 'o'] and
                 self._instrument is md.Inst.WIRCAM):
             result = f'{self._file_id[:-1]}og'
@@ -1137,18 +1138,19 @@ def update(observation, **kwargs):
                         if chunk.time is not None:
                             # consistent with caom2IngestEspadons.py
                             chunk.time_axis = 5
-                        _update_espadons_energy(
+                        _update_energy_espadons(
                             chunk, plane.product_id[-1], headers, idx,
-                            artifact.uri, observation.observation_id)
+                            artifact.uri, fqn, observation.observation_id)
 
                         if chunk.position is not None:
                             # CW - Ignore position wcs if a calibration file
                             # suffix list from caom2IngestEspadons.py, l389
                             # 'b', 'd', 'c', 'f', 'x'
-                            # nospatialwcs==1
+                            # with missing spatial indicator keywords
                             if (plane.product_id[-1] in ['a', 'i', 'o', 'p']
                                     and radecsys.lower() != 'null' and
-                                    headers[idx].get('')):
+                                    headers[idx].get('RA_DEG') is not None and
+                                    headers[idx].get('DEC_DEG') is not None):
                                 chunk.position_axis_1 = 3
                                 chunk.position_axis_2 = 4
                             else:
@@ -1260,27 +1262,64 @@ def _is_composite(headers, obs_id):
     return result, composite_type
 
 
-def _update_espadons_energy(chunk, suffix, headers, idx, uri, obs_id):
-    logging.debug(f'Begin _update_espadons_energy for {obs_id}')
-    if suffix in ['a', 'c', 'f', 'o', 'x']:
+def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
+    logging.debug(f'Begin _update_energy_espadons for {obs_id}')
+    cfht_name = CFHTName(file_name=os.path.basename(fqn),
+                         instrument=md.Inst.ESPADONS)
+    if cfht_name.suffix == suffix:
+        axis = Axis('WAVE', 'nm')
         params = {'header': headers[idx],
                   'uri': uri}
-        naxis1 = get_energy_function_naxis(params)
-        cdelt1 = get_energy_function_delta(params)
-        crval1 = get_energy_function_val(params)
         resolving_power = get_energy_resolving_power(params)
-        axis = Axis('WAVE', 'nm')
-        ref_coord_1 = RefCoord(0.5, crval1)
-        ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1)*cdelt1)
-        coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
-        coord_axis = CoordAxis1D(axis=axis, range=coord_range)
+        if suffix in ['a', 'c', 'f', 'o', 'x']:
+            naxis1 = get_energy_function_naxis(params)
+            cdelt1 = get_energy_function_delta(params)
+            crval1 = get_energy_function_val(params)
+            ref_coord_1 = RefCoord(0.5, crval1)
+            ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1)*cdelt1)
+            coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
+            coord_axis = CoordAxis1D(axis=axis, range=coord_range)
+        elif suffix in ['i', 'p']:
+            # PD slack 08-01-20
+            # espadons is a special case because using bounds allows one to
+            # define "tiles" and then the SODA cutout service can extract the
+            # subset of tiles that overlap the desired region. That's the best
+            # that can be done because it is not possible to create a
+            # CoordFunction1D to say what the wavelength of each pixel is
+            #
+            # If the coverage had significant gaps (eg SCUBA or SCUBA2 from
+            # JCMT)  then the extra detail in bounds would enable better
+            # discovery (as the gaps would be captured in the plane metadata).
+            # In the case of espadons I don't think the gaps  are significant
+            # (iirc, espadons is an eschelle spectrograph but I don't recall
+            # whether the discontinuity between eschelle was a small gap or an
+            # overlap)
+            #
+            # So: bounds provides more detail and it can in principle improve
+            # data discovery (if gaps) and enable extraction of subsections of
+            # the spectrum via the SODA service. Espadons was one of the use
+            # cases that justified having bounds there
+
+            # SF slack 08-01-20
+            # We need the information that is contained in bounds. Gaps need
+            # to be captured. So keep bounds. If you decide to remove range,
+            # then advanced users would have to dig in the info to understand
+            # range is first and last bounds.
+
+            # read in the complete fits file, including the data
+            logging.error(f'reading suffix {suffix} {fqn}')
+            hdus = ac.read_fits_data(fqn)
+            wave = hdus[idx].data[0, :]
+            coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
+            coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
+            hdus.close()
         chunk.energy = SpectralWCS(coord_axis,
                                    specsys='TOPOCENT',
                                    ssysobs='TOPOCENT',
                                    ssyssrc='TOPOCENT',
                                    resolving_power=resolving_power)
         chunk.energy_axis = 1
-    logging.debug(f'End _update_espadons_energy for {obs_id}')
+    logging.debug(f'End _update_energy_espadons for {obs_id}')
 
 
 def _update_observable(chunk, obs_id):
