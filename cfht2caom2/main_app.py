@@ -119,7 +119,8 @@ from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, CompositeObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
 from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
-from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS
+from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
+from caom2 import ObservableAxis
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
@@ -214,8 +215,9 @@ class CFHTName(mc.StorageName):
 
     @property
     def simple_by_suffix(self):
-        return (self._suffix == 'p' and self._instrument in [md.Inst.MEGACAM,
-                                                             md.Inst.WIRCAM])
+        return ((self._suffix == 'p' and
+                 self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM]) or
+                (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS))
 
     @property
     def suffix(self):
@@ -565,15 +567,35 @@ def get_provenance_keywords(params):
             result = 'skysubtraction=yes'
         else:
             result = 'skysubtraction=no'
+    elif instrument is md.Inst.ESPADONS and suffix in ['i']:
+        temp = header.get('REDUCTIO')
+        if temp is not None:
+            result = f'reduction={temp}'
     return result
 
 
 def get_provenance_last_executed(header):
-    result = header.get('PROCDATE')
-    if result is not None:
-        # format like 2018-06-05HST17:21:20, which default code doesn't
-        # understand
-        result = mc.make_time(result)
+    result = None
+    instrument = _get_instrument(header)
+    if instrument is md.Inst.ESPADONS:
+        comments = header.get('COMMENT')
+        if comments is not None:
+            for comment in comments:
+                if 'Upena processing date:' in comment:
+                    result = comment.split('Upena processing date: ')[1]
+                    # format like Fri Mar 13 22:51:55 HST 2009, which default
+                    # code doesn't understand
+                    result = mc.make_time(result)
+                    break
+                elif 'opera-' in comment:
+                    result = comment.split('opera-')[1].split(' build date')[0]
+                    break
+    else:
+        result = header.get('PROCDATE')
+        if result is not None:
+            # format like 2018-06-05HST17:21:20, which default code doesn't
+            # understand
+            result = mc.make_time(result)
     return result
 
 
@@ -583,10 +605,13 @@ def get_provenance_name(header):
     if instrument is md.Inst.ESPADONS:
         comments = header.get('COMMENT')
         if comments is not None:
-            if 'COMMENT Upena' in comments:
-                result = 'UPENA'
-            elif 'COMMENT Opera' in comments:
-                result = 'OPERA'
+            for comment in comments:
+                if 'Upena' in comment:
+                    result = 'UPENA'
+                    break
+                elif 'opera-' in comment:
+                    result = 'OPERA'
+                    break
     elif instrument is md.Inst.MEGAPRIME:
         result = 'ELIXIR'
     elif instrument is md.Inst.SITELLE:
@@ -600,6 +625,28 @@ def get_provenance_project(header):
     result = 'STANDARD PIPELINE'
     if get_provenance_name(header) == 'TCS':
         result = None
+    return result
+
+
+def get_provenance_version(header):
+    result = None
+    instrument = _get_instrument(header)
+    if instrument is md.Inst.ESPADONS:
+        comments = header.get('COMMENT')
+        if comments is not None:
+            for comment in comments:
+                if 'Upena version' in comment:
+                    result = comment.split('Upena version')[1]
+                    break
+                elif 'opera-' in comment and 'build date' in comment:
+                    result = comment.split(' build date')[0]
+                    break
+    else:
+        result = header.get('IIWIVER')
+        if result is None:
+            result = header.get('ORBSVER')
+            if result is None:
+                result = header.get('EL_SYS')
     return result
 
 
@@ -827,7 +874,7 @@ def _is_espadons_energy(header, uri):
     result = False
     if instrument is md.Inst.ESPADONS:
         cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
-        if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'o', 'x']:
+        if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x']:
             result = True
     return result
 
@@ -929,10 +976,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Plane.provenance.reference', 'get_provenance_reference(header)')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
-    bp.clear('Plane.provenance.version')
-    bp.add_fits_attribute('Plane.provenance.version', 'EL_SYS')
-    bp.add_fits_attribute('Plane.provenance.version', 'ORBSVER')
-    bp.add_fits_attribute('Plane.provenance.version', 'IIWIVER')
+    bp.set('Plane.provenance.version', 'get_provenance_version(header)')
 
     bp.set('Artifact.productType', 'get_product_type(params)')
 
@@ -1098,11 +1142,22 @@ def update(observation, **kwargs):
                             artifact.uri, observation.observation_id)
 
                         if chunk.position is not None:
-                            if plane.product_id[-1] in ['a', 'o']:
+                            # CW - Ignore position wcs if a calibration file
+                            # suffix list from caom2IngestEspadons.py, l389
+                            # 'b', 'd', 'c', 'f', 'x'
+                            # nospatialwcs==1
+                            if (plane.product_id[-1] in ['a', 'i', 'o', 'p']
+                                    and radecsys.lower() != 'null' and
+                                    headers[idx].get('')):
                                 chunk.position_axis_1 = 3
                                 chunk.position_axis_2 = 4
                             else:
                                 cc.reset_position(chunk)
+
+                        if plane.product_id[-1] in ['i', 'p']:
+                            _update_observable(
+                                chunk, observation.observation_id)
+
                     elif instrument is md.Inst.MEGAPRIME:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1140,12 +1195,12 @@ def update(observation, **kwargs):
 
                         if (plane.product_id[-1] in ['a', 'o', 'x'] and
                                 chunk.position is None):
-                            _update_position(chunk, headers[idx],
-                                             observation.observation_id)
+                            _update_position_sitelle(chunk, headers[idx],
+                                                     observation.observation_id)
 
                         if (plane.product_id[-1] == 'p' and
                                 chunk.position.axis.function is None):
-                            _update_position_function(
+                            _update_position_function_sitelle(
                                 chunk, headers[idx],
                                 observation.observation_id, idx)
 
@@ -1174,7 +1229,12 @@ def update(observation, **kwargs):
                     _repair_comment_provenance_value,
                     observation.observation_id)
         if instrument is md.Inst.WIRCAM and plane.product_id[-1] == 'p':
-            _update_plane_provenance_p(plane, observation.observation_id)
+            # caom2IngestWircam.py, l193
+            # TODO change this from the existing behaviour
+            _update_plane_provenance_p(plane, observation.observation_id, 'og')
+        elif instrument is md.Inst.ESPADONS and plane.product_id[-1] == 'i':
+            # caom2IngestEspadons.py, l714
+            _update_plane_provenance_p(plane, observation.observation_id, 'o')
 
     # relies on update_plane_provenance being called
     if isinstance(observation, CompositeObservation):
@@ -1221,6 +1281,20 @@ def _update_espadons_energy(chunk, suffix, headers, idx, uri, obs_id):
                                    resolving_power=resolving_power)
         chunk.energy_axis = 1
     logging.debug(f'End _update_espadons_energy for {obs_id}')
+
+
+def _update_observable(chunk, obs_id):
+    logging.debug(f'Begin _update_observable for {obs_id}')
+    # caom2IngestEspadons.py, l828
+    # CW Set up observable axes, row 1 is wavelength, row 2 is normalized
+    # flux, row 3 ('p' only) is Stokes spectrum
+    chunk.observable_axis = 2
+    dependent_axis = Axis('flux', 'counts')
+    independent_axis = Axis('WAVE', 'nm')
+    dependent = Slice(dependent_axis, 2)
+    independent = Slice(independent_axis, 1)
+    chunk.observable = ObservableAxis(dependent, independent)
+    logging.debug(f'End _update_observable for {obs_id}')
 
 
 def _update_observation_metadata(obs, headers, fqn):
@@ -1310,19 +1384,18 @@ def _update_observation_metadata(obs, headers, fqn):
     return idx
 
 
-def _update_plane_provenance_p(plane, obs_id):
+def _update_plane_provenance_p(plane, obs_id, suffix):
     logging.debug(f'Begin _update_plane_provenance_p for {obs_id}')
-    # caom2IngestWircam.py, l193
     obs_member_str = mc.CaomName.make_obs_uri_from_obs_id(COLLECTION,
                                                           obs_id)
     obs_member = ObservationURI(obs_member_str)
-    plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}og')
+    plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}{suffix}')
     plane.provenance.inputs.add(plane_uri)
     logging.debug(f'End _update_plane_provenance_p for {obs_id}')
 
 
-def _update_position(chunk, header, obs_id):
-    logging.debug(f'Begin _update_position for {obs_id}')
+def _update_position_sitelle(chunk, header, obs_id):
+    logging.debug(f'Begin _update_position_sitelle for {obs_id}')
     # from caom2IngestSitelle.py l894
     obs_ra = header.get('RA_DEG')
     obs_dec = header.get('DEC_DEG')
@@ -1354,11 +1427,11 @@ def _update_position(chunk, header, obs_id):
     position.coordsys = 'FK5'
     position.equinox = 2000.0
     chunk.position = position
-    logging.debug(f'End _update_position for {obs_id}')
+    logging.debug(f'End _update_position_sitelle for {obs_id}')
 
 
-def _update_position_function(chunk, header, obs_id, extension):
-    logging.debug(f'Begin _update_position_function for {obs_id}')
+def _update_position_function_sitelle(chunk, header, obs_id, extension):
+    logging.debug(f'Begin _update_position_function_sitelle for {obs_id}')
     cd1_1 = header.get('CD1_1')
     # caom2IngestSitelle.py, l745
     # CW
@@ -1387,7 +1460,7 @@ def _update_position_function(chunk, header, obs_id, extension):
     if chunk is None:
         chunk = Chunk()
     wcs_parser.augment_position(chunk)
-    logging.debug(f'End _update_position_function for {obs_id}')
+    logging.debug(f'End _update_position_function_sitelle for {obs_id}')
 
 
 def _update_wircam_time(chunk, header, obs_id):
@@ -1402,15 +1475,14 @@ def _update_wircam_time(chunk, header, obs_id):
 
 def _identify_instrument(uri):
     # TODO - make this a header read when I get to it ...
-    logging.error(f'uri is {uri}')
-    result = md.Inst.SITELLE # 1944968p, 2445397p
+    result = md.Inst.SITELLE  # 1944968p, 2445397p
     if '2463796o' in uri:
         result = md.Inst.MEGACAM
     elif '2281792p' in uri or '2157095o' in uri:
         result = md.Inst.WIRCAM
     elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
             '1219059' in uri or '1883829c' in uri or '2460602a' in uri or
-            '760296f' in uri or '881162d' in uri):
+            '760296f' in uri or '881162d' in uri or '979339' in uri):
         result = md.Inst.ESPADONS
     return result
 
@@ -1438,14 +1510,14 @@ def _build_blueprints(uris):
 
 def _get_uris(args):
     result = []
-    if args.local:
+    if args.lineage:
+        for ii in args.lineage:
+            result.append(ii.split('/', 1)[1])
+    elif args.local:
         for ii in args.local:
             # TODO hack that leaks naming format - sigh ... :(
             file_uri = mc.build_uri(ARCHIVE, os.path.basename(ii))
             result.append(file_uri)
-    elif args.lineage:
-        for ii in args.lineage:
-            result.append(ii.split('/', 1)[1])
     else:
         raise mc.CadcException(
             'Could not define uri from these args {}'.format(args))

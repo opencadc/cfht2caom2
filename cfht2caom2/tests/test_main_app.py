@@ -106,10 +106,15 @@ def test_main_app(test_name):
     file_name = basename.replace('.header', extension)
     cfht_name = CFHTName(file_name=file_name,
                          instrument=instrument)
-    output_file = '{}/{}.actual.xml'.format(TEST_DATA_DIR, basename)
-    obs_path = '{}/{}'.format(TEST_DATA_DIR, '{}.expected.xml'.format(
-        cfht_name.obs_id))
+    if '979339' in test_name:
+        obs_path = f'{TEST_DATA_DIR}/979339.expected.xml'
+        output_file = f'{TEST_DATA_DIR}/979339.actual.xml'
+    else:
+        obs_path = f'{TEST_DATA_DIR}/{cfht_name.obs_id}.expected.xml'
+        output_file = f'{TEST_DATA_DIR}/{basename}.actual.xml'
     expected = mc.read_obs_from_file(obs_path)
+
+    local = _get_local(basename)
 
     with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
@@ -122,7 +127,7 @@ def test_main_app(test_name):
         sys.argv = \
             ('{} --no_validate --local {} --observation {} {} -o {} '
              '--plugin {} --module {} --lineage {}'.
-             format(APPLICATION, test_name, COLLECTION,
+             format(APPLICATION, local, COLLECTION,
                     cfht_name.obs_id, output_file, PLUGIN, PLUGIN,
                     _get_lineage(cfht_name))).split()
         print(sys.argv)
@@ -150,8 +155,14 @@ def _get_lineage(cfht_name):
     #     fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
     #     result = '{} {}'.format(result, fits)
     # return result
-    return mc.get_lineage(ARCHIVE, cfht_name.product_id,
-                          f'{cfht_name.file_name}')
+    if '979339' in cfht_name.product_id:
+        temp_i = mc.get_lineage(ARCHIVE, '979339i', '979339i.fits.gz')
+        temp_o = mc.get_lineage(ARCHIVE, '979339o', '979339o.fits.gz')
+        result = f'{temp_i} {temp_o}'
+    else:
+        result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
+                                f'{cfht_name.file_name}')
+    return result
 
 
 def _get_local(test_name):
@@ -159,7 +170,12 @@ def _get_local(test_name):
     # for ii in LOOKUP[obs_id]:
     #     result = '{} {}/{}.fits.header'.format(result, TEST_DATA_DIR, ii)
     # return result
-    return f'{TEST_DATA_DIR}/{test_name}'
+    if '979339' in test_name:
+        result = f'{TEST_DATA_DIR}/979339i.fits ' \
+                 f'{TEST_DATA_DIR}/979339o.fits.header'
+    else:
+        result = f'{TEST_DATA_DIR}/{test_name}'
+    return result
 
 
 def _vo_mock(url):
