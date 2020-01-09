@@ -76,8 +76,16 @@ def test_is_valid():
     assert test_subject.obs_id == '2463796', 'wrong obs id'
     assert test_subject.file_id == '2463796o', 'wrong file id'
     assert test_subject.file_uri == 'ad:CFHT/2463796o.fits.fz', 'wrong uri'
+    assert test_subject.is_simple, 'should be simple'
 
     test_subject = CFHTName(file_name='1944968p.fits.fz', instrument='SITELLE')
     assert test_subject.obs_id == '1944968p', 'wrong obs id'
     assert test_subject.file_id == '1944968p', 'wrong file id'
     assert test_subject.file_uri == 'ad:CFHT/1944968p.fits.fz', 'wrong uri'
+    assert not test_subject.is_simple, 'should be composite'
+
+    test_subject = CFHTName(file_name='2460503p.fits.gz', instrument='ESPaDOnS')
+    assert test_subject.obs_id == '2460503p', 'wrong obs id'
+    assert test_subject.file_id == '2460503p', 'wrong file id'
+    assert test_subject.file_uri == 'ad:CFHT/2460503p.fits.gz', 'wrong uri'
+    assert not test_subject.is_simple, 'should be composite'

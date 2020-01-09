@@ -108,6 +108,7 @@ Conversation with CW/SF 02-01-19:
 - conclusion - one plane / file, because users want to see one row / file in
   the results tab
 """
+import copy
 import importlib
 import logging
 import math
@@ -166,7 +167,7 @@ class CFHTName(mc.StorageName):
             file_name = mc.CaomName(ad_uri).file_name
         self._file_id = CFHTName.remove_extensions(file_name)
         self._suffix = self._file_id[-1]
-        if self.is_simple:
+        if self.is_simple and not self.is_master_cal:
             self.obs_id = self._file_id[:-1]
         else:
             self.obs_id = self._file_id
@@ -207,10 +208,20 @@ class CFHTName(mc.StorageName):
         return result
 
     @property
+    def is_master_cal(self):
+        return ('weight' in self._file_id or 'master' in self._file_id or
+                    'hotpix' in self._file_id or 'badpix' in self._file_id or
+                    'deadpix' in self._file_id or 'dark' in self._file_id)
+
+    @property
+    def has_polarization(self):
+        return self._suffix in ['p'] and self._instrument is md.Inst.ESPADONS
+
+    @property
     def is_simple(self):
         result = False
         if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
-                or self.simple_by_suffix):
+                or self.simple_by_suffix or self.is_master_cal):
             result = True
         return result
 
@@ -252,7 +263,8 @@ def get_calibration_level(params):
     instrument = _get_instrument(header)
     cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
     result = CalibrationLevel.CALIBRATED
-    if cfht_name.is_simple and not cfht_name.simple_by_suffix:
+    if (cfht_name.is_simple and not cfht_name.simple_by_suffix and not
+            cfht_name.is_master_cal):
         result = CalibrationLevel.RAW_STANDARD
     return result
 
@@ -392,14 +404,20 @@ def get_exptime(params):
     header, suffix, uri = _decompose_params(params)
     exptime = mc.to_float(header.get('EXPTIME'))
     instrument = _get_instrument(header)
-    if instrument is md.Inst.SITELLE:
+    if instrument is md.Inst.ESPADONS and suffix == 'p':
+        # caom2IngestEspadons.py, l406
+        exptime = 0.0
+        polar_seq = mc.to_int(header.get('POLARSEQ'))
+        for ii in range(1, polar_seq + 1):
+            exptime += mc.to_float(header.get(f'EXPTIME{ii}'))
+    elif instrument is md.Inst.SITELLE:
         if suffix == 'p':
             num_steps = header.get('STEPNB')
             exptime = exptime * num_steps
     # units are seconds
     if exptime is None:
-        file_name = _get_filename(header)
-        if file_name is not None and not CFHTName.for_obs_id(file_name):
+        cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+        if cfht_name.is_simple:
             # caom2IngestMegacaomdetrend.py, l438
             exptime = 0.0
     return exptime
@@ -446,9 +464,10 @@ def get_obs_sequence_number(params):
     cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
     result = None
     exp_num = header.get('EXPNUM')
-    if cfht_name.is_simple:
+    if cfht_name.is_simple and not cfht_name.is_master_cal:
         result = exp_num
-    elif instrument is md.Inst.SITELLE and suffix == 'p' and exp_num is None:
+    elif (instrument in [md.Inst.ESPADONS, md.Inst.SITELLE] and
+            suffix == 'p' and exp_num is None):
         result = cfht_name.file_id[:-1]
     return result
 
@@ -473,6 +492,19 @@ def get_plane_data_product_type(header):
     result = DataProductType.IMAGE
     if instrument is md.Inst.ESPADONS:
         result = DataProductType.SPECTRUM
+    return result
+
+
+def get_polarization_function_val(header):
+    lookup = {'I': 1,
+              'Q': 2,
+              'U': 3,
+              'V': 4,
+              'W': 5}
+    result = 6
+    temp = header.get('CMMTSEQ')
+    if temp is not None:
+        result = lookup.get(temp[0], result)
     return result
 
 
@@ -568,7 +600,7 @@ def get_provenance_keywords(params):
             result = 'skysubtraction=yes'
         else:
             result = 'skysubtraction=no'
-    elif instrument is md.Inst.ESPADONS and suffix in ['i']:
+    elif instrument is md.Inst.ESPADONS and suffix in ['i', 'p']:
         temp = header.get('REDUCTIO')
         if temp is not None:
             result = f'reduction={temp}'
@@ -706,9 +738,12 @@ def get_target_standard(header):
     return result
 
 
-def get_time_refcoord_delta_composite(header):
+def get_time_refcoord_delta_composite(params):
+    header, suffix, uri = _decompose_params(params)
     instrument = _get_instrument(header)
-    if instrument is md.Inst.SITELLE:
+    if instrument is md.Inst.ESPADONS and suffix == 'p':
+        exp_time = get_exptime(params) / 86400.0  # units are d
+    elif instrument is md.Inst.SITELLE:
         mjd_start = _get_mjd_start(header)
         mjd_end = mc.to_float(header.get('MJDEND'))
         if mjd_end is None:
@@ -746,7 +781,16 @@ def get_time_refcoord_delta_simple(params):
 
 def get_time_refcoord_val_composite(header):
     instrument = _get_instrument(header)
-    if instrument is md.Inst.SITELLE:
+    mjd_start1 = header.get('MJDSTART1')
+    mjd_date1 = header.get('MJDATE1')
+    if (instrument is md.Inst.ESPADONS and
+            (mjd_start1 is not None or mjd_date1 is not None)):
+        # caom2IngestEspadons.py, l406
+        if mjd_start1 is not None:
+            mjd_obs = mjd_start1
+        else:
+            mjd_obs = mjd_date1
+    elif instrument is md.Inst.SITELLE:
         mjd_obs = _get_mjd_start(header)
     else:
         # CW
@@ -904,7 +948,6 @@ def accumulate_bp(bp, uri, instrument):
     bp.configure_position_axes((1, 2))
     bp.configure_time_axis(3)
     bp.configure_energy_axis(4)
-    bp.configure_polarization_axis(5)
     bp.configure_observable_axis(6)
 
     bp.set('Observation.intent', 'get_obs_intent(header)')
@@ -1043,17 +1086,29 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
     bp.set('Chunk.time.axis.function.naxis', 1)
     cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
-    if cfht_name.is_simple:
+    # TODO - this is really really wrong that is_simple is not sufficient
+    # to make the distinction between the appropriate implementations.
+    if cfht_name.is_simple and not cfht_name.is_master_cal:
         bp.set('Chunk.time.axis.function.delta',
                'get_time_refcoord_delta_simple(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
                'get_time_refcoord_val_simple(header)')
     else:
         bp.set('Chunk.time.axis.function.delta',
-               'get_time_refcoord_delta_composite(header)')
+               'get_time_refcoord_delta_composite(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
                'get_time_refcoord_val_composite(header)')
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
+
+    if cfht_name.has_polarization:
+        bp.configure_polarization_axis(6)
+        # caom2IngestEspadons.py, l209, lTODO
+        bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+        bp.set('Chunk.polarization.axis.function.delta', 1)
+        bp.set('Chunk.polarization.axis.function.naxis', 1)
+        bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
+        bp.set('Chunk.polarization.axis.function.refCoord.val',
+               'get_polarization_function_val(header)')
 
     logging.debug('Done accumulate_bp.')
 
@@ -1078,23 +1133,26 @@ def update(observation, **kwargs):
     if 'fqn' in kwargs:
         fqn = kwargs['fqn']
 
-    # processed files
-    is_composite, composite_type = _is_composite(
-        headers, observation.observation_id)
-    if is_composite and not isinstance(observation, CompositeObservation):
-        logging.info('{} will be changed to a Composite Observation.'.format(
-            observation.observation_id))
-        algorithm_name = 'master_detrend'
-        if observation.observation_id[-1] == 'p':
-            algorithm_name = 'scan'
-        observation = cc.change_to_composite(observation, algorithm_name)
-
     idx = _update_observation_metadata(observation, headers, fqn)
     ccdbin = headers[idx].get('CCBIN1')
     radecsys = headers[idx].get('RADECSYS')
     ctype1 = headers[idx].get('CTYPE1')
     filter_name = headers[idx].get('FILTER')
     instrument = _get_instrument(headers[idx])
+
+    cfht_name = CFHTName(file_name=os.path.basename(fqn), instrument=instrument)
+    is_composite, composite_type = _is_composite(
+        headers, cfht_name, observation.observation_id)
+    if is_composite and not isinstance(observation, CompositeObservation):
+        logging.info('{} will be changed to a Composite Observation.'.format(
+            observation.observation_id))
+        algorithm_name = 'master_detrend'
+        if observation.observation_id[-1] == 'p':
+            if cfht_name.has_polarization:
+                algorithm_name = 'polarization'
+            else:
+                algorithm_name = 'scan'
+        observation = cc.change_to_composite(observation, algorithm_name)
 
     for plane in observation.planes.values():
         if observation.algorithm.name == 'scan':
@@ -1109,7 +1167,7 @@ def update(observation, **kwargs):
                     CalibrationLevel.RAW_STANDARD):
                 time_delta = get_time_refcoord_delta_simple(params)
             else:
-                time_delta = get_time_refcoord_delta_composite(headers[idx])
+                time_delta = get_time_refcoord_delta_composite(params)
             for part in artifact.parts.values():
                 for c in part.chunks:
                     chunk_idx = part.chunks.index(c)
@@ -1157,8 +1215,8 @@ def update(observation, **kwargs):
                                 cc.reset_position(chunk)
 
                         if plane.product_id[-1] in ['i', 'p']:
-                            _update_observable(
-                                chunk, observation.observation_id)
+                            _update_observable(part, chunk, cfht_name.suffix,
+                                               observation.observation_id)
 
                     elif instrument is md.Inst.MEGAPRIME:
                         # CW
@@ -1225,11 +1283,16 @@ def update(observation, **kwargs):
                                            composite_type, COLLECTION,
                                            _repair_imcmb_provenance_value,
                                            observation.observation_id)
-            else:
+            elif composite_type == 'COMMON':
                 cc.update_plane_provenance_single(
                     plane, headers, composite_type, COLLECTION,
                     _repair_comment_provenance_value,
                     observation.observation_id)
+            else:
+                cc.update_plane_provenance(plane, headers, composite_type,
+                                           COLLECTION,
+                                           _repair_filename_provenance_value,
+                                           observation.observation_id)
         if instrument is md.Inst.WIRCAM and plane.product_id[-1] == 'p':
             # caom2IngestWircam.py, l193
             # TODO change this from the existing behaviour
@@ -1246,7 +1309,7 @@ def update(observation, **kwargs):
     return observation
 
 
-def _is_composite(headers, obs_id):
+def _is_composite(headers, cfht_name, obs_id):
     result = False
     composite_type = ''
     if cc.is_composite(headers):
@@ -1259,6 +1322,10 @@ def _is_composite(headers, obs_id):
                 f'Treating {obs_id} with filetype {file_type} as composite. ')
             result = True
             composite_type = 'COMMENT'
+    if not result and not cfht_name.is_simple:
+        logging.error(f'changing is composite for {cfht_name.suffix} {cfht_name.file_name}')
+        result = True
+        composite_type = 'FILENAM'
     return result, composite_type
 
 
@@ -1307,7 +1374,7 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
             # range is first and last bounds.
 
             # read in the complete fits file, including the data
-            logging.error(f'reading suffix {suffix} {fqn}')
+            logging.info(f'Reading data from {fqn}.')
             hdus = ac.read_fits_data(fqn)
             wave = hdus[idx].data[0, :]
             coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
@@ -1322,17 +1389,32 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
     logging.debug(f'End _update_energy_espadons for {obs_id}')
 
 
-def _update_observable(chunk, obs_id):
+def _update_observable(part, chunk, suffix, obs_id):
     logging.debug(f'Begin _update_observable for {obs_id}')
     # caom2IngestEspadons.py, l828
     # CW Set up observable axes, row 1 is wavelength, row 2 is normalized
     # flux, row 3 ('p' only) is Stokes spectrum
-    chunk.observable_axis = 2
-    dependent_axis = Axis('flux', 'counts')
-    independent_axis = Axis('WAVE', 'nm')
-    dependent = Slice(dependent_axis, 2)
-    independent = Slice(independent_axis, 1)
-    chunk.observable = ObservableAxis(dependent, independent)
+
+    # this check is here, because it's quite difficult to find the 'right'
+    # chunk, and blind updating generally causes both chunks to have the
+    # same metadata values.
+    if chunk.observable is None:
+        chunk.observable_axis = 2
+        independent_axis = Axis('WAVE', 'nm')
+        independent = Slice(independent_axis, 1)
+        dependent_axis = Axis('flux', 'counts')
+        dependent = Slice(dependent_axis, 2)
+        chunk.observable = ObservableAxis(dependent, independent)
+
+        if suffix == 'p' and len(part.chunks) == 1:
+            logging.error('yes or no?')
+            # caom2IngestEspadons.py, l863
+            dependent_axis = Axis('polarized flux', 'percent')
+            dependent = Slice(dependent_axis, 3)
+            new_chunk = copy.deepcopy(chunk)
+            new_chunk.observable = ObservableAxis(dependent, independent)
+            new_chunk._id = Chunk._gen_id()
+            part.chunks.append(new_chunk)
     logging.debug(f'End _update_observable for {obs_id}')
 
 
@@ -1517,11 +1599,12 @@ def _identify_instrument(uri):
     result = md.Inst.SITELLE  # 1944968p, 2445397p
     if '2463796o' in uri:
         result = md.Inst.MEGACAM
-    elif '2281792p' in uri or '2157095o' in uri:
+    elif '2281792p' in uri or '2157095o' in uri or 'weight' in uri:
         result = md.Inst.WIRCAM
     elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
             '1219059' in uri or '1883829c' in uri or '2460602a' in uri or
-            '760296f' in uri or '881162d' in uri or '979339' in uri):
+            '760296f' in uri or '881162d' in uri or '979339' in uri or
+            '2460503p' in uri):
         result = md.Inst.ESPADONS
     return result
 
@@ -1579,6 +1662,21 @@ def _repair_comment_provenance_value(value, obs_id):
                 # 1 - plane
                 results.append([prov_obs_id, prov_prod_id])
     return results
+
+
+def _repair_filename_provenance_value(value, obs_id):
+    # values require no repairing, because they look like:
+    # FILENAME= '2460503p'
+    # FILENAM1= '2460503o'           / Base filename at acquisition
+    # FILENAM2= '2460504o'           / Base filename at acquisition
+    # FILENAM3= '2460505o'           / Base filename at acquisition
+    # FILENAM4= '2460506o'           / Base filename at acquisition
+    prov_prod_id = None
+    prov_obs_id = None
+    if value != obs_id:
+        prov_prod_id = value
+        prov_obs_id = value[:-1]
+    return prov_obs_id, prov_prod_id
 
 
 def _repair_imcmb_provenance_value(value, obs_id):

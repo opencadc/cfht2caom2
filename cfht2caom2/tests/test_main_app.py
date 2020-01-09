@@ -173,6 +173,8 @@ def _get_local(test_name):
     if '979339' in test_name:
         result = f'{TEST_DATA_DIR}/979339i.fits ' \
                  f'{TEST_DATA_DIR}/979339o.fits.header'
+    elif '2460503' in test_name:
+        result = f'{TEST_DATA_DIR}/2460503p.fits'
     else:
         result = f'{TEST_DATA_DIR}/{test_name}'
     return result
