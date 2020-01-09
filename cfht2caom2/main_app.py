@@ -202,7 +202,7 @@ class CFHTName(mc.StorageName):
     def product_id(self):
         result = self._file_id
         # TODO this has changed
-        if (self._file_id[-1] in ['g', 'o'] and
+        if (self._suffix in ['g', 'o'] and
                 self._instrument is md.Inst.WIRCAM):
             result = f'{self._file_id[:-1]}og'
         return result
@@ -220,14 +220,15 @@ class CFHTName(mc.StorageName):
     @property
     def is_simple(self):
         result = False
-        if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 'x']
+        if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',
+                             'w', 'x', 'y']
                 or self.simple_by_suffix or self.is_master_cal):
             result = True
         return result
 
     @property
     def simple_by_suffix(self):
-        return ((self._suffix == 'p' and
+        return ((self._suffix in ['p', 's'] and
                  self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM]) or
                 (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS))
 
@@ -463,11 +464,16 @@ def get_obs_sequence_number(params):
     instrument = _get_instrument(header)
     cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
     result = None
-    exp_num = header.get('EXPNUM')
-    if cfht_name.is_simple and not cfht_name.is_master_cal:
-        result = exp_num
-    elif (instrument in [md.Inst.ESPADONS, md.Inst.SITELLE] and
-            suffix == 'p' and exp_num is None):
+    # SF 09-01-20
+    # *y files are produced from other files, I am guessing the sky
+    # subtraction software at CFHT copies the header from one of the exposure
+    # and does not update the EXPNUM.
+    #
+    # SGo - because of this, use the file name to find the sequence number,
+    # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
+    if ((cfht_name.is_simple and not cfht_name.is_master_cal) or (
+            instrument in [md.Inst.ESPADONS,
+                           md.Inst.SITELLE] and suffix == 'p')):
         result = cfht_name.file_id[:-1]
     return result
 
@@ -1214,7 +1220,8 @@ def update(observation, **kwargs):
                             else:
                                 cc.reset_position(chunk)
 
-                        if plane.product_id[-1] in ['i', 'p']:
+                        if (plane.product_id[-1] in ['i', 'p'] and
+                                cfht_name.suffix == plane.product_id[-1]):
                             _update_observable(part, chunk, cfht_name.suffix,
                                                observation.observation_id)
 
@@ -1293,7 +1300,7 @@ def update(observation, **kwargs):
                                            COLLECTION,
                                            _repair_filename_provenance_value,
                                            observation.observation_id)
-        if instrument is md.Inst.WIRCAM and plane.product_id[-1] == 'p':
+        if instrument is md.Inst.WIRCAM and plane.product_id[-1] in ['p', 's']:
             # caom2IngestWircam.py, l193
             # TODO change this from the existing behaviour
             _update_plane_provenance_p(plane, observation.observation_id, 'og')

@@ -1,0 +1,834 @@
+SIMPLE  =                    T / Written by IDL:  Thu Nov 21 06:29:15 2019      
+BITPIX  =                  -32 / IEEE single precision floating point           
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =               214823 /Number of positions along axis 1                
+NAXIS2  =                   24 /Number of positions along axis 2                
+COMMENT ---------- CFHT acknowledgement ----------                              
+COMMENT Acknowledgement for CFHT data is as follows:                            
+COMMENT Based on observations obtained at the Canada-France-Hawaii              
+COMMENT Telescope (CFHT) which is operated by the National Research             
+COMMENT Council of Canada, the Institut National des Sciences de l'Univers      
+COMMENT of the Centre National de la Recherche Scientique of France,            
+COMMENT and the University of Hawaii.                                           
+COMMENT                                                                         
+COMMENT Fully reduced by Upena at CFHT                                          
+COMMENT ----------- Upena Reduction ----------                                  
+COMMENT Upena version 1.1 January 2016                                          
+COMMENT Upena processing date: Thu Nov 21 06:29:15 HST 2019                     
+COMMENT Upena website: http://www.cfht.hawaii.edu/Instruments/Upena/            
+COMMENT Upena email: upena@cfht.hawaii.edu                                      
+COMMENT Upena uses J-F. Donati's software Libre-ESpRIT                          
+COMMENT Version 2.12 (2016 Jan. 13)                                             
+COMMENT Libre-ESpRIT reference: Donati et al., 1997, MNRAS, 291, 658            
+REDUCTIO= 'Polar   '           / Type of reduction                              
+NORMAL  =                    2 / Normalized and Un-normalized Data              
+COMMENT  File contains automatic wavelength correction and uncorrected data.    
+COL1    = 'Wavelength'         / Normalized                                     
+COL2    = 'Intensity'          / Normalized                                     
+COL3    = 'Stokes  '           / Normalized                                     
+COL4    = 'CheckN1 '           / Normalized                                     
+COL5    = 'CheckN2 '           / Normalized                                     
+COL6    = 'ErrorBar'           / Normalized                                     
+COL7    = 'Wavelength'         / UnNormalized                                   
+COL8    = 'Intensity'          / UnNormalized                                   
+COL9    = 'Stokes  '           / UnNormalized                                   
+COL10   = 'CheckN1 '           / UnNormalized                                   
+COL11   = 'CheckN2 '           / UnNormalized                                   
+COL12   = 'ErrorBar'           / UnNormalized                                   
+COL13   = 'Wavelength'         / Normalized, no autowave correction             
+COL14   = 'Intensity'          / Normalized, no autowave correction             
+COL15   = 'Stokes  '           / Normalized, no autowave correction             
+COL16   = 'CheckN1 '           / Normalized, no autowave correction             
+COL17   = 'CheckN2 '           / Normalized, no autowave correction             
+COL18   = 'ErrorBar'           / Normalized, no autowave correction             
+COL19   = 'Wavelength'         / UnNormalized, no autowave correction           
+COL20   = 'Intensity'          / UnNormalized, no autowave correction           
+COL21   = 'Stokes  '           / UnNormalized, no autowave correction           
+COL22   = 'CheckN1 '           / UnNormalized, no autowave correction           
+COL23   = 'CheckN2 '           / UnNormalized, no autowave correction           
+COL24   = 'ErrorBar'           / UnNormalized, no autowave correction           
+COMMENT For Stokes Q, V, and W, keep the Stokes parameter sign as is            
+COMMENT For Stokes U, invert the sign of the Stokes parameter                   
+POLARSEQ=                    4 / Number of images in polar sequence             
+STARTSEQ=                    1 / Start image of polar sequence                  
+COMMENT Source files 2460503o 2460504o 2460505o 2460506o                        
+COMMENT Polar sequence of 4 images, starting at image 1                         
+INHERIT =                    F / No need to inherit global keywords             
+BZERO   =                    0 / Zero factor                                    
+BSCALE  =              1.00000 / Scale factor                                   
+CMMTOBS = 'N/A     '                                                            
+CMMTSEQ = 'V exposure 1, sequence 1 of 1'                                       
+OBJECT  = 'TIC18066482'                                                         
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Rhita-Maria Ouazzani'                                                
+RUNID   = '19BF35  '                                                            
+FILENAME= '2460503p'           / Base filename at reduction                     
+FILENAM1= '2460503o'           / Base filename at acquisition                   
+FILENAM2= '2460504o'           / Base filename at acquisition                   
+FILENAM3= '2460505o'           / Base filename at acquisition                   
+FILENAM4= '2460506o'           / Base filename at acquisition                   
+PATHNAME= '/data/sessions/espadons/19BQ11-Nov20' / Original directory name at ac
+DATE    = '2019-11-21T06:29:15' / UTC Date of reduction                         
+DATE1   = '2019-11-21T15:57:52' / UTC Date of file acquisition                  
+DATE2   = '2019-11-21T15:59:53' / UTC Date of file acquisition                  
+DATE3   = '2019-11-21T16:01:54' / UTC Date of file acquisition                  
+DATE4   = '2019-11-21T16:03:55' / UTC Date of file acquisition                  
+IMAGESWV= 'CFHT DetCom v3.6018 (Aug 17 2018)' / Image creation software version 
+OBSTYPE = 'OBJECT  '           / Observation / Exposure type                    
+EXPTYPE = 'OBJECT  '           / See OBSTYPE                                    
+EXPNUM1 = '2460503 '           / CFHT odometer number                           
+EXPNUM2 = '2460504 '           / CFHT odometer number                           
+EXPNUM3 = '2460505 '           / CFHT odometer number                           
+EXPNUM4 = '2460506 '           / CFHT odometer number                           
+EXPTIME1= '96.0000 '           / Integration time (seconds)                     
+EXPTIME2= '96.0000 '           / Integration time (seconds)                     
+EXPTIME3= '96.0000 '           / Integration time (seconds)                     
+EXPTIME4= '96.0000 '           / Integration time (seconds)                     
+DARKTIME=               96.000 / [sec] Dark current time                        
+SHUTOPEN= '2019-11-21T15:56:16.914' / Shutter blade opening time (UTC)          
+SHUTCLOS= '2019-11-21T15:57:52.932' / Shutter blade closing time (UTC)          
+DETECTOR= 'OLAPA   '           / Science Detector                               
+IMAGEID =                    0 / CCD chip number                                
+CHIPID  =                    0 / Use IMAGEID instead                            
+DETSIZE = '[1:2048,1:4608]'    / Total data pixels in full mosaic               
+RASTER  = 'FULL    '           / Active raster description                      
+CCDSUM  = '1 1     '           / Binning factors                                
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+PIXSIZE =                 13.5 / Pixel size for both axes (microns)             
+AMPLIST = 'a,b     '           / List of amplifiers for this image              
+CCDSIZE = '[1:2048,1:4608]'    / Detector imaging area size                     
+CCDSEC  = '[21:2068,1:4608]'   / Read out area of the detector (unbinned)       
+DATASEC = '[21:2068,1:4608]'   / Imaging area of the detector                   
+TRIMSEC = '[21:2068,4:4605]'   / Useful imaging area of the detector            
+BSECA   = '[1:20,1:4608]'      / Overscan/prescan (bias) area from Amp A        
+BSECB   = '[2069:2088,1:4608]' / Overscan/prescan (bias) area from Amp B        
+CSECA   = '[21:1044,1:4608]'   / Section in full CCD for DSECA                  
+CSECB   = '[1045:2068,1:4608]' / Section in full CCD for DSECB                  
+DSECA   = '[21:1044,1:4608]'   / Imaging area from Amp A                        
+DSECB   = '[1045:2068,1:4608]' / Imaging area from Amp B                        
+TSECA   = '[21:1044,4:4605]'   / Trim section for Amp A                         
+TSECB   = '[1045:2068,4:4605]' / Trim section for Amp B                         
+MAXLIN  =                65535 / Maximum linearity value (ADU)                  
+SATURATE=                65535 / Saturation value (ADU)                         
+GAINA   =                 1.30 / Amp A gain (electrons/ADU)                     
+GAINB   =                 1.30 / Amp B gain (electrons/ADU)                     
+RDNOISEA=                 4.20 / Amp A read noise (electrons)                   
+RDNOISEB=                 4.10 / Amp B read noise (electrons)                   
+DARKCUR =                    0 / Dark current (e-/pixel/hour)                   
+RDTIME  =                19.00 / Read out time (sec)                            
+MDCOORDS=                    1 / Sequence number within the exposure sequence   
+MDREPEAT=                    1 / Total number of sequences                      
+CMPLTEXP=                    1 / Exposure number within the exposure sequence   
+NEXP    =                    4 / Total number of exposures within the sequence  
+CONSWV  = 'olD=137,DCU=49'     / Controller software DSPID and SERNO versions   
+DETSTAT = 'ok      '           / Detector temp range (-105..-90)                
+DETTEM1 = '-100.200'           / Detector temp deg C = 773 + -0.292 * 3125      
+DETTEM2 = '-100.200'           / Detector temp deg C = 773 + -0.292 * 3125      
+DETTEM3 = '-100.200'           / Detector temp deg C = 773 + -0.292 * 3125      
+DETTEM4 = '-100.200'           / Detector temp deg C = 773 + -0.292 * 3125      
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+COMMENT ---- This section contains data from 2460503pn.out ----                 
+COMMENT Bias file: 2460507b.fits                                                
+COMMENT Detector gain (e/ADU) and read-out noise (e) : 1.210 3.600              
+COMMENT Rejection threshold for unpolarised spectra [default = 10.0] : 20.0     
+COMMENT Accuracy of 2d bias fit : 0.38 ADU; Readout noise : 3.05 ADU            
+COMMENT Accuracy of 2d bias fit : 0.38 ADU; Readout noise : 3.01 ADU            
+COMMENT Order # 22 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 23 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 24 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 25 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 26 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 27 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 28 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 29 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 30 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 31 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 32 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 33 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 34 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 35 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 36 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 37 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 38 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 39 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 40 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 41 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 42 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 43 : columns -13.6 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 44 : columns -13.6 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 45 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 46 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 47 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 48 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 49 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 50 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 51 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 52 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 53 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 54 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 55 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 56 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 57 : columns -14.4 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 58 : columns -16.0 to 14.8 (sep. @ col -0.4)                    
+COMMENT Order # 59 : columns -27.2 to 14.8 (sep. @ col -9.2)                    
+COMMENT Order # 60 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 61 : columns -33.6 to 41.6 (sep. @ col 1.2)                     
+COMMENT Correcting wavelength scale from Earth motion...                        
+COMMENT Coordinates of object : 11:32:12.88 & 38:55:32.7                        
+COMMENT Time of observations : 2019 11 21 @ UT 16: 0:                           
+COMMENT 6 (hour angle = -1.881 hr, airmass = 1.168 )                            
+COMMENT Total exposure time : 384.0 s (96.0+96.0+96.0+96.0 s)                   
+COMMENT Cosine latitude of observatory : 0.941                                  
+COMMENT Heliocentric velocity of observer towards star : 25.368 km/s            
+COMMENT Geocentric Julian date (UTC) : 2458809.16674                            
+COMMENT Heliocentric Julian date (UTC) : 2458809.16563                          
+COMMENT Heliocentric Julian date (TT) : 2458809.16643                           
+COMMENT SNR per spec/ccd pxl in order # 61 (371 nm)                             
+COMMENT  I> 8 / 9 V> 14 / 16 N> 14 / 15                                         
+COMMENT SNR per spec/ccd pxl in order # 60 (377 nm)                             
+COMMENT  I> 13 / 14 V> 12 / 13 N> 12 / 13                                       
+COMMENT SNR per spec/ccd pxl in order # 59 (384 nm)                             
+COMMENT  I> 15 / 17 V> 12 / 14 N> 13 / 14                                       
+COMMENT SNR per spec/ccd pxl in order # 58 (390 nm)                             
+COMMENT  I> 41 / 48 V> 35 / 41 N> 36 / 42                                       
+COMMENT SNR per spec/ccd pxl in order # 57 (397 nm)                             
+COMMENT  I> 57 / 67 V> 50 / 59 N> 51 / 61                                       
+COMMENT SNR per spec/ccd pxl in order # 56 (404 nm)                             
+COMMENT  I> 76 / 90 V> 71 / 84 N> 71 / 84                                       
+COMMENT SNR per spec/ccd pxl in order # 55 (412 nm)                             
+COMMENT  I> 88 / 105 V> 80 / 95 N> 82 / 97                                      
+COMMENT SNR per spec/ccd pxl in order # 54 (419 nm)                             
+COMMENT  I> 101 / 120 V> 94 / 112 N> 95 / 113                                   
+COMMENT SNR per spec/ccd pxl in order # 53 (427 nm)                             
+COMMENT  I> 110 / 131 V> 102 / 122 N> 104 / 124                                 
+COMMENT SNR per spec/ccd pxl in order # 52 (435 nm)                             
+COMMENT  I> 119 / 142 V> 113 / 134 N> 113 / 135                                 
+COMMENT SNR per spec/ccd pxl in order # 51 (444 nm)                             
+COMMENT  I> 130 / 155 V> 122 / 145 N> 120 / 144                                 
+COMMENT SNR per spec/ccd pxl in order # 50 (453 nm)                             
+COMMENT  I> 140 / 168 V> 133 / 159 N> 128 / 153                                 
+COMMENT SNR per spec/ccd pxl in order # 49 (462 nm)                             
+COMMENT  I> 150 / 179 V> 144 / 172 N> 142 / 169                                 
+COMMENT SNR per spec/ccd pxl in order # 48 (472 nm)                             
+COMMENT  I> 156 / 186 V> 147 / 176 N> 147 / 175                                 
+COMMENT SNR per spec/ccd pxl in order # 47 (482 nm)                             
+COMMENT  I> 166 / 198 V> 158 / 188 N> 159 / 190                                 
+COMMENT SNR per spec/ccd pxl in order # 46 (492 nm)                             
+COMMENT  I> 176 / 211 V> 164 / 197 N> 168 / 201                                 
+COMMENT SNR per spec/ccd pxl in order # 45 (503 nm)                             
+COMMENT  I> 183 / 219 V> 168 / 201 N> 175 / 210                                 
+COMMENT SNR per spec/ccd pxl in order # 44 (515 nm)                             
+COMMENT  I> 189 / 227 V> 175 / 209 N> 170 / 203                                 
+COMMENT SNR per spec/ccd pxl in order # 43 (527 nm)                             
+COMMENT  I> 193 / 231 V> 175 / 210 N> 182 / 218                                 
+COMMENT SNR per spec/ccd pxl in order # 42 (539 nm)                             
+COMMENT  I> 196 / 235 V> 183 / 219 N> 188 / 225                                 
+COMMENT SNR per spec/ccd pxl in order # 41 (552 nm)                             
+COMMENT  I> 199 / 239 V> 186 / 222 N> 190 / 227                                 
+COMMENT SNR per spec/ccd pxl in order # 40 (566 nm)                             
+COMMENT  I> 201 / 240 V> 189 / 226 N> 189 / 226                                 
+COMMENT SNR per spec/ccd pxl in order # 39 (581 nm)                             
+COMMENT  I> 200 / 239 V> 187 / 224 N> 186 / 222                                 
+COMMENT SNR per spec/ccd pxl in order # 38 (596 nm)                             
+COMMENT  I> 202 / 242 V> 190 / 227 N> 190 / 227                                 
+COMMENT SNR per spec/ccd pxl in order # 37 (612 nm)                             
+COMMENT  I> 204 / 244 V> 190 / 227 N> 189 / 227                                 
+COMMENT SNR per spec/ccd pxl in order # 36 (629 nm)                             
+COMMENT  I> 207 / 247 V> 196 / 234 N> 190 / 227                                 
+COMMENT SNR per spec/ccd pxl in order # 35 (647 nm)                             
+COMMENT  I> 212 / 253 V> 195 / 233 N> 194 / 232                                 
+COMMENT SNR per spec/ccd pxl in order # 34 (666 nm)                             
+COMMENT  I> 216 / 258 V> 201 / 241 N> 202 / 242                                 
+COMMENT SNR per spec/ccd pxl in order # 33 (686 nm)                             
+COMMENT  I> 217 / 259 V> 200 / 239 N> 206 / 246                                 
+COMMENT SNR per spec/ccd pxl in order # 32 (708 nm)                             
+COMMENT  I> 217 / 260 V> 205 / 245 N> 197 / 236                                 
+COMMENT SNR per spec/ccd pxl in order # 31 (731 nm)                             
+COMMENT  I> 218 / 261 V> 201 / 241 N> 206 / 246                                 
+COMMENT SNR per spec/ccd pxl in order # 30 (755 nm)                             
+COMMENT  I> 215 / 257 V> 195 / 233 N> 191 / 229                                 
+COMMENT SNR per spec/ccd pxl in order # 29 (781 nm)                             
+COMMENT  I> 217 / 260 V> 200 / 240 N> 207 / 248                                 
+COMMENT SNR per spec/ccd pxl in order # 28 (809 nm)                             
+COMMENT  I> 215 / 257 V> 205 / 245 N> 203 / 243                                 
+COMMENT SNR per spec/ccd pxl in order # 27 (839 nm)                             
+COMMENT  I> 211 / 253 V> 201 / 240 N> 196 / 235                                 
+COMMENT SNR per spec/ccd pxl in order # 26 (871 nm)                             
+COMMENT  I> 206 / 247 V> 192 / 229 N> 190 / 227                                 
+COMMENT SNR per spec/ccd pxl in order # 25 (906 nm)                             
+COMMENT  I> 192 / 229 V> 179 / 214 N> 177 / 212                                 
+COMMENT SNR per spec/ccd pxl in order # 24 (944 nm)                             
+COMMENT  I> 151 / 180 V> 134 / 160 N> 132 / 158                                 
+COMMENT SNR per spec/ccd pxl in order # 23 (985 nm)                             
+COMMENT  I> 108 / 128 V> 98 / 116 N> 98 / 116                                   
+COMMENT SNR per spec/ccd pxl in order # 22 (1029 nm)                            
+COMMENT  I> 41 / 49 V> 33 / 38 N> 33 / 39                                       
+COMMENT >>> radial velocity correction from telluric lines (km/s): -0.068       
+COMMENT >>> fwhm / ew of telluric lsd profile (km/s): 9.522 9.313               
+COMMENT >>> H2O col density from tel lines (mm of H2O): 4.912 at airmass 1.168  
+COMMENT >>> vmag/teff estimate from sn curve (mag/K): 7.96 6957                 
+COMMENT ---- End of data from 2460503pn.out ----                                
+COMMENT ---- This section contains data from 2460503pu.out ----                 
+COMMENT Bias file: 2460507b.fits                                                
+COMMENT Detector gain (e/ADU) and read-out noise (e) : 1.210 3.600              
+COMMENT Rejection threshold for unpolarised spectra [default = 10.0] : 20.0     
+COMMENT Accuracy of 2d bias fit : 0.38 ADU; Readout noise : 3.05 ADU            
+COMMENT Accuracy of 2d bias fit : 0.38 ADU; Readout noise : 3.01 ADU            
+COMMENT Order # 22 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 23 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 24 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 25 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 26 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 27 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 28 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 29 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 30 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 31 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 32 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 33 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 34 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 35 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 36 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 37 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 38 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 39 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 40 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 41 : columns -13.6 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 42 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 43 : columns -13.6 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 44 : columns -13.6 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 45 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 46 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 47 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 48 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 49 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 50 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 51 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 52 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 53 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 54 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 55 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 56 : columns -14.0 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 57 : columns -14.4 to 14.4 (sep. @ col -0.4)                    
+COMMENT Order # 58 : columns -16.0 to 14.8 (sep. @ col -0.4)                    
+COMMENT Order # 59 : columns -27.2 to 14.8 (sep. @ col -9.2)                    
+COMMENT Order # 60 : columns -14.0 to 14.0 (sep. @ col -0.4)                    
+COMMENT Order # 61 : columns -33.6 to 41.6 (sep. @ col 1.2)                     
+COMMENT Correcting wavelength scale from Earth motion...                        
+COMMENT Coordinates of object : 11:32:12.88 & 38:55:32.7                        
+COMMENT Time of observations : 2019 11 21 @ UT 16: 0: 6 (hour angle = -1.881 hr 
+COMMENT Total exposure time : 384.0 s (96.0+96.0+96.0+96.0 s)                   
+COMMENT Cosine latitude of observatory : 0.941                                  
+COMMENT Heliocentric velocity of observer towards star : 25.368 km/s            
+COMMENT Geocentric Julian date (UTC) : 2458809.16674                            
+COMMENT Heliocentric Julian date (UTC) : 2458809.16563                          
+COMMENT Heliocentric Julian date (TT) : 2458809.16643                           
+COMMENT SNR per spec/ccd pxl in order # 61 (371 nm)                             
+COMMENT  I> 17 / 19 V> 10 / 11 N> 10 / 11                                       
+COMMENT SNR per spec/ccd pxl in order # 60 (377 nm)                             
+COMMENT  I> 11 / 12 V> 10 / 11 N> 10 / 11                                       
+COMMENT SNR per spec/ccd pxl in order # 59 (384 nm)                             
+COMMENT  I> 14 / 16 V> 11 / 12 N> 11 / 13                                       
+COMMENT SNR per spec/ccd pxl in order # 58 (390 nm)                             
+COMMENT  I> 37 / 43 V> 30 / 35 N> 30 / 35                                       
+COMMENT SNR per spec/ccd pxl in order # 57 (397 nm)                             
+COMMENT  I> 50 / 59 V> 40 / 48 N> 42 / 49                                       
+COMMENT SNR per spec/ccd pxl in order # 56 (404 nm)                             
+COMMENT  I> 73 / 87 V> 68 / 80 N> 67 / 80                                       
+COMMENT SNR per spec/ccd pxl in order # 55 (412 nm)                             
+COMMENT  I> 78 / 92 V> 68 / 81 N> 70 / 83                                       
+COMMENT SNR per spec/ccd pxl in order # 54 (419 nm)                             
+COMMENT  I> 96 / 115 V> 89 / 106 N> 90 / 107                                    
+COMMENT SNR per spec/ccd pxl in order # 53 (427 nm)                             
+COMMENT  I> 105 / 125 V> 97 / 115 N> 98 / 117                                   
+COMMENT SNR per spec/ccd pxl in order # 52 (435 nm)                             
+COMMENT  I> 105 / 125 V> 98 / 117 N> 97 / 116                                   
+COMMENT SNR per spec/ccd pxl in order # 51 (444 nm)                             
+COMMENT  I> 125 / 149 V> 117 / 139 N> 115 / 137                                 
+COMMENT SNR per spec/ccd pxl in order # 50 (453 nm)                             
+COMMENT  I> 135 / 162 V> 128 / 152 N> 123 / 146                                 
+COMMENT SNR per spec/ccd pxl in order # 49 (462 nm)                             
+COMMENT  I> 146 / 174 V> 141 / 168 N> 138 / 165                                 
+COMMENT SNR per spec/ccd pxl in order # 48 (472 nm)                             
+COMMENT  I> 156 / 186 V> 147 / 176 N> 147 / 175                                 
+COMMENT SNR per spec/ccd pxl in order # 47 (482 nm)                             
+COMMENT  I> 160 / 192 V> 151 / 181 N> 152 / 181                                 
+COMMENT SNR per spec/ccd pxl in order # 46 (492 nm)                             
+COMMENT  I> 170 / 203 V> 158 / 189 N> 161 / 193                                 
+COMMENT SNR per spec/ccd pxl in order # 45 (503 nm)                             
+COMMENT  I> 179 / 214 V> 165 / 197 N> 171 / 205                                 
+COMMENT SNR per spec/ccd pxl in order # 44 (515 nm)                             
+COMMENT  I> 184 / 220 V> 169 / 202 N> 164 / 196                                 
+COMMENT SNR per spec/ccd pxl in order # 43 (527 nm)                             
+COMMENT  I> 189 / 226 V> 171 / 205 N> 178 / 213                                 
+COMMENT SNR per spec/ccd pxl in order # 42 (539 nm)                             
+COMMENT  I> 193 / 231 V> 180 / 215 N> 184 / 220                                 
+COMMENT SNR per spec/ccd pxl in order # 41 (552 nm)                             
+COMMENT  I> 197 / 235 V> 183 / 219 N> 187 / 224                                 
+COMMENT SNR per spec/ccd pxl in order # 40 (566 nm)                             
+COMMENT  I> 198 / 237 V> 186 / 223 N> 186 / 223                                 
+COMMENT SNR per spec/ccd pxl in order # 39 (581 nm)                             
+COMMENT  I> 200 / 239 V> 187 / 224 N> 186 / 222                                 
+COMMENT SNR per spec/ccd pxl in order # 38 (596 nm)                             
+COMMENT  I> 201 / 241 V> 189 / 226 N> 189 / 226                                 
+COMMENT SNR per spec/ccd pxl in order # 37 (612 nm)                             
+COMMENT  I> 203 / 243 V> 188 / 225 N> 188 / 225                                 
+COMMENT SNR per spec/ccd pxl in order # 36 (629 nm)                             
+COMMENT  I> 205 / 245 V> 194 / 232 N> 188 / 225                                 
+COMMENT SNR per spec/ccd pxl in order # 35 (647 nm)                             
+COMMENT  I> 207 / 248 V> 190 / 228 N> 189 / 226                                 
+COMMENT SNR per spec/ccd pxl in order # 34 (666 nm)                             
+COMMENT  I> 212 / 254 V> 198 / 237 N> 199 / 238                                 
+COMMENT SNR per spec/ccd pxl in order # 33 (686 nm)                             
+COMMENT  I> 212 / 253 V> 192 / 230 N> 197 / 236                                 
+COMMENT SNR per spec/ccd pxl in order # 32 (708 nm)                             
+COMMENT  I> 217 / 260 V> 205 / 245 N> 198 / 236                                 
+COMMENT SNR per spec/ccd pxl in order # 31 (731 nm)                             
+COMMENT  I> 215 / 257 V> 198 / 236 N> 202 / 242                                 
+COMMENT SNR per spec/ccd pxl in order # 30 (755 nm)                             
+COMMENT  I> 204 / 244 V> 176 / 211 N> 173 / 207                                 
+COMMENT SNR per spec/ccd pxl in order # 29 (781 nm)                             
+COMMENT  I> 216 / 259 V> 199 / 238 N> 206 / 246                                 
+COMMENT SNR per spec/ccd pxl in order # 28 (809 nm)                             
+COMMENT  I> 209 / 250 V> 197 / 236 N> 195 / 234                                 
+COMMENT SNR per spec/ccd pxl in order # 27 (839 nm)                             
+COMMENT  I> 206 / 246 V> 195 / 234 N> 191 / 229                                 
+COMMENT SNR per spec/ccd pxl in order # 26 (871 nm)                             
+COMMENT  I> 203 / 243 V> 189 / 226 N> 187 / 224                                 
+COMMENT SNR per spec/ccd pxl in order # 25 (906 nm)                             
+COMMENT  I> 181 / 217 V> 164 / 196 N> 162 / 193                                 
+COMMENT SNR per spec/ccd pxl in order # 24 (944 nm)                             
+COMMENT  I> 166 / 198 V> 98 / 117 N> 97 / 115                                   
+COMMENT SNR per spec/ccd pxl in order # 23 (985 nm)                             
+COMMENT  I> 105 / 125 V> 95 / 113 N> 95 / 113                                   
+COMMENT SNR per spec/ccd pxl in order # 22 (1029 nm)                            
+COMMENT  I> 42 / 49 V> 33 / 39 N> 34 / 39                                       
+COMMENT ---- End of from 2460503pu.out ----                                     
+COMMENT ---- This section contains data from wcal_OLAPA-ab_pol_Normal.out ----  
+COMMENT Mean spectral resolution in order #22 : 65346 (acc : 1498, #lines : 46) 
+COMMENT Mean spectral resolution in order #23 : 64901 (acc : 1093, #lines : 60) 
+COMMENT Mean spectral resolution in order #24 : 63134 (acc : 1126, #lines : 50) 
+COMMENT Mean spectral resolution in order #25 : 65615 (acc : 1119, #lines : 63) 
+COMMENT Mean spectral resolution in order #26 : 66522 (acc : 1141, #lines : 47) 
+COMMENT Mean spectral resolution in order #27 : 66007 (acc : 1006, #lines : 48) 
+COMMENT Mean spectral resolution in order #28 : 67423 (acc : 770, #lines : 57)  
+COMMENT Mean spectral resolution in order #29 : 65390 (acc : 1173, #lines : 39) 
+COMMENT Mean spectral resolution in order #30 : 67584 (acc : 762, #lines : 40)  
+COMMENT Mean spectral resolution in order #31 : 66523 (acc : 1400, #lines : 34) 
+COMMENT Mean spectral resolution in order #32 : 67058 (acc : 1374, #lines : 34) 
+COMMENT Mean spectral resolution in order #33 : 68850 (acc : 1847, #lines : 40) 
+COMMENT Mean spectral resolution in order #34 : 65508 (acc : 699, #lines : 43)  
+COMMENT Mean spectral resolution in order #35 : 67762 (acc : 1859, #lines : 52) 
+COMMENT Mean spectral resolution in order #36 : 65688 (acc : 566, #lines : 75)  
+COMMENT Mean spectral resolution in order #37 : 65417 (acc : 507, #lines : 94)  
+COMMENT Mean spectral resolution in order #38 : 65676 (acc : 567, #lines : 88)  
+COMMENT Mean spectral resolution in order #39 : 65900 (acc : 668, #lines : 61)  
+COMMENT Mean spectral resolution in order #40 : 64530 (acc : 922, #lines : 61)  
+COMMENT Mean spectral resolution in order #41 : 64930 (acc : 613, #lines : 76)  
+COMMENT Mean spectral resolution in order #42 : 65923 (acc : 857, #lines : 80)  
+COMMENT Mean spectral resolution in order #43 : 64599 (acc : 797, #lines : 71)  
+COMMENT Mean spectral resolution in order #44 : 65089 (acc : 807, #lines : 72)  
+COMMENT Mean spectral resolution in order #45 : 66054 (acc : 747, #lines : 63)  
+COMMENT Mean spectral resolution in order #46 : 63840 (acc : 768, #lines : 66)  
+COMMENT Mean spectral resolution in order #47 : 64465 (acc : 709, #lines : 69)  
+COMMENT Mean spectral resolution in order #48 : 63739 (acc : 826, #lines : 67)  
+COMMENT Mean spectral resolution in order #49 : 64775 (acc : 1196, #lines : 60) 
+COMMENT Mean spectral resolution in order #50 : 63895 (acc : 661, #lines : 55)  
+COMMENT Mean spectral resolution in order #51 : 63722 (acc : 761, #lines : 66)  
+COMMENT Mean spectral resolution in order #52 : 63901 (acc : 819, #lines : 67)  
+COMMENT Mean spectral resolution in order #53 : 65348 (acc : 701, #lines : 67)  
+COMMENT Mean spectral resolution in order #54 : 65360 (acc : 776, #lines : 61)  
+COMMENT Mean spectral resolution in order #55 : 64430 (acc : 668, #lines : 65)  
+COMMENT Mean spectral resolution in order #56 : 65670 (acc : 531, #lines : 79)  
+COMMENT Mean spectral resolution in order #57 : 65324 (acc : 1004, #lines : 63) 
+COMMENT Mean spectral resolution in order #58 : 64413 (acc : 880, #lines : 57)  
+COMMENT Mean spectral resolution in order #59 : 64813 (acc : 924, #lines : 58)  
+COMMENT Mean spectral resolution in order #60 : 64237 (acc : 982, #lines : 52)  
+COMMENT Mean spectral resolution in order #61 : 71523 (acc : 4526, #lines : 33) 
+COMMENT ---- End of data from wcal_OLAPA-ab_pol_Normal.out ----                 
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'auto_guide'         / Telescope Control System status                
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+DATE-OB1= '2019-11-21'         / Date at start of observation (UTC)             
+DATE-OB2= '2019-11-21'         / Date at start of observation (UTC)             
+DATE-OB3= '2019-11-21'         / Date at start of observation (UTC)             
+DATE-OB4= '2019-11-21'         / Date at start of observation (UTC)             
+HSTTIME = 'Thu Nov 21 06:29:15 HST 2019' / Local time in Hawaii of reduction    
+QSOVALI1= 'VALIDATED'          / QSO validation state                           
+QSOVALI2= 'VALIDATED'          / QSO validation state                           
+QSOVALI3= 'VALIDATED'          / QSO validation state                           
+QSOVALI4= 'VALIDATED'          / QSO validation state                           
+QSOGRAD1=                    1 / QSO grade (1=good 5=unusable)                  
+QSOGRAD2=                    1 / QSO grade (1=good 5=unusable)                  
+QSOGRAD3=                    1 / QSO grade (1=good 5=unusable)                  
+QSOGRAD4=                    2 / QSO grade (1=good 5=unusable)                  
+NONSIDE1=                    F / Non-sidereal used                              
+NONSIDE2=                    F / Non-sidereal used                              
+NONSIDE3=                    F / Non-sidereal used                              
+NONSIDE4=                    F / Non-sidereal used                              
+ISPHOTO1=                    F / Is photometric                                 
+ISPHOTO2=                    F / Is photometric                                 
+ISPHOTO3=                    F / Is photometric                                 
+ISPHOTO4=                    F / Is photometric                                 
+IQREQUE1= '<1.00   '           / Requested IQ in arcsec                         
+IQREQUE2= '<1.00   '           / Requested IQ in arcsec                         
+IQREQUE3= '<1.00   '           / Requested IQ in arcsec                         
+IQREQUE4= '<1.00   '           / Requested IQ in arcsec                         
+IQMEASU1= 'Unknown '           / Measured IQ in arcsec                          
+IQMEASU2= 'Unknown '           / Measured IQ in arcsec                          
+IQMEASU3= 'Unknown '           / Measured IQ in arcsec                          
+IQMEASU4= 'Unknown '           / Measured IQ in arcsec                          
+UTIME   = '06:29:15'           / UTC time of reduction                          
+UTIME1  = '15:56:11.81'        / Time at start of observation (UT)              
+UTIME2  = '15:58:12.85'        / Time at start of observation (UT)              
+UTIME3  = '16:00:13.38'        / Time at start of observation (UT)              
+UTIME4  = '16:02:14.34'        / Time at start of observation (UT)              
+UTC-OBS1= '15:56:11.81'        / Time at start of observation (UTC)             
+UTC-OBS2= '15:58:12.85'        / Time at start of observation (UTC)             
+UTC-OBS3= '16:00:13.38'        / Time at start of observation (UTC)             
+UTC-OBS4= '16:02:14.34'        / Time at start of observation (UTC)             
+TIME-OB1= '15:56:16.914'       / Time at start of observation (unix)            
+TIME-OB2= '15:58:17.466'       / Time at start of observation (unix)            
+TIME-OB3= '16:00:18.434'       / Time at start of observation (unix)            
+TIME-OB4= '16:02:19.293'       / Time at start of observation (unix)            
+MJDATE1 = '58808.664'          / Modified Julian Date at start of observation   
+MJDATE2 = '58808.665'          / Modified Julian Date at start of observation   
+MJDATE3 = '58808.667'          / Modified Julian Date at start of observation   
+MJDATE4 = '58808.668'          / Modified Julian Date at start of observation   
+MJD-OBS1= '58808.664'          / Modified Julian Date at start of obs.          
+MJD-OBS2= '58808.665'          / Modified Julian Date at start of obs.          
+MJD-OBS3= '58808.667'          / Modified Julian Date at start of obs.          
+MJD-OBS4= '58808.668'          / Modified Julian Date at start of obs.          
+SIDTIME1= '9:35:46.82'         / Sidereal time at end of exposure               
+SIDTIME2= '9:37:48.20'         / Sidereal time at end of exposure               
+SIDTIME3= '9:39:49.05'         / Sidereal time at end of exposure               
+SIDTIME4= '9:41:50.35'         / Sidereal time at end of exposure               
+LST-OBS1= '9:35:46.82'         / Sidereal time at start of exposure             
+LST-OBS2= '9:37:48.20'         / Sidereal time at start of exposure             
+LST-OBS3= '9:39:49.05'         / Sidereal time at start of exposure             
+LST-OBS4= '9:41:50.35'         / Sidereal time at start of exposure             
+DATEEND1= '2019-11-21'         / Date at end of observation (UTC)               
+DATEEND2= '2019-11-21'         / Date at end of observation (UTC)               
+DATEEND3= '2019-11-21'         / Date at end of observation (UTC)               
+DATEEND4= '2019-11-21'         / Date at end of observation (UTC)               
+UTCEND1 = '15:58:12.65'        / Time at end of observation (UTC)               
+UTCEND2 = '16:00:13.23'        / Time at end of observation (UTC)               
+UTCEND3 = '16:02:14.19'        / Time at end of observation (UTC)               
+UTCEND4 = '16:04:15.05'        / Time at end of observation (UTC)               
+TIMEEND1= '15:57:52.932'       / Time at end of observation (unix)              
+TIMEEND2= '15:59:53.484'       / Time at end of observation (unix)              
+TIMEEND3= '16:01:54.451'       / Time at end of observation (unix)              
+TIMEEND4= '16:03:55.311'       / Time at end of observation (unix)              
+MJDEND1 = '58808.665'          / Modified Julian Date at end of obs.            
+MJDEND2 = '58808.667'          / Modified Julian Date at end of obs.            
+MJDEND3 = '58808.668'          / Modified Julian Date at end of obs.            
+MJDEND4 = '58808.670'          / Modified Julian Date at end of obs.            
+LSTEND1 = '9:37:48.00'         / Sidereal time at end of exposure               
+LSTEND2 = '9:39:48.90'         / Sidereal time at end of exposure               
+LSTEND3 = '9:41:50.19'         / Sidereal time at end of exposure               
+LSTEND4 = '9:43:51.39'         / Sidereal time at end of exposure               
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+RA      = '11:32:12.88'        / Telescope right ascension                      
+DEC     = '38:55:32.7'         / Telescope declination                          
+HA1     = '-1:56:26.06'        / Object hour angle at start of exposure         
+HA2     = '-1:54:24.68'        / Object hour angle at start of exposure         
+HA3     = '-1:52:23.83'        / Object hour angle at start of exposure         
+HA4     = '-1:50:22.53'        / Object hour angle at start of exposure         
+HAEND1  = '-1:54:24.88'        / Object hour angle at end of exposure           
+HAEND2  = '-1:52:23.98'        / Object hour angle at end of exposure           
+HAEND3  = '-1:50:22.69'        / Object hour angle at end of exposure           
+HAEND4  = '-1:48:21.49'        / Object hour angle at end of exposure           
+INSTZRA =                 0.00 / Instrument zero for RA in arc seconds          
+INSTZDEC=                 0.00 / Instrument zero for Dec in arc seconds         
+RA_DEG  =           173.053667 / Telescope right ascension in degrees           
+DEC_DEG =            38.925750 / Telescope declination in degrees               
+OBJNAME = 'TIC18066482'        / Target name                                    
+OBJMAG  =                  8.0 / Target magnitude                               
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '11:32:12.88'        / Target right ascension                         
+OBJDEC  = '38:55:32.7'         / Target declination                             
+OBJRAPM =                 0.00 / Target right ascension proper motion in as/yr  
+OBJDECPM=                -0.01 / Target declination proper motion in as/yr      
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'Cass    '           / TCS guider name                                
+GUIEQUIN=               2000.0 / TCS guider equinox                             
+GUIRADEC= 'FK5     '           / TCS guider system for equinox                  
+GUIRA   = '11:34:15.39'        / TCS guider right ascension                     
+GUIDEC  = '38:56:48.3'         / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = 'auto GSC: 0'        / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =             -194.000 / Telescope bonnette guide probe X position      
+YPROBE  =              -12.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =              385.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS1= '1.17500 '           / Airmass at start of observation                
+AIRMASS2= '1.17000 '           / Airmass at start of observation                
+AIRMASS3= '1.16600 '           / Airmass at start of observation                
+AIRMASS4= '1.16200 '           / Airmass at start of observation                
+TELALT1 = '58.3732 '           / Telescope altitude at start of observation, deg
+TELALT2 = '58.7185 '           / Telescope altitude at start of observation, deg
+TELALT3 = '59.0590 '           / Telescope altitude at start of observation, deg
+TELALT4 = '59.3999 '           / Telescope altitude at start of observation, deg
+TELAZ1  = '46.7286 '           / Telescope azimuth at start, deg, 0=N 90=E 270=W
+TELAZ2  = '46.3657 '           / Telescope azimuth at start, deg, 0=N 90=E 270=W
+TELAZ3  = '45.9950 '           / Telescope azimuth at start, deg, 0=N 90=E 270=W
+TELAZ4  = '45.6102 '           / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                 49.0 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANG1= '31.6000 '           / Angle from object to moon at start in degrees  
+MOONANG2= '31.6000 '           / Angle from object to moon at start in degrees  
+MOONANG3= '31.6000 '           / Angle from object to moon at start in degrees  
+MOONANG4= '31.6000 '           / Angle from object to moon at start in degrees  
+MOONPHA1= '-0.220000'          / Angle from object to moon at start in degrees  
+MOONPHA2= '-0.220000'          / Angle from object to moon at start in degrees  
+MOONPHA3= '-0.220000'          / Angle from object to moon at start in degrees  
+MOONPHA4= '-0.220000'          / Angle from object to moon at start in degrees  
+MOONUP1 = 'True    '           / Moon up? True or False                         
+MOONUP2 = 'True    '           / Moon up? True or False                         
+MOONUP3 = 'True    '           / Moon up? True or False                         
+MOONUP4 = 'True    '           / Moon up? True or False                         
+MOONALT1= '56.7000 '           / Moon altitude at start in degrees              
+MOONALT2= '57.1000 '           / Moon altitude at start in degrees              
+MOONALT3= '57.6000 '           / Moon altitude at start in degrees              
+MOONALT4= '58.0000 '           / Moon altitude at start in degrees              
+MOONAZ1 = '107.700 '           / Moon azimuth at start in deg, 0=N 90=E 270=W   
+MOONAZ2 = '108.100 '           / Moon azimuth at start in deg, 0=N 90=E 270=W   
+MOONAZ3 = '108.500 '           / Moon azimuth at start in deg, 0=N 90=E 270=W   
+MOONAZ4 = '108.900 '           / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID1= 'Cass    '           / Telescope focus in use                         
+FOCUSID2= 'Cass    '           / Telescope focus in use                         
+FOCUSID3= 'Cass    '           / Telescope focus in use                         
+FOCUSID4= 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+CALFOCUS=               12.203 / Telescope focus calculated from model in mm    
+DEFOCUS =                0.000 / Telescope defocus from calculated in mm        
+FOCUSPO1= '12202   '           / Telescope focus encoder readout                
+FOCUSPO2= '12202   '           / Telescope focus encoder readout                
+FOCUSPO3= '12202   '           / Telescope focus encoder readout                
+FOCUSPO4= '12202   '           / Telescope focus encoder readout                
+TELFOCUS=                12202 / Telescope focus encoder readout in microns     
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= '0097 15:56:07.592700' / TCS GPS read out in BCD                      
+TCSGPSTM=             15.93544 / TCS GPS clock time in decimal hours            
+TCSRBUSS= '18:05:00.000'       / TCS RBUSS clock time                           
+TCSEPICS= '20191121 15:55:34.599' / TCS EPICS clock time                        
+TCSAMODE= 'O       '           / TCS acquire mode - T/O/G/g/P for t/o/g coords  
+TCSMJD  =        58808.6639764 / TCS MJD                                        
+TCSLST  =              9.59516 / TCS LST in decimal hours                       
+TCSAPHA =            -29.38382 / TCS apparent hour angle in degrees             
+TCSAPDEC=             38.81536 / TCS apparent declination in degrees            
+TCSOBHA =            -29.37689 / TCS observed hour angle in degrees             
+TCSOBDEC=             38.81235 / TCS observed declination in degrees            
+TCSENHA =                    0 / TCS hour angle absolute encoder in bits        
+TCSENDEC=                    0 / TCS declination absolute encoder in bits       
+TCSEDHA =            -29.36242 / TCS hour angle absolute encoder in degrees     
+TCSEDDEC=             38.82410 / TCS declination absolute encoder in degrees    
+TCSINHA =                  -29 / TCS hour angle incremental encoder in bits     
+TCSINDEC=                   38 / TCS declination incremental encoder in bits    
+TCSSEHA =                -0.11 / TCS hour angle servo error in arcsec           
+TCSSEDEC=                -0.06 / TCS declination servo error in arcsec          
+TCSGEHA =                 0.00 / TCS hour angle guider error in arcsec          
+TCSGEDEC=                 0.00 / TCS declination guider error in arcsec         
+TCSPMHA =              350.042 / TCS hour angle pointing model output in arcsec 
+TCSPMDEC=              153.212 / TCS declination pointing model output in arcsec
+TCSAMHA =                0.000 / TCS hour angle encoder model in arcsec         
+TCSAMDEC=                2.724 / TCS declination encoder model in arcsec        
+TCSVMHA =                0.000 / TCS hour angle virtual encoder model in arcsec 
+TCSVMDEC=                0.000 / TCS declination virtual encoder model in arcsec
+TCSCREEP=                0.000 / TCS declination creep model in arcsec          
+TCSMVRA =              -0.1300 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=               9.3000 / TCS declination acquisition move in arcsec     
+TCSMVX  =            -9999.900 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =            -9999.900 / TCS secondary guider acquisition y move in mm  
+FFLAMPON= 'OFF     '           / flatfield lamp status ON/OFF                   
+FFLAMP1 =                    2 / flatfield lamp 1 intensity                     
+FFLAMP2 =                   12 / flatfield lamp 2 intensity                     
+CLAMPON = 'OFF     '           / comparison lamp status ON/OFF                  
+INSTRUME= 'ESPaDOnS'           / Instrument Name                                
+INSTMODE= 'Polarimetry, R=65,000' / Instrument Mode                             
+FILTERID=                   -1 / wheel position                                 
+FILTER  = 'Unknown '           / description of filter                          
+EADCPOS1= 'IN      '           / ESPaDOnS ADC position IN/OUT of beam           
+EADCPOS2= 'IN      '           / ESPaDOnS ADC position IN/OUT of beam           
+EADCPOS3= 'IN      '           / ESPaDOnS ADC position IN/OUT of beam           
+EADCPOS4= 'IN      '           / ESPaDOnS ADC position IN/OUT of beam           
+EADC1BEG= '-42.6831410553741'  / ADC prism 1 position at start of exposure      
+EADC2BEG= '194.49604743083'    / ADC prism 2 position at start of exposure      
+EADC1END= '-43.0188790968035'  / ADC prism 1 position at end of exposure        
+EADC2END= '195.129693675889'   / ADC prism 2 position at end of exposure        
+ECALIBW1= 'P1      '           / ESPaDOnS calibration wheel position (# and deg)
+ECALIBW2= 'P1      '           / ESPaDOnS calibration wheel position (# and deg)
+ECALIBW3= 'P1      '           / ESPaDOnS calibration wheel position (# and deg)
+ECALIBW4= 'P1      '           / ESPaDOnS calibration wheel position (# and deg)
+ERHOMB11= 'P1      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB12= 'P5      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB13= 'P3      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB14= 'P7      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB21= 'P4      '           / ESPaDOnS rhomb 2 position (# and deg)          
+ERHOMB22= 'P2      '           / ESPaDOnS rhomb 2 position (# and deg)          
+ERHOMB23= 'P2      '           / ESPaDOnS rhomb 2 position (# and deg)          
+ERHOMB24= 'P4      '           / ESPaDOnS rhomb 2 position (# and deg)          
+EFABPER1= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EFABPER2= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EFABPER3= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EFABPER4= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EWEDWOL1= 'WOL     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+EWEDWOL2= 'WOL     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+EWEDWOL3= 'WOL     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+EWEDWOL4= 'WOL     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+ETEMPPO1= '-43.1700'           / ESPaDOnS polarimeter temperature deg C         
+ETEMPPO2= '-43.2500'           / ESPaDOnS polarimeter temperature deg C         
+ETEMPPO3= '-43.3600'           / ESPaDOnS polarimeter temperature deg C         
+ETEMPPO4= '-43.3600'           / ESPaDOnS polarimeter temperature deg C         
+ETEMPCB1= '2.16000 '           / ESPaDOnS calibration box temperature degC      
+ETEMPCB2= '2.20000 '           / ESPaDOnS calibration box temperature degC      
+ETEMPCB3= '2.16000 '           / ESPaDOnS calibration box temperature degC      
+ETEMPCB4= '2.16000 '           / ESPaDOnS calibration box temperature degC      
+EGUIDING= 'GO      '           / ESPaDOnS guiding state ON/OFF                  
+EGUISEE =             -9999.90 / ESPaDOnS guider seeing estimate                
+ECAMFOC1= '-3.57000'           / ESPaDOnS camera focus position (mm)            
+ECAMFOC2= '-3.57000'           / ESPaDOnS camera focus position (mm)            
+ECAMFOC3= '-3.57000'           / ESPaDOnS camera focus position (mm)            
+ECAMFOC4= '-3.57000'           / ESPaDOnS camera focus position (mm)            
+EHARTPO1= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+EHARTPO2= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+EHARTPO3= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+EHARTPO4= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+ESLIPOS1= 'P2      '           / ESPaDOnS slicer bench position (# and mm)      
+ESLIPOS2= 'P2      '           / ESPaDOnS slicer bench position (# and mm)      
+ESLIPOS3= 'P2      '           / ESPaDOnS slicer bench position (# and mm)      
+ESLIPOS4= 'P2      '           / ESPaDOnS slicer bench position (# and mm)      
+EHALOPO1= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOPO2= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOPO3= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOPO4= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOGE1= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+EHALOGE2= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+EHALOGE3= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+EHALOGE4= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+ESLICER1= 'P2      '           / ESPaDOnS slicer position (# and deg)           
+ESLICER2= 'P2      '           / ESPaDOnS slicer position (# and deg)           
+ESLICER3= 'P2      '           / ESPaDOnS slicer position (# and deg)           
+ESLICER4= 'P2      '           / ESPaDOnS slicer position (# and deg)           
+EDEKKER1= 'P4      '           / ESPaDOnS dekker position (# and mm)            
+EDEKKER2= 'P4      '           / ESPaDOnS dekker position (# and mm)            
+EDEKKER3= 'P4      '           / ESPaDOnS dekker position (# and mm)            
+EDEKKER4= 'P4      '           / ESPaDOnS dekker position (# and mm)            
+EEMSHUT1= 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSHUT2= 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSHUT3= 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSHUT4= 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSTAT1= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMSTAT2= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMSTAT3= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMSTAT4= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMCNTS1= '432     '           / ESPaDOnS exposure meter counts at end          
+EEMCNTS2= '434     '           / ESPaDOnS exposure meter counts at end          
+EEMCNTS3= '463     '           / ESPaDOnS exposure meter counts at end          
+EEMCNTS4= '457     '           / ESPaDOnS exposure meter counts at end          
+EEMSTD  =                29.97 / ESPaDOnS exposure meter count std deviation    
+EEMSNR  =                66.10 / ESPaDOnS exposure meter SNR (calib at 730nm)   
+ETSP1BEG=                18.35 / ESPaDOnS down mirror temp at start (deg C)     
+ETSP2BEG=                18.53 / ESPaDOnS camera temp at start (deg C)          
+ETSP3BEG=                18.48 / ESPaDOnS up mirror temp at start (deg C)       
+ETSP4BEG=                18.07 / ESPaDOnS hygrometer temp at start (deg C)      
+EPRSPBEG=                -0.92 / ESPaDOnS relative pressure at start (mb)       
+ERHSPBEG=                16.64 / ESPaDOnS relative humidity at start (%)        
+ETSP1END=                18.35 / ESPaDOnS down mirror temp at end (deg C)       
+ETSP2END=                18.55 / ESPaDOnS camera temp at end (deg C)            
+ETSP3END=                18.48 / ESPaDOnS up mirror temp at end (deg C)         
+ETSP4END=                18.07 / ESPaDOnS hygrometer temp at end (deg C)        
+EPRSPEND=                -0.88 / ESPaDOnS relative pressure at end (mb)         
+ERHSPEND=                16.80 / ESPaDOnS relative humidity at end (%)          
+EREADSPD= 'Normal: 4.15e noise, 1.30e/ADU, 19s' / ESPaDOnS det read out xslow/sl
+DOMESHUT= 'OPEN    '           / Dome shutter state (OPEN/CLOSED)               
+MIRRCOV = 'OPEN    '           / Mirror cover state (OPEN/CLOSED)               
+WINDSCR =                    0 / Windscreen elevation in degrees                
+DOMELOUV= 'CLOSED  '           / Dome louver state (OPEN/CLOSED)                
+VENTMODE= 'MANUAL  '           / Dome venting control mode                      
+VENTL1  = 'CLOSED:0:0:0'       / Dome vent L1 door and vane configuration       
+VENTL2  = 'UNKNOWN:-9999:-9999:-9999' / Dome vent L2 door and vane configuration
+VENTL3  = 'CLOSED:0:0:0'       / Dome vent L3 door and vane configuration       
+VENTL4  = 'CLOSED:0:0:0'       / Dome vent L4 door and vane configuration       
+VENTL5  = 'CLOSED:0:0:0'       / Dome vent L5 door and vane configuration       
+VENTL6  = 'CLOSED:0:0:0'       / Dome vent L6 door and vane configuration       
+VENTR1  = 'CLOSED:0:0:0'       / Dome vent R1 door and vane configuration       
+VENTR2  = 'UNKNOWN:-9999:-9999:-9999' / Dome vent R2 door and vane configuration
+VENTR3  = 'CLOSED:0:0:0'       / Dome vent R3 door and vane configuration       
+VENTR4  = 'CLOSED:0:0:0'       / Dome vent R4 door and vane configuration       
+VENTR5  = 'CLOSED:0:0:0'       / Dome vent R5 door and vane configuration       
+VENTR6  = 'CLOSED:0:0:0'       / Dome vent R6 door and vane configuration       
+TESPMIRE=                -2.60 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 1.61 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 1.81 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 1.30 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=               851.29 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 1.40 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=             -9999.90 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 3.36 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 1.50 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 1.38 / 06 temp, air, top ring west deg C              
+TEANRLSB=                12.26 / 19 temp, air, north rail support beam deg C    
+TESHRSET=                16.39 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 0.85 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 0.48 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 3.22 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 0.86 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 0.07 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 1.57 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                -1.50 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                -3.90 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=               849.80 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 2.19 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 1.30 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 2.13 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                 2.65 / 61 temp, surface, floor above control room degC
+TESPIERN=                 3.60 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 2.90 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 1.60 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 0.65 / 86 temp, air, weather tower deg C              
+WINDSPED=                 5.62 / 84 wind speed, weather tower knots             
+WINDDIR =                58.21 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                66.29 / 87 relative humidity, weather tower %          
+PRESSURE=               617.34 / 31 barometric pressure, control room mb        
+DDSEEMEN=             -9999.90 / Dome DIMM mean seeing, arc seconds             
+DDSEEMED=             -9999.90 / Dome DIMM median seeing, arc seconds           
+DDSEEMOD=             -9999.90 / Dome DIMM mode seeing, arc seconds             
+DDSEESTD=             -9999.90 / Dome DIMM seeing deviation, arc seconds        
+WMSEEMEN=                 0.29 / Weather tower MASS mean seeing, arc seconds    
+WMSEEMED=                 0.29 / Weather tower MASS median seeing, arc seconds  
+WMSEEMOD=                 0.29 / Weather tower MASS mode seeing, arc seconds    
+WMSEESTD=                 0.00 / Weather tower MASS seeing deviation, arc second
+WDSEEMEN=                 0.44 / Weather tower DIMM mean seeing, arc seconds    
+WDSEEMED=                 0.44 / Weather tower DIMM median seeing, arc seconds  
+WDSEEMOD=                 0.44 / Weather tower DIMM mode seeing, arc seconds    
+WDSEESTD=                 0.00 / Weather tower DIMM seeing deviation, arc second
+SPOZPMEN=                 0.22 / SkyProbe (orig) mean absorption, magnitude     
+SPOZPMED=                 0.22 / SkyProbe (orig) median absorption, magnitude   
+SPOZPMOD=                 0.22 / SkyProbe (orig) mode absorption, magnitude     
+SPOZPSTD=                 0.13 / SkyProbe (orig) absorption deviation, magnitude
+QRUNID  = '19BQ11  '           / queue run id                                   
+QOBSERVE= 'Callie Crowder'     / queue observer                                 
+QCOORD  = 'Nadine Manset'      / queue coordinator                              
+QID     = 55700500000000068757 / queue id                                       
+QOBSEQID= 55301400000000297555 / queue ob sequence id                           
+QICSEQID= 55351200000000329922 / queue ic sequence id                           
+QOBITER =                    1 / queue ob iteration                             
+REL_DATE= '2021-02-28T00:00:00' / queue release date                            
+MET_DATE= '2019-11-21T00:00:00' / queue metadata release date                   
+QICLABEL= 'IC14    '           / queue instrument configuration label           
+SNRGOAL =               148.80 / Goal SNR per pixel per frame                   
+SNRWAVE =                  730 / Wavelength of goal SNR [nm]                    
+OBJTEMP =                 7000 / Object effective temperature                   
+END                                                                             

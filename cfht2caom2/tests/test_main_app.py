@@ -88,6 +88,20 @@ PLUGIN = os.path.join(os.path.dirname(THIS_DIR), 'main_app.py')
 
 LOOKUP = {'key': ['fileid1', 'fileid2']}
 
+WIRCAM_TEST_EXPANSE = {
+    'a': '2462928a',
+    'd': '787355d',
+    'f': '1706150f',
+    'g': '1007126g',
+    'm': '981337m',
+    'o': '2157095o',
+    'p': '2281792p',
+    's': '2281792s',
+    'w': '1151210w',
+    'x': '1758254x',
+    'y': '1681594y'
+}
+
 
 def pytest_generate_tests(metafunc):
     # obs_id_list = []
@@ -159,6 +173,10 @@ def _get_lineage(cfht_name):
         temp_i = mc.get_lineage(ARCHIVE, '979339i', '979339i.fits.gz')
         temp_o = mc.get_lineage(ARCHIVE, '979339o', '979339o.fits.gz')
         result = f'{temp_i} {temp_o}'
+    elif '2281792' in cfht_name.product_id:
+        temp_s = mc.get_lineage(ARCHIVE, '2281792s', '2281792s.fits.fz')
+        temp_p = mc.get_lineage(ARCHIVE, '2281792p', '2281792p.fits.fz')
+        result = f'{temp_p} {temp_s}'
     else:
         result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
                                 f'{cfht_name.file_name}')
@@ -175,6 +193,9 @@ def _get_local(test_name):
                  f'{TEST_DATA_DIR}/979339o.fits.header'
     elif '2460503' in test_name:
         result = f'{TEST_DATA_DIR}/2460503p.fits'
+    elif '2281792' in test_name:
+        result = f'{TEST_DATA_DIR}/2281792s.fits.header ' \
+                 f'{TEST_DATA_DIR}/2281792p.fits.header'
     else:
         result = f'{TEST_DATA_DIR}/{test_name}'
     return result
