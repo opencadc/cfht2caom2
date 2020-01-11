@@ -201,10 +201,6 @@ class CFHTName(mc.StorageName):
     @property
     def product_id(self):
         result = self._file_id
-        # TODO this has changed
-        if (self._suffix in ['g', 'o'] and
-                self._instrument is md.Inst.WIRCAM):
-            result = f'{self._file_id[:-1]}og'
         return result
 
     @property
@@ -520,7 +516,7 @@ def get_product_type(params):
     obs_type = get_obs_intent(header)
     if obs_type == ObservationIntentType.CALIBRATION:
         result = ProductType.CALIBRATION
-    if suffix in ['m', 'w', 'y']:
+    if suffix in ['g', 'm', 'w', 'y']:
         result = ProductType.AUXILIARY
     return result
 
@@ -741,6 +737,17 @@ def get_target_standard(header):
                     result = True
         else:
             result = False
+    return result
+
+
+def get_time_function_naxis(params):
+    header, suffix, uri = _decompose_params(params)
+    result = 1
+    instrument = _get_instrument(header)
+    if instrument is md.Inst.WIRCAM and suffix == 'g':
+        # stop the over-ride of the original header values by the
+        # action of the blueprint
+        result = None
     return result
 
 
@@ -1090,7 +1097,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.time.axis.axis.cunit', 'd')
     bp.set('Chunk.time.axis.error.rnder', 0.0000001)
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
-    bp.set('Chunk.time.axis.function.naxis', 1)
+    bp.set('Chunk.time.axis.function.naxis', 'get_time_function_naxis(params)')
     cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
     # TODO - this is really really wrong that is_simple is not sufficient
     # to make the distinction between the appropriate implementations.
@@ -1272,17 +1279,22 @@ def update(observation, **kwargs):
                                 observation.observation_id, idx)
 
                     elif instrument is md.Inst.WIRCAM:
-                        if (chunk.time is not None and
-                                observation.type not in
-                                ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
+                        if ((chunk.time is not None and
+                             cfht_name.suffix == plane.product_id[-1])):
                             _update_wircam_time(
-                                chunk, headers[idx],
-                                observation.observation_id)
+                                chunk, headers, idx, cfht_name,
+                                observation.type,
+                                observation.observation_id, fqn)
 
                         if (plane.product_id[-1] in ['f'] or
                                 observation.type in
                                 ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
                             cc.reset_position(chunk)
+
+                        if (cfht_name.suffix == 'g' and
+                                plane.product_id[-1] == 'g'):
+                            _update_wircam_position(part, chunk, headers, idx,
+                                                    observation.observation_id)
 
         if isinstance(observation, CompositeObservation):
             if composite_type == 'IMCMB':
@@ -1302,8 +1314,9 @@ def update(observation, **kwargs):
                                            observation.observation_id)
         if instrument is md.Inst.WIRCAM and plane.product_id[-1] in ['p', 's']:
             # caom2IngestWircam.py, l193
-            # TODO change this from the existing behaviour
-            _update_plane_provenance_p(plane, observation.observation_id, 'og')
+            # CW 09-01-20
+            # Only the 'o' is input
+            _update_plane_provenance_p(plane, observation.observation_id, 'o')
         elif instrument is md.Inst.ESPADONS and plane.product_id[-1] == 'i':
             # caom2IngestEspadons.py, l714
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
@@ -1591,13 +1604,113 @@ def _update_position_function_sitelle(chunk, header, obs_id, extension):
     logging.debug(f'End _update_position_function_sitelle for {obs_id}')
 
 
-def _update_wircam_time(chunk, header, obs_id):
+def _update_wircam_position(part, chunk, headers, idx, obs_id):
+    logging.debug(f'Begin _update_wircam_position for {obs_id}')
+    header = headers[idx]
+
+    # caom2IngestWircam.py, l870+
+    if headers[0].get('CRVAL2') is not None:
+        cd1_1 = mc.to_float(headers[0].get('PIXSCAL1')) / 3600.0
+        cd2_2 = mc.to_float(headers[0].get('PIXSCAL2')) / 3600.0
+    elif headers[1].get('CRVAL2') is not None:
+        cd1_1 = mc.to_float(headers[1].get('PIXSCAL1')) / 3600.0
+        cd2_2 = mc.to_float(headers[1].get('PIXSCAL2')) / 3600.0
+
+    naxis_1 = headers[0].get('NAXIS1')
+    if naxis_1 is None:
+        naxis_1 = headers[0].get('ZNAXIS1')
+        if naxis_1 is None:
+            naxis_1 = headers[1].get('NAXIS1')
+            if naxis_1 is None:
+                naxis_1 = headers[1].get('ZNAXIS1')
+    naxis_2 = headers[0].get('NAXIS2')
+    if naxis_2 is None:
+        naxis_2 = headers[0].get('ZNAXIS2')
+        if naxis_2 is None:
+            naxis_2 = headers[1].get('NAXIS2')
+            if naxis_2 is None:
+                naxis_2 = headers[1].get('ZNAXIS2')
+
+    if part.name == '5':
+        cr_val1 = 0.0
+        cr_val2 = 0.0
+    else:
+        wcgd_ra = headers[0].get(f'WCGDRA{part.name}')
+        wcgd_dec = headers[0].get(f'WCGDDEC{part.name}')
+        ra_temp = wcgd_ra.split(':')
+        dec_temp = wcgd_dec.split(':')
+        cr_val1 = 15.0 * (mc.to_float(ra_temp[0]) +
+                          mc.to_float(ra_temp[1]) / 60.0 +
+                          mc.to_float(ra_temp[2]) / 3600.0)
+        cr_val2 = (mc.to_float(dec_temp[0]) +
+                   mc.to_float(dec_temp[1]) / 60.0 +
+                   mc.to_float(dec_temp[2]) / 3600.0)
+        if wcgd_dec[0] == '-':
+            cr_val2 = -1.0 * abs(cr_val2)
+
+    if mc.to_float(obs_id) < 980000:
+        cr_val2 *= 15.0
+
+    # caom2IngestWircam.py, l367
+    header['NAXIS1'] = naxis_1
+    header['NAXIS2'] = naxis_2
+    header['CRPIX1'] = naxis_1 / 2.0
+    header['CRPIX2'] = naxis_2 / 2.0
+    header['CRVAL1'] = cr_val1
+    header['CRVAL2'] = cr_val2
+    header['CD1_1'] = -1.0 * cd1_1
+    header['CD1_2'] = 0.0
+    header['CD2_1'] = 0.0
+    header['CD2_2'] = cd2_2
+
+    wcs_parser = WcsParser(header, obs_id, idx)
+    if chunk is None:
+        chunk = Chunk()
+    wcs_parser.augment_position(chunk)
+    chunk.position_axis_1 = 1
+    chunk.position_axis_2 = 2
+    logging.debug(f'End _update_wircam_position for {obs_id}')
+
+
+def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
     logging.debug(f'Begin _update_wircam_time for {obs_id}')
-    n_exp = header.get('NEXP')
-    if (n_exp is not None and chunk.time.axis is not None and
-            chunk.time.axis.function is not None):
-        # caom2IngestWircam.py, l843
-        chunk.time.axis.function.naxis = mc.to_int(n_exp)
+    if cfht_name.suffix == 'g':
+        # CW
+        # Define time samples for guidecube data
+        # Guiding time doesn't seem to match up very well, so just say that
+        # use MJD-OBS gnaxis3 and WCPERIOD
+        #
+        # code from caom2IngestWircam.py, l876+
+        wcgdra1_0 = headers[0].get('WCGDRA1')
+        wc_period_0 = headers[0].get('WCPERIOD')
+        wc_period = None
+        if (chunk.time.axis is not None and
+                chunk.time.axis.function is not None):
+            if wcgdra1_0 is not None and wc_period_0 is not None:
+                wc_period = wc_period_0
+            else:
+                wcgdra1_1 = headers[1].get('WCGDRA1')
+                wc_period_1 = headers[1].get('WCPERIOD')
+                if wcgdra1_1 is not None and wc_period_1 is not None:
+                    wc_period = wc_period_1
+
+            if wc_period is not None:
+                if wc_period < 0.0:
+                    wc_period = 100.0
+                # caom2IngestWircam.py, l375
+                chunk.time.exposure = wc_period / 1000.0
+                chunk.time.resolution = chunk.time.exposure
+                chunk.time.axis.function.delta = chunk.time.exposure / 86400.0
+
+    # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
+    # seem to prefer NAXIS, so odd as this placement seems, do not rely
+    # on function execution, because it affects NAXIS, not ZNAXIS - sigh
+    if obs_type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT'] and cfht_name.suffix != 'g':
+        n_exp = headers[idx].get('NEXP')
+        if n_exp is not None:
+            # caom2IngestWircam.py, l843
+            chunk.time.axis.function.naxis = mc.to_int(n_exp)
+
     logging.debug(f'End _update_wircam_time for {obs_id}')
 
 
