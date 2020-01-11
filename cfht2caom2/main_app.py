@@ -497,6 +497,25 @@ def get_plane_data_product_type(header):
     return result
 
 
+def get_plane_data_release(header):
+    result = header.get('REL_DATE')
+    if result is None:
+        date_obs = header.get('DATE-OBS')
+        run_id = _get_run_id(header)
+        if run_id[3] == 'E' or run_id[3] == 'Q':
+            result = f'{date_obs}T00:00:00'
+        else:
+            logging.warning('REL_DATE not in header. Derive from DATE-OBS.')
+            semester = mc.to_int(run_id[0:2])
+            rel_year = 2000 + semester + 1
+            if run_id[2] == 'A':
+                result = f'{rel_year}-08-31T00:00:00'
+            else:
+                rel_year += 1
+                result = f'{rel_year}-02-08T00:00:00'
+    return result
+
+
 def get_polarization_function_val(header):
     lookup = {'I': 1,
               'Q': 2,
@@ -1019,10 +1038,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Plane.metaRelease', 'DATE')
     bp.add_fits_attribute('Plane.metaRelease', 'DATE-OBS')
     bp.add_fits_attribute('Plane.metaRelease', 'MET_DATE')
-    bp.clear('Plane.dataRelease')
-    bp.add_fits_attribute('Plane.dataRelease', 'DATE')
-    bp.add_fits_attribute('Plane.dataRelease', 'DATE-OBS')
-    bp.add_fits_attribute('Plane.dataRelease', 'REL_DATE')
+    bp.set('Plane.dataRelease', 'get_plane_data_release(header)')
 
     bp.set('Plane.provenance.keywords', 'get_provenance_keywords(params)')
     bp.set('Plane.provenance.lastExecuted',

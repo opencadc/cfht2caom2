@@ -41,7 +41,7 @@
   </caom2:environment>
   <caom2:planes>
     <caom2:plane caom2:id="00000000-0000-0000-6a81-015d37119a9b" caom2:lastModified="2019-01-11T20:31:33.609" caom2:maxLastModified="2019-11-06T07:44:56.229" caom2:metaChecksum="md5:3ecd6a235c1680715b8889ce5c698498" caom2:accMetaChecksum="md5:50ffefb2bd904d4eeaef5a117cfaaadb">
-      <caom2:productID>2157095og</caom2:productID>
+      <caom2:productID>2157095o</caom2:productID>
       <caom2:metaRelease>2017-07-12T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2019-02-28T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
