@@ -67,28 +67,34 @@
 # ***********************************************************************
 #
 
+import logging
 import os
 import sys
 
+from astropy.table import Table
 from hashlib import md5
 
 from mock import Mock, patch
 
+from cadctap import CadcTapClient
 from caom2pipe import caom_composable as cc
+from caom2pipe import execute_composable as ec
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import composable
+from cfht2caom2 import composable, cfht_name
 import test_main_app
 
 TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
+@patch('caom2pipe.manage_composable.exec_cmd')
 @patch('cfht2caom2.builder.CadcDataClient')
 @patch('caom2pipe.execute_composable.CAOM2RepoClient')
 @patch('caom2pipe.execute_composable.CadcDataClient')
-def test_run_by_builder(data_client_mock, repo_mock, builder_data_mock):
+def test_run_by_builder(data_client_mock, repo_mock, builder_data_mock,
+                        exec_mock):
     builder_data_mock.return_value.get_file.side_effect = _mock_get_file
     repo_mock.return_value.read.side_effect = _mock_repo_read
-    repo_mock.return_value.create.side_effect = _mock_repo_create
+    repo_mock.return_value.create.side_effect = Mock()
     repo_mock.return_value.update.side_effect = _mock_repo_update
     data_client_mock.return_value.get_file_info.side_effect = \
         _mock_get_file_info
@@ -106,6 +112,62 @@ def test_run_by_builder(data_client_mock, repo_mock, builder_data_mock):
         'get_file not called'
     assert repo_mock.return_value.read.called, 'repo read not called'
     assert repo_mock.return_value.create.called, 'repo create not called'
+    param, level_as = ec.CaomExecute._specify_logging_level_param(
+        logging.WARNING)
+    py_version = f'{sys.version_info.major}.{sys.version_info.minor}'
+    exec_mock.assert_called_with(
+        f'cfht2caom2  --cert /usr/src/app/cadcproxy.pem --observation CFHT '
+        f'2281792 --local /usr/src/app/cfht2caom2/cfht2caom2/tests/data/'
+        f'composable_test/2281792p.fits.fz --out /usr/src/app/cfht2caom2/'
+        f'cfht2caom2/tests/data/composable_test/2281792.fits.xml --plugin'
+        f' /usr/local/lib/python{py_version}/site-packages/cfht2caom2/'
+        f'cfht2caom2.py --module /usr/local/lib/python{py_version}/'
+        f'site-packages/cfht2caom2/cfht2caom2.py --lineage '
+        f'2281792p/ad:CFHT/2281792p.fits.fz',
+        level_as), \
+        'exec mock wrong parameters'
+
+
+@patch('cfht2caom2.builder.CadcDataClient')
+@patch('caom2pipe.execute_composable.CadcDataClient')
+@patch('caom2pipe.manage_composable.query_tap_client')
+@patch('caom2pipe.execute_composable._do_one')
+def test_run_state(run_mock, tap_mock, data_client_mock,
+                   builder_data_mock):
+    run_mock.return_value = 0
+    tap_mock.side_effect = _mock_service_query
+    builder_data_mock.return_value.get_file.side_effect = _mock_get_file
+    data_client_mock.return_value.get_file_info.side_effect = \
+        _mock_get_file_info
+    getcwd_orig = os.getcwd
+    os.getcwd = Mock(return_value=TEST_DIR)
+    CadcTapClient.__init__ = Mock(return_value=None)
+
+    test_obs_id = '2281792'
+    test_f_name = f'{test_obs_id}p.fits.fz'
+    try:
+        # execution
+        sys.argv = ['test command']
+        test_result = composable._run_state()
+        assert test_result == 0, 'mocking correct execution'
+    finally:
+        os.getcwd = getcwd_orig
+
+    # assert query_mock.called, 'service query not created'
+    assert builder_data_mock.return_value.get_file.called, \
+        'get_file not called'
+    assert run_mock.called, 'should have been called'
+    args, kwargs = run_mock.call_args
+    assert args[3] == 'cfht2caom2', 'wrong command'
+    test_storage = args[2]
+    assert isinstance(test_storage, cfht_name.CFHTName), type(test_storage)
+    assert test_storage.obs_id == test_obs_id, 'wrong obs id'
+    assert test_storage.file_name == test_f_name, 'wrong file name'
+    assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
+    assert test_storage.url is None, 'wrong url'
+    assert test_storage.lineage == f'{test_obs_id}p/ad:CFHT/{test_f_name}', \
+        'wrong lineage'
+    assert test_storage.external_urls is None, 'wrong external urls'
 
 
 def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,
@@ -150,3 +212,11 @@ def _mock_get_file_info(archive, file_id):
                 'md5sum': 'md5:a347f2754ff2fd4b6209e7566637efad',
                 'type': 'application/fits',
                 'name': file_id}
+
+
+def _mock_service_query(arg1, output_file='', data_only=True,
+                        response_format='arg4'):
+    return Table.read(
+            'fileName,ingestDate\n'
+            '2281792p.fits.fz,2019-10-23T16:27:19.000\n'.split('\n'),
+            format='csv')
