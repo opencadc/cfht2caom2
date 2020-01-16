@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2020.                            (c) 2020.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -67,65 +67,86 @@
 # ***********************************************************************
 #
 
-import logging
+import os
 import sys
-import traceback
 
-from caom2pipe import execute_composable as ec
+from hashlib import md5
+
+from mock import Mock, patch
+
+from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, builder, main_app
+from cfht2caom2 import composable
+import test_main_app
+
+TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
-meta_visitors = []
-data_visitors = []
-
-
-def _run_state():
-    """Uses a state file with a timestamp to control which entries will be
-    processed.
-    """
-    config = mc.Config()
-    config.get_executors()
-    return ec.run_from_state(config, cfht_name.CFHTName,
-                             main_app.APPLICATION, meta_visitors,
-                             data_visitors, bookmark=None, work=None)
-
-
-def run_state():
-    """Wraps _run_state in exception handling."""
+@patch('cfht2caom2.builder.CadcDataClient')
+@patch('caom2pipe.execute_composable.CAOM2RepoClient')
+@patch('caom2pipe.execute_composable.CadcDataClient')
+def test_run_by_builder(data_client_mock, repo_mock, builder_data_mock):
+    builder_data_mock.return_value.get_file.side_effect = _mock_get_file
+    repo_mock.return_value.read.side_effect = _mock_repo_read
+    repo_mock.return_value.create.side_effect = _mock_repo_create
+    repo_mock.return_value.update.side_effect = _mock_repo_update
+    data_client_mock.return_value.get_file_info.side_effect = \
+        _mock_get_file_info
+    getcwd_orig = os.getcwd
+    os.getcwd = Mock(return_value=TEST_DIR)
     try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+        # execution
+        sys.argv = ['test command']
+        test_result = composable._run_by_builder()
+        assert test_result == 0, 'wrong result'
+    finally:
+        os.getcwd = getcwd_orig
+
+    assert builder_data_mock.return_value.get_file.called, \
+        'get_file not called'
+    assert repo_mock.return_value.read.called, 'repo read not called'
+    assert repo_mock.return_value.create.called, 'repo create not called'
 
 
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
-
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config = mc.Config()
-    config.get_executors()
-    name_builder = builder.CFHTBuilder(config)
-    return ec.run_by_file_storage_name(config, main_app.APPLICATION,
-                                       meta_visitors, data_visitors,
-                                       name_builder, chooser=None)
+def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,
+                   decompress=False, fhead=True, wcs=False, process_types=None,
+                   md5_check=True):
+    return b.write(b'SIMPLE  = T\n'
+                   b'BITPIX  = -32\n'
+                   b'END\n'
+                   b'SIMPLE  = T\n'
+                   b'INSTRUME= \'WIRCam\'\n'
+                   b'END')
 
 
-def run_by_builder():
-    try:
-        result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+def _mock_repo_create(arg1):
+    # arg1 is an Observation instance
+    act_fqn = f'{TEST_DIR}/{arg1.observation_id}.fits.xml'
+    ex_fqn = f'{TEST_DIR}/{arg1.observation_id}.expected.xml'
+    mc.write_obs_to_file(arg1, act_fqn)
+    result = cc.compare(ex_fqn, act_fqn, arg1.observation_id)
+    if result is not None:
+        assert False, result
+    pass
+
+
+def _mock_repo_read(arg1, arg2):
+    return None
+
+
+def _mock_repo_update(ignore1):
+    return None
+
+
+def _mock_get_file_info(archive, file_id):
+    if '_prev' in file_id:
+        return {'size': 10290,
+                'md5sum': 'md5:{}'.format(
+                    md5('-37'.encode()).hexdigest()),
+                'type': 'image/jpeg',
+                'name': file_id}
+    else:
+        return {'size': 665345,
+                'md5sum': 'md5:a347f2754ff2fd4b6209e7566637efad',
+                'type': 'application/fits',
+                'name': file_id}

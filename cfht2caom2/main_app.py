@@ -74,8 +74,8 @@ CW - 02-01-20
 The CADC page describing file types:
 http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/cfht/extensions.html
 
-For Espadons, Sitelle and Spirou there are composite observations made up from
-several exposures. These composite observations are given the ‘p’ ending to
+For Espadons, Sitelle and Spirou there are derived observations made up from
+several exposures. These derived observations are given the ‘p’ ending to
 distinguish them from the simple observations that are based on a single
 exposure.
 
@@ -99,8 +99,8 @@ Conversation with CW/SF 02-01-19:
 - 'p' files:
     - MegaCam/WIRCam - 'p' is a processed file that is an additional plane to
             a SimpleObservation
-    - SITELLE - 'p' is processed + Composite - a different observation
-    - SPIROU/Espadons - 'p' is polarized + Composite (TBC on Composite), a
+    - SITELLE - 'p' is processed + Derived - a different observation
+    - SPIROU/Espadons - 'p' is polarized + Derived (TBC on Derived), a
       different observation
     - there are other processed files for single exposures
     - users want 'p' files
@@ -117,7 +117,7 @@ import sys
 import traceback
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
-from caom2 import ProductType, CompositeObservation, TypedList, Chunk
+from caom2 import ProductType, DerivedObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
 from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
 from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
@@ -128,116 +128,18 @@ from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
 
+from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
 
-__all__ = ['cfht_main_app', 'update', 'CFHTName', 'COLLECTION',
-           'APPLICATION', 'ARCHIVE']
+__all__ = ['cfht_main_app', 'update', 'APPLICATION']
 
 
 APPLICATION = 'cfht2caom2'
-COLLECTION = 'CFHT'
-ARCHIVE = 'CFHT'
 
 # All comments denoted 'CW' are copied from
-# ssh://goliaths@gimli3/srv/cadc/git/wcaom2archive
-
-
-class CFHTName(mc.StorageName):
-    """Naming rules:
-    - support mixed-case file name storage, and mixed-case obs id values
-    - support fz files in storage
-    - product id == file id
-    - the file_name attribute has ALL the extensions, including compression
-      type.
-    """
-
-    CFHT_NAME_PATTERN = '*'
-
-    def __init__(self, obs_id=None, fname_on_disk=None, file_name=None,
-                 instrument=None, ad_uri=None):
-        # set compression to an empty string so the file uri method still
-        # works, since the file_name element will have all extensions,
-        # including the .fz to indicate compression  # TODO no longer true
-        super(CFHTName, self).__init__(
-            None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
-            compression='')
-        self._instrument = md.Inst(instrument)
-        if ad_uri is not None and file_name is None:
-            file_name = mc.CaomName(ad_uri).file_name
-        self._file_id = CFHTName.remove_extensions(file_name)
-        self._suffix = self._file_id[-1]
-        if self.is_simple and not self.is_master_cal:
-            self.obs_id = self._file_id[:-1]
-        else:
-            self.obs_id = self._file_id
-        self._file_name = file_name
-        logging.debug(self)
-
-    def __str__(self):
-        return f'obs_id {self.obs_id}, ' \
-               f'file_id {self._file_id}, ' \
-               f'file_name {self.file_name}, ' \
-               f'lineage {self.lineage}'
-
-    def is_valid(self):
-        return True
-
-    @property
-    def file_id(self):
-        """The file id - no extensions."""
-        return self._file_id
-
-    @property
-    def file_name(self):
-        """The file name."""
-        return self._file_name
-
-    @file_name.setter
-    def file_name(self, value):
-        """The file name."""
-        self._file_name = value
-
-    @property
-    def product_id(self):
-        result = self._file_id
-        return result
-
-    @property
-    def is_master_cal(self):
-        return ('weight' in self._file_id or 'master' in self._file_id or
-                    'hotpix' in self._file_id or 'badpix' in self._file_id or
-                    'deadpix' in self._file_id or 'dark' in self._file_id)
-
-    @property
-    def has_polarization(self):
-        return self._suffix in ['p'] and self._instrument is md.Inst.ESPADONS
-
-    @property
-    def is_simple(self):
-        result = False
-        if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',
-                             'w', 'x', 'y']
-                or self.simple_by_suffix or self.is_master_cal):
-            result = True
-        return result
-
-    @property
-    def simple_by_suffix(self):
-        return ((self._suffix in ['p', 's'] and
-                 self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM]) or
-                (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS))
-
-    @property
-    def suffix(self):
-        return self._suffix
-
-    @staticmethod
-    def remove_extensions(name):
-        """How to get the file_id from a file_name."""
-        # ESPaDOnS files have a .gz extension ;)
-        return name.replace('.fits', '').replace('.fz', '').replace(
-            '.header', '').replace('.gz', '')
+# ssh://goliaths@gimli3/srv/cadc/git/wcaom2archive.git
+# from /cfht2caom2/scripts
 
 
 def get_bandpass_name(header):
@@ -258,7 +160,7 @@ def get_bandpass_name(header):
 def get_calibration_level(params):
     header, suffix, uri = _decompose_params(params)
     instrument = _get_instrument(header)
-    cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     result = CalibrationLevel.CALIBRATED
     if (cfht_name.is_simple and not cfht_name.simple_by_suffix and not
             cfht_name.is_master_cal):
@@ -413,7 +315,7 @@ def get_exptime(params):
             exptime = exptime * num_steps
     # units are seconds
     if exptime is None:
-        cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
         if cfht_name.is_simple:
             # caom2IngestMegacaomdetrend.py, l438
             exptime = 0.0
@@ -458,7 +360,7 @@ def get_obs_intent(header):
 def get_obs_sequence_number(params):
     header, suffix, uri = _decompose_params(params)
     instrument = _get_instrument(header)
-    cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     result = None
     # SF 09-01-20
     # *y files are produced from other files, I am guessing the sky
@@ -770,7 +672,7 @@ def get_time_function_naxis(params):
     return result
 
 
-def get_time_refcoord_delta_composite(params):
+def get_time_refcoord_delta_derived(params):
     header, suffix, uri = _decompose_params(params)
     instrument = _get_instrument(header)
     if instrument is md.Inst.ESPADONS and suffix == 'p':
@@ -787,7 +689,7 @@ def get_time_refcoord_delta_composite(params):
             exp_time = mjd_end - mjd_start
             logging.error(f'exp_time {exp_time}')
     else:
-        mjd_obs = get_time_refcoord_val_composite(header)
+        mjd_obs = get_time_refcoord_val_derived(header)
         tv_stop = header.get('TVSTOP')
         if tv_stop is None:
             # caom2IngestMegacamdetrend.py, l429
@@ -811,7 +713,7 @@ def get_time_refcoord_delta_simple(params):
     return exp_time
 
 
-def get_time_refcoord_val_composite(header):
+def get_time_refcoord_val_derived(header):
     instrument = _get_instrument(header)
     mjd_start1 = header.get('MJDSTART1')
     mjd_date1 = header.get('MJDATE1')
@@ -861,7 +763,7 @@ def _decompose_params(params):
     header = params.get('header')
     uri = params.get('uri')
     instrument = _get_instrument(header)
-    suffix = CFHTName(ad_uri=uri, instrument=instrument)._suffix
+    suffix = cn.CFHTName(ad_uri=uri, instrument=instrument)._suffix
     return header, suffix, uri
 
 
@@ -950,7 +852,7 @@ def _is_espadons_energy(header, uri):
     instrument = _get_instrument(header)
     result = False
     if instrument is md.Inst.ESPADONS:
-        cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
         if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x']:
             result = True
     return result
@@ -960,7 +862,7 @@ def _is_sitelle_energy(header, uri):
     instrument = _get_instrument(header)
     result = False
     if instrument is md.Inst.SITELLE:
-        cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
         if cfht_name.suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
             result = True
     return result
@@ -1114,7 +1016,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.time.axis.error.rnder', 0.0000001)
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
     bp.set('Chunk.time.axis.function.naxis', 'get_time_function_naxis(params)')
-    cfht_name = CFHTName(ad_uri=uri, instrument=instrument)
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     # TODO - this is really really wrong that is_simple is not sufficient
     # to make the distinction between the appropriate implementations.
     if cfht_name.is_simple and not cfht_name.is_master_cal:
@@ -1124,9 +1026,9 @@ def accumulate_bp(bp, uri, instrument):
                'get_time_refcoord_val_simple(header)')
     else:
         bp.set('Chunk.time.axis.function.delta',
-               'get_time_refcoord_delta_composite(params)')
+               'get_time_refcoord_delta_derived(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
-               'get_time_refcoord_val_composite(header)')
+               'get_time_refcoord_val_derived(header)')
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
     if cfht_name.has_polarization:
@@ -1169,11 +1071,11 @@ def update(observation, **kwargs):
     filter_name = headers[idx].get('FILTER')
     instrument = _get_instrument(headers[idx])
 
-    cfht_name = CFHTName(file_name=os.path.basename(fqn), instrument=instrument)
-    is_composite, composite_type = _is_composite(
+    cfht_name = cn.CFHTName(file_name=os.path.basename(fqn), instrument=instrument)
+    is_derived, derived_type = _is_derived(
         headers, cfht_name, observation.observation_id)
-    if is_composite and not isinstance(observation, CompositeObservation):
-        logging.info('{} will be changed to a Composite Observation.'.format(
+    if is_derived and not isinstance(observation, DerivedObservation):
+        logging.info('{} will be changed to a Derived Observation.'.format(
             observation.observation_id))
         algorithm_name = 'master_detrend'
         if observation.observation_id[-1] == 'p':
@@ -1181,7 +1083,8 @@ def update(observation, **kwargs):
                 algorithm_name = 'polarization'
             else:
                 algorithm_name = 'scan'
-        observation = cc.change_to_composite(observation, algorithm_name)
+        observation = cc.change_to_composite(
+            observation, algorithm_name, cn.COLLECTION)
 
     for plane in observation.planes.values():
         if observation.algorithm.name == 'scan':
@@ -1196,7 +1099,7 @@ def update(observation, **kwargs):
                     CalibrationLevel.RAW_STANDARD):
                 time_delta = get_time_refcoord_delta_simple(params)
             else:
-                time_delta = get_time_refcoord_delta_composite(params)
+                time_delta = get_time_refcoord_delta_derived(params)
             for part in artifact.parts.values():
                 for c in part.chunks:
                     chunk_idx = part.chunks.index(c)
@@ -1312,20 +1215,20 @@ def update(observation, **kwargs):
                             _update_wircam_position(part, chunk, headers, idx,
                                                     observation.observation_id)
 
-        if isinstance(observation, CompositeObservation):
-            if composite_type == 'IMCMB':
+        if isinstance(observation, DerivedObservation):
+            if derived_type == 'IMCMB':
                 cc.update_plane_provenance(plane, headers[1:],
-                                           composite_type, COLLECTION,
+                                           derived_type, cn.COLLECTION,
                                            _repair_imcmb_provenance_value,
                                            observation.observation_id)
-            elif composite_type == 'COMMON':
+            elif derived_type == 'COMMON':
                 cc.update_plane_provenance_single(
-                    plane, headers, composite_type, COLLECTION,
+                    plane, headers, derived_type, cn.COLLECTION,
                     _repair_comment_provenance_value,
                     observation.observation_id)
             else:
-                cc.update_plane_provenance(plane, headers, composite_type,
-                                           COLLECTION,
+                cc.update_plane_provenance(plane, headers, derived_type,
+                                           cn.COLLECTION,
                                            _repair_filename_provenance_value,
                                            observation.observation_id)
         if instrument is md.Inst.WIRCAM and plane.product_id[-1] in ['p', 's']:
@@ -1338,36 +1241,35 @@ def update(observation, **kwargs):
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
 
     # relies on update_plane_provenance being called
-    if isinstance(observation, CompositeObservation):
+    if isinstance(observation, DerivedObservation):
         cc.update_observation_members(observation)
 
     logging.debug('Done update.')
     return observation
 
 
-def _is_composite(headers, cfht_name, obs_id):
+def _is_derived(headers, cfht_name, obs_id):
     result = False
-    composite_type = ''
+    derived_type = ''
     if cc.is_composite(headers):
         result = True
-        composite_type = 'IMCMB'
+        derived_type = 'IMCMB'
     else:
         file_type = headers[0].get('FILETYPE')
         if file_type is not None and 'alibrat' in file_type:
             logging.info(
-                f'Treating {obs_id} with filetype {file_type} as composite. ')
+                f'Treating {obs_id} with filetype {file_type} as derived. ')
             result = True
-            composite_type = 'COMMENT'
+            derived_type = 'COMMENT'
     if not result and not cfht_name.is_simple:
-        logging.error(f'changing is composite for {cfht_name.suffix} {cfht_name.file_name}')
         result = True
-        composite_type = 'FILENAM'
-    return result, composite_type
+        derived_type = 'FILENAM'
+    return result, derived_type
 
 
 def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
     logging.debug(f'Begin _update_energy_espadons for {obs_id}')
-    cfht_name = CFHTName(file_name=os.path.basename(fqn),
+    cfht_name = cn.CFHTName(file_name=os.path.basename(fqn),
                          instrument=md.Inst.ESPADONS)
     if cfht_name.suffix == suffix:
         axis = Axis('WAVE', 'nm')
@@ -1498,12 +1400,12 @@ def _update_observation_metadata(obs, headers, fqn):
 
         # use the fqn to define the URI
         # TODO - leaking name structure here
-        product_id = CFHTName.remove_extensions(os.path.basename(fqn))
+        product_id = cn.CFHTName.remove_extensions(os.path.basename(fqn))
         extension = '.fz'
         instrument = _get_instrument(headers[idx])
         if instrument is md.Inst.ESPADONS:
             extension = '.gz'
-        uri = mc.build_uri(ARCHIVE,
+        uri = mc.build_uri(cn.ARCHIVE,
                            os.path.basename(fqn).replace('.header',
                                                          extension))
         module = importlib.import_module(__name__)
@@ -1543,7 +1445,7 @@ def _update_observation_metadata(obs, headers, fqn):
 
 def _update_plane_provenance_p(plane, obs_id, suffix):
     logging.debug(f'Begin _update_plane_provenance_p for {obs_id}')
-    obs_member_str = mc.CaomName.make_obs_uri_from_obs_id(COLLECTION,
+    obs_member_str = mc.CaomName.make_obs_uri_from_obs_id(cn.COLLECTION,
                                                           obs_id)
     obs_member = ObservationURI(obs_member_str)
     plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}{suffix}')
@@ -1731,17 +1633,21 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
 
 
 def _identify_instrument(uri):
+    logging.error(f'Begin _identify_instrument for uri {uri}.')
     # TODO - make this a header read when I get to it ...
     result = md.Inst.SITELLE  # 1944968p, 2445397p
     if '2463796o' in uri:
         result = md.Inst.MEGACAM
-    elif '2281792p' in uri or '2157095o' in uri or 'weight' in uri:
+    elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
+          '2281792' in uri):
         result = md.Inst.WIRCAM
     elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
             '1219059' in uri or '1883829c' in uri or '2460602a' in uri or
             '760296f' in uri or '881162d' in uri or '979339' in uri or
             '2460503p' in uri):
         result = md.Inst.ESPADONS
+    logging.error(
+        f'End _identify_instrument for uri {uri} instrument is {result}.')
     return result
 
 
@@ -1774,7 +1680,7 @@ def _get_uris(args):
     elif args.local:
         for ii in args.local:
             # TODO hack that leaks naming format - sigh ... :(
-            file_uri = mc.build_uri(ARCHIVE, os.path.basename(ii))
+            file_uri = mc.build_uri(cn.ARCHIVE, os.path.basename(ii))
             result.append(file_uri)
     else:
         raise mc.CadcException(
@@ -1793,7 +1699,7 @@ def _repair_comment_provenance_value(value, obs_id):
             if 'Scan member' in entry:
                 temp = str(entry).split('member=')
                 prov_prod_id = temp[1].split()[0]
-                prov_obs_id = CFHTName(file_name=prov_prod_id).obs_id
+                prov_obs_id = cn.CFHTName(file_name=prov_prod_id).obs_id
                 # 0 - observation
                 # 1 - plane
                 results.append([prov_obs_id, prov_prod_id])
@@ -1840,7 +1746,7 @@ def _repair_imcmb_provenance_value(value, obs_id):
             prov_prod_id = temp[0]
         else:
             prov_prod_id = temp[0][:-2]
-        prov_obs_id = CFHTName(file_name=prov_prod_id).obs_id
+        prov_obs_id = cn.CFHTName(file_name=prov_prod_id).obs_id
     return prov_obs_id, prov_prod_id
 
 

@@ -1,4 +1,4 @@
-working_directory: /usr/src/app/cfht2caom2
+working_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test
 # the netrc_filename value must be a fully-qualified name
 # netrc_filename: /usr/src/app/netrc
 # this is the name of the proxy certificate file supplied 
@@ -23,7 +23,7 @@ logging_level: DEBUG
 # values True False
 log_to_file: True
 # fully qualified name for a directory to write log files
-log_file_directory: /usr/src/app/logs
+log_file_directory: /usr/src/app/cfht2caom2/tests/data/composable_test/logs
 # the filename where success logs are written
 #
 # this file is created in the logs directory, default is 'success_log.txt'
@@ -53,13 +53,13 @@ collection: CFHT
 # CADC service execution metrics
 #
 observe_execution: True
-observable_directory: /usr/src/app/metrics
+observable_directory: /usr/src/app/cfht2caom2/tests/data/composable_test/metrics
 # 
 # if the pipeline for the collection tracks known failures, that occurs
 # in this location
 # 
 rejected_file_name: rejected.yml
-rejected_directory: /usr/src/app/rejected
+rejected_directory: /usr/src/app/cfht2caom2/tests/data/composable_test/rejected
 #
 # for information that needs to be persisted between pipeline 
 # invocations, defaults to 'state.yml', and is found in 'working_directory'

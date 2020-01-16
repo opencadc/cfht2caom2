@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2020.                            (c) 2020.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -68,64 +68,111 @@
 #
 
 import logging
-import sys
-import traceback
 
-from caom2pipe import execute_composable as ec
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, builder, main_app
+from cfht2caom2 import metadata as md
 
 
-meta_visitors = []
-data_visitors = []
+__all__ = ['CFHTName', 'COLLECTION', 'ARCHIVE']
 
 
-def _run_state():
-    """Uses a state file with a timestamp to control which entries will be
-    processed.
+COLLECTION = 'CFHT'
+ARCHIVE = 'CFHT'
+
+
+class CFHTName(mc.StorageName):
+    """Naming rules:
+    - support mixed-case file name storage, and mixed-case obs id values
+    - support fz files in storage
+    - product id == file id
+    - the file_name attribute has ALL the extensions, including compression
+      type.
     """
-    config = mc.Config()
-    config.get_executors()
-    return ec.run_from_state(config, cfht_name.CFHTName,
-                             main_app.APPLICATION, meta_visitors,
-                             data_visitors, bookmark=None, work=None)
 
+    CFHT_NAME_PATTERN = '*'
 
-def run_state():
-    """Wraps _run_state in exception handling."""
-    try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+    def __init__(self, obs_id=None, fname_on_disk=None, file_name=None,
+                 instrument=None, ad_uri=None):
+        # set compression to an empty string so the file uri method still
+        # works, since the file_name element will have all extensions,
+        # including the .fz to indicate compression  # TODO no longer true
+        super(CFHTName, self).__init__(
+            None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
+            compression='')
+        self._instrument = md.Inst(instrument)
+        if ad_uri is not None and file_name is None:
+            file_name = mc.CaomName(ad_uri).file_name
+        self._file_id = CFHTName.remove_extensions(file_name)
+        self._suffix = self._file_id[-1]
+        if self.is_simple and not self.is_master_cal:
+            self.obs_id = self._file_id[:-1]
+        else:
+            self.obs_id = self._file_id
+        self._file_name = file_name
+        self._logger = logging.getLogger(__name__)
+        self._logger.debug(self)
 
+    def __str__(self):
+        return f'obs_id {self.obs_id}, ' \
+               f'file_id {self._file_id}, ' \
+               f'file_name {self.file_name}, ' \
+               f'lineage {self.lineage}'
 
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
+    def is_valid(self):
+        return True
 
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config = mc.Config()
-    config.get_executors()
-    name_builder = builder.CFHTBuilder(config)
-    return ec.run_by_file_storage_name(config, main_app.APPLICATION,
-                                       meta_visitors, data_visitors,
-                                       name_builder, chooser=None)
+    @property
+    def file_id(self):
+        """The file id - no extensions."""
+        return self._file_id
 
+    @property
+    def file_name(self):
+        """The file name."""
+        return self._file_name
 
-def run_by_builder():
-    try:
-        result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+    @file_name.setter
+    def file_name(self, value):
+        """The file name."""
+        self._file_name = value
+
+    @property
+    def product_id(self):
+        result = self._file_id
+        return result
+
+    @property
+    def is_master_cal(self):
+        return ('weight' in self._file_id or 'master' in self._file_id or
+                    'hotpix' in self._file_id or 'badpix' in self._file_id or
+                    'deadpix' in self._file_id or 'dark' in self._file_id)
+
+    @property
+    def has_polarization(self):
+        return self._suffix in ['p'] and self._instrument is md.Inst.ESPADONS
+
+    @property
+    def is_simple(self):
+        result = False
+        if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',
+                             'w', 'x', 'y']
+                or self.simple_by_suffix or self.is_master_cal):
+            result = True
+        return result
+
+    @property
+    def simple_by_suffix(self):
+        return ((self._suffix in ['p', 's'] and
+                 self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM]) or
+                (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS))
+
+    @property
+    def suffix(self):
+        return self._suffix
+
+    @staticmethod
+    def remove_extensions(name):
+        """How to get the file_id from a file_name."""
+        # ESPaDOnS files have a .gz extension ;)
+        return name.replace('.fits', '').replace('.fz', '').replace(
+            '.header', '').replace('.gz', '')

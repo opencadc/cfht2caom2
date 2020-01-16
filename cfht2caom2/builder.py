@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2020.                            (c) 2020.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -68,64 +68,39 @@
 #
 
 import logging
-import sys
-import traceback
 
-from caom2pipe import execute_composable as ec
+from cadcdata import CadcDataClient
+from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, builder, main_app
+from cfht2caom2 import cfht_name as cn
 
 
-meta_visitors = []
-data_visitors = []
+__all__ = ['CFHTBuilder']
 
 
-def _run_state():
-    """Uses a state file with a timestamp to control which entries will be
-    processed.
-    """
-    config = mc.Config()
-    config.get_executors()
-    return ec.run_from_state(config, cfht_name.CFHTName,
-                             main_app.APPLICATION, meta_visitors,
-                             data_visitors, bookmark=None, work=None)
+class CFHTBuilder(mc.Builder):
 
+    def __init__(self, config):
+        super(CFHTBuilder, self).__init__(config)
+        subject = mc.define_subject(config)
+        self._data_client = CadcDataClient(subject)
 
-def run_state():
-    """Wraps _run_state in exception handling."""
-    try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+    def build(self, entry):
+        """
+        :param entry an entry is a file name, complete with the appropriate
+        compression extension, that is sufficient to retrieve file header
+        information from CADC's storage system.
+        """
 
+        # retrieve the header information, extract the instrument name
+        headers_str = mc.get_cadc_headers_client(
+            self._config.archive, entry, self._data_client)
+        headers = ac.make_headers_from_string(headers_str)
 
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
-
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config = mc.Config()
-    config.get_executors()
-    name_builder = builder.CFHTBuilder(config)
-    return ec.run_by_file_storage_name(config, main_app.APPLICATION,
-                                       meta_visitors, data_visitors,
-                                       name_builder, chooser=None)
-
-
-def run_by_builder():
-    try:
-        result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+        instrument = headers[0].get('INSTRUME')
+        if instrument is None:
+            instrument = headers[1].get('INSTRUME')
+            if instrument is None:
+                raise mc.CadcException(
+                    f'Could not identify instrument for {entry}.')
+        return cn.CFHTName(file_name=entry, instrument=instrument)
