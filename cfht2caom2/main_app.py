@@ -130,6 +130,7 @@ from caom2pipe import manage_composable as mc
 
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
+from cfht2caom2 import builder
 
 
 __all__ = ['cfht_main_app', 'update', 'APPLICATION']
@@ -400,6 +401,8 @@ def get_plane_data_product_type(header):
 
 
 def get_plane_data_release(header):
+    # order set from:
+    # caom2IngestWircam.py, l756
     result = header.get('REL_DATE')
     if result is None:
         date_obs = header.get('DATE-OBS')
@@ -886,6 +889,8 @@ def accumulate_bp(bp, uri, instrument):
 
     bp.set('Observation.intent', 'get_obs_intent(header)')
     # add most preferred attribute last
+    # order set from:
+    # caom2IngestWircam.py, l777
     bp.clear('Observation.metaRelease')
     bp.add_fits_attribute('Observation.metaRelease', 'REL_DATE')
     bp.add_fits_attribute('Observation.metaRelease', 'DATE')
@@ -954,6 +959,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Plane.provenance.version', 'get_provenance_version(header)')
 
     bp.set('Artifact.productType', 'get_product_type(params)')
+    bp.set('Artifact.releaseType', 'data')
 
     # hard-coded values from:
     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
@@ -1071,7 +1077,9 @@ def update(observation, **kwargs):
     filter_name = headers[idx].get('FILTER')
     instrument = _get_instrument(headers[idx])
 
-    cfht_name = cn.CFHTName(file_name=os.path.basename(fqn), instrument=instrument)
+    logging.error(f'fqn {fqn}')
+    cfht_name = cn.CFHTName(
+        file_name=os.path.basename(fqn), instrument=instrument)
     is_derived, derived_type = _is_derived(
         headers, cfht_name, observation.observation_id)
     if is_derived and not isinstance(observation, DerivedObservation):
@@ -1085,8 +1093,13 @@ def update(observation, **kwargs):
                 algorithm_name = 'scan'
         observation = cc.change_to_composite(
             observation, algorithm_name, cn.COLLECTION)
+    for plane in observation.planes.values():
+        logging.error(f'plane id {plane.product_id}')
 
     for plane in observation.planes.values():
+        if plane.product_id != cfht_name.product_id:
+            # do only the work for the applicable plane
+            continue
         if observation.algorithm.name == 'scan':
             plane.data_product_type = DataProductType.CUBE
             if plane.provenance is not None:
@@ -1235,6 +1248,7 @@ def update(observation, **kwargs):
             # caom2IngestWircam.py, l193
             # CW 09-01-20
             # Only the 'o' is input
+            logging.error('should get here?')
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
         elif instrument is md.Inst.ESPADONS and plane.product_id[-1] == 'i':
             # caom2IngestEspadons.py, l714
@@ -1388,8 +1402,12 @@ def _update_observation_metadata(obs, headers, fqn):
     # the first time through, the CD4_4 value is set from CDELT4,
     # the second time through, it is not, because
 
+    # more notes to myself - why does this not work within the pipeline?
+    # it should???
+
     # check for files with primary headers that have NO information
     # - e.g. 2445848a
+    logging.debug(f'Begin _update_observation_metadata for {fqn}')
     idx = 0
     run_id = headers[0].get('RUNID')
     if run_id is None:
@@ -1421,25 +1439,29 @@ def _update_observation_metadata(obs, headers, fqn):
         # is already set from the first pass-through - need to figure out a
         # way to fix this .... sigh
         unmodified_headers = get_cadc_headers(f'file://{fqn}')
-
-        # make a list of length 1, because then
-        # fits2caom2.FitsParser.augment_observation won't try to read the
-        # headers from a file on disk
-        # print('{!r}'.format(headers[1]))
-        # parser = FitsParser([headers[1]], bp, uri)
-        parser = FitsParser([unmodified_headers[1]], bp, uri)
+        parser = FitsParser(unmodified_headers[1:], bp, uri)
         parser.augment_observation(obs, uri, product_id)
 
         # re-home the chunk information to be consistent with accepted CAOM
         # patterns of part/chunk relationship - i.e. part 0 never has chunks
+        # if the file being represented has extensions. This
+        # relationship gets missed when only using the headers[1:], so
+        # shift all the chunks up by one, and set the 0th to no chunks
         for plane in obs.planes.values():
+            if plane.product_id != product_id:
+                continue
             for artifact in plane.artifacts.values():
-                if artifact.uri == uri:
-                    part0 = artifact.parts['0']
-                    part1 = artifact.parts['1']
-                    part1.chunks[0] = part0.chunks[0]
-                    part0.chunks = TypedList(Chunk, )
+                if artifact.uri == uri and len(artifact.parts) > 1:
+                    count = len(artifact.parts)
+                    ii = count
+                    while ii > 1:
+                        part_ii_minus_1 = artifact.parts[str(ii-2)]
+                        part_ii = artifact.parts[str(ii-1)]
+                        part_ii.chunks[0] = part_ii_minus_1.chunks[0]
+                        ii -= 1
+                    artifact.parts['0'].chunks = TypedList(Chunk, )
 
+    logging.debug(f'End _update_observation_metadata.')
     return idx
 
 
@@ -1449,6 +1471,7 @@ def _update_plane_provenance_p(plane, obs_id, suffix):
                                                           obs_id)
     obs_member = ObservationURI(obs_member_str)
     plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}{suffix}')
+    logging.error(f'{plane.product_id}')
     plane.provenance.inputs.add(plane_uri)
     logging.debug(f'End _update_plane_provenance_p for {obs_id}')
 
@@ -1623,7 +1646,8 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
     # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
     # seem to prefer NAXIS, so odd as this placement seems, do not rely
     # on function execution, because it affects NAXIS, not ZNAXIS - sigh
-    if obs_type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT'] and cfht_name.suffix != 'g':
+    if (obs_type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT'] and
+            cfht_name.suffix != 'g'):
         n_exp = headers[idx].get('NEXP')
         if n_exp is not None:
             # caom2IngestWircam.py, l843
@@ -1633,7 +1657,16 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
 
 
 def _identify_instrument(uri):
-    logging.error(f'Begin _identify_instrument for uri {uri}.')
+    # logging.error(f'Begin _identify_instrument for uri {uri}.')
+    # config = mc.Config()
+    # config.get_executors()
+    # cfht_builder = builder.CFHTBuilder(config)
+    # storage_name = cfht_builder.build(mc.CaomName(uri).file_name)
+    # md.set_storage_name(storage_name)
+    # logging.error(
+    #     f'End _identify_instrument for uri {uri} instrument is '
+    #     f'{storage_name.instrument}.')
+    # return storage_name.instrument
     # TODO - make this a header read when I get to it ...
     result = md.Inst.SITELLE  # 1944968p, 2445397p
     if '2463796o' in uri:
@@ -1646,8 +1679,6 @@ def _identify_instrument(uri):
             '760296f' in uri or '881162d' in uri or '979339' in uri or
             '2460503p' in uri):
         result = md.Inst.ESPADONS
-    logging.error(
-        f'End _identify_instrument for uri {uri} instrument is {result}.')
     return result
 
 
@@ -1750,8 +1781,16 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
-def _main_app():
+def _cfht_args_parser():
     args = get_gen_proc_arg_parser().parse_args()
+    if args.not_connected:
+        # stop attempts to connect to SVO
+        md.filter_cache.connected = False
+    return args
+
+
+def _main_app():
+    args = _cfht_args_parser()
     uris = _get_uris(args)
     blueprints = _build_blueprints(uris)
     result = gen_proc(args, blueprints)
@@ -1759,7 +1798,7 @@ def _main_app():
 
 
 def cfht_main_app():
-    args = get_gen_proc_arg_parser().parse_args()
+    args = _cfht_args_parser()
     try:
         result = _main_app()
         logging.debug('Done {} processing.'.format(APPLICATION))
