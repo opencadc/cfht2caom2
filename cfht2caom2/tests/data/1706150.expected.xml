@@ -1,4 +1,4 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-2365-0145da474ba3" caom2:lastModified="2017-06-07T08:57:41.123" caom2:maxLastModified="2019-11-05T23:20:03.794" caom2:metaChecksum="md5:3c46d1155803a8f00a3922bfd01ea8f4" caom2:accMetaChecksum="md5:d883f80412b5dbc21ebcbfda821d7c52">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-2365-0145da474ba3" caom2:lastModified="2017-06-07T08:57:41.123" caom2:maxLastModified="2019-11-05T23:20:03.794" caom2:metaChecksum="md5:3c46d1155803a8f00a3922bfd01ea8f4" caom2:accMetaChecksum="md5:d883f80412b5dbc21ebcbfda821d7c52">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1706150</caom2:observationID>
   <caom2:metaRelease>2014-05-08T00:00:00.000</caom2:metaRelease>
@@ -60,9 +60,6 @@
               <caom2:name>1</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-2365-0145da474c69" caom2:lastModified="2014-05-08T05:21:17.360" caom2:maxLastModified="2014-05-08T05:21:17.360" caom2:metaChecksum="md5:90e435994508da28a39121a47f5e67bf" caom2:accMetaChecksum="md5:dabc5e3691eb9a84217d40861a13c123">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -118,9 +115,6 @@
               <caom2:name>2</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-2365-0145da474c77" caom2:lastModified="2014-05-08T05:21:17.360" caom2:maxLastModified="2014-05-08T05:21:17.360" caom2:metaChecksum="md5:9f355936847b7f66d4d90732909972a5" caom2:accMetaChecksum="md5:f0cc59d55fdc0e1d30881671b5172f26">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -176,9 +170,6 @@
               <caom2:name>3</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-2365-0145da474c7d" caom2:lastModified="2014-05-08T05:21:17.360" caom2:maxLastModified="2014-05-08T05:21:17.360" caom2:metaChecksum="md5:4b3bd93743f2a9ebecf6955963d40e07" caom2:accMetaChecksum="md5:8faa9eb68cd2ac10b8cd991cf77eb30a">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -234,9 +225,6 @@
               <caom2:name>4</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-2365-0145da474c82" caom2:lastModified="2014-05-08T05:21:17.360" caom2:maxLastModified="2014-05-08T05:21:17.360" caom2:metaChecksum="md5:8c70568c211761b721147db03993b8de" caom2:accMetaChecksum="md5:7fc1fd9bd6c3f3ad60dcf2dd34ff0570">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>

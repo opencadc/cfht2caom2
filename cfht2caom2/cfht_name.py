@@ -102,19 +102,18 @@ class CFHTName(mc.StorageName):
         self._instrument = md.Inst(instrument)
         if ad_uri is not None and file_name is None:
             file_name = mc.CaomName(ad_uri).file_name
+        self._file_name = file_name
         self._file_id = CFHTName.remove_extensions(file_name)
         self._suffix = self._file_id[-1]
         if self.is_simple and not self.is_master_cal:
             self.obs_id = self._file_id[:-1]
         else:
             self.obs_id = self._file_id
-        self._file_name = file_name
-        self._logger = logging.getLogger(__name__)
         self._logger.debug(self)
 
     def __str__(self):
         return f'obs_id {self.obs_id}, ' \
-               f'file_id {self._file_id}, ' \
+               f'file_id {self.file_id}, ' \
                f'file_name {self.file_name}, ' \
                f'lineage {self.lineage}'
 
@@ -135,6 +134,10 @@ class CFHTName(mc.StorageName):
     def file_name(self, value):
         """The file name."""
         self._file_name = value
+
+    @property
+    def instrument(self):
+        return self._instrument
 
     @property
     def product_id(self):

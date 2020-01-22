@@ -78,6 +78,7 @@ class Inst(Enum):
     MEGAPRIME = 'MetaPrime'
     SITELLE = 'SITELLE'
     WIRCAM = 'WIRCam'
+    NONE = None
 
 
 # key is CFHT metadata
@@ -107,7 +108,8 @@ FILTER_REPAIR_LOOKUP = {
     'z.MP9801': 'z',
     'z.MP9901': 'z_sdss',
     # WIRCam
-    'BrG': 'Brackett_gamma'}
+    'BrG': 'Brackett_gamma',
+    'Ks.WC8302': 'Ks'}
 
 # key is CFHT metadata
 # value is SVO url piece
@@ -137,7 +139,9 @@ CFHT_CACHE = {
     'SN2': {'cw': None, 'fwhm': None},
     'SN3': {'cw': None, 'fwhm': None},
     # WIRCam
-    'WIRCam.None': {'cw': 17000.0, 'fwhm': 14000.0}}
+    'WIRCam.None': {'cw': 17000.0, 'fwhm': 14000.0},
+    'FakeBlank': {'cw': 17000.0, 'fwhm': 14000.0}
+}
 
 filter_cache = ac.FilterMetadataCache(FILTER_REPAIR_LOOKUP,
                                       INSTRUMENT_REPAIR_LOOKUP,

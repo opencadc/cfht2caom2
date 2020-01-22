@@ -1,4 +1,4 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="472fd350-07a8-47ab-9c36-6876ddbcac8d" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:3a555065a797fb46e2b71e273c9fde01" caom2:accMetaChecksum="md5:5e2ccb5010e2b9fa1abf861d6bbc9876">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="472fd350-07a8-47ab-9c36-6876ddbcac8d" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:3a555065a797fb46e2b71e273c9fde01" caom2:accMetaChecksum="md5:5e2ccb5010e2b9fa1abf861d6bbc9876">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>hotpix_20191124HST180309_v200</caom2:observationID>
   <caom2:metaRelease>2019-11-24T00:00:00.000</caom2:metaRelease>

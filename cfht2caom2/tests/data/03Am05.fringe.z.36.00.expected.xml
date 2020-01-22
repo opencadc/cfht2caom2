@@ -1,4 +1,4 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:CompositeObservation" caom2:id="00000000-0000-0000-247c-0140a0107dc8" caom2:lastModified="2017-07-16T06:46:50.953" caom2:maxLastModified="2019-11-06T03:28:59.688" caom2:metaChecksum="md5:23c364ab06d44ab7ba52abd25a7ff647" caom2:accMetaChecksum="md5:7598bcfd17192ca807aa6b9e396203d9">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:CompositeObservation" caom2:id="00000000-0000-0000-247c-0140a0107dc8" caom2:lastModified="2017-07-16T06:46:50.953" caom2:maxLastModified="2019-11-06T03:28:59.688" caom2:metaChecksum="md5:23c364ab06d44ab7ba52abd25a7ff647" caom2:accMetaChecksum="md5:7598bcfd17192ca807aa6b9e396203d9">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>03Am05.fringe.z.36.00</caom2:observationID>
   <caom2:metaRelease>2003-06-23T00:00:00.000</caom2:metaRelease>

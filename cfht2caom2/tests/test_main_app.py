@@ -131,12 +131,29 @@ def test_main_app(test_name):
     local = _get_local(basename)
 
     with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
-       patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
+        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock, \
+            patch('cfht2caom2.main_app._identify_instrument') as inst_mock:
         def get_file_info(archive, file_id):
             return {'type': 'application/fits'}
 
+        def _identify_inst_mock(uri):
+            result = md.Inst.SITELLE  # 1944968p, 2445397p
+            if '2463796o' in uri:
+                result = md.Inst.MEGACAM
+            elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
+                  '2281792' in uri):
+                result = md.Inst.WIRCAM
+            elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
+                    '1219059' in uri or '1883829c' in uri or
+                    '2460602a' in uri or
+                    '760296f' in uri or '881162d' in uri or '979339' in uri or
+                    '2460503p' in uri):
+                result = md.Inst.ESPADONS
+            return result
+
         data_client_mock.return_value.get_file_info.side_effect = get_file_info
         vo_mock.side_effect = _vo_mock
+        inst_mock.side_effect = _identify_inst_mock
 
         sys.argv = \
             ('{} --no_validate --local {} --observation {} {} -o {} '
@@ -163,12 +180,6 @@ def test_main_app(test_name):
 
 
 def _get_lineage(cfht_name):
-    # result = ''
-    # for ii in LOOKUP[obs_id]:
-    #     product_id = CFHTName.extract_product_id(ii)
-    #     fits = mc.get_lineage(ARCHIVE, product_id, '{}.fits'.format(ii))
-    #     result = '{} {}'.format(result, fits)
-    # return result
     if '979339' in cfht_name.product_id:
         temp_i = mc.get_lineage(ARCHIVE, '979339i', '979339i.fits.gz')
         temp_o = mc.get_lineage(ARCHIVE, '979339o', '979339o.fits.gz')
@@ -178,7 +189,11 @@ def _get_lineage(cfht_name):
         temp_p = mc.get_lineage(ARCHIVE, '2281792p', '2281792p.fits.fz')
         temp_o = mc.get_lineage(ARCHIVE, '2281792o', '2281792o.fits.fz')
         temp_g = mc.get_lineage(ARCHIVE, '2281792g', '2281792g.fits.gz')
-        result = f'{temp_p} {temp_s} {temp_o} {temp_g}'
+        result = f'{temp_s} {temp_p} {temp_o} {temp_g}'
+    elif '1151210' in cfht_name.product_id:
+        temp_m = mc.get_lineage(ARCHIVE, '1151210m', '1151210m.fits.fz')
+        temp_w = mc.get_lineage(ARCHIVE, '1151210w', '1151210w.fits.gz')
+        result = f'{temp_m} {temp_w}'
     else:
         result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
                                 f'{cfht_name.file_name}')
@@ -186,13 +201,12 @@ def _get_lineage(cfht_name):
 
 
 def _get_local(test_name):
-    # result = ''
-    # for ii in LOOKUP[obs_id]:
-    #     result = '{} {}/{}.fits.header'.format(result, TEST_DATA_DIR, ii)
-    # return result
     if '979339' in test_name:
         result = f'{TEST_DATA_DIR}/979339i.fits ' \
                  f'{TEST_DATA_DIR}/979339o.fits.header'
+    elif '1151210' in test_name:
+        result = f'{TEST_DATA_DIR}/1151210m.fits.header ' \
+                 f'{TEST_DATA_DIR}/1151210w.fits.header'
     elif '2460503' in test_name:
         result = f'{TEST_DATA_DIR}/2460503p.fits'
     elif '2281792' in test_name:

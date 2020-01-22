@@ -1,4 +1,4 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-706d-01408b320c8b" caom2:lastModified="2017-12-13T15:42:28.927" caom2:maxLastModified="2019-11-05T23:23:31.588" caom2:metaChecksum="md5:0a04b5967b3c960de1f1a7e90f34708f" caom2:accMetaChecksum="md5:1574c800c6a8061197d24dd55ff07b74">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-706d-01408b320c8b" caom2:lastModified="2017-12-13T15:42:28.927" caom2:maxLastModified="2019-11-05T23:23:31.588" caom2:metaChecksum="md5:0a04b5967b3c960de1f1a7e90f34708f" caom2:accMetaChecksum="md5:1574c800c6a8061197d24dd55ff07b74">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1003681</caom2:observationID>
   <caom2:metaRelease>2008-06-25T00:00:00.000</caom2:metaRelease>

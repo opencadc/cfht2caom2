@@ -73,15 +73,27 @@ import traceback
 
 from datetime import datetime
 
+from caom2pipe import data_source as ds
 from caom2pipe import execute_composable as ec
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import builder, main_app, work
+from caom2pipe import run_composable as rc
+from cfht2caom2 import cfht_builder, main_app, work
 
 
 meta_visitors = []
 data_visitors = []
 
 CFHT_BOOKMARK = 'cfht_timestamp'
+
+
+class CFHTChooser(ec.OrganizeChooser):
+
+    def __init__(self):
+        super(CFHTChooser, self).__init__()
+
+    def use_compressed(self):
+        # store CFHT files in whatever compression format they are sent in
+        return True
 
 
 def _run_state():
@@ -119,10 +131,23 @@ def _run_by_builder():
     """
     config = mc.Config()
     config.get_executors()
-    name_builder = builder.CFHTBuilder(config)
-    return ec.run_by_file_storage_name(config, main_app.APPLICATION,
-                                       meta_visitors, data_visitors,
-                                       name_builder, chooser=None)
+
+    logger = logging.getLogger()
+    logger.setLevel(config.logging_level)
+    logging.debug(config)
+
+    builder = cfht_builder.CFHTBuilder(config)
+    chooser = CFHTChooser()
+    organizer = ec.OrganizeExecutesWithDoOne(
+        config, main_app.APPLICATION, meta_visitors, data_visitors)
+    if config.use_local_files:
+        data_source = ds.ListDirDataSource(config, chooser)
+        runner = rc.TodoRunner(config, organizer, builder, data_source)
+        return runner.run()
+    else:
+        return ec.run_by_file_storage_name(config, main_app.APPLICATION,
+                                           meta_visitors, data_visitors,
+                                           builder, chooser)
 
 
 def run_by_builder():

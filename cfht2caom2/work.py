@@ -68,14 +68,14 @@
 #
 
 from caom2pipe import work_composable as wc
-from cfht2caom2 import builder
+from cfht2caom2 import cfht_builder
 
 
 class StorageTimeBoxQueryStorageName(wc.StorageTimeBoxQuery):
 
     def __init__(self, max_ts, config):
         super(StorageTimeBoxQueryStorageName, self).__init__(max_ts, config)
-        self._builder = builder.CFHTBuilder(config)
+        self._builder = cfht_builder.CFHTBuilder(config)
 
     def todo(self, prev_exec_date, exec_date):
         results = []

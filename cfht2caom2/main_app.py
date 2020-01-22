@@ -128,12 +128,12 @@ from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
 
+from cfht2caom2 import cfht_builder as cb
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
-from cfht2caom2 import builder
 
 
-__all__ = ['cfht_main_app', 'update', 'APPLICATION']
+__all__ = ['cfht_main_app', 'to_caom2', 'update', 'APPLICATION']
 
 
 APPLICATION = 'cfht2caom2'
@@ -690,7 +690,6 @@ def get_time_refcoord_delta_derived(params):
         else:
             # caom2IngestSitelle.py, l704
             exp_time = mjd_end - mjd_start
-            logging.error(f'exp_time {exp_time}')
     else:
         mjd_obs = get_time_refcoord_val_derived(header)
         tv_stop = header.get('TVSTOP')
@@ -1069,17 +1068,31 @@ def update(observation, **kwargs):
     fqn = None
     if 'fqn' in kwargs:
         fqn = kwargs['fqn']
+    uri = None
+    if 'uri' in kwargs:
+        uri = kwargs['uri']
 
-    idx = _update_observation_metadata(observation, headers, fqn)
+    instrument = cb.CFHTBuilder.get_instrument(headers, uri)
+
+    # fqn is not always defined, ffs
+    if uri is not None:
+        ignore_scheme, ignore_archive, f_name = mc.decompose_uri(uri)
+        cfht_name = cn.CFHTName(
+            file_name=f_name, instrument=instrument)
+    elif fqn is not None:
+        cfht_name = cn.CFHTName(
+            file_name=os.path.basename(fqn), instrument=instrument)
+    else:
+        raise mc.CadcException(f'Cannot define a CFHTName instance for '
+                               f'{observation.observation_id}')
+
+    idx = _update_observation_metadata(observation, headers, cfht_name,
+                                       fqn, uri)
     ccdbin = headers[idx].get('CCBIN1')
     radecsys = headers[idx].get('RADECSYS')
     ctype1 = headers[idx].get('CTYPE1')
     filter_name = headers[idx].get('FILTER')
-    instrument = _get_instrument(headers[idx])
 
-    logging.error(f'fqn {fqn}')
-    cfht_name = cn.CFHTName(
-        file_name=os.path.basename(fqn), instrument=instrument)
     is_derived, derived_type = _is_derived(
         headers, cfht_name, observation.observation_id)
     if is_derived and not isinstance(observation, DerivedObservation):
@@ -1093,8 +1106,6 @@ def update(observation, **kwargs):
                 algorithm_name = 'scan'
         observation = cc.change_to_composite(
             observation, algorithm_name, cn.COLLECTION)
-    for plane in observation.planes.values():
-        logging.error(f'plane id {plane.product_id}')
 
     for plane in observation.planes.values():
         if plane.product_id != cfht_name.product_id:
@@ -1248,7 +1259,6 @@ def update(observation, **kwargs):
             # caom2IngestWircam.py, l193
             # CW 09-01-20
             # Only the 'o' is input
-            logging.error('should get here?')
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
         elif instrument is md.Inst.ESPADONS and plane.product_id[-1] == 'i':
             # caom2IngestEspadons.py, l714
@@ -1359,7 +1369,6 @@ def _update_observable(part, chunk, suffix, obs_id):
         chunk.observable = ObservableAxis(dependent, independent)
 
         if suffix == 'p' and len(part.chunks) == 1:
-            logging.error('yes or no?')
             # caom2IngestEspadons.py, l863
             dependent_axis = Axis('polarized flux', 'percent')
             dependent = Slice(dependent_axis, 3)
@@ -1370,7 +1379,7 @@ def _update_observable(part, chunk, suffix, obs_id):
     logging.debug(f'End _update_observable for {obs_id}')
 
 
-def _update_observation_metadata(obs, headers, fqn):
+def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
     """
     Why this method exists:
 
@@ -1407,7 +1416,8 @@ def _update_observation_metadata(obs, headers, fqn):
 
     # check for files with primary headers that have NO information
     # - e.g. 2445848a
-    logging.debug(f'Begin _update_observation_metadata for {fqn}')
+    logging.debug(f'Begin _update_observation_metadata for '
+                  f'{cfht_name.file_name}')
     idx = 0
     run_id = headers[0].get('RUNID')
     if run_id is None:
@@ -1415,17 +1425,26 @@ def _update_observation_metadata(obs, headers, fqn):
 
         logging.warning(f'Resetting the header/blueprint '
                         f'relationship for {obs.observation_id}')
-
-        # use the fqn to define the URI
-        # TODO - leaking name structure here
-        product_id = cn.CFHTName.remove_extensions(os.path.basename(fqn))
-        extension = '.fz'
         instrument = _get_instrument(headers[idx])
-        if instrument is md.Inst.ESPADONS:
-            extension = '.gz'
-        uri = mc.build_uri(cn.ARCHIVE,
-                           os.path.basename(fqn).replace('.header',
-                                                         extension))
+        if uri is None and fqn is not None:
+            # use the fqn to define the URI
+            # TODO - leaking name structure here
+            extension = '.fz'
+            if instrument is md.Inst.ESPADONS:
+                extension = '.gz'
+            uri = mc.build_uri(cn.ARCHIVE,
+                               os.path.basename(fqn).replace('.header',
+                                                             extension))
+            # this is the fits2caom2 implementation, which returns
+            # a list structure
+            unmodified_headers = get_cadc_headers(f'file://{fqn}')
+        elif uri is not None:
+            # this is the fits2caom2 implementation, which returns
+            # a list structure
+            unmodified_headers = get_cadc_headers(uri)
+        else:
+            raise mc.CadcException(f'Cannot retrieve un-modified headers for '
+                                   f'{uri}')
         module = importlib.import_module(__name__)
         bp = ObsBlueprint(module=module)
         accumulate_bp(bp, uri, instrument)
@@ -1438,9 +1457,8 @@ def _update_observation_metadata(obs, headers, fqn):
         # CD4_4 value update is expressly NOT done, because the CD4_4 value
         # is already set from the first pass-through - need to figure out a
         # way to fix this .... sigh
-        unmodified_headers = get_cadc_headers(f'file://{fqn}')
         parser = FitsParser(unmodified_headers[1:], bp, uri)
-        parser.augment_observation(obs, uri, product_id)
+        parser.augment_observation(obs, uri, cfht_name.product_id)
 
         # re-home the chunk information to be consistent with accepted CAOM
         # patterns of part/chunk relationship - i.e. part 0 never has chunks
@@ -1448,7 +1466,7 @@ def _update_observation_metadata(obs, headers, fqn):
         # relationship gets missed when only using the headers[1:], so
         # shift all the chunks up by one, and set the 0th to no chunks
         for plane in obs.planes.values():
-            if plane.product_id != product_id:
+            if plane.product_id != cfht_name.product_id:
                 continue
             for artifact in plane.artifacts.values():
                 if artifact.uri == uri and len(artifact.parts) > 1:
@@ -1471,7 +1489,6 @@ def _update_plane_provenance_p(plane, obs_id, suffix):
                                                           obs_id)
     obs_member = ObservationURI(obs_member_str)
     plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}{suffix}')
-    logging.error(f'{plane.product_id}')
     plane.provenance.inputs.add(plane_uri)
     logging.debug(f'End _update_plane_provenance_p for {obs_id}')
 
@@ -1657,29 +1674,15 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
 
 
 def _identify_instrument(uri):
-    # logging.error(f'Begin _identify_instrument for uri {uri}.')
-    # config = mc.Config()
-    # config.get_executors()
-    # cfht_builder = builder.CFHTBuilder(config)
-    # storage_name = cfht_builder.build(mc.CaomName(uri).file_name)
-    # md.set_storage_name(storage_name)
-    # logging.error(
-    #     f'End _identify_instrument for uri {uri} instrument is '
-    #     f'{storage_name.instrument}.')
-    # return storage_name.instrument
-    # TODO - make this a header read when I get to it ...
-    result = md.Inst.SITELLE  # 1944968p, 2445397p
-    if '2463796o' in uri:
-        result = md.Inst.MEGACAM
-    elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
-          '2281792' in uri):
-        result = md.Inst.WIRCAM
-    elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
-            '1219059' in uri or '1883829c' in uri or '2460602a' in uri or
-            '760296f' in uri or '881162d' in uri or '979339' in uri or
-            '2460503p' in uri):
-        result = md.Inst.ESPADONS
-    return result
+    logging.error(f'Begin _identify_instrument for uri {uri}.')
+    config = mc.Config()
+    config.get_executors()
+    cfht_builder = cb.CFHTBuilder(config)
+    storage_name = cfht_builder.build(mc.CaomName(uri).file_name)
+    logging.error(
+        f'End _identify_instrument for uri {uri} instrument is '
+        f'{storage_name.instrument}.')
+    return storage_name.instrument
 
 
 def _build_blueprints(uris):
@@ -1789,22 +1792,27 @@ def _cfht_args_parser():
     return args
 
 
-def _main_app():
-    args = _cfht_args_parser()
-    uris = _get_uris(args)
-    blueprints = _build_blueprints(uris)
-    result = gen_proc(args, blueprints)
-    return result
+def to_caom2():
+    try:
+        args = _cfht_args_parser()
+        uris = _get_uris(args)
+        blueprints = _build_blueprints(uris)
+        result = gen_proc(args, blueprints)
+        return result
+    except Exception as e:
+        logging.error(traceback.format_exc())
+        raise e
 
 
 def cfht_main_app():
+    logging.error(sys.argv)
     args = _cfht_args_parser()
     try:
-        result = _main_app()
+        result = to_caom2()
         logging.debug('Done {} processing.'.format(APPLICATION))
         sys.exit(result)
     except Exception as e:
         logging.error('Failed {} execution for {}.'.format(APPLICATION, args))
         tb = traceback.format_exc()
-        logging.debug(tb)
+        logging.error(tb)
         sys.exit(-1)

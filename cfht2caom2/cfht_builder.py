@@ -68,22 +68,30 @@
 #
 
 import logging
+import os
 
 from cadcdata import CadcDataClient
+from caom2utils import fits2caom2
+from caom2pipe import builder
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
+from cfht2caom2 import metadata as md
 
 
 __all__ = ['CFHTBuilder']
 
 
-class CFHTBuilder(mc.Builder):
+class CFHTBuilder(builder.StorageNameBuilder):
 
     def __init__(self, config):
-        super(CFHTBuilder, self).__init__(config)
-        subject = mc.define_subject(config)
-        self._data_client = CadcDataClient(subject)
+        super(CFHTBuilder, self).__init__()
+        self._config = config
+        if self._config.use_local_files:
+            self._data_client = None
+        else:
+            subject = mc.define_subject(self._config)
+            self._data_client = CadcDataClient(subject)
 
     def build(self, entry):
         """
@@ -93,14 +101,28 @@ class CFHTBuilder(mc.Builder):
         """
 
         # retrieve the header information, extract the instrument name
-        headers_str = mc.get_cadc_headers_client(
-            self._config.archive, entry, self._data_client)
-        headers = ac.make_headers_from_string(headers_str)
+        if self._data_client is None:
+            cwd = os.getcwd()
+            headers = fits2caom2.get_cadc_headers(f'file://{cwd}/{entry}')
+        else:
+            headers_str = mc.get_cadc_headers_client(
+                self._config.archive, entry, self._data_client)
+            headers = ac.make_headers_from_string(headers_str)
 
+        instrument = CFHTBuilder.get_instrument(headers, entry)
+        return cn.CFHTName(file_name=entry, instrument=instrument)
+
+    @staticmethod
+    def get_instrument(headers, entry):
         instrument = headers[0].get('INSTRUME')
         if instrument is None:
             instrument = headers[1].get('INSTRUME')
             if instrument is None:
                 raise mc.CadcException(
                     f'Could not identify instrument for {entry}.')
-        return cn.CFHTName(file_name=entry, instrument=instrument)
+        try:
+            inst = md.Inst(instrument)
+        except ValueError:
+            raise mc.CadcException(
+                f'Unknown value for instrument {instrument} for {entry}.')
+        return inst
