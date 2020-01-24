@@ -111,9 +111,11 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
-def test_main_app(test_name):
+@ patch('cfht2caom2.main_app._identify_instrument')
+def test_main_app(inst_mock, test_name):
+    inst_mock.side_effect = _identify_inst_mock
     basename = os.path.basename(test_name)
-    instrument = main_app._identify_instrument(basename)
+    instrument = _identify_inst_mock(test_name)
     extension = '.fz'
     if instrument is md.Inst.ESPADONS:
         extension = '.gz'
@@ -131,29 +133,12 @@ def test_main_app(test_name):
     local = _get_local(basename)
 
     with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
-        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock, \
-            patch('cfht2caom2.main_app._identify_instrument') as inst_mock:
+        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
         def get_file_info(archive, file_id):
             return {'type': 'application/fits'}
 
-        def _identify_inst_mock(uri):
-            result = md.Inst.SITELLE  # 1944968p, 2445397p
-            if '2463796o' in uri:
-                result = md.Inst.MEGACAM
-            elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
-                  '2281792' in uri):
-                result = md.Inst.WIRCAM
-            elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
-                    '1219059' in uri or '1883829c' in uri or
-                    '2460602a' in uri or
-                    '760296f' in uri or '881162d' in uri or '979339' in uri or
-                    '2460503p' in uri):
-                result = md.Inst.ESPADONS
-            return result
-
         data_client_mock.return_value.get_file_info.side_effect = get_file_info
         vo_mock.side_effect = _vo_mock
-        inst_mock.side_effect = _identify_inst_mock
 
         sys.argv = \
             ('{} --no_validate --local {} --observation {} {} -o {} '
@@ -163,7 +148,7 @@ def test_main_app(test_name):
                     _get_lineage(cfht_name))).split()
         print(sys.argv)
         try:
-            main_app._main_app()
+            main_app.to_caom2()
         except Exception as e:
             import logging
             import traceback
@@ -228,3 +213,19 @@ def _vo_mock(url):
         return votable, None
     except Exception as e:
         logging.error(f'get_vo_table failure for url {url}')
+
+
+def _identify_inst_mock(uri):
+    result = md.Inst.SITELLE  # 1944968p, 2445397p
+    if '2463796o' in uri:
+        result = md.Inst.MEGACAM
+    elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
+          '2281792' in uri):
+        result = md.Inst.WIRCAM
+    elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
+            '1219059' in uri or '1883829c' in uri or
+            '2460602a' in uri or
+            '760296f' in uri or '881162d' in uri or '979339' in uri or
+            '2460503p' in uri):
+        result = md.Inst.ESPADONS
+    return result

@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2020.                            (c) 2020.
+#  (c) 2019.                            (c) 2019.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -67,22 +67,57 @@
 # ***********************************************************************
 #
 
-from caom2pipe import work_composable as wc
-from cfht2caom2 import cfht_builder
+from mock import patch
+from cfht2caom2 import metadata as md
+
+import test_main_app
 
 
-class StorageTimeBoxQueryStorageName(wc.StorageTimeBoxQuery):
+@patch('caom2pipe.manage_composable.query_endpoint')
+def test_project_titles_cache(query_mock):
+    query_mock.side_effect = _mock_query
 
-    def __init__(self, max_ts, config):
-        super(StorageTimeBoxQueryStorageName, self).__init__(max_ts, config)
-        self._builder = cfht_builder.CFHTBuilder(config)
+    # already cached value
+    test_subject = md.cache
+    assert test_subject is not None, 'expect a cache'
+    test_run_id = '09BC26'
+    test_result = test_subject.get_title(test_run_id)
+    assert test_result is not None, 'expect a result'
+    assert test_result == 'The Next Generation Virgo Survey &#45;&#45; ' \
+                          'Infrared: K_s-Band Observations of the Central 4 ' \
+                          'deg^2', 'wrong result'
 
-    def todo(self, prev_exec_date, exec_date):
-        results = []
-        temp = super(StorageTimeBoxQueryStorageName, self).todo(
-            prev_exec_date, exec_date)
-        for entry in temp:
-            # 0 - file name, 1 - timestamp
-            self._logger.info(f'Adding entry for {entry[0]}')
-            results.append(self._builder.build(entry[0]))
-        return results
+    # empty string does nothing - support case with no RUN_ID in header
+    test_run_id = ''
+    test_result = test_subject.get_title(test_run_id)
+    assert test_result is None, 'expect a result'
+
+    # value not found in cache
+    test_run_id = '20AS19'
+    test_result = test_subject.get_title(test_run_id)
+    assert test_result is not None, f'expect a result {test_run_id}'
+    assert test_result == 'Revealing the origin of rprocess elements from ' \
+                          'the renhanced stars', 'wrong result'
+
+
+def _mock_query(url):
+    class Object(object):
+        def __init__(self):
+            pass
+
+        def close(self):
+            pass
+
+    response = Object()
+    if url == 'http://www.cfht.hawaii.edu/en/science/QSO/2020A/':
+        with open(f'{test_main_app.TEST_DATA_DIR}/programs/'
+                  f'2020a_index.htm') as f:
+            response.text = f.read()
+    elif url == 'http://www.cfht.hawaii.edu/en/science/QSO/2020A/' \
+                'qso_prog_ESP_2020A.html':
+        with open(f'{test_main_app.TEST_DATA_DIR}/programs/'
+                  f'espadons_2020a.htm') as f:
+            response.text = f.read()
+    else:
+        response.text = ''
+    return response

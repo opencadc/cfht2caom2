@@ -145,6 +145,26 @@ class CFHTName(mc.StorageName):
         return result
 
     @property
+    def prev(self):
+        """The preview file name for the file."""
+        return '{}_preview_1024.jpg'.format(self.product_id)
+
+    @property
+    def thumb(self):
+        """The thumbnail file name for the file."""
+        return '{}_preview_256.jpg'.format(self.product_id)
+
+    @property
+    def zoom(self):
+        """The zoom preview file name for the file."""
+        return '{}_preview_zoom_1024.jpg'.format(self.product_id)
+
+    @property
+    def zoom_uri(self):
+        """The zoom preview URI."""
+        return self._get_uri(self.zoom)
+
+    @property
     def is_master_cal(self):
         return ('weight' in self._file_id or 'master' in self._file_id or
                     'hotpix' in self._file_id or 'badpix' in self._file_id or

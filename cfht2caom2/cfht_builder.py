@@ -101,7 +101,7 @@ class CFHTBuilder(builder.StorageNameBuilder):
         """
 
         # retrieve the header information, extract the instrument name
-        if self._data_client is None:
+        if self._config.use_local_files:
             cwd = os.getcwd()
             headers = fits2caom2.get_cadc_headers(f'file://{cwd}/{entry}')
         else:

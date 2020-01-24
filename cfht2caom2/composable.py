@@ -71,13 +71,10 @@ import logging
 import sys
 import traceback
 
-from datetime import datetime
-
-from caom2pipe import data_source as ds
 from caom2pipe import execute_composable as ec
 from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
-from cfht2caom2 import cfht_builder, main_app, work
+from cfht2caom2 import cfht_builder, main_app
 
 
 meta_visitors = []
@@ -97,15 +94,11 @@ class CFHTChooser(ec.OrganizeChooser):
 
 
 def _run_state():
-    """Uses a state file with a timestamp to control which entries will be
-    processed.
-    """
     config = mc.Config()
     config.get_executors()
-    return ec.run_from_storage_name_instance(
-        config, main_app.APPLICATION, meta_visitors, data_visitors,
-        bookmark_name=CFHT_BOOKMARK,
-        work=work.StorageTimeBoxQueryStorageName(datetime.utcnow(), config))
+    builder = cfht_builder.CFHTBuilder(config)
+    return rc.run_by_state(config, builder, main_app.APPLICATION,
+                           CFHT_BOOKMARK, meta_visitors, data_visitors)
 
 
 def run_state():
@@ -131,23 +124,10 @@ def _run_by_builder():
     """
     config = mc.Config()
     config.get_executors()
-
-    logger = logging.getLogger()
-    logger.setLevel(config.logging_level)
-    logging.debug(config)
-
     builder = cfht_builder.CFHTBuilder(config)
     chooser = CFHTChooser()
-    organizer = ec.OrganizeExecutesWithDoOne(
-        config, main_app.APPLICATION, meta_visitors, data_visitors)
-    if config.use_local_files:
-        data_source = ds.ListDirDataSource(config, chooser)
-        runner = rc.TodoRunner(config, organizer, builder, data_source)
-        return runner.run()
-    else:
-        return ec.run_by_file_storage_name(config, main_app.APPLICATION,
-                                           meta_visitors, data_visitors,
-                                           builder, chooser)
+    return rc.run_by_todo(config, builder, chooser, main_app.APPLICATION,
+                          meta_visitors, data_visitors)
 
 
 def run_by_builder():

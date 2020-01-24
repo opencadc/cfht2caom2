@@ -86,13 +86,10 @@ import test_main_app
 TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
-@patch('caom2pipe.manage_composable.exec_cmd')
-@patch('cfht2caom2.builder.CadcDataClient')
+@patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local_direct')
 @patch('caom2pipe.execute_composable.CAOM2RepoClient')
 @patch('caom2pipe.execute_composable.CadcDataClient')
-def test_run_by_builder(data_client_mock, repo_mock, builder_data_mock,
-                        exec_mock):
-    builder_data_mock.return_value.get_file.side_effect = _mock_get_file
+def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
     repo_mock.return_value.update.side_effect = _mock_repo_update
@@ -108,30 +105,15 @@ def test_run_by_builder(data_client_mock, repo_mock, builder_data_mock,
     finally:
         os.getcwd = getcwd_orig
 
-    assert builder_data_mock.return_value.get_file.called, \
-        'get_file not called'
     assert repo_mock.return_value.read.called, 'repo read not called'
     assert repo_mock.return_value.create.called, 'repo create not called'
-    param, level_as = ec.CaomExecute._specify_logging_level_param(
-        logging.WARNING)
-    py_version = f'{sys.version_info.major}.{sys.version_info.minor}'
-    exec_mock.assert_called_with(
-        f'cfht2caom2  --cert /usr/src/app/cadcproxy.pem --observation CFHT '
-        f'2281792 --local /usr/src/app/cfht2caom2/cfht2caom2/tests/data/'
-        f'composable_test/2281792p.fits.fz --out /usr/src/app/cfht2caom2/'
-        f'cfht2caom2/tests/data/composable_test/2281792.fits.xml --plugin'
-        f' /usr/local/lib/python{py_version}/site-packages/cfht2caom2/'
-        f'cfht2caom2.py --module /usr/local/lib/python{py_version}/'
-        f'site-packages/cfht2caom2/cfht2caom2.py --lineage '
-        f'2281792p/ad:CFHT/2281792p.fits.fz',
-        level_as), \
-        'exec mock wrong parameters'
+    assert exec_mock.called, 'expect to be called'
 
 
-@patch('cfht2caom2.builder.CadcDataClient')
+@patch('cfht2caom2.cfht_builder.CadcDataClient')
 @patch('caom2pipe.execute_composable.CadcDataClient')
 @patch('caom2pipe.manage_composable.query_tap_client')
-@patch('caom2pipe.execute_composable._do_one')
+@patch('caom2pipe.execute_composable.OrganizeExecutesWithDoOne.do_one')
 def test_run_state(run_mock, tap_mock, data_client_mock,
                    builder_data_mock):
     run_mock.return_value = 0
@@ -154,12 +136,11 @@ def test_run_state(run_mock, tap_mock, data_client_mock,
         os.getcwd = getcwd_orig
 
     # assert query_mock.called, 'service query not created'
-    assert builder_data_mock.return_value.get_file.called, \
-        'get_file not called'
+    # assert builder_data_mock.return_value.get_file.called, \
+    #     'get_file not called'
     assert run_mock.called, 'should have been called'
     args, kwargs = run_mock.call_args
-    assert args[3] == 'cfht2caom2', 'wrong command'
-    test_storage = args[2]
+    test_storage = args[0]
     assert isinstance(test_storage, cfht_name.CFHTName), type(test_storage)
     assert test_storage.obs_id == test_obs_id, 'wrong obs id'
     assert test_storage.file_name == test_f_name, 'wrong file name'

@@ -1,0 +1,68 @@
+energy_defaults:
+  C1:
+    cw: null
+    fwhm: null
+  C2:
+    cw: null
+    fwhm: null
+  C3:
+    cw: null
+    fwhm: null
+  C4:
+    cw: null
+    fwhm: null
+  FakeBlank:
+    cw: 17000.0
+    fwhm: 14000.0
+  MegaPrime.None:
+    cw: 6200.0
+    fwhm: 6000.0
+  N393.MP1111:
+    cw: 6200.0
+    fwhm: 6000.0
+  OIII:MP7504:
+    cw: 0.0
+    fwhm: 0.0
+  PHG.MP9999:
+    cw: 6200.0
+    fwhm: 6000.0
+  SN1:
+    cw: null
+    fwhm: null
+  SN2:
+    cw: null
+    fwhm: null
+  SN3:
+    cw: null
+    fwhm: null
+  WIRCam.None:
+    cw: 17000.0
+    fwhm: 14000.0
+filter_repair_lookup:
+  BrG: Brackett_gamma
+  CN.MP7803: CN
+  CaHK.MP9303: CaHK
+  Halpha.MP7604: Halpha_off
+  Halpha.MP7605: Halpha_on
+  Halpha.MP9603: Halpha
+  Halpha.MP9604: Halpha_Off_2
+  Ks.WC8302: Ks
+  NB920.MP7902: NB920
+  OIII.MP9501: OIII
+  OIII.MP9502: OIII_off
+  TiO.MP7701: TiO
+  g.MP9401: g
+  g.MP9402: g_sdss
+  gri.MP9605: gri
+  i.MP9701: i1
+  i.MP9702: i
+  i.MP9703: i_sdss
+  r.MP9601: r
+  r.MP9602: r_sdss
+  u.MP9301: u
+  u.MP9302: u_sdss
+  z.MP9801: z
+  z.MP9901: z_sdss
+project_titles:
+  09BC26: 'The Next Generation Virgo Survey &#45;&#45; Infrared: K_s-Band Observations
+    of the Central 4 deg^2'
