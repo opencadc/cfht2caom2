@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2020.                            (c) 2020.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -68,74 +68,27 @@
 #
 
 import logging
-import sys
-import traceback
 
-from caom2pipe import execute_composable as ec
+from caom2 import Observation, TypedOrderedDict, Plane
 from caom2pipe import manage_composable as mc
-from caom2pipe import run_composable as rc
-from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
 
 
-meta_visitors = [cleanup_augmentation]
-data_visitors = []
+def visit(observation, **kwargs):
+    mc.check_param(observation, Observation)
 
-CFHT_BOOKMARK = 'cfht_timestamp'
+    count = 0
+    delete_list = []
+    for plane in observation.planes.values():
+        if plane.product_id.endswith('og'):
+            delete_list.append(plane.product_id)
 
+    for entry in delete_list:
+        logging.info(
+            f'Removing plane {entry} from {observation.observation_id}')
+        count += 1
+        observation.planes.pop(entry)
 
-class CFHTChooser(ec.OrganizeChooser):
-
-    def __init__(self):
-        super(CFHTChooser, self).__init__()
-
-    def use_compressed(self):
-        # store CFHT files in whatever compression format they are sent in
-        return True
-
-
-def _run_state():
-    config = mc.Config()
-    config.get_executors()
-    builder = cfht_builder.CFHTBuilder(config)
-    return rc.run_by_state(config, builder, main_app.APPLICATION,
-                           CFHT_BOOKMARK, meta_visitors, data_visitors)
-
-
-def run_state():
-    """Wraps _run_state in exception handling."""
-    try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
-
-
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
-
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config = mc.Config()
-    config.get_executors()
-    builder = cfht_builder.CFHTBuilder(config)
-    chooser = CFHTChooser()
-    return rc.run_by_todo(config, builder, chooser, main_app.APPLICATION,
-                          meta_visitors, data_visitors)
-
-
-def run_by_builder():
-    try:
-        result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+    logging.info(
+        f'Completed cleanup augmentation for {observation.observation_id}. '
+        f'Remove {count} planes from the observation.')
+    return {'planes': count}

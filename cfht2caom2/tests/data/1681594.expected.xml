@@ -2961,7 +2961,7 @@
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-d887-0158d2ac881d" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:fc2bae69a54d024adea99824b48ca222" caom2:accMetaChecksum="md5:dd280915cd00c9334710210671b66b71">
           <caom2:uri>ad:CFHT/1681594y.fits.fz</caom2:uri>
-          <caom2:productType>auxiliary</caom2:productType>
+          <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
           <caom2:contentChecksum>md5:2d127fbd588ea28eea95dcd0621036f3</caom2:contentChecksum>

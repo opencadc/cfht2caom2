@@ -403,6 +403,19 @@ def get_plane_data_product_type(header):
 def get_plane_data_release(header):
     # order set from:
     # caom2IngestWircam.py, l756
+    #
+    # from http://www.cfht.hawaii.edu/en/science/QSO/
+    #
+    # "The proprietary period of QSO data extends by default to 1 year + 1
+    # month starting at the end of the QSO semester. For instance, data taken
+    # for the 2009B semester (August 1 - January 31) will have a default
+    # release date set to 02/28/2011. The extra month is allowed because of
+    # possible delays in the data reduction distribution of observations
+    # carried out near the end of a semester. If an extension is requested
+    # during the Phase 1 period and is approved by TAC, a new date will be
+    # set for this program through the QSO system. This release date for the
+    # QSO data is indicated in the fits headers by the keyword REL_DATE."
+
     result = header.get('REL_DATE')
     if result is None:
         date_obs = header.get('DATE-OBS')
@@ -417,7 +430,7 @@ def get_plane_data_release(header):
                 result = f'{rel_year}-08-31T00:00:00'
             else:
                 rel_year += 1
-                result = f'{rel_year}-02-08T00:00:00'
+                result = f'{rel_year}-02-28T00:00:00'
     return result
 
 
@@ -441,7 +454,21 @@ def get_product_type(params):
     if obs_type == ObservationIntentType.CALIBRATION:
         result = ProductType.CALIBRATION
     if suffix in ['g', 'm', 'w', 'y']:
-        result = ProductType.AUXILIARY
+        result = ProductType.CALIBRATION
+
+    # The goal is to make all file types easily findable by archive users,
+    # which means having each file type show as a row in the search results.
+    # With the search results limitation, a single file must be owned by a
+    # plane, as that is how it gets displayed in the search results. The
+    # planes must also contain plane-level metadata for the search to find.
+    # Plane-level metadata is only calculated for science or calibration
+    # artifacts, so any file types that might conceivably be auxiliary
+    # product types are labeled as calibration, so that plane-level metadata
+    # is calculated.
+    #
+    # Confirm the goal is find-ability in conversation with CW, SF on
+    # 27-01-20.
+
     return result
 
 
@@ -513,6 +540,14 @@ def get_proposal_project(header):
                 if run_id in value:
                     result = key
                     break
+    return result
+
+
+def get_proposal_title(header):
+    result = None
+    run_id = header.get('RUNID')
+    if run_id is not None:
+        result = md.cache.get_title(run_id)
     return result
 
 
@@ -913,6 +948,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
     bp.set_default('Observation.proposal.pi', 'CFHT')
     bp.set('Observation.proposal.project', 'get_proposal_project(header)')
+    bp.set('Observation.proposal.title', 'get_proposal_title(header)')
 
     bp.clear('Observation.instrument.name')
     bp.add_fits_attribute('Observation.instrument.name', 'INSTRUME')
@@ -1423,10 +1459,10 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
     if run_id is None:
         idx = 1
 
-        logging.warning(f'Resetting the header/blueprint '
-                        f'relationship for {obs.observation_id}')
+        logging.warning(f'Resetting the header/blueprint relationship for '
+                        f'{cfht_name.file_name} in {obs.observation_id}')
         instrument = _get_instrument(headers[idx])
-        if uri is None and fqn is not None:
+        if fqn is not None:
             # use the fqn to define the URI
             # TODO - leaking name structure here
             extension = '.fz'
@@ -1674,12 +1710,12 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
 
 
 def _identify_instrument(uri):
-    logging.error(f'Begin _identify_instrument for uri {uri}.')
+    logging.debug(f'Begin _identify_instrument for uri {uri}.')
     config = mc.Config()
     config.get_executors()
     cfht_builder = cb.CFHTBuilder(config)
     storage_name = cfht_builder.build(mc.CaomName(uri).file_name)
-    logging.error(
+    logging.debug(
         f'End _identify_instrument for uri {uri} instrument is '
         f'{storage_name.instrument}.')
     return storage_name.instrument

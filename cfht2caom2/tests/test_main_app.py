@@ -176,9 +176,10 @@ def _get_lineage(cfht_name):
         temp_g = mc.get_lineage(ARCHIVE, '2281792g', '2281792g.fits.gz')
         result = f'{temp_s} {temp_p} {temp_o} {temp_g}'
     elif '1151210' in cfht_name.product_id:
+        temp_g = mc.get_lineage(ARCHIVE, '1151210g', '1151210g.fits.fz')
         temp_m = mc.get_lineage(ARCHIVE, '1151210m', '1151210m.fits.fz')
         temp_w = mc.get_lineage(ARCHIVE, '1151210w', '1151210w.fits.gz')
-        result = f'{temp_m} {temp_w}'
+        result = f'{temp_g} {temp_m} {temp_w}'
     else:
         result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
                                 f'{cfht_name.file_name}')
@@ -190,7 +191,8 @@ def _get_local(test_name):
         result = f'{TEST_DATA_DIR}/979339i.fits ' \
                  f'{TEST_DATA_DIR}/979339o.fits.header'
     elif '1151210' in test_name:
-        result = f'{TEST_DATA_DIR}/1151210m.fits.header ' \
+        result = f'{TEST_DATA_DIR}/1151210g.fits.header ' \
+                 f'{TEST_DATA_DIR}/1151210m.fits.header ' \
                  f'{TEST_DATA_DIR}/1151210w.fits.header'
     elif '2460503' in test_name:
         result = f'{TEST_DATA_DIR}/2460503p.fits'

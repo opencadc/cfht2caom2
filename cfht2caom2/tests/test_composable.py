@@ -67,7 +67,6 @@
 # ***********************************************************************
 #
 
-import logging
 import os
 import sys
 
@@ -78,7 +77,6 @@ from mock import Mock, patch
 
 from cadctap import CadcTapClient
 from caom2pipe import caom_composable as cc
-from caom2pipe import execute_composable as ec
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import composable, cfht_name
 import test_main_app

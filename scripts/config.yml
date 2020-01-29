@@ -64,7 +64,11 @@ rejected_directory: /usr/src/app/rejected
 # for information that needs to be persisted between pipeline 
 # invocations, defaults to 'state.yml', and is found in 'working_directory'
 #
+# state.yml is for information that changes between invocations, cache.yml is
+# for information that generally remains consistent between invocations.
+#
 state_file_name: state.yml
+cache_file_name: cache.yml
 #
 # if using a state file to time-box execution chunks, this is 
 # the interval, in minutes, that define the start and end of the 

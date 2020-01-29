@@ -5,6 +5,11 @@ then
   cp /config.yml ${PWD}
 fi
 
+if [[ ! -e ${PWD}/cache.yml ]]
+then
+  cp /cache.yml ${PWD}
+fi
+
 if [[ ! -e ${PWD}/state.yml ]]; then
   if [[ "${@}" == "cfht_run_state" ]]; then
     yesterday=$(date -d yesterday "+%d-%b-%Y %H:%M")

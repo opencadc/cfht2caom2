@@ -83,7 +83,7 @@ def test_project_titles_cache(query_mock):
     test_run_id = '09BC26'
     test_result = test_subject.get_title(test_run_id)
     assert test_result is not None, 'expect a result'
-    assert test_result == 'The Next Generation Virgo Survey &#45;&#45; ' \
+    assert test_result == 'The Next Generation Virgo Survey -- ' \
                           'Infrared: K_s-Band Observations of the Central 4 ' \
                           'deg^2', 'wrong result'
 

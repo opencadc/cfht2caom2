@@ -67,6 +67,7 @@
 # ***********************************************************************
 #
 
+import logging
 import re
 
 from bs4 import BeautifulSoup
@@ -158,6 +159,7 @@ class CFHTCache(mc.Cache):
         super(CFHTCache, self).__init__()
         self._project_titles = self.get_from(PROJECT_TITLES_CACHE)
         self._cached_semesters = self._fill_cached_semesters()
+        self._logger = logging.getLogger(__name__)
 
     def _fill_cached_semesters(self):
         result = []
@@ -187,6 +189,11 @@ class CFHTCache(mc.Cache):
         rows = html_table.find_all('a', string=re.compile('\\.html'))
         for row in rows:
             inst_url = row.get('href')
+            if not isinstance(inst_url, str) and 'qso_prog_' not in inst_url:
+                continue
+            if not inst_url.startswith('http'):
+                inst_url = f'{semester_url}/{inst_url}'
+
             self._logger.info(
                 f'Querying {inst_url} for new project information.')
             inst_response = mc.query_endpoint(inst_url)
@@ -211,7 +218,8 @@ class CFHTCache(mc.Cache):
     def get_title(self, run_id):
         result = self._project_titles.get(run_id)
         if result is None:
-            self._logger.error('result is none')
+            self._logger.warning(
+                f'Could not find project information for run id {run_id}.')
             if not self._semester_cached(run_id):
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
