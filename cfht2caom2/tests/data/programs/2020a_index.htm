@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0048)http://www.cfht.hawaii.edu/en/science/QSO/2020A/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Index of /en/science/QSO/2020A</title>
+ <script data-dapp-detection="">
+(function() {
+  let alreadyInsertedMetaTag = false
+
+  function __insertDappDetected() {
+    if (!alreadyInsertedMetaTag) {
+      const meta = document.createElement('meta')
+      meta.name = 'dapp-detected'
+      document.head.appendChild(meta)
+      alreadyInsertedMetaTag = true
+    }
+  }
+
+  if (window.hasOwnProperty('web3')) {
+    // Note a closure can't be used for this var because some sites like
+    // www.wnyc.org do a second script execution via eval for some reason.
+    window.__disableDappDetectionInsertion = true
+    // Likely oldWeb3 is undefined and it has a property only because
+    // we defined it. Some sites like wnyc.org are evaling all scripts
+    // that exist again, so this is protection against multiple calls.
+    if (window.web3 === undefined) {
+      return
+    }
+    if (!window.web3.currentProvider ||
+        !window.web3.currentProvider.isMetaMask) {
+      __insertDappDetected()
+    }
+  } else {
+    var oldWeb3 = window.web3
+    Object.defineProperty(window, 'web3', {
+      configurable: true,
+      set: function (val) {
+        if (!window.__disableDappDetectionInsertion)
+          __insertDappDetected()
+        oldWeb3 = val
+      },
+      get: function () {
+        if (!window.__disableDappDetectionInsertion)
+          __insertDappDetected()
+        return oldWeb3
+      }
+    })
+  }
+})()</script></head>
+ <body>
+<h1>Index of /en/science/QSO/2020A</h1>
+<table><tbody><tr><th><img src="./2020a_index_files/blank.gif" alt="[ICO]"></th><th><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/?C=N;O=D">Name</a></th><th><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/?C=M;O=A">Last modified</a></th><th><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/?C=S;O=A">Size</a></th><th><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/?C=D;O=A">Description</a></th></tr><tr><th colspan="5"><hr></th></tr>
+<tr><td valign="top"><img src="./2020a_index_files/back.gif" alt="[DIR]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/">Parent Directory</a></td><td>&nbsp;</td><td align="right">  - </td></tr>
+<tr><td valign="top"><img src="./2020a_index_files/layout.gif" alt="[   ]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/2020A-tentative.pdf">2020A-tentative.pdf</a></td><td align="right">16-Jan-2020 10:03  </td><td align="right"> 60K</td></tr>
+<tr><td valign="top"><img src="./2020a_index_files/text.gif" alt="[TXT]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/qso_prog_ESP_2020A.html">qso_prog_ESP_2020A.html</a></td><td align="right">04-Dec-2019 13:45  </td><td align="right">5.1K</td></tr>
+<tr><td valign="top"><img src="./2020a_index_files/text.gif" alt="[TXT]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/qso_prog_MC_2020A.html">qso_prog_MC_2020A.html</a></td><td align="right">05-Dec-2019 11:23  </td><td align="right">8.1K</td></tr>
+<tr><td valign="top"><img src="./2020a_index_files/text.gif" alt="[TXT]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/qso_prog_SIT_2020A.html">qso_prog_SIT_2020A.html</a></td><td align="right">04-Dec-2019 13:45  </td><td align="right">3.8K</td></tr>
+<tr><td valign="top"><img src="./2020a_index_files/text.gif" alt="[TXT]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/qso_prog_SPI_2020A.html">qso_prog_SPI_2020A.html</a></td><td align="right">05-Dec-2019 11:19  </td><td align="right">5.9K</td></tr>
+<tr><td valign="top"><img src="./2020a_index_files/text.gif" alt="[TXT]"></td><td><a href="http://www.cfht.hawaii.edu/en/science/QSO/2020A/qso_prog_WC_2020A.html">qso_prog_WC_2020A.html</a></td><td align="right">04-Dec-2019 13:45  </td><td align="right">2.6K</td></tr>
+<tr><th colspan="5"><hr></th></tr>
+</tbody></table>
+
+</body></html>

@@ -12,7 +12,7 @@
     <caom2:id>19BP32</caom2:id>
     <caom2:pi>Michael Liu</caom2:pi>
     <caom2:project>CIPP</caom2:project>
-<!--    <caom2:title>CIPP</caom2:title>-->
+    <caom2:title>CIPP</caom2:title>
   </caom2:proposal>
   <caom2:target>
     <caom2:name>2M1047+40</caom2:name>

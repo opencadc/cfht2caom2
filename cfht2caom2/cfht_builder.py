@@ -72,7 +72,7 @@ import os
 
 from cadcdata import CadcDataClient
 from caom2utils import fits2caom2
-from caom2pipe import builder
+from caom2pipe import name_builder_composable as nbc
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
@@ -82,7 +82,7 @@ from cfht2caom2 import metadata as md
 __all__ = ['CFHTBuilder']
 
 
-class CFHTBuilder(builder.StorageNameBuilder):
+class CFHTBuilder(nbc.StorageNameBuilder):
 
     def __init__(self, config):
         super(CFHTBuilder, self).__init__()

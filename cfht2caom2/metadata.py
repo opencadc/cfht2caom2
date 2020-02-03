@@ -125,6 +125,12 @@ INSTRUMENT_REPAIR_LOOKUP = {Inst.WIRCAM: 'Wircam'}
 # If no or "open" filter or pinhole mask, put in 20% on-off cuts from
 # MegaCam_QE_data.txt
 #
+# SF 28-01-20 - from conversation - if there's no energy information,
+# e.g. 1007126g.fits.gz with filter name == 'FakeBlank', leave the
+# energy information empty
+
+#
+#
 # CFHT_CACHE = {
 #     # pinhole mask, so use full energy range
 #     'PHG.MP9999': {'cw': 6200., 'fwhm': 6000.},
@@ -172,9 +178,14 @@ class CFHTCache(mc.Cache):
         return CFHTCache.semester(run_id) in self._cached_semesters
 
     def _try_to_append_to_cache(self, run_id):
+        if run_id is None or run_id == '':
+            # the case of no value for run_id
+            return
+
         sem = CFHTCache.semester(run_id)
+        sem_int = mc.to_int(sem[:-1])
         updated_content = False
-        if len(sem) < 3 or not sem[0] in ['0', '1', '2']:
+        if len(sem) < 3 or not sem[0] in ['0', '1', '2'] or sem_int < 9:
             # the URL here only works from 2009B on
             return
         base_url = 'http://www.cfht.hawaii.edu/en/science/QSO/'

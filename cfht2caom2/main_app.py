@@ -1274,6 +1274,34 @@ def update(observation, **kwargs):
                                 plane.product_id[-1] == 'g'):
                             _update_wircam_position(part, chunk, headers, idx,
                                                     observation.observation_id)
+                            if chunk.energy.bandpass_name == 'FakeBlank':
+                                cc.reset_energy(chunk)
+
+                        # position axis check is to determine if naxis should
+                        # be set
+                        if (plane.product_id[-1] in ['d', 'f', 'g'] and
+                                chunk.position_axis_1 is None):
+                            # PD - 17-01-20
+                            #  This is a FLAT field exposure so the position
+                            #  is not relevant and only the energy and time is
+                            #  relevant for discovery. The easiest correct
+                            #  thing to do is to leave naxis, energyAxis, and
+                            #  timeAxis all null: the same plane metadata
+                            #  should be generated and that should be valid.
+                            #  The most correct thing to do would be to set
+                            #  naxis=2, positionAxis1=1, positionAxis2=2 (to
+                            #  indicate image) and then use a suitable
+                            #  coordinate system description that meant "this
+                            #  patch of the inside of the dome" or maybe some
+                            #  description of the pixel coordinate system
+                            #  (because wcs kind of treats the sky and the
+                            #  pixels as two different systems)... I don't
+                            #  know how to do that and it adds very minimal
+                            #  value (it allows Plane.position.dimension to be
+                            #  assigned a value).
+                            chunk.naxis = None
+                            chunk.energy_axis = None
+                            chunk.time_axis = None
 
         if isinstance(observation, DerivedObservation):
             if derived_type == 'IMCMB':
@@ -1601,6 +1629,11 @@ def _update_position_function_sitelle(chunk, header, obs_id, extension):
 def _update_wircam_position(part, chunk, headers, idx, obs_id):
     logging.debug(f'Begin _update_wircam_position for {obs_id}')
     header = headers[idx]
+
+    obj_name = header.get('OBJNAME')
+    if obj_name == 'zenith':
+        cc.reset_position(chunk)
+        return
 
     # caom2IngestWircam.py, l870+
     if headers[0].get('CRVAL2') is not None:

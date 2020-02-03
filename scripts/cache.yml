@@ -12,8 +12,8 @@ energy_defaults:
     cw: null
     fwhm: null
   FakeBlank:
-    cw: 17000.0
-    fwhm: 14000.0
+    cw: null
+    fwhm: null
   H:
     cw: 16308.4244171
     fwhm: 2911.26276156
