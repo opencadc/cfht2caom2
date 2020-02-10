@@ -12,7 +12,7 @@
     <caom2:id>19BP41</caom2:id>
     <caom2:pi>Laurie Rousseau-Nepton</caom2:pi>
     <caom2:project>SIGNALS</caom2:project>
-<!--    <caom2:title>SIGNALS</caom2:title>-->
+    <caom2:title>SIGNALS</caom2:title>
   </caom2:proposal>
   <caom2:target>
     <caom2:name>M31_Field1</caom2:name>

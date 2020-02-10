@@ -143,18 +143,16 @@ APPLICATION = 'cfht2caom2'
 # from /cfht2caom2/scripts
 
 
-def get_bandpass_name(header):
-    instrument = _get_instrument(header)
-    result = header.get('FILTER')
-    if instrument is md.Inst.WIRCAM:
-        wheel_a = header.get('WHEELADE')
-        wheel_b = header.get('WHEELBDE')
-        if wheel_a == 'Open' and wheel_b != 'Open':
-            result = wheel_b
-        elif wheel_b == 'Open' and wheel_a != 'Open':
-            result = wheel_a
-        elif wheel_a == 'Open' and wheel_b == 'Open':
-            result = 'Open'
+def get_wircam_bandpass_name(header):
+    wheel_a = header.get('WHEELADE')
+    wheel_b = header.get('WHEELBDE')
+    result = None
+    if wheel_a == 'Open' and wheel_b != 'Open':
+        result = wheel_b
+    elif wheel_b == 'Open' and wheel_a != 'Open':
+        result = wheel_a
+    elif wheel_a == 'Open' and wheel_b == 'Open':
+        result = 'Open'
     return result
 
 
@@ -377,18 +375,16 @@ def get_obs_sequence_number(params):
     return result
 
 
-def get_obs_type(params):
+def get_wircam_obs_type(params):
     header, suffix, uri = _decompose_params(params)
     result = header.get('OBSTYPE')
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.WIRCAM:
-        # caom2IngestWircamdetrend.py, l369
-        if 'weight' in uri:
-            result = 'WEIGHT'
-        elif 'badpix' in uri or 'hotpix' in uri or 'deadpix' in uri:
-            result = 'BPM'
-        elif suffix == 'g' and result is None:
-            result = 'GUIDE'
+    # caom2IngestWircamdetrend.py, l369
+    if 'weight' in uri:
+        result = 'WEIGHT'
+    elif 'badpix' in uri or 'hotpix' in uri or 'deadpix' in uri:
+        result = 'BPM'
+    elif suffix == 'g' and result is None:
+        result = 'GUIDE'
     return result
 
 
@@ -420,7 +416,9 @@ def get_plane_data_release(header):
     if result is None:
         date_obs = header.get('DATE-OBS')
         run_id = _get_run_id(header)
-        if run_id[3] == 'E' or run_id[3] == 'Q':
+        if run_id == 'SMEARING':
+            result = header.get('DATE')
+        elif run_id[3] == 'E' or run_id[3] == 'Q':
             result = f'{date_obs}T00:00:00'
         else:
             logging.warning('REL_DATE not in header. Derive from DATE-OBS.')
@@ -551,109 +549,97 @@ def get_proposal_title(header):
     return result
 
 
-def get_provenance_keywords(params):
+def get_espadons_provenance_keywords(params):
     header, suffix, ignore = _decompose_params(params)
-    instrument = _get_instrument(header)
     result = None
-    if instrument is md.Inst.WIRCAM and suffix in ['p', 's']:
-        # caom2IngestWircam.py, l1063
-        if suffix == 'p':
-            result = 'skysubtraction=yes'
-        else:
-            result = 'skysubtraction=no'
-    elif instrument is md.Inst.ESPADONS and suffix in ['i', 'p']:
+    if suffix in ['i', 'p']:
         temp = header.get('REDUCTIO')
         if temp is not None:
             result = f'reduction={temp}'
     return result
 
 
-def get_provenance_last_executed(header):
+def get_wircam_provenance_keywords(uri):
+    suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
     result = None
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.ESPADONS:
-        comments = header.get('COMMENT')
-        if comments is not None:
-            for comment in comments:
-                if 'Upena processing date:' in comment:
-                    result = comment.split('Upena processing date: ')[1]
-                    # format like Fri Mar 13 22:51:55 HST 2009, which default
-                    # code doesn't understand
-                    result = mc.make_time(result)
-                    break
-                elif 'opera-' in comment:
-                    result = comment.split('opera-')[1].split(' build date')[0]
-                    break
-    else:
-        result = header.get('PROCDATE')
-        if result is not None:
-            # format like 2018-06-05HST17:21:20, which default code doesn't
-            # understand
-            result = mc.make_time(result)
+    if suffix in ['p', 's']:
+        # caom2IngestWircam.py, l1063
+        if suffix == 'p':
+            result = 'skysubtraction=yes'
+        else:
+            result = 'skysubtraction=no'
     return result
 
 
-def get_provenance_name(header):
+def get_provenance_last_executed(header):
+    result = header.get('PROCDATE')
+    if result is not None:
+        # format like 2018-06-05HST17:21:20, which default code doesn't
+        # understand
+        result = mc.make_time(result)
+    return result
+
+
+def get_espadons_provenance_last_executed(header):
+    result = None
+    comments = header.get('COMMENT')
+    if comments is not None:
+        for comment in comments:
+            if 'Upena processing date:' in comment:
+                result = comment.split('Upena processing date: ')[1]
+                # format like Fri Mar 13 22:51:55 HST 2009, which default
+                # code doesn't understand
+                result = mc.make_time(result)
+                break
+            elif 'opera-' in comment:
+                result = comment.split('opera-')[1].split(' build date')[0]
+                break
+    return result
+
+
+def get_espadons_provenance_name(header):
     result = 'TCS'  # ESPaDOnS
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.ESPADONS:
-        comments = header.get('COMMENT')
-        if comments is not None:
-            for comment in comments:
-                if 'Upena' in comment:
-                    result = 'UPENA'
-                    break
-                elif 'opera-' in comment:
-                    result = 'OPERA'
-                    break
-    elif instrument is md.Inst.MEGAPRIME:
-        result = 'ELIXIR'
-    elif instrument is md.Inst.SITELLE:
-        result = 'ORBS'
-    elif instrument is md.Inst.WIRCAM:
-        result = 'IIWI'
+    comments = header.get('COMMENT')
+    if comments is not None:
+        for comment in comments:
+            if 'Upena' in comment:
+                result = 'UPENA'
+                break
+            elif 'opera-' in comment:
+                result = 'OPERA'
+                break
     return result
 
 
-def get_provenance_project(header):
+def get_espadons_provenance_project(header):
     result = 'STANDARD PIPELINE'
-    if get_provenance_name(header) == 'TCS':
+    if get_espadons_provenance_name(header) == 'TCS':
         result = None
     return result
 
 
 def get_provenance_version(header):
     result = None
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.ESPADONS:
-        comments = header.get('COMMENT')
-        if comments is not None:
-            for comment in comments:
-                if 'Upena version' in comment:
-                    result = comment.split('Upena version')[1]
-                    break
-                elif 'opera-' in comment and 'build date' in comment:
-                    result = comment.split(' build date')[0]
-                    break
-    else:
-        result = header.get('IIWIVER')
+    result = header.get('IIWIVER')
+    if result is None:
+        result = header.get('ORBSVER')
         if result is None:
-            result = header.get('ORBSVER')
-            if result is None:
-                result = header.get('EL_SYS')
+            result = header.get('EL_SYS')
     return result
 
 
-def get_provenance_reference(header):
-    lookup = {
-        md.Inst.ESPADONS:
-            'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/',
-        md.Inst.MEGAPRIME: 'http://www.cfht.hawaii.edu/Instruments/Elixir/',
-        md.Inst.SITELLE: 'http://ascl.net/1409.007',
-        md.Inst.WIRCAM:
-            'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'}
-    instrument = _get_instrument(header)
-    return lookup.get(instrument)
+def get_espadons_provenance_version(header):
+    result = None
+    comments = header.get('COMMENT')
+    if comments is not None:
+        for comment in comments:
+            if 'Upena version' in comment:
+                result = comment.split('Upena version')[1]
+                break
+            elif 'opera-' in comment and 'build date' in comment:
+                result = comment.split(' build date')[0]
+                break
+    return result
 
 
 def get_target_position_cval1(header):
@@ -699,11 +685,19 @@ def get_target_standard(header):
     return result
 
 
-def get_time_function_naxis(params):
-    header, suffix, uri = _decompose_params(params)
+# def get_time_function_naxis(params):
+#     header, suffix, uri = _decompose_params(params)
+#     result = 1
+#     instrument = _get_instrument(header)
+#     if instrument is md.Inst.WIRCAM and suffix == 'g':
+#         result = None
+#     return result
+
+
+def get_wircam_time_function_naxis(uri):
     result = 1
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.WIRCAM and suffix == 'g':
+    suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
+    if suffix == 'g':
         # stop the over-ride of the original header values by the
         # action of the blueprint
         result = None
@@ -934,7 +928,8 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
 
     bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
-    bp.set('Observation.type', 'get_obs_type(params)')
+    bp.clear('Observation.type')
+    bp.add_fits_attribute('Observation.type', 'OBSTYPE')
 
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
@@ -982,13 +977,10 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Plane.metaRelease', 'MET_DATE')
     bp.set('Plane.dataRelease', 'get_plane_data_release(header)')
 
-    bp.set('Plane.provenance.keywords', 'get_provenance_keywords(params)')
     bp.set('Plane.provenance.lastExecuted',
            'get_provenance_last_executed(header)')
-    bp.set('Plane.provenance.name', 'get_provenance_name(header)')
     bp.set_default('Plane.provenance.producer', 'CFHT')
-    bp.set('Plane.provenance.project', 'get_provenance_project(header)')
-    bp.set('Plane.provenance.reference', 'get_provenance_reference(header)')
+    bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
     bp.set('Plane.provenance.version', 'get_provenance_version(header)')
@@ -1012,7 +1004,8 @@ def accumulate_bp(bp, uri, instrument):
            'get_energy_function_pix(params)')
     bp.set('Chunk.energy.axis.function.refCoord.val',
            'get_energy_function_val(params)')
-    bp.set('Chunk.energy.bandpassName', 'get_bandpass_name(header)')
+    bp.clear('Chunk.energy.bandpassName')
+    bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
     bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(params)')
     bp.set('Chunk.energy.specsys', 'TOPOCENT')
     bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
@@ -1021,26 +1014,6 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.position.axis.axis1.cunit', 'deg')
     bp.set('Chunk.position.axis.axis2.cunit', 'deg')
 
-    if instrument is md.Inst.ESPADONS:
-        # constants from caom2espadons.config
-        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
-        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
-        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
-        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
-        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
-        bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
-        bp.add_fits_attribute(
-            'Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG')
-        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
-        bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
-        bp.add_fits_attribute(
-            'Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG')
-        # CW
-        # Fibre size is 1.6", i.e. 0.000444 deg
-        bp.set('Chunk.position.axis.function.cd11', -0.000444)
-        bp.set('Chunk.position.axis.function.cd12', 0.0)
-        bp.set('Chunk.position.axis.function.cd21', 0.0)
-        bp.set('Chunk.position.axis.function.cd22', 0.000444)
     bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
     bp.set('Chunk.position.axis.error1.syser', 0.0000278)
     bp.set('Chunk.position.axis.error2.rnder', 0.0000278)
@@ -1056,7 +1029,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.time.axis.axis.cunit', 'd')
     bp.set('Chunk.time.axis.error.rnder', 0.0000001)
     bp.set('Chunk.time.axis.error.syser', 0.0000001)
-    bp.set('Chunk.time.axis.function.naxis', 'get_time_function_naxis(params)')
+    bp.set('Chunk.time.axis.function.naxis', 1)
     cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     # TODO - this is really really wrong that is_simple is not sufficient
     # to make the distinction between the appropriate implementations.
@@ -1082,7 +1055,375 @@ def accumulate_bp(bp, uri, instrument):
         bp.set('Chunk.polarization.axis.function.refCoord.val',
                'get_polarization_function_val(header)')
 
+    logging.error(f'sintrument {instrument}')
+    if instrument is md.Inst.ESPADONS:
+        accumulate_espadons_bp(bp, cfht_name)
+    elif instrument is md.Inst.MEGACAM:
+        accumulate_megacam_bp(bp, uri, cfht_name)
+    elif instrument is md.Inst.SITELLE:
+        accumulate_sitelle_bp(bp, uri, cfht_name)
+    elif instrument is md.Inst.WIRCAM:
+        logging.error('is this happening?')
+        accumulate_wircam_bp(bp, uri, cfht_name)
+
     logging.debug('Done accumulate_bp.')
+
+
+def accumulate_espadons_bp(bp, cfht_name):
+    """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
+    Observation level.
+    """
+    logging.debug('Begin accumulate_espadons_bp.')
+
+    bp.set('Plane.provenance.keywords',
+           'get_espadons_provenance_keywords(params)')
+    bp.set('Plane.provenance.lastExecuted',
+           'get_espadons_provenance_last_executed(header)')
+    bp.set('Plane.provenance.name', 'get_espadons_provenance_name(header)')
+    bp.set('Plane.provenance.project',
+           'get_espadons_provenance_project(header)')
+    bp.set_default('Plane.provenance.reference',
+                   'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/'
+                   'Espadons/')
+    bp.set('Plane.provenance.version',
+           'get_espadons_provenance_version(header)')
+
+    # constants from caom2espadons.config
+    bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
+    bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
+    bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
+    bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
+    bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
+    bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
+    bp.add_fits_attribute(
+        'Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG')
+    bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
+    bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
+    bp.add_fits_attribute(
+        'Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG')
+    # CW
+    # Fibre size is 1.6", i.e. 0.000444 deg
+    bp.set('Chunk.position.axis.function.cd11', -0.000444)
+    bp.set('Chunk.position.axis.function.cd12', 0.0)
+    bp.set('Chunk.position.axis.function.cd21', 0.0)
+    bp.set('Chunk.position.axis.function.cd22', 0.000444)
+    logging.debug('Done accumulate_espadons_bp.')
+
+
+def accumulate_megacam_bp(bp, uri, cfht_name):
+    """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
+    Observation level.
+    """
+    logging.debug('Begin accumulate_megacam_bp.')
+
+    bp.set_default('Plane.provenance.name', 'ELIXIR')
+
+    # bp.set('Observation.intent', 'get_obs_intent(header)')
+    # # add most preferred attribute last
+    # # order set from:
+    # # caom2IngestWircam.py, l777
+    # bp.clear('Observation.metaRelease')
+    # bp.add_fits_attribute('Observation.metaRelease', 'REL_DATE')
+    # bp.add_fits_attribute('Observation.metaRelease', 'DATE')
+    # # caom2IngestEspadons.py, l625
+    # bp.add_fits_attribute('Observation.metaRelease', 'DATE-OB1')
+    # bp.add_fits_attribute('Observation.metaRelease', 'DATE-OBS')
+    # bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
+    #
+    # bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
+    # bp.set('Observation.type', 'get_obs_type(params)')
+    #
+    # bp.set('Observation.environment.elevation',
+    #        'get_environment_elevation(header)')
+    # bp.clear('Observation.environment.humidity')
+    # bp.add_fits_attribute('Observation.environment.humidity', 'RELHUMID')
+    #
+    # # TODO title is select title from runid_title where proposal_id = 'runid'
+    # bp.clear('Observation.proposal.id')
+    # bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
+    # bp.clear('Observation.proposal.pi')
+    # bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
+    # bp.set_default('Observation.proposal.pi', 'CFHT')
+    # bp.set('Observation.proposal.project', 'get_proposal_project(header)')
+    # bp.set('Observation.proposal.title', 'get_proposal_title(header)')
+    #
+    # bp.clear('Observation.instrument.name')
+    # bp.add_fits_attribute('Observation.instrument.name', 'INSTRUME')
+    # bp.set('Observation.instrument.keywords',
+    #        'get_instrument_keywords(header)')
+    #
+    # bp.set('Observation.target.standard', 'get_target_standard(header)')
+    #
+    # bp.clear('Observation.target_position.coordsys')
+    # bp.add_fits_attribute('Observation.target_position.coordsys', 'OBJRADEC')
+    # bp.clear('Observation.target_position.equinox')
+    # bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQN')
+    # bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQUIN')
+    # bp.set('Observation.target_position.point.cval1',
+    #        'get_target_position_cval1(header)')
+    # bp.set('Observation.target_position.point.cval2',
+    #        'get_target_position_cval2(header)')
+    #
+    # bp.set('Observation.telescope.name', 'CFHT 3.6m')
+    # x, y, z = ac.get_geocentric_location('cfht')
+    # bp.set('Observation.telescope.geoLocationX', x)
+    # bp.set('Observation.telescope.geoLocationY', y)
+    # bp.set('Observation.telescope.geoLocationZ', z)
+    #
+    # bp.set('Plane.dataProductType', 'get_plane_data_product_type(header)')
+    # bp.set('Plane.calibrationLevel', 'get_calibration_level(params)')
+    # bp.clear('Plane.metaRelease')
+    # bp.add_fits_attribute('Plane.metaRelease', 'REL_DATE')
+    # bp.add_fits_attribute('Plane.metaRelease', 'DATE')
+    # bp.add_fits_attribute('Plane.metaRelease', 'DATE-OBS')
+    # bp.add_fits_attribute('Plane.metaRelease', 'MET_DATE')
+    # bp.set('Plane.dataRelease', 'get_plane_data_release(header)')
+    #
+    # bp.set('Plane.provenance.keywords', 'get_provenance_keywords(params)')
+    # bp.set('Plane.provenance.lastExecuted',
+    #        'get_provenance_last_executed(header)')
+    # bp.set('Plane.provenance.name', 'get_provenance_name(header)')
+    # bp.set_default('Plane.provenance.producer', 'CFHT')
+    # bp.set('Plane.provenance.project', 'get_provenance_project(header)')
+    bp.set_default('Plane.provenance.reference',
+                   'http://www.cfht.hawaii.edu/Instruments/Elixir/')
+    # bp.clear('Plane.provenance.runID')
+    # bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
+    # bp.set('Plane.provenance.version', 'get_provenance_version(header)')
+    #
+    # bp.set('Artifact.productType', 'get_product_type(params)')
+    # bp.set('Artifact.releaseType', 'data')
+    #
+    # # hard-coded values from:
+    # # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
+    # # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
+    # #
+    # bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
+    # bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
+    # bp.set('Chunk.energy.axis.error.rnder', 1.0)
+    # bp.set('Chunk.energy.axis.error.syser', 1.0)
+    # bp.set('Chunk.energy.axis.function.delta',
+    #        'get_energy_function_delta(params)')
+    # bp.set('Chunk.energy.axis.function.naxis',
+    #        'get_energy_function_naxis(params)')
+    # bp.set('Chunk.energy.axis.function.refCoord.pix',
+    #        'get_energy_function_pix(params)')
+    # bp.set('Chunk.energy.axis.function.refCoord.val',
+    #        'get_energy_function_val(params)')
+    # bp.set('Chunk.energy.bandpassName', 'get_bandpass_name(header)')
+    # bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(params)')
+    # bp.set('Chunk.energy.specsys', 'TOPOCENT')
+    # bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
+    # bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
+    #
+    # bp.set('Chunk.position.axis.axis1.cunit', 'deg')
+    # bp.set('Chunk.position.axis.axis2.cunit', 'deg')
+    #
+    # bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
+    # bp.set('Chunk.position.axis.error1.syser', 0.0000278)
+    # bp.set('Chunk.position.axis.error2.rnder', 0.0000278)
+    # bp.set('Chunk.position.axis.error2.syser', 0.0000278)
+    #
+    # bp.clear('Chunk.position.coordsys')
+    # bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
+    #
+    # bp.set('Chunk.time.exposure', 'get_exptime(params)')
+    # bp.set('Chunk.time.resolution', 'get_exptime(params)')
+    # bp.set('Chunk.time.timesys', 'UTC')
+    # bp.set('Chunk.time.axis.axis.ctype', 'TIME')
+    # bp.set('Chunk.time.axis.axis.cunit', 'd')
+    # bp.set('Chunk.time.axis.error.rnder', 0.0000001)
+    # bp.set('Chunk.time.axis.error.syser', 0.0000001)
+    # bp.set('Chunk.time.axis.function.naxis', 'get_time_function_naxis(params)')
+    # # TODO - this is really really wrong that is_simple is not sufficient
+    # # to make the distinction between the appropriate implementations.
+    # if cfht_name.is_simple and not cfht_name.is_master_cal:
+    #     bp.set('Chunk.time.axis.function.delta',
+    #            'get_time_refcoord_delta_simple(params)')
+    #     bp.set('Chunk.time.axis.function.refCoord.val',
+    #            'get_time_refcoord_val_simple(header)')
+    # else:
+    #     bp.set('Chunk.time.axis.function.delta',
+    #            'get_time_refcoord_delta_derived(params)')
+    #     bp.set('Chunk.time.axis.function.refCoord.val',
+    #            'get_time_refcoord_val_derived(header)')
+    # bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
+    #
+    # if cfht_name.has_polarization:
+    #     bp.configure_polarization_axis(6)
+    #     # caom2IngestEspadons.py, l209, lTODO
+    #     bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+    #     bp.set('Chunk.polarization.axis.function.delta', 1)
+    #     bp.set('Chunk.polarization.axis.function.naxis', 1)
+    #     bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
+    #     bp.set('Chunk.polarization.axis.function.refCoord.val',
+    #            'get_polarization_function_val(header)')
+
+    logging.debug('Done accumulate_megacam_bp.')
+
+
+def accumulate_sitelle_bp(bp, uri, cfht_name):
+    """Configure the Sitelle-specific ObsBlueprint at the CAOM model
+    Observation level.
+    """
+    logging.debug('Begin accumulate_sitelle_bp.')
+    bp.set_default('Plane.provenance.name', 'ORBS')
+    bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
+    logging.debug('End accumulate_sitelle_bp.')
+
+
+def accumulate_wircam_bp(bp, uri, cfht_name):
+    """Configure the WIRCam-specific ObsBlueprint at the CAOM model
+    Observation level.
+    """
+    logging.debug('Begin accumulate_wircam_bp.')
+    # bp.set('Observation.intent', 'get_obs_intent(header)')
+    # # add most preferred attribute last
+    # # order set from:
+    # # caom2IngestWircam.py, l777
+    # bp.clear('Observation.metaRelease')
+    # bp.add_fits_attribute('Observation.metaRelease', 'REL_DATE')
+    # bp.add_fits_attribute('Observation.metaRelease', 'DATE')
+    # # caom2IngestEspadons.py, l625
+    # bp.add_fits_attribute('Observation.metaRelease', 'DATE-OB1')
+    # bp.add_fits_attribute('Observation.metaRelease', 'DATE-OBS')
+    # bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
+    #
+    # bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
+    bp.set('Observation.type', 'get_wircam_obs_type(params)')
+    #
+    # bp.set('Observation.environment.elevation',
+    #        'get_environment_elevation(header)')
+    # bp.clear('Observation.environment.humidity')
+    # bp.add_fits_attribute('Observation.environment.humidity', 'RELHUMID')
+    #
+    # # TODO title is select title from runid_title where proposal_id = 'runid'
+    # bp.clear('Observation.proposal.id')
+    # bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
+    # bp.clear('Observation.proposal.pi')
+    # bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
+    # bp.set_default('Observation.proposal.pi', 'CFHT')
+    # bp.set('Observation.proposal.project', 'get_proposal_project(header)')
+    # bp.set('Observation.proposal.title', 'get_proposal_title(header)')
+    #
+    # bp.clear('Observation.instrument.name')
+    # bp.add_fits_attribute('Observation.instrument.name', 'INSTRUME')
+    # bp.set('Observation.instrument.keywords',
+    #        'get_instrument_keywords(header)')
+    #
+    # bp.set('Observation.target.standard', 'get_target_standard(header)')
+    #
+    # bp.clear('Observation.target_position.coordsys')
+    # bp.add_fits_attribute('Observation.target_position.coordsys', 'OBJRADEC')
+    # bp.clear('Observation.target_position.equinox')
+    # bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQN')
+    # bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQUIN')
+    # bp.set('Observation.target_position.point.cval1',
+    #        'get_target_position_cval1(header)')
+    # bp.set('Observation.target_position.point.cval2',
+    #        'get_target_position_cval2(header)')
+    #
+    # bp.set('Observation.telescope.name', 'CFHT 3.6m')
+    # x, y, z = ac.get_geocentric_location('cfht')
+    # bp.set('Observation.telescope.geoLocationX', x)
+    # bp.set('Observation.telescope.geoLocationY', y)
+    # bp.set('Observation.telescope.geoLocationZ', z)
+    #
+    # bp.set('Plane.dataProductType', 'get_plane_data_product_type(header)')
+    # bp.set('Plane.calibrationLevel', 'get_calibration_level(params)')
+    # bp.clear('Plane.metaRelease')
+    # bp.add_fits_attribute('Plane.metaRelease', 'REL_DATE')
+    # bp.add_fits_attribute('Plane.metaRelease', 'DATE')
+    # bp.add_fits_attribute('Plane.metaRelease', 'DATE-OBS')
+    # bp.add_fits_attribute('Plane.metaRelease', 'MET_DATE')
+    # bp.set('Plane.dataRelease', 'get_plane_data_release(header)')
+    #
+    bp.set('Plane.provenance.keywords', 'get_wircam_provenance_keywords(uri)')
+    # bp.set('Plane.provenance.lastExecuted',
+    #        'get_provenance_last_executed(header)')
+
+    bp.set_default('Plane.provenance.name', 'IIWI')
+    bp.set_default('Plane.provenance.reference',
+                   'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam')
+
+    # bp.set_default('Plane.provenance.producer', 'CFHT')
+    # bp.set('Plane.provenance.project', 'get_provenance_project(header)')
+    # bp.set('Plane.provenance.reference', 'get_provenance_reference(header)')
+    # bp.clear('Plane.provenance.runID')
+    # bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
+    # bp.set('Plane.provenance.version', 'get_provenance_version(header)')
+    #
+    # bp.set('Artifact.productType', 'get_product_type(params)')
+    # bp.set('Artifact.releaseType', 'data')
+    #
+    # # hard-coded values from:
+    # # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
+    # # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
+    # #
+    # bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
+    # bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
+    # bp.set('Chunk.energy.axis.error.rnder', 1.0)
+    # bp.set('Chunk.energy.axis.error.syser', 1.0)
+    # bp.set('Chunk.energy.axis.function.delta',
+    #        'get_energy_function_delta(params)')
+    # bp.set('Chunk.energy.axis.function.naxis',
+    #        'get_energy_function_naxis(params)')
+    # bp.set('Chunk.energy.axis.function.refCoord.pix',
+    #        'get_energy_function_pix(params)')
+    # bp.set('Chunk.energy.axis.function.refCoord.val',
+    #        'get_energy_function_val(params)')
+    bp.set('Chunk.energy.bandpassName', 'get_wircam_bandpass_name(header)')
+    # bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(params)')
+    # bp.set('Chunk.energy.specsys', 'TOPOCENT')
+    # bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
+    # bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
+    #
+    # bp.set('Chunk.position.axis.axis1.cunit', 'deg')
+    # bp.set('Chunk.position.axis.axis2.cunit', 'deg')
+    #
+    # bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
+    # bp.set('Chunk.position.axis.error1.syser', 0.0000278)
+    # bp.set('Chunk.position.axis.error2.rnder', 0.0000278)
+    # bp.set('Chunk.position.axis.error2.syser', 0.0000278)
+    #
+    # bp.clear('Chunk.position.coordsys')
+    # bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
+    #
+    # bp.set('Chunk.time.exposure', 'get_exptime(params)')
+    # bp.set('Chunk.time.resolution', 'get_exptime(params)')
+    # bp.set('Chunk.time.timesys', 'UTC')
+    # bp.set('Chunk.time.axis.axis.ctype', 'TIME')
+    # bp.set('Chunk.time.axis.axis.cunit', 'd')
+    # bp.set('Chunk.time.axis.error.rnder', 0.0000001)
+    # bp.set('Chunk.time.axis.error.syser', 0.0000001)
+    bp.set('Chunk.time.axis.function.naxis',
+           'get_wircam_time_function_naxis(uri)')
+    #
+    # # TODO - this is really really wrong that is_simple is not sufficient
+    # # to make the distinction between the appropriate implementations.
+    # if cfht_name.is_simple and not cfht_name.is_master_cal:
+    #     bp.set('Chunk.time.axis.function.delta',
+    #            'get_time_refcoord_delta_simple(params)')
+    #     bp.set('Chunk.time.axis.function.refCoord.val',
+    #            'get_time_refcoord_val_simple(header)')
+    # else:
+    #     bp.set('Chunk.time.axis.function.delta',
+    #            'get_time_refcoord_delta_derived(params)')
+    #     bp.set('Chunk.time.axis.function.refCoord.val',
+    #            'get_time_refcoord_val_derived(header)')
+    # bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
+    #
+    # if cfht_name.has_polarization:
+    #     bp.configure_polarization_axis(6)
+    #     # caom2IngestEspadons.py, l209, lTODO
+    #     bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+    #     bp.set('Chunk.polarization.axis.function.delta', 1)
+    #     bp.set('Chunk.polarization.axis.function.naxis', 1)
+    #     bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
+    #     bp.set('Chunk.polarization.axis.function.refCoord.val',
+    #            'get_polarization_function_val(header)')
+
+    logging.debug('Done accumulate_wircam_bp.')
 
 
 def update(observation, **kwargs):
@@ -1108,6 +1449,8 @@ def update(observation, **kwargs):
     if 'uri' in kwargs:
         uri = kwargs['uri']
 
+    # TODO - use the instrument name in the observation? might not work
+    # for a redo
     instrument = cb.CFHTBuilder.get_instrument(headers, uri)
 
     # fqn is not always defined, ffs
@@ -1188,6 +1531,7 @@ def update(observation, **kwargs):
                         if chunk.time is not None:
                             # consistent with caom2IngestEspadons.py
                             chunk.time_axis = 5
+                        # TODO - use cfht_name as a parameter here
                         _update_energy_espadons(
                             chunk, plane.product_id[-1], headers, idx,
                             artifact.uri, fqn, observation.observation_id)
@@ -1274,7 +1618,8 @@ def update(observation, **kwargs):
                                 plane.product_id[-1] == 'g'):
                             _update_wircam_position(part, chunk, headers, idx,
                                                     observation.observation_id)
-                            if chunk.energy.bandpass_name == 'FakeBlank':
+                            temp_bandpass_name = headers[idx].get('FILTER')
+                            if temp_bandpass_name == 'FakeBlank':
                                 cc.reset_energy(chunk)
 
                         # position axis check is to determine if naxis should
@@ -1309,7 +1654,7 @@ def update(observation, **kwargs):
                                            derived_type, cn.COLLECTION,
                                            _repair_imcmb_provenance_value,
                                            observation.observation_id)
-            elif derived_type == 'COMMON':
+            elif derived_type == 'COMMENT':
                 cc.update_plane_provenance_single(
                     plane, headers, derived_type, cn.COLLECTION,
                     _repair_comment_provenance_value,
@@ -1358,7 +1703,7 @@ def _is_derived(headers, cfht_name, obs_id):
 def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
     logging.debug(f'Begin _update_energy_espadons for {obs_id}')
     cfht_name = cn.CFHTName(file_name=os.path.basename(fqn),
-                         instrument=md.Inst.ESPADONS)
+                            instrument=md.Inst.ESPADONS)
     if cfht_name.suffix == suffix:
         axis = Axis('WAVE', 'nm')
         params = {'header': headers[idx],
@@ -1406,6 +1751,8 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
             coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
             coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
             hdus.close()
+        elif suffix in ['b', 'd']:
+            return
         chunk.energy = SpectralWCS(coord_axis,
                                    specsys='TOPOCENT',
                                    ssysobs='TOPOCENT',
@@ -1821,6 +2168,7 @@ def _repair_filename_provenance_value(value, obs_id):
     if value != obs_id:
         prov_prod_id = value
         prov_obs_id = value[:-1]
+        logging.error(f'prod id {prov_prod_id} obs id {prov_obs_id}')
     return prov_obs_id, prov_prod_id
 
 
@@ -1862,15 +2210,11 @@ def _cfht_args_parser():
 
 
 def to_caom2():
-    try:
-        args = _cfht_args_parser()
-        uris = _get_uris(args)
-        blueprints = _build_blueprints(uris)
-        result = gen_proc(args, blueprints)
-        return result
-    except Exception as e:
-        logging.error(traceback.format_exc())
-        raise e
+    args = _cfht_args_parser()
+    uris = _get_uris(args)
+    blueprints = _build_blueprints(uris)
+    result = gen_proc(args, blueprints)
+    return result
 
 
 def cfht_main_app():

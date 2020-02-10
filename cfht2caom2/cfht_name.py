@@ -109,6 +109,7 @@ class CFHTName(mc.StorageName):
             self.obs_id = self._file_id[:-1]
         else:
             self.obs_id = self._file_id
+        self._logger = logging.getLogger(__name__)
         self._logger.debug(self)
 
     def __str__(self):

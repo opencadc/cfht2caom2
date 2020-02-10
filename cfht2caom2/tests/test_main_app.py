@@ -84,6 +84,7 @@ import sys
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEST_DATA_DIR = os.path.join(THIS_DIR, 'data')
+SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
 PLUGIN = os.path.join(os.path.dirname(THIS_DIR), 'main_app.py')
 
 LOOKUP = {'key': ['fileid1', 'fileid2']}
@@ -104,14 +105,11 @@ WIRCAM_TEST_EXPANSE = {
 
 
 def pytest_generate_tests(metafunc):
-    # obs_id_list = []
-    # for ii in LOOKUP:
-    #     obs_id_list.append(ii)
-    obs_id_list = glob.glob(f'{TEST_DATA_DIR}/*.fits.header')
+    obs_id_list = glob.glob(f'{SINGLE_PLANE_DIR}/*.fits.header')
     metafunc.parametrize('test_name', obs_id_list)
 
 
-@ patch('cfht2caom2.main_app._identify_instrument')
+@patch('cfht2caom2.main_app._identify_instrument')
 def test_main_app(inst_mock, test_name):
     inst_mock.side_effect = _identify_inst_mock
     basename = os.path.basename(test_name)
@@ -122,12 +120,12 @@ def test_main_app(inst_mock, test_name):
     file_name = basename.replace('.header', extension)
     cfht_name = CFHTName(file_name=file_name,
                          instrument=instrument)
-    if '979339' in test_name:
-        obs_path = f'{TEST_DATA_DIR}/979339.expected.xml'
-        output_file = f'{TEST_DATA_DIR}/979339.actual.xml'
-    else:
-        obs_path = f'{TEST_DATA_DIR}/{cfht_name.obs_id}.expected.xml'
-        output_file = f'{TEST_DATA_DIR}/{basename}.actual.xml'
+    obs_path = f'{SINGLE_PLANE_DIR}/{cfht_name.obs_id}.expected.xml'
+    output_file = f'{SINGLE_PLANE_DIR}/{basename}.actual.xml'
+
+    if os.path.exists(output_file):
+        os.unlink(output_file)
+
     expected = mc.read_obs_from_file(obs_path)
 
     local = _get_local(basename)
@@ -165,44 +163,16 @@ def test_main_app(inst_mock, test_name):
 
 
 def _get_lineage(cfht_name):
-    if '979339' in cfht_name.product_id:
-        temp_i = mc.get_lineage(ARCHIVE, '979339i', '979339i.fits.gz')
-        temp_o = mc.get_lineage(ARCHIVE, '979339o', '979339o.fits.gz')
-        result = f'{temp_i} {temp_o}'
-    elif '2281792' in cfht_name.product_id:
-        temp_s = mc.get_lineage(ARCHIVE, '2281792s', '2281792s.fits.fz')
-        temp_p = mc.get_lineage(ARCHIVE, '2281792p', '2281792p.fits.fz')
-        temp_o = mc.get_lineage(ARCHIVE, '2281792o', '2281792o.fits.fz')
-        temp_g = mc.get_lineage(ARCHIVE, '2281792g', '2281792g.fits.gz')
-        result = f'{temp_s} {temp_p} {temp_o} {temp_g}'
-    elif '1151210' in cfht_name.product_id:
-        temp_g = mc.get_lineage(ARCHIVE, '1151210g', '1151210g.fits.fz')
-        temp_m = mc.get_lineage(ARCHIVE, '1151210m', '1151210m.fits.fz')
-        temp_w = mc.get_lineage(ARCHIVE, '1151210w', '1151210w.fits.gz')
-        result = f'{temp_g} {temp_m} {temp_w}'
-    else:
-        result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
-                                f'{cfht_name.file_name}')
+    result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
+                            f'{cfht_name.file_name}')
     return result
 
 
 def _get_local(test_name):
-    if '979339' in test_name:
-        result = f'{TEST_DATA_DIR}/979339i.fits ' \
-                 f'{TEST_DATA_DIR}/979339o.fits.header'
-    elif '1151210' in test_name:
-        result = f'{TEST_DATA_DIR}/1151210g.fits.header ' \
-                 f'{TEST_DATA_DIR}/1151210m.fits.header ' \
-                 f'{TEST_DATA_DIR}/1151210w.fits.header'
-    elif '2460503' in test_name:
-        result = f'{TEST_DATA_DIR}/2460503p.fits'
-    elif '2281792' in test_name:
-        result = f'{TEST_DATA_DIR}/2281792s.fits.header ' \
-                 f'{TEST_DATA_DIR}/2281792p.fits.header ' \
-                 f'{TEST_DATA_DIR}/2281792o.fits.header ' \
-                 f'{TEST_DATA_DIR}/2281792g.fits.header'
+    if '2460503' in test_name:
+        result = f'{SINGLE_PLANE_DIR}/2460503p.fits'
     else:
-        result = f'{TEST_DATA_DIR}/{test_name}'
+        result = f'{SINGLE_PLANE_DIR}/{test_name}'
     return result
 
 
@@ -219,10 +189,17 @@ def _vo_mock(url):
 
 def _identify_inst_mock(uri):
     result = md.Inst.SITELLE  # 1944968p, 2445397p
-    if '2463796o' in uri:
+    if ('2463796o' in uri or '676000' in uri or '1013337' in uri or
+            '2463857' in uri or '2004B.mask' in uri or '19Bm03.bias' in uri or
+            '718955' in uri or '07Bm06.flat' in uri or '2463854' in uri or
+            '03Am02.dark' in uri or '1000003' in uri or
+            '03Am05.fringe' in uri or '1265044' in uri):
         result = md.Inst.MEGACAM
     elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
-          '2281792' in uri):
+          '2281792' in uri or '1681594' in uri or '981337' in uri or
+          'master' in uri or '1706150' in uri or '1758254' in uri or
+          '2462928' in uri or '1151210' in uri or 'hotpix' in uri or
+          '1007126' in uri or 'dark_003s_' in uri):
         result = md.Inst.WIRCAM
     elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
             '1219059' in uri or '1883829c' in uri or

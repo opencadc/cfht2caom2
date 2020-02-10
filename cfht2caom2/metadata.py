@@ -80,7 +80,7 @@ from caom2pipe import manage_composable as mc
 class Inst(Enum):
     ESPADONS = 'ESPaDOnS'
     MEGACAM = 'MegaCam'
-    MEGAPRIME = 'MetaPrime'
+    MEGAPRIME = 'MegaPrime'
     SITELLE = 'SITELLE'
     WIRCAM = 'WIRCam'
     NONE = None
@@ -88,37 +88,8 @@ class Inst(Enum):
 
 # key is CFHT metadata
 # value is SVO url piece
-# FILTER_REPAIR_LOOKUP = {
-#     # MegaPrime
-#     'u.MP9302': 'u_sdss',
-#     'u.MP9301': 'u',
-#     'CaHK.MP9303': 'CaHK',
-#     'g.MP9401': 'g',
-#     'g.MP9402': 'g_sdss',
-#     'OIII.MP9501': 'OIII',
-#     'OIII.MP9502': 'OIII_off',
-#     'gri.MP9605': 'gri',
-#     'Halpha.MP7604': 'Halpha_off',
-#     'Halpha.MP7605': 'Halpha_on',
-#     'Halpha.MP9603': 'Halpha',
-#     'Halpha.MP9604': 'Halpha_Off_2',
-#     'r.MP9601': 'r',
-#     'r.MP9602': 'r_sdss',
-#     'i.MP9701': 'i1',
-#     'i.MP9702': 'i',
-#     'i.MP9703': 'i_sdss',
-#     'TiO.MP7701': 'TiO',
-#     'CN.MP7803': 'CN',
-#     'NB920.MP7902': 'NB920',
-#     'z.MP9801': 'z',
-#     'z.MP9901': 'z_sdss',
-#     # WIRCam
-#     'BrG': 'Brackett_gamma',
-#     'Ks.WC8302': 'Ks'}
-
-# key is CFHT metadata
-# value is SVO url piece
-INSTRUMENT_REPAIR_LOOKUP = {Inst.WIRCAM: 'Wircam'}
+INSTRUMENT_REPAIR_LOOKUP = {Inst.WIRCAM: 'Wircam',
+                            Inst.MEGAPRIME: 'MegaPrime'}
 
 # CW/SF 17-12-19 - content from conversation
 # CW
@@ -128,31 +99,6 @@ INSTRUMENT_REPAIR_LOOKUP = {Inst.WIRCAM: 'Wircam'}
 # SF 28-01-20 - from conversation - if there's no energy information,
 # e.g. 1007126g.fits.gz with filter name == 'FakeBlank', leave the
 # energy information empty
-
-#
-#
-# CFHT_CACHE = {
-#     # pinhole mask, so use full energy range
-#     'PHG.MP9999': {'cw': 6200., 'fwhm': 6000.},
-#     # test filter - just use full energy range
-#     'N393.MP1111': {'cw': 6200., 'fwhm': 6000.},
-#     # CFH12K filter
-#     'OIII:MP7504': {'cw': 0.0, 'fwhm': 0.0},
-#     # 'NONE': {'cw': 6200., 'fwhm': 6000.},
-#     # 'OPEN': {'cw': 6200., 'fwhm': 6000.},
-#     'MegaPrime.None': {'cw': 6200., 'fwhm': 6000.},
-#     # SITELLE - not available at SVO
-#     'C1': {'cw': None, 'fwhm': None},
-#     'C2': {'cw': None, 'fwhm': None},
-#     'C3': {'cw': None, 'fwhm': None},
-#     'C4': {'cw': None, 'fwhm': None},
-#     'SN1': {'cw': None, 'fwhm': None},
-#     'SN2': {'cw': None, 'fwhm': None},
-#     'SN3': {'cw': None, 'fwhm': None},
-#     # WIRCam
-#     'WIRCam.None': {'cw': 17000.0, 'fwhm': 14000.0},
-#     'FakeBlank': {'cw': 17000.0, 'fwhm': 14000.0}
-# }
 
 # keys in the cache:
 FILTER_REPAIR_CACHE = 'filter_repair_lookup'
@@ -231,7 +177,8 @@ class CFHTCache(mc.Cache):
         if result is None:
             self._logger.warning(
                 f'Could not find project information for run id {run_id}.')
-            if not self._semester_cached(run_id):
+            if (not self._semester_cached(run_id) and
+                    run_id not in ['SMEARING']):
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
                 result = self._project_titles.get(run_id)

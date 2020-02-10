@@ -11,7 +11,7 @@
   <caom2:proposal>
     <caom2:id>16AC23</caom2:id>
     <caom2:pi>Laurie Rousseau-Nepton</caom2:pi>
-<!--    <caom2:title>The SNAGS Project Nebular Abundances in Nearby Star-Forming Galaxies: A Pilot Study with SITELLE</caom2:title>-->
+    <caom2:title>The SNAGS Project Nebular Abundances in Nearby Star-Forming Galaxies: A Pilot Study with SITELLE</caom2:title>
   </caom2:proposal>
   <caom2:target>
     <caom2:name>NGC6822</caom2:name>
