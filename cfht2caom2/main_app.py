@@ -262,30 +262,41 @@ def get_energy_resolving_power(params):
         result = None
         if delta is not None and val is not None:
             result = val/delta
-        instrument = _get_instrument(header)
-        if instrument is md.Inst.ESPADONS:
-            instmode = header.get('INSTMODE')
-            if instmode is None or 'R=' not in instmode:
-                # CW - Default if resolving power value not in header
-                # caom2IngestEspadons.py, l377
-                result = 65000.0
+    return result
+
+
+def get_espadons_energy_resolving_power(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        instmode = header.get('INSTMODE')
+        if instmode is None or 'R=' not in instmode:
+            # CW - Default if resolving power value not in header
+            # caom2IngestEspadons.py, l377
+            result = 65000.0
+        else:
+            # CW - This string is already in instrument keywords but also
+            # need to extract resolving power from it:
+            # 'Spectroscopy, star only, R=80,000'
+            temp = instmode.split('R=')
+            values = temp[1].split(',')
+            if len(values) == 1:
+                result = values[0]
             else:
-                # CW - This string is already in instrument keywords but also
-                # need to extract resolving power from it:
-                # 'Spectroscopy, star only, R=80,000'
-                temp = instmode.split('R=')
-                values = temp[1].split(',')
-                if len(values) == 1:
-                    result = values[0]
-                else:
-                    result = f'{values[0]}{values[1]}'
-                result = mc.to_float(result)
-        elif instrument is md.Inst.SITELLE:
-            sitresol = header.get('SITRESOL')
-            if sitresol is not None and sitresol > 0.0:
-                result = sitresol
-            if result is None:
-                result = 1.0
+                result = f'{values[0]}{values[1]}'
+            result = mc.to_float(result)
+    return result
+
+
+def get_sitelle_energy_resolving_power(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        sitresol = header.get('SITRESOL')
+        if sitresol is not None and sitresol > 0.0:
+            result = sitresol
+        if result is None:
+            result = 1.0
     return result
 
 
@@ -730,7 +741,6 @@ def get_sitelle_time_refcoord_delta(params):
         delta = None
         mjd_start = _get_mjd_start(header)
         mjd_end = mc.to_float(header.get('MJDEND'))
-        logging.error(f'start {mjd_start} end {mjd_end}')
         # caom2IngestSitelle.py, l704
         if mjd_start is not None and mjd_end is not None:
             delta = mjd_end - mjd_start
@@ -1059,17 +1069,6 @@ def accumulate_bp(bp, uri, instrument):
                'get_time_refcoord_val_derived(header)')
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
-    if cfht_name.has_polarization:
-        bp.configure_polarization_axis(6)
-        # caom2IngestEspadons.py, l209, lTODO
-        bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
-        bp.set('Chunk.polarization.axis.function.delta', 1)
-        bp.set('Chunk.polarization.axis.function.naxis', 1)
-        bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
-        bp.set('Chunk.polarization.axis.function.refCoord.val',
-               'get_polarization_function_val(header)')
-
-    logging.error(f'sintrument {instrument}')
     if instrument is md.Inst.ESPADONS:
         accumulate_espadons_bp(bp, cfht_name)
     elif instrument is md.Inst.MEGACAM:
@@ -1077,7 +1076,6 @@ def accumulate_bp(bp, uri, instrument):
     elif instrument is md.Inst.SITELLE:
         accumulate_sitelle_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.WIRCAM:
-        logging.error('is this happening?')
         accumulate_wircam_bp(bp, uri, cfht_name)
 
     logging.debug('Done accumulate_bp.')
@@ -1101,6 +1099,9 @@ def accumulate_espadons_bp(bp, cfht_name):
                    'Espadons/')
     bp.set('Plane.provenance.version',
            'get_espadons_provenance_version(header)')
+
+    bp.set('Chunk.energy.resolvingPower',
+           'get_espadons_energy_resolving_power(params)')
 
     # constants from caom2espadons.config
     bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
@@ -1130,6 +1131,16 @@ def accumulate_espadons_bp(bp, cfht_name):
     bp.set('Chunk.time.exposure', 'get_espadons_exptime(params)')
     bp.set('Chunk.time.resolution', 'get_espadons_exptime(params)')
 
+    if cfht_name.suffix == 'p':
+        bp.configure_polarization_axis(6)
+        # caom2IngestEspadons.py, l209, lTODO
+        bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+        bp.set('Chunk.polarization.axis.function.delta', 1)
+        bp.set('Chunk.polarization.axis.function.naxis', 1)
+        bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
+        bp.set('Chunk.polarization.axis.function.refCoord.val',
+               'get_polarization_function_val(header)')
+
     logging.debug('Done accumulate_espadons_bp.')
 
 
@@ -1153,6 +1164,9 @@ def accumulate_sitelle_bp(bp, uri, cfht_name):
     logging.debug('Begin accumulate_sitelle_bp.')
     bp.set_default('Plane.provenance.name', 'ORBS')
     bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
+
+    bp.set('Chunk.energy.resolvingPower',
+           'get_sitelle_energy_resolving_power(params)')
 
     bp.set('Chunk.time.axis.function.delta',
            'get_sitelle_time_refcoord_delta(params)')
@@ -1464,7 +1478,7 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
         axis = Axis('WAVE', 'nm')
         params = {'header': headers[idx],
                   'uri': uri}
-        resolving_power = get_energy_resolving_power(params)
+        resolving_power = get_espadons_energy_resolving_power(params)
         if suffix in ['a', 'c', 'f', 'o', 'x']:
             naxis1 = get_energy_function_naxis(params)
             cdelt1 = get_energy_function_delta(params)
