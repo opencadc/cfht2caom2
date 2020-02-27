@@ -106,7 +106,7 @@ Conversation with CW/SF 02-01-19:
     - users want 'p' files
 
 - conclusion - one plane / file, because users want to see one row / file in
-  the results tab
+  the query results
 """
 import copy
 import importlib
@@ -115,6 +115,8 @@ import math
 import os
 import sys
 import traceback
+
+from enum import Enum
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, DerivedObservation, TypedList, Chunk
@@ -141,6 +143,16 @@ APPLICATION = 'cfht2caom2'
 # All comments denoted 'CW' are copied from
 # ssh://goliaths@gimli3/srv/cadc/git/wcaom2archive.git
 # from /cfht2caom2/scripts
+
+
+class ProvenanceType(Enum):
+    """The different types of header values that identify provenance
+    information. Used to specify different functions for
+    execution. """
+    COMMENT = 'COMMENT'
+    FILENAME = 'FILENAM'
+    IMCMB = 'IMCMB'
+    UNDEFINED = 'UNDEFINED'  # hdf5 file support
 
 
 def get_wircam_bandpass_name(header):
@@ -292,11 +304,18 @@ def get_sitelle_energy_resolving_power(params):
     result = None
     header, suffix, uri = _decompose_params(params)
     if _has_energy(header):
+        # from caom2IngestSitelle.py, l555+
         sitresol = header.get('SITRESOL')
         if sitresol is not None and sitresol > 0.0:
             result = sitresol
         if result is None:
             result = 1.0
+            if suffix in ['a', 'c', 'f', 'o', 'x']:
+                # from caom2IngestSitelle.py, l596
+                crval3 = mc.to_float(header.get('FILTERLB'))
+                cdelt3 = mc.to_float(header.get('FILTERBW'))
+                if crval3 is not None and cdelt3 is not None:
+                    result = crval3 / cdelt3
     return result
 
 
@@ -416,6 +435,14 @@ def get_plane_data_product_type(header):
     result = DataProductType.IMAGE
     if instrument is md.Inst.ESPADONS:
         result = DataProductType.SPECTRUM
+    return result
+
+
+def get_sitelle_plane_data_product_type(uri):
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.SITELLE)
+    result = DataProductType.IMAGE
+    if cfht_name.is_derived_sitelle:
+        result = DataProductType.CUBE
     return result
 
 
@@ -603,6 +630,14 @@ def get_provenance_last_executed(header):
     return result
 
 
+def get_mega_provenance_last_executed(header):
+    result = get_provenance_last_executed(header)
+    if result is None:
+        result = header.get('DATEPROC')
+        result = mc.make_time(result)
+    return result
+
+
 def get_espadons_provenance_last_executed(header):
     result = None
     comments = header.get('COMMENT')
@@ -753,7 +788,6 @@ def get_sitelle_time_refcoord_delta(params):
         if exp_time is None:
             exp_time = mc.to_float(header.get('DARKTIME'))
         delta = exp_time / 86400.0
-        logging.error(f'delta is {delta}')
     return delta
 
 
@@ -774,13 +808,16 @@ def get_time_refcoord_val_derived(header):
     # caom2IngestWircamdetrend.py, l388
     # Time - set exptime as time of one image, start and stop dates
     # as one pixel so this means crval3 is not equal to exptime
-    # if TVSTART  not defined, use release_date as mjdstart
+    # if TVSTART not defined, use release_date as mjdstart
     dt_str = header.get('TVSTART')
     if dt_str is None:
         dt_str = header.get('REL_DATE')
         if dt_str is None:
             dt_str = header.get('DATE')
     mjd_obs = ac.get_datetime(dt_str)
+    if mjd_obs is None:
+        logging.warning(f'Chunk.time.axis.function.refCoord.val is None for '
+                        f'{_get_filename(header)}')
     return mjd_obs
 
 
@@ -801,12 +838,10 @@ def get_espadons_time_refcoord_val(params):
         if mjd_obs is None:
             date_obs = header.get('DATE-OBS')
             time_obs = header.get('TIME-OBS')
-            logging.error(f'date_obs {date_obs} time_obs {time_obs}')
             if (date_obs is None or time_obs is None or
                     date_obs == '1970-01-01' or date_obs == '1970-00-01'):
                 hst_time = header.get('HSTTIME)')
                 # fmt 'Mon Nov 27 15:58:17 HST 2006'
-                logging.error(f'hst_time {hst_time}')
                 mjd_obs = ac.get_datetime(hst_time)
             else:
                 mjd_obs_str = f'{date_obs}T{time_obs}'
@@ -1071,8 +1106,8 @@ def accumulate_bp(bp, uri, instrument):
 
     if instrument is md.Inst.ESPADONS:
         accumulate_espadons_bp(bp, cfht_name)
-    elif instrument is md.Inst.MEGACAM:
-        accumulate_megacam_bp(bp, uri, cfht_name)
+    elif instrument is md.Inst.MEGACAM or instrument is md.Inst.MEGAPRIME:
+        accumulate_mega_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.SITELLE:
         accumulate_sitelle_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.WIRCAM:
@@ -1144,17 +1179,19 @@ def accumulate_espadons_bp(bp, cfht_name):
     logging.debug('Done accumulate_espadons_bp.')
 
 
-def accumulate_megacam_bp(bp, uri, cfht_name):
+def accumulate_mega_bp(bp, uri, cfht_name):
     """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    logging.debug('Begin accumulate_megacam_bp.')
+    logging.debug('Begin accumulate_mega_bp.')
 
+    bp.set('Plane.provenance.lastExecuted',
+           'get_mega_provenance_last_executed(header)')
     bp.set_default('Plane.provenance.name', 'ELIXIR')
-
     bp.set_default('Plane.provenance.reference',
                    'http://www.cfht.hawaii.edu/Instruments/Elixir/')
-    logging.debug('Done accumulate_megacam_bp.')
+
+    logging.debug('Done accumulate_mega_bp.')
 
 
 def accumulate_sitelle_bp(bp, uri, cfht_name):
@@ -1162,6 +1199,7 @@ def accumulate_sitelle_bp(bp, uri, cfht_name):
     Observation level.
     """
     logging.debug('Begin accumulate_sitelle_bp.')
+    bp.set('Plane.dataProductType', 'get_sitelle_plane_data_product_type(uri)')
     bp.set_default('Plane.provenance.name', 'ORBS')
     bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
 
@@ -1219,9 +1257,21 @@ def update(observation, **kwargs):
     if 'uri' in kwargs:
         uri = kwargs['uri']
 
+    ingesting_hdf5 = False
+
     # TODO - use the instrument name in the observation? might not work
     # for a redo
-    instrument = cb.CFHTBuilder.get_instrument(headers, uri)
+    if uri is None:
+        instrument = md.Inst(observation.instrument.name)
+    else:
+        suffix = cn.CFHTName.remove_extensions(uri)[-1]
+        if suffix == 'z':
+            instrument = md.Inst.SITELLE
+            ingesting_hdf5 = True
+            logging.info(
+                f'Ingesting the hdf5 plane for {observation.observation_id}')
+        else:
+            instrument = cb.CFHTBuilder.get_instrument(headers, uri)
 
     # fqn is not always defined, ffs
     if uri is not None:
@@ -1235,18 +1285,20 @@ def update(observation, **kwargs):
         raise mc.CadcException(f'Cannot define a CFHTName instance for '
                                f'{observation.observation_id}')
 
-    idx = _update_observation_metadata(observation, headers, cfht_name,
-                                       fqn, uri)
-    ccdbin = headers[idx].get('CCBIN1')
-    radecsys = headers[idx].get('RADECSYS')
-    ctype1 = headers[idx].get('CTYPE1')
-    filter_name = headers[idx].get('FILTER')
+    if ingesting_hdf5:
+        # avoid all the code that references undefined headers variable
+        if not isinstance(observation, DerivedObservation):
+            observation = cc.change_to_composite(
+                observation, 'scan', cn.COLLECTION)
+        _update_sitelle_plane(observation, uri)
+        logging.debug('Done hdf5 update.')
+        return observation
 
     is_derived, derived_type = _is_derived(
         headers, cfht_name, observation.observation_id)
     if is_derived and not isinstance(observation, DerivedObservation):
-        logging.info('{} will be changed to a Derived Observation.'.format(
-            observation.observation_id))
+        logging.info(f'{observation.observation_id} will be changed to a '
+                     f'Derived Observation.')
         algorithm_name = 'master_detrend'
         if observation.observation_id[-1] == 'p':
             if cfht_name.has_polarization:
@@ -1255,6 +1307,13 @@ def update(observation, **kwargs):
                 algorithm_name = 'scan'
         observation = cc.change_to_composite(
             observation, algorithm_name, cn.COLLECTION)
+
+    idx = _update_observation_metadata(observation, headers, cfht_name,
+                                       fqn, uri)
+    ccdbin = headers[idx].get('CCBIN1')
+    radecsys = headers[idx].get('RADECSYS')
+    ctype1 = headers[idx].get('CTYPE1')
+    filter_name = headers[idx].get('FILTER')
 
     for plane in observation.planes.values():
         if plane.product_id != cfht_name.product_id:
@@ -1272,7 +1331,7 @@ def update(observation, **kwargs):
                     CalibrationLevel.RAW_STANDARD):
                 time_delta = get_time_refcoord_delta_simple(params)
             else:
-                time_delta = get_time_refcoord_delta_derived(params)
+                time_delta = get_time_refcoord_delta_derived(headers[idx])
             for part in artifact.parts.values():
                 for c in part.chunks:
                     chunk_idx = part.chunks.index(c)
@@ -1419,18 +1478,18 @@ def update(observation, **kwargs):
                             chunk.time_axis = None
 
         if isinstance(observation, DerivedObservation):
-            if derived_type == 'IMCMB':
+            if derived_type is ProvenanceType.IMCMB:
                 cc.update_plane_provenance(plane, headers[1:],
-                                           derived_type, cn.COLLECTION,
+                                           derived_type.value, cn.COLLECTION,
                                            _repair_imcmb_provenance_value,
                                            observation.observation_id)
-            elif derived_type == 'COMMENT':
+            elif derived_type is ProvenanceType.COMMENT:
                 cc.update_plane_provenance_single(
-                    plane, headers, derived_type, cn.COLLECTION,
+                    plane, headers, derived_type.value, cn.COLLECTION,
                     _repair_comment_provenance_value,
                     observation.observation_id)
             else:
-                cc.update_plane_provenance(plane, headers, derived_type,
+                cc.update_plane_provenance(plane, headers, derived_type.value,
                                            cn.COLLECTION,
                                            _repair_filename_provenance_value,
                                            observation.observation_id)
@@ -1441,6 +1500,10 @@ def update(observation, **kwargs):
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
         elif instrument is md.Inst.ESPADONS and plane.product_id[-1] == 'i':
             # caom2IngestEspadons.py, l714
+            _update_plane_provenance_p(plane, observation.observation_id, 'o')
+        elif (instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM] and
+              plane.product_id[-1] == 'p'):
+            # caom2IngestMegacam.py, l142
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
 
     # relies on update_plane_provenance being called
@@ -1456,17 +1519,20 @@ def _is_derived(headers, cfht_name, obs_id):
     derived_type = ''
     if cc.is_composite(headers):
         result = True
-        derived_type = 'IMCMB'
+        derived_type = ProvenanceType.IMCMB
     else:
         file_type = headers[0].get('FILETYPE')
         if file_type is not None and 'alibrat' in file_type:
             logging.info(
                 f'Treating {obs_id} with filetype {file_type} as derived. ')
             result = True
-            derived_type = 'COMMENT'
+            derived_type = ProvenanceType.COMMENT
     if not result and not cfht_name.is_simple:
         result = True
-        derived_type = 'FILENAM'
+        derived_type = ProvenanceType.FILENAME
+    if cfht_name.is_derived_sitelle and cfht_name.suffix == 'z':
+        result = True
+        derived_type = ProvenanceType.UNDEFINED
     return result, derived_type
 
 
@@ -1743,6 +1809,36 @@ def _update_position_function_sitelle(chunk, header, obs_id, extension):
     logging.debug(f'End _update_position_function_sitelle for {obs_id}')
 
 
+def _update_sitelle_plane(observation, uri):
+    logging.debug(
+        f'Begin _update_sitelle_plane for {observation.observation_id}')
+    # if the 'p' plane exists, the observation id is the same as the plane id,
+    # so copy the metadata to the 'z' plane
+    z_plane_key = observation.observation_id.replace('p', 'z')
+    if (observation.observation_id in observation.planes.keys() and
+            z_plane_key in observation.planes.keys()):
+        p_plane = observation.planes[observation.observation_id]
+        p_artifact_key = uri.replace('z', 'p').replace('.hdf5', '.fits.fz')
+        if p_artifact_key not in p_plane.artifacts.keys():
+            p_artifact_key = uri.replace('z', 'p').replace('.hdf5', '.fits')
+            if p_artifact_key not in p_plane.artifacts.keys():
+                p_artifact_key = uri.replace('z', 'p').replace(
+                    '.hdf5', '.fits.gz')
+                if p_artifact_key not in p_plane.artifacts.keys():
+                    raise mc.CadcException(
+                        f'Unexpected naming pattern for artifact URI '
+                        f'{p_artifact_key} in {observation.observation_id}.')
+        z_plane = observation.planes[z_plane_key]
+        z_plane.artifacts[uri].parts = p_plane.artifacts[p_artifact_key].parts
+        z_plane.provenance = p_plane.provenance
+        z_plane.calibration_level = p_plane.calibration_level
+        z_plane.data_product_type = p_plane.data_product_type
+        z_plane.data_release = p_plane.data_release
+        z_plane.meta_release = p_plane.meta_release
+
+    logging.debug('End _update_sitelle_plane')
+
+
 def _update_wircam_position(part, chunk, headers, idx, obs_id):
     logging.debug(f'Begin _update_wircam_position for {obs_id}')
     header = headers[idx]
@@ -1886,7 +1982,8 @@ def _build_blueprints(uris):
     for uri in uris:
         instrument = _identify_instrument(uri)
         blueprint = ObsBlueprint(module=module)
-        if not mc.StorageName.is_preview(uri):
+        if ((not mc.StorageName.is_preview(uri)) and
+                (not mc.StorageName.is_hdf5(uri))):
             accumulate_bp(blueprint, uri, instrument)
         blueprints[uri] = blueprint
     return blueprints
@@ -1904,11 +2001,12 @@ def _get_uris(args):
             result.append(file_uri)
     else:
         raise mc.CadcException(
-            'Could not define uri from these args {}'.format(args))
+            f'Could not define uri from these args {args}')
     return result
 
 
 def _repair_comment_provenance_value(value, obs_id):
+    logging.debug(f'Begin _repair_comment_provenance_value for {obs_id}')
     results = []
     # COMMENT headers with provenance:
     # COMMENT Scan member=2445653o st=174 iq=1.2200 bk=5.5214 ex=0.024000 ...
@@ -1923,10 +2021,12 @@ def _repair_comment_provenance_value(value, obs_id):
                 # 0 - observation
                 # 1 - plane
                 results.append([prov_obs_id, prov_prod_id])
+    logging.debug(f'End _repair_comment_provenance_value')
     return results
 
 
 def _repair_filename_provenance_value(value, obs_id):
+    logging.debug(f'Begin _repair_filename_provenance_value for {obs_id}')
     # values require no repairing, because they look like:
     # FILENAME= '2460503p'
     # FILENAM1= '2460503o'           / Base filename at acquisition
@@ -1938,11 +2038,12 @@ def _repair_filename_provenance_value(value, obs_id):
     if value != obs_id:
         prov_prod_id = value
         prov_obs_id = value[:-1]
-        logging.error(f'prod id {prov_prod_id} obs id {prov_obs_id}')
+    logging.debug(f'End _repair_filename_provenance_value')
     return prov_obs_id, prov_prod_id
 
 
 def _repair_imcmb_provenance_value(value, obs_id):
+    logging.debug(f'Begin _repair_imcmb_provenance_value for {obs_id}')
     prov_obs_id = None
     prov_prod_id = None
     # CFHT files contain other IMCMB headers that look like this - ignore
@@ -1968,6 +2069,7 @@ def _repair_imcmb_provenance_value(value, obs_id):
         else:
             prov_prod_id = temp[0][:-2]
         prov_obs_id = cn.CFHTName(file_name=prov_prod_id).obs_id
+    logging.debug(f'End _repair_imcmb_provenance_value')
     return prov_obs_id, prov_prod_id
 
 
@@ -1980,6 +2082,8 @@ def _cfht_args_parser():
 
 
 def to_caom2():
+    """This function is called by pipeline execution. It must have this name.
+    """
     args = _cfht_args_parser()
     uris = _get_uris(args)
     blueprints = _build_blueprints(uris)
@@ -1988,14 +2092,14 @@ def to_caom2():
 
 
 def cfht_main_app():
-    logging.error(sys.argv)
+    """External application."""
     args = _cfht_args_parser()
     try:
         result = to_caom2()
-        logging.debug('Done {} processing.'.format(APPLICATION))
+        logging.debug(f'Done {APPLICATION} processing.')
         sys.exit(result)
     except Exception as e:
-        logging.error('Failed {} execution for {}.'.format(APPLICATION, args))
+        logging.error(f'Failed {APPLICATION} execution for {args}.')
         tb = traceback.format_exc()
         logging.error(tb)
         sys.exit(-1)

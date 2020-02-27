@@ -1,0 +1,109 @@
+SIMPLE  =                    T / conforms to FITS standard                      
+BITPIX  =                  -32 / array data type                                
+NAXIS   =                    2 / number of array dimensions                     
+NAXIS1  =                 2048                                                  
+NAXIS2  =                 2064                                                  
+EXTEND  =                    T                                                  
+PROGRAM = 'ORB v3.1.2'         / Thomas Martin: thomas.martin.1@ulaval.ca       
+DATE    = '2019-04-16'         / Creation date                                  
+MASK    = 'False   '                                                            
+COMMENT                                                                         
+COMMENT General                                                                 
+COMMENT -------                                                                 
+COMMENT                                                                         
+FILETYPE= 'Deep Frame'         / Type of file                                   
+OBSERVAT= 'CFHT    '           / Observatory name                               
+TELESCOP= 'CFHT    '           / Telescope name                                 
+INSTRUME= 'SITELLE '           / Instrument name                                
+COMMENT                                                                         
+COMMENT ORBS                                                                    
+COMMENT ----                                                                    
+COMMENT                                                                         
+ORBSVER = '' / ORBS version                                                     
+OPTNAME = 'NGC4569_SN3_19AC27' / Name of the option file                        
+COMMENT                                                                         
+COMMENT Observation parameters                                                  
+COMMENT ----------------------                                                  
+COMMENT                                                                         
+OBJECT  = 'NGC4569 '           / Object Name                                    
+EXPTIME =                 25.0 / Exposure time                                  
+FILTER  = 'SN3     '           / Name of filter used during the observation     
+DATE-OBS= '2019-04-05'         / Date of the observation                        
+ORDER   =                  8.0 / Order of spectral folding                      
+STEP    =          2943.025792 / Step size in nm                                
+STEPNB  =                  505 / Number of steps                                
+TARGETR = '12:36:31.34'        / Target Right Ascension                         
+TARGETD = '+13:10:58.30'       / Target Declination                             
+TARGETX =               1023.5 / Target estimated X coordinate                  
+TARGETY =               1031.5 / Target estimated Y coordinate                  
+COMMENT                                                                         
+COMMENT Image Description                                                       
+COMMENT -----------------                                                       
+COMMENT                                                                         
+CAMERA  = 'MERGED_DATA'        / Merged data from CAM1 and CAM2                 
+BINNING =                    1 / Binning of the camera                          
+COMMENT                                                                         
+COMMENT Frame WCS                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+CTYPE1  = 'RA---TAN-SIP'       / TAN (gnomonic) projection + SIP distortions    
+CRVAL1  =        189.130583333 / [deg] Coordinate value at reference point      
+CUNIT1  = 'deg     '           / Units of coordinate increment and value        
+CRPIX1  =        1079.25968262 / Pixel coordinate of reference point            
+CDELT1  = 8.99251302083333E-05 / Degrees per pixel                              
+CROTA1  =                  0.0                                                  
+CTYPE2  = 'DEC--TAN-SIP'       / TAN (gnomonic) projection + SIP distortions    
+CRVAL2  =        13.1828611111 / [deg] Coordinate value at reference point      
+CUNIT2  = 'deg     '           / Units of coordinate increment and value        
+CRPIX2  =        1016.33800053 / Pixel coordinate of reference point            
+CDELT2  = 8.92280361757106E-05 / Degrees per pixel                              
+CROTA2  =                  0.0                                                  
+CD1_1   =   -8.98135051216E-05 / Coordinate transformation matrix element       
+CD1_2   = -9.6040372607400E-07 / Coordinate transformation matrix element       
+CD2_1   = -9.6040372607400E-07 / Coordinate transformation matrix element       
+CD2_2   =    8.98135051216E-05 / Coordinate transformation matrix element       
+BP_0_0  =   0.0004146459258812                                                  
+BP_0_1  =  -0.0074907516869857                                                  
+BP_0_2  = -2.4535747263782E-06                                                  
+A_3_0   = -1.3386015041297E-08                                                  
+B_3_0   = -8.2217586656479E-10                                                  
+BP_3_0  =  8.2217586656479E-10                                                  
+B_1_2   = 7.06901196658068E-10                                                  
+B_1_0   = -0.00046763775778992                                                  
+B_1_1   = 5.49357275612099E-08                                                  
+B_2_1   = -1.5158421693962E-08                                                  
+B_2_0   = 2.10036180812735E-07                                                  
+A_ORDER =                    3                                                  
+B_0_3   = -1.3558958871007E-08                                                  
+B_0_2   = 2.45357472637824E-06                                                  
+B_0_1   = 0.007490751686985707                                                  
+B_0_0   =  -0.0004146459258812                                                  
+BP_0_3  = 1.35589588710073E-08                                                  
+B_ORDER =                    3                                                  
+BP_ORDER=                    3                                                  
+BP_1_2  = -7.0690119665806E-10                                                  
+AP_ORDER=                    3                                                  
+AP_3_0  = 1.33860150412973E-08                                                  
+A_1_1   = 1.54533982581321E-06                                                  
+A_1_0   = 0.008237240881055026                                                  
+BP_2_0  = -2.1003618081273E-07                                                  
+A_1_2   = -1.5401552133746E-08                                                  
+AP_2_1  = -2.7855377277203E-10                                                  
+AP_2_0  = -1.1637530524668E-06                                                  
+A_0_0   = -0.03076738601481299                                                  
+A_0_1   = -0.00049117718322371                                                  
+A_0_2   = 5.96501012228556E-07                                                  
+A_0_3   = 1.06190303616824E-09                                                  
+BP_1_1  = -5.4935727561209E-08                                                  
+BP_1_0  = 0.000467637757789927                                                  
+A_2_0   = 1.16375305246683E-06                                                  
+A_2_1   = 2.78553772772031E-10                                                  
+AP_1_0  = -0.00823724088105502                                                  
+AP_1_1  = -1.5453398258132E-06                                                  
+AP_1_2  = 1.54015521337463E-08                                                  
+BP_2_1  = 1.51584216939626E-08                                                  
+AP_0_1  = 0.000491177183223714                                                  
+AP_0_0  =  0.03076738601481299                                                  
+AP_0_3  = -1.0619030361682E-09                                                  
+AP_0_2  = -5.9650101222855E-07                                                  
+END                                                                             

@@ -6,7 +6,44 @@ files="
 03Am05.fringe.z.36.00
 2004B.mask.0.36.01
 2463796o
-1265044o"
+1265044o
+2445848a
+2270807b
+2115407c
+2270827d
+1819176f
+2352723o
+2445397p
+1944968p
+2462928a
+787355d
+981337m
+1706150f
+1758254x
+1007126g
+2157095o
+hotpix_20191124HST180309_v200
+839579g
+787144o
+dark_003s_20161108HST061911_v200
+mastertwilightflat_BrG_07Aw06_v200
+2281792p
+weight__20191126HST174153_CO_v200
+2460602a
+1001063b
+1883829c
+881162d
+1219059f
+1001836x
+1003681o
+979339o
+760296f
+979339i
+2460503p
+2281792
+1151210
+1681594
+"
 
 obs_ids="
 19Bm03.bias.0.40.00
@@ -16,14 +53,85 @@ obs_ids="
 03Am05.fringe.z.36.00
 2004B.mask.0.36.01
 2463796
-1265044"
+1265044
+2445848
+2270807
+2115407
+2270827
+1819176
+2352723
+2445397
+1944968
+2462928
+787355
+981337
+1706150
+1758254
+1007126
+2157095
+hotpix_20191124HST180309_v200
+839579
+787144
+dark_003s_20161108HST061911_v200
+mastertwilightflat_BrG_07Aw06_v200
+2281792
+weight__20191126HST174153_CO_v200
+2460602
+1001063
+1883829
+881162
+1219059
+1001836
+1003681
+979339
+760296
+2460503p
+2281792p
+2281792s
+1151210w
+1681594y
+"
+
+files="
+1151210m
+1151210g
+1151210o
+1151210p
+1151210s
+1151210w
+1151210y
+1681594m
+1681594g
+1681594o
+1681594p
+1681594s
+1681594y
+2157095o
+2157095p
+2157095s
+2281792g
+2281792o
+2281792p
+2281792s
+"
+
+files="
+2384125p
+2384125v
+2384125z
+"
+
+obs_ids="
+2384125
+"
 
 for ii in $files; do
   echo $ii
-  cadc-data get --fhead --cert $HOME/.ssl/cadcproxy.pem -o ../cfht2caom2/tests/data/$ii.fits.header CFHT $ii.fits.fz || exit $?
+  # cadc-data get --fhead --cert $HOME/.ssl/cadcproxy.pem -o ../cfht2caom2/tests/bak/$ii.fits.header CFHT $ii.fits.fz
+  # cadc-data get --cert $HOME/.ssl/cadcproxy.pem -o ../cfht2caom2/tests/bak/$ii.fits.fz CFHT $ii.fits.fz
 done
 
 for ii in $obs_ids; do
   echo $ii
-  caom2-repo read --cert $HOME/.ssl/cadcproxy.pem --resource-id ivo://cadc.nrc.ca/ams CFHT $ii > ../cfht2caom2/tests/data/$ii.expected.xml || exit $?
+  caom2-repo read --cert $HOME/.ssl/cadcproxy.pem --resource-id ivo://cadc.nrc.ca/ams CFHT $ii > ../cfht2caom2/tests/bak/$ii.expected.xml
 done

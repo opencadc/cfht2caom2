@@ -139,11 +139,10 @@ def test_main_app(inst_mock, test_name):
         vo_mock.side_effect = _vo_mock
 
         sys.argv = \
-            ('{} --no_validate --local {} --observation {} {} -o {} '
-             '--plugin {} --module {} --lineage {}'.
-             format(APPLICATION, local, COLLECTION,
-                    cfht_name.obs_id, output_file, PLUGIN, PLUGIN,
-                    _get_lineage(cfht_name))).split()
+            (f'{APPLICATION} --no_validate --local {local} --observation '
+             f'{COLLECTION} {cfht_name.obs_id} -o {output_file} --plugin '
+             f'{PLUGIN} --module {PLUGIN} --lineage {_get_lineage(cfht_name)}'
+             ).split()
         print(sys.argv)
         try:
             main_app.to_caom2()
@@ -155,9 +154,9 @@ def test_main_app(inst_mock, test_name):
     actual = mc.read_obs_from_file(output_file)
     result = get_differences(expected, actual, 'Observation')
     if result:
-        msg = 'Differences found in observation {} test name {}\n{}'. \
-            format(expected.observation_id, test_name, '\n'.join(
-            [r for r in result]))
+        text = '\n'.join([r for r in result])
+        msg = f'Differences found in observation {expected.observation_id} ' \
+              f'test name {test_name}\n{text}'
         raise AssertionError(msg)
     # assert False  # cause I want to see logging messages
 
@@ -188,23 +187,34 @@ def _vo_mock(url):
 
 
 def _identify_inst_mock(uri):
-    result = md.Inst.SITELLE  # 1944968p, 2445397p
-    if ('2463796o' in uri or '676000' in uri or '1013337' in uri or
-            '2463857' in uri or '2004B.mask' in uri or '19Bm03.bias' in uri or
-            '718955' in uri or '07Bm06.flat' in uri or '2463854' in uri or
-            '03Am02.dark' in uri or '1000003' in uri or
-            '03Am05.fringe' in uri or '1265044' in uri):
-        result = md.Inst.MEGACAM
-    elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
-          '2281792' in uri or '1681594' in uri or '981337' in uri or
-          'master' in uri or '1706150' in uri or '1758254' in uri or
-          '2462928' in uri or '1151210' in uri or 'hotpix' in uri or
-          '1007126' in uri or 'dark_003s_' in uri):
-        result = md.Inst.WIRCAM
-    elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
-            '1219059' in uri or '1883829c' in uri or
-            '2460602a' in uri or
-            '760296f' in uri or '881162d' in uri or '979339' in uri or
-            '2460503p' in uri):
-        result = md.Inst.ESPADONS
+    lookup = {md.Inst.MEGAPRIME: ['2452990p'],
+              md.Inst.SITELLE: ['2384125']}
+    result = None
+    for key, value in lookup.items():
+        for entry in value:
+            if entry in uri:
+                result = key
+                break
+        if result is not None:
+            break
+    if result is None:
+        result = md.Inst.SITELLE  # 1944968p, 2445397p
+        if ('2463796o' in uri or '676000' in uri or '1013337' in uri or
+                '2463857' in uri or '2004B.mask' in uri or '19Bm03.bias' in uri or
+                '718955' in uri or '07Bm06.flat' in uri or '2463854' in uri or
+                '03Am02.dark' in uri or '1000003' in uri or
+                '03Am05.fringe' in uri or '1265044' in uri):
+            result = md.Inst.MEGACAM
+        elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
+              '2281792' in uri or '1681594' in uri or '981337' in uri or
+              'master' in uri or '1706150' in uri or '1758254' in uri or
+              '2462928' in uri or '1151210' in uri or 'hotpix' in uri or
+              '1007126' in uri or 'dark_003s_' in uri):
+            result = md.Inst.WIRCAM
+        elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
+                '1219059' in uri or '1883829c' in uri or
+                '2460602a' in uri or
+                '760296f' in uri or '881162d' in uri or '979339' in uri or
+                '2460503p' in uri):
+            result = md.Inst.ESPADONS
     return result

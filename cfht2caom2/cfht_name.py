@@ -109,11 +109,14 @@ class CFHTName(mc.StorageName):
             self.obs_id = self._file_id[:-1]
         else:
             self.obs_id = self._file_id
+            if self.is_derived_sitelle:
+                self.obs_id = self.obs_id.replace(self._suffix, 'p')
         self._logger = logging.getLogger(__name__)
         self._logger.debug(self)
 
     def __str__(self):
-        return f'obs_id {self.obs_id}, ' \
+        return f'instrument {self.instrument}, ' \
+               f'obs_id {self.obs_id}, ' \
                f'file_id {self.file_id}, ' \
                f'file_name {self.file_name}, ' \
                f'lineage {self.lineage}'
@@ -176,6 +179,11 @@ class CFHTName(mc.StorageName):
         return self._suffix in ['p'] and self._instrument is md.Inst.ESPADONS
 
     @property
+    def is_derived_sitelle(self):
+        return (self._instrument == md.Inst.SITELLE and
+                self._suffix in ['p', 'v', 'z'])
+
+    @property
     def is_simple(self):
         result = False
         if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',
@@ -187,7 +195,8 @@ class CFHTName(mc.StorageName):
     @property
     def simple_by_suffix(self):
         return ((self._suffix in ['p', 's'] and
-                 self._instrument in [md.Inst.MEGACAM, md.Inst.WIRCAM]) or
+                 self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME,
+                                      md.Inst.WIRCAM]) or
                 (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS))
 
     @property
@@ -198,5 +207,6 @@ class CFHTName(mc.StorageName):
     def remove_extensions(name):
         """How to get the file_id from a file_name."""
         # ESPaDOnS files have a .gz extension ;)
+        # SITELLE has hdf5 files
         return name.replace('.fits', '').replace('.fz', '').replace(
-            '.header', '').replace('.gz', '')
+            '.header', '').replace('.gz', '').replace('.hdf5', '')
