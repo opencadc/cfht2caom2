@@ -84,7 +84,9 @@ LOOKUP = {'979339': ['979339i.fits.gz', '979339o.fits.gz'],
           '2281792': ['2281792s.fits.fz', '2281792p.fits.fz',
                       '2281792o.fits.fz', '2281792g.fits.gz'],
           '1151210': ['1151210g.fits.fz', '1151210m.fits.fz',
-                      '1151210w.fits.gz']
+                      '1151210w.fits.gz'],
+          # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
+          '2384125p': ['2384125p.fits.fz', '2384125z.hdf5']
           }
 
 
@@ -148,11 +150,19 @@ def _get_lineage(obs_id):
 
 def _get_local(obs_id):
     result = ''
+    root = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}'
     if '979339' in obs_id:
-        result = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}/979339i.fits ' \
-                 f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}/979339o.fits.header'
+        result = f'{root}/979339i.fits ' \
+                 f'{root}/979339o.fits.header'
+    elif '2384125p' in obs_id:
+        # result = f'{root}/2384125p.fits.header ' \
+        #          f'{root}/2384125v.fits.header' \
+        #          f'{root}/2384125z.hdf5'
+        # result = f'{root}/2384125z.hdf5'
+        result = f'{root}/2384125p.fits.header ' \
+                 f'{root}/2384125z.hdf5'
     else:
         for ii in LOOKUP[obs_id]:
-            result = f'{result} {test_main_app.TEST_DATA_DIR}/{DIR_NAME}/' \
+            result = f'{result} {root}/' \
                      f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
     return result
