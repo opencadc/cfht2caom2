@@ -92,6 +92,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         else:
             subject = mc.define_subject(self._config)
             self._data_client = CadcDataClient(subject)
+        self._logger = logging.getLogger(__name__)
 
     def build(self, entry):
         """
@@ -101,6 +102,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         """
 
         # retrieve the header information, extract the instrument name
+        self._logger.debug(f'Build a StorageName instance for {entry}.')
         if self._config.use_local_files:
             cwd = os.getcwd()
             headers = fits2caom2.get_cadc_headers(f'file://{cwd}/{entry}')
@@ -114,15 +116,18 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
     @staticmethod
     def get_instrument(headers, entry):
-        instrument = headers[0].get('INSTRUME')
-        if instrument is None:
-            instrument = headers[1].get('INSTRUME')
+        if mc.StorageName.is_hdf5(entry):
+            inst = md.Inst.SITELLE
+        else:
+            instrument = headers[0].get('INSTRUME')
             if instrument is None:
+                instrument = headers[1].get('INSTRUME')
+                if instrument is None:
+                    raise mc.CadcException(
+                        f'Could not identify instrument for {entry}.')
+            try:
+                inst = md.Inst(instrument)
+            except ValueError:
                 raise mc.CadcException(
-                    f'Could not identify instrument for {entry}.')
-        try:
-            inst = md.Inst(instrument)
-        except ValueError:
-            raise mc.CadcException(
-                f'Unknown value for instrument {instrument} for {entry}.')
+                    f'Unknown value for instrument {instrument} for {entry}.')
         return inst

@@ -184,6 +184,16 @@ class CFHTName(mc.StorageName):
                 self._suffix in ['p', 'v', 'z'])
 
     @property
+    def is_feasible(self):
+        """
+        Executing parts of the pipeline is not feasible for hdf5 files at this
+        time - make it possible to know whether or not to try for each
+        StorageName instance.
+        :return:
+        """
+        return not mc.StorageName.is_hdf5(self._file_name)
+
+    @property
     def is_simple(self):
         result = False
         if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',

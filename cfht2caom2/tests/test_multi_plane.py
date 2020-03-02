@@ -70,9 +70,8 @@
 import os
 import sys
 
-from caom2.diff import get_differences
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, main_app
+from cfht2caom2 import cfht_name, main_app, metadata
 
 from mock import patch
 import test_main_app
@@ -98,7 +97,10 @@ def pytest_generate_tests(metafunc):
 
 
 @patch('cfht2caom2.main_app._identify_instrument')
-def test_multi_plane(inst_mock, test_name):
+@patch('caom2utils.fits2caom2.CadcDataClient')
+@patch('caom2pipe.astro_composable.get_vo_table')
+def test_multi_plane(svofps_mock, data_client_mock, inst_mock, test_name):
+    metadata.filter_cache.connected = True
     inst_mock.side_effect = test_main_app._identify_inst_mock
     obs_id = test_name
     lineage = _get_lineage(obs_id)
@@ -108,35 +110,29 @@ def test_multi_plane(inst_mock, test_name):
     local = _get_local(test_name)
     plugin = test_main_app.PLUGIN
 
-    with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
-            patch('caom2pipe.astro_composable.get_vo_table') as svofps_mock:
-        def get_file_info(archive, file_id):
-            return {'type': 'application/fits'}
+    if os.path.exists(actual_fqn):
+        os.remove(actual_fqn)
 
-        data_client_mock.return_value.get_file_info.side_effect = get_file_info
-        svofps_mock.side_effect = test_main_app._vo_mock
+    data_client_mock.return_value.get_file_info.side_effect = \
+        test_main_app._get_file_info
+    svofps_mock.side_effect = test_main_app._vo_mock
 
-        if os.path.exists(actual_fqn):
-            os.remove(actual_fqn)
-
-        sys.argv = \
-            (f'{main_app.APPLICATION} --quiet --no_validate --observation '
-             f'{cfht_name.COLLECTION} {test_name} --local {local} '
-             f'--plugin {plugin} --module {plugin} --out {actual_fqn} '
-             f'--lineage {lineage}').split()
-        print(sys.argv)
-        main_app.to_caom2()
-        expected_fqn = '{}/{}/{}.expected.xml'.format(
-            test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
-        actual = mc.read_obs_from_file(actual_fqn)
-        expected = mc.read_obs_from_file(expected_fqn)
-        result = get_differences(expected, actual, 'Observation')
-        if result:
-            msg = 'Differences found in observation {} test name {}\n{}'. \
-                format(expected.observation_id, test_name, '\n'.join(
-                [r for r in result]))
-            raise AssertionError(msg)
-        # assert False  # cause I want to see logging messages
+    # cannot use the --not_connected parameter in this test, because the
+    # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
+    # as well
+    sys.argv = \
+        (f'{main_app.APPLICATION} --quiet --no_validate '
+         f'--observation {cfht_name.COLLECTION} {test_name} --local '
+         f'{local} --plugin {plugin} --module {plugin} --out {actual_fqn} '
+         f'--lineage {lineage}').split()
+    print(sys.argv)
+    main_app.to_caom2()
+    expected_fqn = '{}/{}/{}.expected.xml'.format(
+        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
+    compare_result = mc.compare_observations(actual_fqn, expected_fqn)
+    if compare_result is not None:
+        raise AssertionError(compare_result)
+    # assert False  # cause I want to see logging messages
 
 
 def _get_lineage(obs_id):

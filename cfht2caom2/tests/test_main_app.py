@@ -76,7 +76,6 @@ from mock import patch
 from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
 from cfht2caom2 import metadata as md
-from caom2.diff import get_differences
 from caom2pipe import manage_composable as mc
 
 import os
@@ -110,7 +109,10 @@ def pytest_generate_tests(metafunc):
 
 
 @patch('cfht2caom2.main_app._identify_instrument')
-def test_main_app(inst_mock, test_name):
+@patch('caom2utils.fits2caom2.CadcDataClient')
+@patch('caom2pipe.astro_composable.get_vo_table')
+def test_main_app(vo_mock, data_client_mock, inst_mock, test_name):
+    md.filter_cache.connected = True
     inst_mock.side_effect = _identify_inst_mock
     basename = os.path.basename(test_name)
     instrument = _identify_inst_mock(test_name)
@@ -126,39 +128,36 @@ def test_main_app(inst_mock, test_name):
     if os.path.exists(output_file):
         os.unlink(output_file)
 
-    expected = mc.read_obs_from_file(obs_path)
-
     local = _get_local(basename)
 
-    with patch('caom2utils.fits2caom2.CadcDataClient') as data_client_mock, \
-        patch('caom2pipe.astro_composable.get_vo_table') as vo_mock:
-        def get_file_info(archive, file_id):
-            return {'type': 'application/fits'}
+    data_client_mock.return_value.get_file_info.side_effect = _get_file_info
+    vo_mock.side_effect = _vo_mock
 
-        data_client_mock.return_value.get_file_info.side_effect = get_file_info
-        vo_mock.side_effect = _vo_mock
+    # cannot use the --not_connected parameter in this test, because the
+    # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
+    # as well
+    sys.argv = \
+        (f'{APPLICATION} --no_validate --local {local} '
+         f'--observation {COLLECTION} {cfht_name.obs_id} -o {output_file} '
+         f'--plugin {PLUGIN} --module {PLUGIN} --lineage '
+         f'{_get_lineage(cfht_name)}'
+         ).split()
+    print(sys.argv)
+    try:
+        main_app.to_caom2()
+    except Exception as e:
+        import logging
+        import traceback
+        logging.error(traceback.format_exc())
 
-        sys.argv = \
-            (f'{APPLICATION} --no_validate --local {local} --observation '
-             f'{COLLECTION} {cfht_name.obs_id} -o {output_file} --plugin '
-             f'{PLUGIN} --module {PLUGIN} --lineage {_get_lineage(cfht_name)}'
-             ).split()
-        print(sys.argv)
-        try:
-            main_app.to_caom2()
-        except Exception as e:
-            import logging
-            import traceback
-            logging.error(traceback.format_exc())
-
-    actual = mc.read_obs_from_file(output_file)
-    result = get_differences(expected, actual, 'Observation')
-    if result:
-        text = '\n'.join([r for r in result])
-        msg = f'Differences found in observation {expected.observation_id} ' \
-              f'test name {test_name}\n{text}'
-        raise AssertionError(msg)
+    compare_result = mc.compare_observations(output_file, obs_path)
+    if compare_result is not None:
+        raise AssertionError(compare_result)
     # assert False  # cause I want to see logging messages
+
+
+def _get_file_info(archive, file_id):
+    return {'type': 'application/fits'}
 
 
 def _get_lineage(cfht_name):

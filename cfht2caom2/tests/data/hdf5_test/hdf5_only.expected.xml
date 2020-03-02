@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="14f34b1b-9857-44b5-a005-fc53c2917747">
+  <caom2:collection>CFHT</caom2:collection>
+  <caom2:observationID>2384125p</caom2:observationID>
+  <caom2:algorithm>
+    <caom2:name>scan</caom2:name>
+  </caom2:algorithm>
+  <caom2:planes>
+    <caom2:plane caom2:id="2fe684d6-69c7-4563-b437-8075599ac404">
+      <caom2:productID>2384125z</caom2:productID>
+      <caom2:dataProductType>cube</caom2:dataProductType>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="a3c93072-da43-47c1-b810-aa9f42b5f581">
+          <caom2:uri>ad:CFHT/2384125z.hdf5</caom2:uri>
+          <caom2:productType>science</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>application/x-hdf</caom2:contentType>
+          <caom2:contentLength>105</caom2:contentLength>
+          <caom2:contentChecksum>md5:fd64ff2460857e840daa79e663115d4b</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+  </caom2:planes>
+</caom2:Observation>

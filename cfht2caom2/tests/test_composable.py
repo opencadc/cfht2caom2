@@ -68,6 +68,7 @@
 #
 
 import os
+import shutil
 import sys
 
 from astropy.table import Table
@@ -147,6 +148,77 @@ def test_run_state(run_mock, tap_mock, data_client_mock,
     assert test_storage.lineage == f'{test_obs_id}p/ad:CFHT/{test_f_name}', \
         'wrong lineage'
     assert test_storage.external_urls is None, 'wrong external urls'
+
+
+def test_run_by_builder_hdf5_first():
+    # create a new observation with an hdf5 file, just using scrape
+    # to make sure the observation is writable to an ams service
+    #
+    # also make sure the SCRAPE task works, so ensure
+    # there's no need for credentials, or CADC library clients
+
+    test_obs_id = '2384125p'
+    test_dir = f'{test_main_app.TEST_DATA_DIR}/hdf5_test'
+    fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
+    hdf5_fqn = f'{test_dir}/2384125z.hdf5'
+    actual_fqn = f'{test_dir}/{test_obs_id}.fits.xml'
+    expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
+
+    # clean up existing observation
+    if os.path.exists(actual_fqn):
+        os.unlink(actual_fqn)
+    if os.path.exists(fits_fqn):
+        os.unlink(fits_fqn)
+
+    # make sure expected files are present
+    if not os.path.exists(hdf5_fqn):
+        shutil.copy(f'{test_main_app.TEST_DATA_DIR}/multi_plane/2384125z.hdf5',
+                    hdf5_fqn)
+
+    _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
+
+
+def test_run_by_builder_hdf5_added_to_existing():
+    # add to an existing observation with an hdf5 file, just using scrape
+    # to make sure the observation is writable to an ams service, and the
+    # 'p' metadata gets duplicated correctly
+
+    test_obs_id = '2384125p'
+    test_dir = f'{test_main_app.TEST_DATA_DIR}/hdf5_test'
+    hdf5_fqn = f'{test_dir}/2384125z.hdf5'
+    fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
+    actual_fqn = f'{test_dir}/{test_obs_id}.fits.xml'
+    expected_fqn = f'{test_dir}/all.expected.xml'
+    expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
+
+    # make sure expected files are present
+    if not os.path.exists(actual_fqn):
+        shutil.copy(expected_hdf5_only_fqn, actual_fqn)
+    if not os.path.exists(fits_fqn):
+        shutil.copy(f'{test_main_app.TEST_DATA_DIR}/multi_plane/'
+                    f'{test_obs_id}.fits.header', fits_fqn)
+
+    # clean up unexpected files
+    if os.path.exists(hdf5_fqn):
+        os.unlink(hdf5_fqn)
+
+    _common_execution(test_dir, actual_fqn, expected_fqn)
+
+
+def _common_execution(test_dir, actual_fqn, expected_fqn):
+    # set up mocks
+    getcwd_orig = os.getcwd
+    os.getcwd = Mock(return_value=test_dir)
+    try:
+        # execution
+        test_result = composable._run_by_builder()
+        assert test_result == 0, 'wrong result'
+    finally:
+        os.getcwd = getcwd_orig
+    assert os.path.exists(actual_fqn), f'expect {actual_fqn}'
+    compare_result = mc.compare_observations(actual_fqn, expected_fqn)
+    if compare_result is not None:
+        raise AssertionError(compare_result)
 
 
 def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,

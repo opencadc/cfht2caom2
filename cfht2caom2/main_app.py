@@ -1424,11 +1424,12 @@ def update(observation, **kwargs):
                             _update_position_sitelle(chunk, headers[idx],
                                                      observation.observation_id)
 
-                        if (plane.product_id[-1] == 'p' and
-                                chunk.position.axis.function is None):
-                            _update_position_function_sitelle(
-                                chunk, headers[idx],
-                                observation.observation_id, idx)
+                        if plane.product_id[-1] == 'p':
+                            if chunk.position.axis.function is None:
+                                _update_position_function_sitelle(
+                                    chunk, headers[idx],
+                                    observation.observation_id, idx)
+                            _update_sitelle_plane(observation, uri)
 
                     elif instrument is md.Inst.WIRCAM:
                         if ((chunk.time is not None and
@@ -1815,26 +1816,41 @@ def _update_sitelle_plane(observation, uri):
     # if the 'p' plane exists, the observation id is the same as the plane id,
     # so copy the metadata to the 'z' plane
     z_plane_key = observation.observation_id.replace('p', 'z')
-    if (observation.observation_id in observation.planes.keys() and
-            z_plane_key in observation.planes.keys()):
-        p_plane = observation.planes[observation.observation_id]
-        p_artifact_key = uri.replace('z', 'p').replace('.hdf5', '.fits.fz')
-        if p_artifact_key not in p_plane.artifacts.keys():
-            p_artifact_key = uri.replace('z', 'p').replace('.hdf5', '.fits')
-            if p_artifact_key not in p_plane.artifacts.keys():
-                p_artifact_key = uri.replace('z', 'p').replace(
-                    '.hdf5', '.fits.gz')
-                if p_artifact_key not in p_plane.artifacts.keys():
-                    raise mc.CadcException(
-                        f'Unexpected naming pattern for artifact URI '
-                        f'{p_artifact_key} in {observation.observation_id}.')
+    temp_z_uri = uri.replace('p', 'z')
+    z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
+
+    # fix the plane-level information for the z plane
+    if z_plane_key in observation.planes.keys():
         z_plane = observation.planes[z_plane_key]
-        z_plane.artifacts[uri].parts = p_plane.artifacts[p_artifact_key].parts
-        z_plane.provenance = p_plane.provenance
-        z_plane.calibration_level = p_plane.calibration_level
-        z_plane.data_product_type = p_plane.data_product_type
-        z_plane.data_release = p_plane.data_release
-        z_plane.meta_release = p_plane.meta_release
+        z_plane.data_product_type = DataProductType.CUBE
+        z_plane.calibration_level = CalibrationLevel.CALIBRATED
+
+        if observation.observation_id in observation.planes.keys():
+            # replicate the plane-level information from the p plane to the
+            # z plane
+            p_plane = observation.planes[observation.observation_id]
+            p_artifact_key = uri.replace('z', 'p').replace('.hdf5', '.fits.fz')
+            if p_artifact_key not in p_plane.artifacts.keys():
+                p_artifact_key = uri.replace(
+                    'z', 'p').replace('.hdf5', '.fits')
+                if p_artifact_key not in p_plane.artifacts.keys():
+                    p_artifact_key = uri.replace('z', 'p').replace(
+                        '.hdf5', '.fits.gz')
+                    if p_artifact_key not in p_plane.artifacts.keys():
+                        p_artifact_key = uri.replace('z', 'p').replace(
+                            '.hdf5', '.fits.header')
+                        if p_artifact_key not in p_plane.artifacts.keys():
+                            raise mc.CadcException(
+                                f'Unexpected extension name pattern for '
+                                f'artifact URI {p_artifact_key} in '
+                                f'{observation.observation_id}.')
+            z_plane.artifacts[z_artifact_key].parts = \
+                p_plane.artifacts[p_artifact_key].parts
+            z_plane.provenance = p_plane.provenance
+            z_plane.calibration_level = p_plane.calibration_level
+            z_plane.data_product_type = p_plane.data_product_type
+            z_plane.data_release = p_plane.data_release
+            z_plane.meta_release = p_plane.meta_release
 
     logging.debug('End _update_sitelle_plane')
 
