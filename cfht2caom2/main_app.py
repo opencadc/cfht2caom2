@@ -975,6 +975,9 @@ def accumulate_bp(bp, uri, instrument):
     bp.configure_observable_axis(6)
 
     bp.set('Observation.intent', 'get_obs_intent(header)')
+
+    meta_producer = mc.get_version(APPLICATION)
+    bp.set('Observation.metaProducer', meta_producer)
     # add most preferred attribute last
     # order set from:
     # caom2IngestWircam.py, l777
@@ -1038,15 +1041,18 @@ def accumulate_bp(bp, uri, instrument):
 
     bp.set('Plane.provenance.lastExecuted',
            'get_provenance_last_executed(header)')
+    bp.set('Plane.metaProducer', meta_producer)
     bp.set_default('Plane.provenance.producer', 'CFHT')
     bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
     bp.set('Plane.provenance.version', 'get_provenance_version(header)')
 
+    bp.set('Artifact.metaProducer', meta_producer)
     bp.set('Artifact.productType', 'get_product_type(params)')
     bp.set('Artifact.releaseType', 'data')
 
+    bp.set('Chunk.metaProducer', meta_producer)
     # hard-coded values from:
     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
@@ -1824,6 +1830,9 @@ def _update_sitelle_plane(observation, uri):
         z_plane = observation.planes[z_plane_key]
         z_plane.data_product_type = DataProductType.CUBE
         z_plane.calibration_level = CalibrationLevel.CALIBRATED
+        z_plane.meta_producer = mc.get_version(APPLICATION)
+        observation.meta_producer = z_plane.meta_producer
+        z_plane.artifacts[z_artifact_key].meta_producer = z_plane.meta_producer
 
         if observation.observation_id in observation.planes.keys():
             # replicate the plane-level information from the p plane to the
@@ -1846,10 +1855,13 @@ def _update_sitelle_plane(observation, uri):
                                 f'{observation.observation_id}.')
             z_plane.artifacts[z_artifact_key].parts = \
                 p_plane.artifacts[p_artifact_key].parts
+            z_plane.artifacts[z_artifact_key].meta_producer = \
+                p_plane.artifacts[p_artifact_key].meta_producer
             z_plane.provenance = p_plane.provenance
             z_plane.calibration_level = p_plane.calibration_level
             z_plane.data_product_type = p_plane.data_product_type
             z_plane.data_release = p_plane.data_release
+            z_plane.meta_producer = p_plane.meta_producer
             z_plane.meta_release = p_plane.meta_release
 
     logging.debug('End _update_sitelle_plane')
