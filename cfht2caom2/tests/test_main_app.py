@@ -73,6 +73,7 @@ from astropy.io.votable import parse_single_table
 
 from mock import patch
 
+from caom2.obs_reader_writer import CAOM24_NAMESPACE
 from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
 from cfht2caom2 import metadata as md
@@ -85,6 +86,7 @@ THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEST_DATA_DIR = os.path.join(THIS_DIR, 'data')
 SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
 PLUGIN = os.path.join(os.path.dirname(THIS_DIR), 'main_app.py')
+TEST_FILES_DIR = '/test_files'
 
 LOOKUP = {'key': ['fileid1', 'fileid2']}
 
@@ -137,9 +139,9 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, test_name):
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
     # as well
     sys.argv = \
-        (f'{APPLICATION} --no_validate --local {local} '
-         f'--observation {COLLECTION} {cfht_name.obs_id} -o {output_file} '
-         f'--plugin {PLUGIN} --module {PLUGIN} --lineage '
+        (f'{APPLICATION} --no_validate --caom_namespace {CAOM24_NAMESPACE} '
+         f'--local {local} --observation {COLLECTION} {cfht_name.obs_id} -o '
+         f'{output_file} --plugin {PLUGIN} --module {PLUGIN} --lineage '
          f'{_get_lineage(cfht_name)}'
          ).split()
     print(sys.argv)
@@ -168,7 +170,7 @@ def _get_lineage(cfht_name):
 
 def _get_local(test_name):
     if '2460503' in test_name:
-        result = f'{SINGLE_PLANE_DIR}/2460503p.fits'
+        result = f'{TEST_FILES_DIR}/2460503p.fits'
     else:
         result = f'{SINGLE_PLANE_DIR}/{test_name}'
     return result

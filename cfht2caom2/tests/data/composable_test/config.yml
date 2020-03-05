@@ -82,5 +82,7 @@ task_types:
   - ingest
 features:
   supports_composite: False
+  supports_latest_caom: True
+  supports_multiple_files: True
   use_file_names: True
   use_urls: False

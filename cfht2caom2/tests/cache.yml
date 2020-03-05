@@ -1,4 +1,7 @@
 energy_defaults:
+  Brackett_gamma:
+    cw: 21720.8514077
+    fwhm: 297.792347914
   C1:
     cw: null
     fwhm: null
@@ -11,9 +14,27 @@ energy_defaults:
   C4:
     cw: null
     fwhm: null
+  CO:
+    cw: 23201.083661629
+    fwhm: 398.6740226312
   FakeBlank:
-    cw: 17000.0
-    fwhm: 14000.0
+    cw: null
+    fwhm: null
+  H:
+    cw: 16308.4244171
+    fwhm: 2911.26276156
+  H2:
+    cw: 21301.6814833
+    fwhm: 294.535926397
+  J:
+    cw: 12540.5396521
+    fwhm: 1587.5275506
+  Ks:
+    cw: 21500.3675632
+    fwhm: 3270.46092509
+  LowOH2:
+    cw: 11892.6829653
+    fwhm: 113.365930599
   MegaPrime.None:
     cw: 6200.0
     fwhm: 6000.0
@@ -38,6 +59,18 @@ energy_defaults:
   WIRCam.None:
     cw: 17000.0
     fwhm: 14000.0
+  Y:
+    cw: 10253.5056354
+    fwhm: 1105.32902776
+  r:
+    cw: 6281.8880318809
+    fwhm: 1219.3797137385
+  r_sdss:
+    cw: 6397.8502250119
+    fwhm: 1473.6290523795
+  z:
+    cw: 10134.051008786
+    fwhm: 3731.8979824276
 filter_repair_lookup:
   BrG: Brackett_gamma
   CN.MP7803: CN
@@ -64,5 +97,2171 @@ filter_repair_lookup:
   z.MP9801: z
   z.MP9901: z_sdss
 project_titles:
-  09BC26: 'The Next Generation Virgo Survey &#45;&#45; Infrared: K_s-Band Observations
-    of the Central 4 deg^2'
+  09BC26: 'The Next Generation Virgo Survey -- Infrared: K_s-Band Observations of
+    the Central 4 deg^2'
+  09BP03: NGVS
+  10AB05: 'Deep imaging of edge-on galaxies in nearby clusters: probing environmental
+    effects on thick discs and stellar halos.'
+  10AB07: Lensing properties of fossil clusters
+  10AB99: Lensing properties of fossil clusters
+  10AC02: 'The M87 PNe Survey: Testing Galaxy Formation in Clusters'
+  10AC03: Searching for Evidence of White Dwarf Kicks
+  10AC06: A MegaCam Survey of Substructures in the Galactic Halo
+  10AC10: 'The Next Generation Virgo Survey -- Infrared: Ks-Band Observations of the
+    Central 4 deg square'
+  10AC11: A comprehensive study of dark matter and baryon stripping in galaxy clusters
+  10AC21: 'Tacking the NGVS trans-neptunians: measuring the migration of Neptune.'
+  10AC27: Does the delta Sct star rho Puppis show solar-like oscillations, as predicted?
+  10AC28: Spectropolarimetry of the mysterious eclipsing binary system Epsilon Aurigae
+    during the first half of the total eclipse
+  10AC30: Multi-wavelength near-infrared thermal emission from the hottest of the
+    hot Jupiters
+  10AC34: Understanding Galaxy Evolution in Dense Cluster Environments
+  10AC35: Understanding Galaxy Evolution in Dense Cluster Environments
+  10AC36: Galaxy Evolution in Rich Clusters at z > 1
+  10AC37: Cartography of the magnetic fields and chemical spots of Ap stars
+  10AC98: Galaxy Evolution in Rich Clusters at z > 1
+  10AC99: Searching for Evidence of White Dwarf Kicks
+  10AF01: Magnified Weak Lensing Tomography With Massive Rich Clusters of Galaxies
+    (II)
+  10AF02: 'Ophiuchus: probably the richest and brightest nearby cluster of galaxies'
+  10AF03: 'The Next Generation Virgo Survey -- Infrared: Ks-Band Observations of the
+    Central 4 deg square'
+  10AF05: 'Massive Galaxies at High Redshift: Deep H-band Imaging of the SERVS fields'
+  10AF06: Measuring the shape of dark matter halos with stellar streams
+  10AF07: 'Deep color-magnitude relations in =0.25 clusters: probing the formation
+    of dwarf galaxies'
+  10AF08: 'Completion of Program: Galaxy Populations in Large Quasar Groups at 0.8'
+  10AF09: Spectroscopic Characterization of Kepler Asteroseismic Targets - open cluster
+    targets
+  10AF10: Searching for extratidal structures in the outskirts of the outer halo globular
+    clusters
+  10AF11: The Magnetic Sun in Time
+  10AF12: Searching for ultracool brown dwarfs - a WIRCam extension to the Canada-France
+    Brown Dwarfs Survey
+  10AF13: Photometric study of the extreme trans-neptunian 2009 MS9
+  10AF14: Probing the dark matter distribution and the mass-to-light ratio of galaxy
+    groups with the CFHTLS Strong Lensing Legacy Survey (SL2S)
+  10AF15: 'Two birds with one stone: Identifying two galaxy overdensities surrounding
+    two submillimeter galaxies at z~2.3 with one observation'
+  10AF16: 'Search for a magnetic field on Sirius : towards a new class of magnetic
+    A-type stars'
+  10AF17: 'Diffuse H-alpha Emission in the M81/M82 Group: More Caps, Nature of Outflows,
+    Intergroup Star-formation.'
+  10AF18: 'To the core: a search for magnetic fields in hot subdwarfs'
+  10AF20: Probing supply paths from the inner Oort cloud
+  10AF25: 'Follow-up of the exoplanet program of the CoRoT satellite : confirmation
+    of planetary transits and identification of false positive.'
+  10AF96: Probing supply paths from the inner Oort cloud
+  10AF97: Spectroscopic Characterization of Kepler Asteroseismic Targets - field stars
+  10AF99: The Magnetic Sun in Time
+  10AH06: 'Understanding transition disks: followup SMA imaging and radial velocity
+    survey'
+  10AH08: ''
+  10AH10: CFHT/WIRCam imaging of the AKARI NEP deep field
+  10AH15: Rapid follow up of important solar system discoveries from Pan-STARRS
+  10AH19: Follow up astrometry of near Earth objects and interesting WISE discoveries
+  10AH23: Searching for Z>>4 ultraluminous dusty galaxies
+  10AH31: Dynamical masses of brown dwarfs and low mass stars
+  10AH33: ''
+  10AH37: Structured fast winds of Planetary Nebulae stars
+  10AH97: ''
+  10AH98: ''
+  10AH99: ''
+  10AO01: 'Creating astrometric and photometric calibration fields for GAIA II '
+  10AO02: Deep JHKs-band imaging of the gravitational lensing cluster Abell 2218
+  10AP11: MaPP
+  10AP12: MaPP
+  10AP13: MiMeS
+  10AP14: MiMeS
+  10AT01: Cepheids and Long Period Variables in NGC 4258
+  10AT03: Deep J-Band Imaging of the Strong Lensing Cluster A2390
+  10AT04: 'WIRCAM Imaging in Extended GOODS-N: Searching for the Most Luminous Galaxies
+    at z > 7'
+  10AT06: Tacking the NGVS trans-Neptunians, measuring the migration of Neptune.
+  10AT07: Identication of T Dwarfs with Methane Imaging
+  10AT08: Constraining the Galaxy Population Evolution in Clusters of Galaxies
+  10AT09: Joint CFHT/HST/Chandra Observations of the Galactic Globular Clusters Terzan
+    3 and NGC 6535
+  10AT18: Optical Monitoring of Gamma-ray Burst afterglows
+  10AT19: ''
+  10BB01: Chemical abundances of hot Post-AGB Stars and distant OB supergiants
+  10BB02: 'Accretion signature in massive YSOs: H2 outflows'
+  10BB05: HEAVY ELEMENTS IN CARBON ENHANCED METAL POOR STARS
+  10BB07: Weak lensing mass reconstruction of the supercluster of galaxies SC0028-0001
+  10BB08: Spectropolarimetry probing the structure and dynamics of a circumstellar
+    decretion disk
+  10BB09: 'CFHT/Megacam High-Resolution Imaging of the SDSS Stripe 82: Measuring the
+    Mass Distribution of Structures from Clusters to Galaxy Scale'
+  10BB97: Weak lensing mass reconstruction of the supercluster of galaxies SC0028-0001
+  10BB98: 'Accretion signature in massive YSOs: H2 outflows'
+  10BB99: HEAVY ELEMENTS IN CARBON ENHANCED METAL POOR STARS
+  10BC01: Imaging of highly luminous post-starburst galaxies
+  10BC02: The Recent Star Forming History of the M31 Disk
+  10BC03: Variability of weak emission lines in chemically peculiar B type stars
+  10BC04: Great balls of fire! Monitoring the magnetic fields of intermediate-mass
+    red giant stars
+  10BC05: Monitoring the magnetic variability and topology of late-type supergiants
+  10BC06: A survey of the magnetic field properties of late-type supergiants
+  10BC07: Investigation of the magnetic field structure of HD21699
+  10BC08: Evolution of Chemical Abundance Distributions for Cluster Ap Stars
+  10BC09: The magnetic topology of tau Sco analogues
+  10BC10: 'Kepler Mission: Physical Characteristics of the RR Lyrae Stars derived
+    from ESPaDOnS High-Dispersion Spectra'
+  10BC11: Are the emission lines in cool core galaxy clusters polarized?
+  10BC12: Unveiling the Nature of FS CMa Type Stars
+  10BC13: 'Photometric Monitoring of the Inbound Oort Comet 2009 MS9 '
+  10BC14: Understanding the Galaxy-Halo Connection at z > 1
+  10BC15: WR 2 -- A gamma-ray burst progenitor in our backyard?
+  10BC16: 'M33: Galaxy substructure and evolutionary history through the globular
+    cluster system'
+  10BC18: 'Understanding Galaxy Evolution in Dense Cluster Environments with Megacam '
+  10BC20: Spectropolarimetry of the mysterious Eps Aur during the second half of the
+    total eclipse
+  10BC21: 'Encountering New Horizons: Searching for targets.'
+  10BC22: 'CFHT/Megacam High-Resolution Imaging of the SDSS Stripe 82: Measuring the
+    Mass Distribution of Structures from Clusters to Galaxy Scale'
+  10BC23: A Panchromatic Survey of the Andromeda Galaxy
+  10BC25: Parallax and methane spectral typing of late T dwarfs discovered in the
+    Canada-France Brown Dwarf Survey - InfraRed
+  10BC26: The First Broadband Transmission Spectrum of a Super-Earth
+  10BC95: 'M33: Galaxy substructure and evolutionary history through the globular
+    cluster system'
+  10BC96: 'Multi-wavelength near-infrared thermal emission from the hottest of the
+    hot Jupiters '
+  10BC97: A Panchromatic Survey of the Andromeda Galaxy
+  10BC99: Understanding Galaxy Evolution in Dense Cluster Environments with WIRCam
+  10BF02: 'J band imaging of the FADAS survey: constraining the Dark Energy equation
+    of state and cluster evolution'
+  10BF03: NGC 1232 as a probe for the structure of our Galaxy
+  10BF04: 'Follow-up of the exoplanet program of the CoRoT satellite : confirmation
+    of planetary transits and identification of false positives.'
+  10BF06: A new view of Lyman-alpha and Lyman-continuum escape in high-redshift galaxies
+  10BF08: 'The Earth observed as an extrasolar transiting planet: Dec. 21st 2010 Moon
+    eclipse to identify Earth''s atmospheric biomarkers and atmosphere thickness'
+  10BF10: 'Massive Galaxies at High Redshift: Deep H-band Imaging of the SERVS fields'
+  10BF11: 'MATLAS: investigating the nature of fast and slow rotating early-type galaxies
+    with fine structures'
+  10BF12: Synoptic Monitoring of YSOs with CFHT and Spitzer
+  10BF13: 'MONITOR : Young low-mass eclipsing binaries in h & X Per'
+  10BF14: Characterising the fossil substructure in the Andromeda and Triangulum galaxies
+  10BF15: Search for signatures of the spectacular 17P/Holmes Megaburst
+  10BF16: 'Photometric redshift of GRB fields: completing GROND observations.'
+  10BF17: 'A massive cluster in the Cygnus X region: triggered star formation on large
+    scales'
+  10BF18: 'Modelling non-solar coronae using ZDI magnetograms and VLBA imaging: close
+    binaries'
+  10BF19: Photometric Monitoring of the Inbound Oort Comet 2009 MS9
+  10BF20: Studying the peculiar host galaxies of GRB 020127 and GRB 030115
+  10BF22: Witnessing the hierarchical formation of galaxies
+  10BF23: 'CFHT/Megacam High-Resolution Imaging of the SDSS Stripe 82: Measuring the
+    Mass Distribution of Structures from Clusters to Galaxy Scale'
+  10BF24: 'Magnetic field on Sirius : exploration of a new class of magnetic stars
+    among intermediate mass stars'
+  10BF26: Parallax and methane spectral typing of late T dwarfs discovered in the
+    Canada-France Brown Dwarf Survey - InfraRed
+  10BF98: 'Photometric redshift of GRB fields: completing GROND observations.'
+  10BF99: 'Modelling non-solar coronae using ZDI magnetograms and VLBA imaging: close
+    binaries'
+  10BH08: 'Red Sequence and Luminous IR Galaxies in High-z Clusters 10BH17: Extreme
+    Brown Dwarfs'
+  10BH19: Connections between NEOs and meteoroid streams
+  10BH29: Properties of extremely faint X-ray sources in the 4 Ms Chandra Image
+  10BH31: IR ux suppression in cool halo white dwarfs
+  10BH34: Rapid followup of important solar system discoveries from Pan-STARRS
+  10BH38: Mapping dark and luminous matter in massive galaxy clusters at z > 0.3
+  10BH41: Follow-up Astrometry of Near-Earth Objects and Interesting WISE Discoveries
+  10BH48: 'Understanding transition disks: second-epoch radial velocity observations'
+  10BH54: na
+  10BH90: Physical properties of large bodies in the outer solar system
+  10BH91: 'Understanding transition disks: second-epoch radial velocity observations'
+  10BH92: Properties of extremely faint X-ray sources in the 4 Ms Chandra Image
+  10BH93: Properties of extremely faint X-ray sources in the 4 Ms Chandra Image
+  10BH94: Properties of extremely faint X-ray sources in the 4 Ms Chandra Image
+  10BH95: Extreme brown dwarfs
+  10BH96: Search for fragments of 2008 TC3
+  10BH97: 'Understanding transition disks: second-epoch radial velocity observations'
+  10BP01: PAndAS
+  10BP02: PAndAS
+  10BP03: NGVS
+  10BP11: MaPP
+  10BP12: MaPP
+  10BP13: MiMeS
+  10BP14: MiMeS
+  10BP21: 'Thermal Emission of Transiting Exoplanets (TETrEs): Probing the Diversity
+    of Hot Jupiter Atmospheres with Multi-Wavelength Precision Photometry'
+  10BP22: Searching Z~7 quasars with WIRCam in the CFHT-LS Wide fields
+  10BQ01: ''
+  10BQ02: ''
+  10BQ03: ''
+  10BQ04: ''
+  10BQ05: ''
+  10BQ06: ''
+  10BQ07: ''
+  10BQ08: ''
+  10BQ09: ''
+  10BQ10: ''
+  10BQ11: ''
+  10BQ12: ''
+  10BQ13: ''
+  10BQ14: ''
+  10BT01: Ks-Band Legacy Survey in the Extended Chandra Deep Field-South
+  10BT02: Localization of the ultraluminous X-ray source XMMU J132218.3-164247
+  10BT03: Mapping the magnetic field topology of 2E 4498 and Gl890
+  10BT04: Tracking the TNOs in Rho Oph region
+  10BT05: Monitoring Long-Term Variability of Active T Tauri Stars
+  10BT07: Identification of T Dwarfs in the Rho Ophiuchus Star-Forming Region with
+    Methane Imaging
+  10BT08: Optical Constraints on z~7 QSO Candidates Discovered in Infrared Medium-deep
+    Survey
+  10BT12: Unveiling a site for GRBs and surrounding associated cluster environment
+  10BT99: Ks-Band Legacy Survey in the Extended Chandra Deep Field-South
+  11AB01: 'Neutron-capture elements in HD140283: r- or s-process?'
+  11AB02: HEAVY ELEMENTS IN CARBON ENHANCED METAL POOR STARS
+  11AB03: 'Accretion signature in massive YSOs: H2 outflows'
+  11AB04: Spectropolarimetry of Herbig Ae/Be stars
+  11AB05: 'The Magnetic Sun in time: Investigating the sun''s magnetic history through
+    spectropolarimetry'
+  11AB06: The magnetic field for late-type giants across the coronal dividing line
+  11AB07: Spectropolarimetry probing the structure and dynamics of a circumstellar
+    decretion disk
+  11AB99: The magnetic field for late-type giants across the coronal dividing line
+  11AC02: 'AW UMa: The crucial object for the contact binary model'
+  11AC04: Signatures of rocky planets in the atmospheres of planet-hosting stars
+  11AC05: Galaxy Evolution in Rich Clusters at z > 1
+  11AC07: The onset of a BalQSO phase in the EUV depleted quasar Ton 34
+  11AC08: The SMBH/Globular Cluster Connection in Galaxies
+  11AC09: The Golden Standard for Star Formation Rate Indicators
+  11AC10: Great balls of fire! Monitoring the magnetic fields of intermediate-mass
+    red giant stars
+  11AC12: The Herschel ATLAS Cosmological Fields
+  11AC13: Age-Dating of Low-Mass Candidate members of Nearby Young Kinematic Groups
+  11AC15: End-of-eclipse spectropolarimetric observations of the mysterious Eps Aur
+  11AC17: Monitoring the magnetic variability and topology of late-type supergiants
+  11AC18: A survey of the magnetic field properties of late-type supergiants
+  11AC20: Photometric Monitoring of the Inbound Oort Comet 2009 MS9
+  11AC21: Understanding Galaxy Evolution in Dense Cluster Environments with Megacam
+  11AC22: Tightening the constraints on the z = 7.7 Luminosity function of Lyalpha
+    emitters
+  11AC25: Refining the Broadband Spectrum of the Super-Earth GJ 1214b
+  11AC26: Is a Galaxy's Nova Rate Correlated with its Globular Cluster Population?
+  11AC27: A Direct Test of Brown Dwarf Models - Measuring the Secondary Eclipse of
+    a Newly-Discovered Eclipsing Brown Dwarf
+  11AC28: Large scale  structures around distant galaxy clusters
+  11AC29: Searching for Magnetic fields in the central stars of Planetary Nebulae
+  11AC30: 'Encountering New Horizons: Searching for targets.'
+  11AC33: Scattered Light Echoes from the Crab Supernova
+  11AC95: Large scale  structures around distant galaxy clusters
+  11AC96: Understanding Galaxy Evolution in Dense Cluster Environments with Megacam
+  11AC97: Tightening the constraints on the z = 7.7 Luminosity function of Lyalpha
+    emitters
+  11AC98: The Herschel ATLAS Cosmological Fields
+  11AC99: Scattered Light Echoes from the Crab Supernova
+  11AF02: 'J and z'' band imaging for the DAFT/FADA survey: constraining the Dark
+    Energy equation of state and cluster evolution'
+  11AF03: 'Mercury''s exosphere: spatial distribution of the Na/K ratio'
+  11AF04: A self-magnetic-field generation in the plasma of radiative shock wave of
+    pulsating stars to explain the polarization of hydrogen lines
+  11AF05: 'Follow-up of the exoplanet program of the CoRoT satellite : confirmation
+    of planetary transits  and identification of false positives. '
+  11AF06: 'MATLAS: investigating the origin of the kinematically decoupled components
+    in field early-type galaxies using fine structures'
+  11AF08: Preparing CFHTLS Wide for a redshift survey of ~20000 z~3 galaxies.
+  11AF09: Galactic archaeology of halo streams
+  11AF10: Tightening the constraints on the z = 7.7 Luminosity Function of Lyalpha
+    emitters
+  11AF12: ' The magnetic field of Sirius : exploration of a new class of magnetic
+    stars among intermediate-mass stars'
+  11AF13: Large scale  structures around distant galaxy clusters
+  11AF14: Unveiling the role of major cluster mergers on star formation in A2163
+  11AF15: Photometric Monitoring of the Inbound Oort Comet 2009 MS9
+  11AF16: 'Encountering New Horizons: Searching for targets.'
+  11AF17: NIR line imaging of optically obscured SNR shells emitting gamma-rays
+  11AF19: A multi-wavelength view of the star-formation history and galaxy evolution
+    in the HerMES Lockman and FLS fields
+  11AF97: 'J and z'' band imaging for the DAFT/FADA survey: constraining the Dark
+    Energy equation of state and cluster evolution'
+  11AF98: Large scale  structures around distant galaxy clusters
+  11AF99: Preparing CFHTLS Wide for a redshift survey of ~20000 z~3 galaxies.
+  11AH03: Deep optical imaging of the AKARI NEP deep field.
+  11AH06: Red Sequence and Luminous IR Galaxies in High-z Clusters
+  11AH11: Census of Planets around Nearby Late K and Early M Dwarf Stars
+  11AH14: Observations of Near-Earth Objects
+  11AH17: Connections between NEOs and meteoroid streams
+  11AH26: Third-epoch CFHT spectroscopy of transition objects in Perseus and Taurus-Auriga
+  11AH28: Pan-STARRS Main Belt Comet followup in MegaCam or GMOS queue mode
+  11AH31: Rapid followup of important solar system discoveries from Pan-STARRS
+  11AH36: Surface Properties of Blue and Neutral Trans-Neptunian Objects with the
+    UH 2.2-m and CFHT
+  11AH37: Infrared Parallaxes of Extreme Brown Dwarfs
+  11AH95: Rapid followup of solar system discoveries from the Pan-STARRS 1 telescope
+  11AH96: 'A Herschel Survey of Weak-Line T Tauri Star Disks: ancillary data'
+  11AH97: Finding Kuiper Belt Targets for the New Horizons Spacecraft
+  11AH98: Infrared Parallaxes of Extreme Brown Dwarfs
+  11AH99: Surface Properties of Blue and Neutral Trans-Neptunian Objects with the
+    UH 2.2-m and CFHT
+  11AP03: NGVS
+  11AP11: MaPP
+  11AP12: MaPP
+  11AP13: MiMeS
+  11AP14: MiMeS
+  11AP22: CFHQSIR z~7 quasars in CFHTLS fields
+  11AT01: Detecting the photoevaporation evidence in a homologously depleted transition
+    circumstellar disk
+  11AT02: Cosmic explosion - the Pan-STARRS transient follow-ups
+  11AT03: Chemically Testing A Possible Nearby Sagittarius Tidal Structure
+  11AT04: Calibrating Cluster Mass-Observable Relations at z=0.4-0.7
+  11AT06: WIRCAM H-band Survey in the Extended GOODS-N Field
+  11AT99: Calibrating Cluster Mass-Observable Relations at z=0.4-0.8
+  11BB01: 'Stellar dynamos on the fastest regimes: dwarf stars on close binaries'
+  11BB02: Galaxy Evolution around the XLSSC005a+b Clusters
+  11BB04: Follow-up of the Triple Spectroscopic System HD208905
+  11BB05: Spectropolarimetry of Herbig Ae/Be stars
+  11BB06: 'Accretion signature in massive YSOs: H2 outflows'
+  11BB08: 'WISER: the WIRCAM SDSS Equatorial Region Survey for the title'
+  11BC01: The Golden Standard for Star Formation Rate Indicators
+  11BC02: 'Looking for peculiarities of HD213597: a bright early-type star with a
+    sub-stellar companion'
+  11BC03: Imaging the Double Galaxy Cluster Abell 2465
+  11BC04: Confirming the nature of high-redshift XMM-LSS galaxy clusters with CFHT/WIRCAM
+  11BC05: Signatures of rocky planets in the atmospheres of the planet-hosting star
+    Kepler-11
+  11BC08: Age-Dating of Low-Mass Candidate members of Nearby Young Kinematic Groups
+  11BC10: Measuring the extent of stellar haloes at exceptionally large radius
+  11BC12: Completing the M31 Disk WIRCAM/MEGACAM Survey
+  11BC14: Measuring KBO atmospheres via stellar occultation a search for events.
+  11BC15: Refining the Broadband Transmission Spectrum of a Super-Earth
+  11BC16: Stellar Death and Pulsation in the Globular Clusters M5 and M15
+  11BC17: 'Narrowband mapping of a z=2.23 protocluster: galaxy evolution in the nodes
+    of the cosmic web'
+  11BC18: 'WISER: the WIRCAM SDSS Equatorial Region Survey'
+  11BC19: Studying Cloud Patterns of the T2.5 Brown Dwarf SIMP0136+0933
+  11BC20: A Direct Test of Brown Dwarf Models - Measuring the Secondary Eclipse of
+    a Newly-Discovered Eclipsing Brown Dwarf
+  11BC21: Solving the Mystery of the 3C 58 - SN 1181 Connection Using Supernova Light
+    Echoes
+  11BC22: Trojans and Plutinos as probes of planet building
+  11BC23: 'Lensing Magnification: A novel method to calibrate the mass-richness relation
+    of galaxy clusters at high redshift'
+  11BC24: Witnessing the hierarchical formation of galaxies
+  11BC25: Searching for a New Horizons Encounter target.
+  11BC97: 'Lensing Magnification: A novel method to calibrate the mass-richness relation
+    of galaxy clusters at high redshift'
+  11BC98: Stellar Death and Pulsation in the Globular Clusters M5 and M15
+  11BC99: Age-Dating of Low-Mass Candidate members of Nearby Young Kinematic Groups
+  11BF01: 'The mass budget of z~0.6 massive ellipticals: stellar mass of SL2S gravitational
+    lenses'
+  11BF02: Confirming the nature of high-redshift XMM-LSS galaxy clusters with CFHT/WIRCam
+  11BF03: Exploring the IMF of the Pleiades deep into the planetary mass regime.
+  11BF05: Unique measures of ionizing galaxies
+  11BF07: Near-infrared varibility for TMR-1C
+  11BF09: 'Monitoring the accretion variability of young stars : a Corot/Spitzer/Chandra/CFHT
+    coordinated campaign'
+  11BF11: Can we use Planck for an all-sky survey of high-z galaxy clusters?
+  11BF12: 'Strongly lopsided galaxies at z~2: Victims of their environment?'
+  11BF13: Dust properties in the filamentary structure of the California molecular
+    cloud
+  11BF14: 'Understanding the M dwarf Radius Discrepancy at the Fundamental Level:  Magnetic
+    Field Mapping of Two M dwarf Eclipsing Binaries'
+  11BF15: 'Seeing the invisible: ultra-faint galaxies around M31'
+  11BF16: 'How do Winds Impact Galaxies: The Transmogrification of NGC 3073 by NGC
+    3079'
+  11BF18: Photometric Monitoring of the Inbound Oort Comet 2009 MS9
+  11BF19: The extended tidal tails of Palomar 14
+  11BF20: Constraining Lorentz Invariance Violation using GRBs and their host galaxies
+  11BF23: Witnessing the hierarchical formation of galaxies
+  11BF24: Searching for a New Horizons Encounter target
+  11BF25: Trojans and Plutinos as probes of planet building
+  11BF26: 'Follow-up of the exoplant program of the CoRoT satellite: confirmation
+    of planetary transits and identification of false positives'
+  11BF96: Constraining Lorentz Invariance Violation using GRBs and their host galaxies
+  11BF97: 'Understanding the M dwarf Radius Discrepancy at the Fundamental Level:  Magnetic
+    Field Mapping of Two M dwarf Eclipsing Binaries'
+  11BF98: 'Strongly lopsided galaxies at z~2: Victims of their environment?'
+  11BF99: Can we use Planck for an all-sky survey of high-z galaxy clusters?
+  11BH02: Rapid followup of important solar system discoveries from Pan-STARRS
+  11BH03: Infrared Parallaxes of Extreme Brown Dwarfs
+  11BH04: 'CFHTLS-VIPERS : accessing stellar mass with WIRCAM observations'
+  11BH05: Improving our Understanding of Planets through their M dwarf Hosts
+  11BH06: "GALEX Emission-Line Galaxies: The Key to Understanding Ly\u03B1 Emitting\
+    \ Galaxies"
+  11BH07: "Environmental Effects on Galaxy Evolution at z \u223C 1: The ORELSE Survey"
+  11BH08: The Northern Extension of the IRIS Monitoring Project
+  11BH09: Rapid followup of important solar system discoveries from Pan-STARRS
+  11BH10: Surface Properties of Trans-Neptunian Misfits
+  11BH12: Connections between NEOs and meteoroid streams
+  11BH21: Observations of Near-Earth Objects
+  11BH22: 'CFHTLS-VIPERS : accessing stellar mass with WIRCAM observations'
+  11BH31: Infrared Parallaxes of Extreme Brown Dwarfs
+  11BH32: Pan-STARRS Main Belt Comet followup in MegaCam or GMOS queue mode
+  11BH41: Improving our Understanding of Planets through their M dwarf Hosts
+  11BH50: High Spectral Resolution Spectroscopy of the Recent FUor HBC722
+  11BH51: J imaging for the FMOS Fastsound survey
+  11BH98: Infrared Parallaxes of Extreme Brown Dwarfs
+  11BH99: A search for large undiscovered NEOs at low solar elongation
+  11BO19: Searching for structure in the extended outer Galactic halo
+  11BO29: Exploring the z~1-9 Universe and its large-scale clustering with the widest,
+    contiguous narrow-band survey
+  11BP03: 'The Next Generation Virgo Cluster Survey (NGVS): A Comprehensive Study
+    of Baryonic Substructures in the Low Redshift Universe'
+  11BP11: MaPP (Magnetic Protostars and Planets) - studying the impact of magnetic
+    fields on the formation of low-mass stars and planets
+  11BP12: MaPP (Magnetic Protostars and Planets) - studying the impact of magnetic
+    fields on the formation of low-mass stars and planets
+  11BP13: Magnetism in Massive Stars (MiMeS)
+  11BP14: Magnetism in Massive Stars (MiMeS)
+  11BP21: 'Thermal Emission of Transiting Exoplanets (TETrEs): Probing the Diversity
+    of Hot Jupiter Atmospheres with Multi-Wavelength Precision Photometry'
+  11BP22: Searching Z~7 quasars with WIRCam in the CFHT-LS Wide fields
+  11BS05: A systematic study of NLTE abundance of nearby dwarfs
+  11BS06: Kinematic membership estimation and the multiband photometic study of young
+    open cluster NGC7380
+  11BS07: A Deep 2.1um Narrow-Band Imaging Survey
+  11BS08: 'THE JHK-IMAGING OBSERVATION OF NGC3031 (M81):  Whether or not can old stellar
+    population heat interstellar dust grains effectively?'
+  11BS09: Direct Detection of Gravitational Lens Magnification in Close Pairs of Ellipticals
+    at Different Redshifts
+  11BS11: Search of  high-redshift Gamma-ray Bursts by deep near infrared observations
+  11BS12: Something fishy? Deep photometry of main sequence turn-off stars in the
+    Pisces Overdensity
+  11BS13: 'CFHT/WIRCAM y band observation of Stripe 82: weak lensing cluster candidates
+    determination and mass estimation'
+  11BS99: A systematic study of NLTE abundance of nearby dwarfs
+  11BT01: Monitoring Long-Term Variability of Active T Tauri Stars (II)
+  11BT02: Cosmic explosion - the Pan-STARRS transient follow-ups
+  11BT03: Seaching for jet signatures in extremely young YSO candidates
+  11BT04: Exploring the Metallicity Gradient and Chemical Trends in the Triangulum-Andromeda
+    Star Cloud
+  11BT06: 'WISER: the WIRCAM SDSS Equatorial Region Survey'
+  12AB04: New Milky Way satellites in BOSS footprint
+  12AB06: 'Accretion signature in massive YSOs: H2 outflows - Equatorial Sample (2/2)'
+  12AB16: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12AB98: 'Accretion signature in massive YSOs: H2 outflows - Equatorial Sample (2/2)'
+  12AB99: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12AC01: The baryonic mass and light of all galaxies in the very local Universe
+  12AC02: 'Lensing Magnification: A novel method to calibrate the mass-richness relations
+    of galaxy clusters at high redshift'
+  12AC03: High-resolution spectroscopy of pulsating pre-main sequence stars in NGC
+    2264
+  12AC04: WIRCam Imaging of the Adaptive Optics Deep Field
+  12AC05: Is a Galaxy s Nova Rate Correlated with its Globular Cluster Population?
+  12AC07: Measuring KBO Atmospheres by Stellar Occultation; a Search for Events.
+  12AC09: A MegaCam Survey of the Leo Triplet
+  12AC10: Zeeman circular and linear polarisation in line profiles of cool, active
+    stars
+  12AC11: 'The magnetic field of iota Herculis: searching for Vega-type magnetic fields
+    in a normal B-type star'
+  12AC12: Unveiling the Nature of FS CMa Type Stars
+  12AC15: An investigation of the rapidly rotating Bp star HD 133880
+  12AC16: The large-field Bp star HD 147010
+  12AC17: Stellar Masses for a Local Sample of Filament Galaxies
+  12AC19: Mapping the stellar mass with Kband observations of an HI-flux limited sample
+    of nearby galaxies
+  12AC20: Tightening the constraints on the z = 7.7 Luminosity Function of Lyalpha
+    emitters
+  12AC21: Mass loss in the Sextans Dwarf Spheroidal
+  12AC23: Age-Dating of Low-Mass Candidate members of Nearby Young Kinematic Groups
+  12AC24: 'Coolest of the cool: Magnetic fields and activity of the M-type supergiants
+    Betelgeuse and Antares'
+  12AC25: 'Towards an Understanding of the Black Hole Mass Scaling Relations: Identifying
+    Fundamental Drivers'
+  12AC26: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12AC27: Do White Dwarfs lie at the Centres of their Planetary Nebulae?
+  12AC28: Searching for evidence of a magnetic field in the exotic super-Earth 55
+    Cancri e
+  12AC29: 'Clouds and Weather in a Substelalr Atmosphere: Verification and Follow-up
+    of a Variable Brown Dwarf'
+  12AC97: WIRCam Imaging of the Adaptive Optics Deep Field
+  12AC98: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12AC99: 'Lensing Magnification: A novel method to calibrate the mass-richness relations
+    of galaxy clusters at high redshift'
+  12AF01: 'Copy of Follow-up of the exoplanet program of the CoRoT satellite : confirmation
+    of planetary transits and identification of false positives.'
+  12AF03: Archaeology of halo streams
+  12AF04: 'MATLAS: investigating the origin of the molecular gas in Atlas3D early-type
+    galaxies with extremely deep imaging'
+  12AF05: Properties of newly discovered Kepler exoplanetary systems
+  12AF07: Large Scale Structures around distant galaxy clusters
+  12AF08: How do galaxy mergers induce star formation? Closing in on a major missing
+    link of galaxy evolution
+  12AF09: A study of magnetic fields in the progenitors of the Herbig Ae/Be stars,
+    the Intermediate Mass T Tauri stars
+  12AF12: Tightening the constraints on the z = 7.7 Luminosity Function of Lyalpha
+    emitters
+  12AF15: Morphology of Radio Loud Quasars Candidates to Link the Gaia Fundamental
+    Frame and the ICRF
+  12AF17: 'Coolest of the cool: Magnetic fields and activity of the M-type supergiants
+    Betelgeuse and Antares'
+  12AF19: The H2/cm-waves correlation in translucent clouds
+  12AF21: NIR line imaging of optically obscured SNR shells emitting gamma-rays
+  12AF95: Properties of newly discovered Kepler exoplanetary systems
+  12AF96: Large Scale Structures around distant galaxy clusters
+  12AF98: Archaeology of halo streams
+  12AF99: 'MATLAS: investigating the origin of the molecular gas in Atlas3D early-type
+    galaxies with extremely deep imaging'
+  12AH07: Observations of Near-Earth Objects
+  12AH08: The Northern Extension of the IRIS Monitoring Project
+  12AH12: An In-depth Study of Late-type Stars in the Kepler Field
+  12AH15: 850 micron Fluxes for the Faintest Known X-ray Sources
+  12AH16: Rapid followup of important solar system discoveries from Pan-STARRS
+  12AH17: 'S0 bulge building: Searching for blue cores'
+  12AH19: Connections between NEOs and meteoroid streams
+  12AH22: Pan-STARRS Main Belt Comet followup in MegaCam or GMOS queue mode
+  12AH24: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12AH27: 'Environmental Effects on Galaxy Evolution at z ? 1: The ORELSE Survey'
+  12AH52: Infrared Parallaxes of Extreme Brown Dwarfs
+  12AH92: 'Environmental Effects on Galaxy Evolution at z ? 1: The ORELSE Survey'
+  12AH93: Completing the Census of the Youngest Moving Groups
+  12AH94: Completing the Census of the Youngest Moving Groups
+  12AH95: Infrared Parallaxes of Extreme Brown Dwarfs
+  12AH96: 'Environmental Effects on Galaxy Evolution at z ? 1: The ORELSE Survey'
+  12AH97: A search for large undiscovered NEOs at low solar elongation
+  12AH98: Orbit Determination for New Horizons KBO Flyby Targets
+  12AH99: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12AO16: Do hot Jupiters orbiting active stars lack atmospheric temperature inversions
+    (stratospheres)?
+  12AO19: Exploring the z~1-9 Universe and its large-scale clustering with the widest,
+    contiguous narrow-band survey
+  12AO99: Do hot Jupiters orbiting active stars lack atmospheric temperature inversions
+    (stratospheres)?
+  12AP03: NGVS
+  12AP04: NGVS
+  12AP11: MaPP
+  12AP12: MaPP
+  12AP13: MiMeS
+  12AP14: MiMeS
+  12AP21: TETrEs
+  12AP22: CFHQSIR
+  12AS02: Search for extended structures in planetary nebulae
+  12AS03: The near infrared SED of WASP-43b -- a  close, compact planet around a K7
+    dwarf
+  12AS06: Clusters and jets in the Aquila Rift molecular cloud complex
+  12AS98: Search for extended structures in planetary nebulae
+  12AS99: The near infrared SED of WASP-43b -- a  close, compact planet around a K7
+    dwarf
+  12AT01: Joint CFHT/HST/Chandra Observations of the Galactic Globular Cluster NGC
+    6760
+  12AT03: Quiescent state of the black hole binary MAXI J1659-152
+  12AT06: Cosmic explosion - the Pan-STARRS transient follow-ups
+  12AT07: Detecting galaxy-infall through a Mpc-scale filament
+  12AT09: Constrain the Physical Conditions of Young Stellar Objects in Star Formation
+    Region
+  12AT10: Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey
+  12AT11: WIRCAM H-band Survey in the Extended GOODS-N Field
+  12AT12: Optical Identification of GRB Host galaxies
+  12AT99: WIRCAM H-band Survey in the Extended GOODS-N Field
+  13BB01: Unveiling the nature of the TeV gamma-ray binary LS I +61 303
+  13BB02: Completing the kinematic characterisation of the UKIDSS LT dwarf sample
+  13BB03: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  13BB97: Unveiling the nature of the TeV gamma-ray binary LS I +61 303
+  13BB98: Completing the kinematic characterisation of the UKIDSS LT dwarf sample
+  13BB99: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  13BC01: The Atmosphere, Sizes, and Shapes of KBOs; Predicting Occultation Events.
+  13BC02: Zero-harassment? The global structure and stellar content of the most isolated
+    nearby galaxies
+  13BC03: A Stratification Study in the Atmospheres of Field BHB Stars
+  13BC05: Characterising the magnetic field and the giant magnetosphere of the extraordinary
+    Of?p star NGC 1624-2
+  13BC06: Metal Abundances, Space Motions and Physical Characteristics of Recently-Discovered
+    Candidate SX Phe Stars in the Kepler Field
+  13BC07: Investigating the nature of the mysterious CEMP-no stars
+  13BC08: Search for vertical stratification of chemical species abundance among CP
+    stars
+  13BC09: Magnetic Ap/Bp stars in open clusters
+  13BC10: Looking for circumstellar gas surrouding the XO-4, WASP-13, and CoRoT-1
+    planetary systems
+  13BC12: 'The Missing Mass in Centrifugal Magnetospheres: Venting or Leaking?'
+  13BC14: Stellar death and mass loss in the globular clusters M5 and M15
+  13BC17: H2 Fluorescence in IC 59 - Extending the WIRCam detection of Purcell alignment
+    in IC 63
+  13BC19: The Structure of Luminous Blue Variables
+  13BC21: 'Catching a speeding exoplanet: TiO lines in the atmosphere of the extremely
+    hot Jupiter WASP-33b'
+  13BC23: Completing a K-band survey of the XXL-N field
+  13BC24: Unveiling the Nature of FS CMa Type Stars
+  13BC26: A WIRCAM Survey of the e-MERLIN SuperCLASS Field
+  13BC27: Tracking of NEA Discoveries from Canadas NEOSSat Space Telescope
+  13BC29: 'Finishing off: Trojans and Plutinos as probes of planet building'
+  13BC30: Continued Monitoring of Quasar Colour Variability in Stripe 82
+  13BC31: Dark Matter Halo Profiles of Galaxy Groups and Poor Clusters
+  13BC32: Calibrating the Contribution of AGB Stars to the Total Near-Infrared Light
+    of M31
+  13BC33: Age-Dating of Candidate members of Nearby Young Kinematic Groups
+  13BC99: Continued Monitoring of Quasar Colour Variability in Stripe 82
+  13BD99: Spectroscopy of the transiting exoplanet system KIC 8435766b
+  13BF02: Dust properties in Taurus region dark clouds from visible and NIR scattering
+  13BF03: 'Short-term Variability of an Ultra-wide Transneptunian Binary: 2007 TY430.'
+  13BF04: 'HMS : the History of the Magnetic Sun (Part II: Pleiades)'
+  13BF05: Survey at Intermediate Redshifts for Cluster and Lensed Supernovae (SIRCLS)
+  13BF06: Exploring the IMF and Star Formation Modes in XUV-disk Galaxies
+  13BF07: The brightest lenses on the sub-mm sky discovered with Planck/Herschel
+  13BF08: Completing a K-band survey of the XXL-N field
+  13BF09: 'Large-scale magnetic fields of very-low-mass stars: are we observing dynamo
+    bistability? (2/2)'
+  13BF10: 'Accretion variability of YSOs in NGC 2264: investigating accretion regimes
+    and variability by exploring different wavelength and time domains'
+  13BF12: 'Caught in the act: Identifying the stellar counterparts of the brightest
+    Mpc environs on the sub-mm sky'
+  13BF13: The Most Massive Galaxy Clusters across Cosmic Time
+  13BF14: The masses and ionization of intergalactic HII regions in the M81 group
+  13BF15: Properties of newly discovered Kepler exoplanetary systems
+  13BF96: 'Large-scale magnetic fields of very-low-mass stars: are we observing dynamo
+    bistability? (2/2)'
+  13BF97: The Most Massive Galaxy Clusters across Cosmic Time
+  13BF98: The brightest lenses on the sub-mm sky discovered with Planck/Herschel
+  13BF99: Dust properties in Taurus region dark clouds from visible and NIR scattering
+  13BH01: Extreme Brown Dwarfs
+  13BH03: Cepheids - Shedding light on the chemical element distribution in the inner
+    parts of the Milky Way
+  13BH20: Rapid followup of important solar system discoveries from Pan-STARRS
+  13BH22: Finding the Elusive Substellar Members of Nearby Moving Groups.
+  13BH28: Observations of Near-Earth Objects
+  13BH29: Completing the Low-Mass Stellar Census of the Youngest Moving Groups.
+  13BH32: IfA Coordinated comet ISON Campaign
+  13BH34: 'Calibrating gravitational telescopes: The HST Frontier Field clusters.'
+  13BH40: Rare Brown Dwarfs in the Solar Neighorhood from Pan-STARRS 1
+  13BH96: Finding the Elusive Substellar Members of Nearby Moving Groups.
+  13BH97: IfA Coordinated comet ISON Campaign
+  13BH98: Rapid followup of important solar system discoveries from Pan-STARRS
+  13BH99: Extreme Brown Dwarfs
+  13BK01: Testing weak lensing maps with galaxy redshift surveys
+  13BK02: Deep wide field imaging of Nearby late type galaxies
+  13BK99: Testing weak lensing maps with galaxy redshift surveys
+  13BO05: One of the oldest open clusters in teh Milky way or
+  13BO55: Dark matter Radio shock wave interaction in merging clusters
+  13BO63: Constraining the atnospheric properties of two highly-irradiated exoplantets
+  13BP05: OSSOS
+  13BP06: OSSOS
+  13BP07: Matlas
+  13BP08: Matlas
+  13BP15: Binamics
+  13BP16: Binamics
+  13BP17: Matysse
+  13BP18: Matysse
+  13BS01: Infrared imaging of planetary nebulae
+  13BS04: CFHT MegaCam Imaging of the H-ATLAS SDP Field
+  13BS06: Searching for H2 jets driven by brown dwarfs in NGC 1333
+  13BS08: Re-confirming the First Detection of Magnetic Alignment of Atoms
+  13BS09: Rotational modulation of accretion rate measurements
+  13BS11: Deep photometric observations with CFHT MegaCam for three candidates of
+    the extremely faint satellites of the Milky Way
+  13BS13: Detecting Interstellar and Circumstellar Magnetic Fields with Ground State
+    Alignment
+  13BS14: Hunting for the Most Massive Structures at z=2.23
+  13BT01: A snapshot observing program to study the optical counterparts of gamma-ray
+    emitting black widow-type millisecond pulsars
+  13BT02: Monitoring Long-Term Variability of Active T Tauri Stars (IV)
+  13BT03: Optical Identification of GRB Host galaxies II
+  13BT04: 'Large Scale Structure at z~7: A Deep WIRCam Y Survey in the Extended Chandra
+    Deep Field-South'
+  13BT05: Explore Nature of IR excesses associated with Super-Luminous Supernova
+  13BT06: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey:  SXDS field'
+  13BT99: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey:  SXDS field'
+  14AB01: Detecting near-infrared thermal emission from the transiting exoplanets
+    KELT-3b and KELT-4b
+  14AB02: Infrared Bright galaxies in the Zone of Avoidance
+  14AB03: Probing the circumstellar disk dynamics in the enigmatic TeV gamma-ray binary
+    HESS J0632+057
+  14AB04: Dwarf galaxies in dense environments
+  14AB98: Probing the circumstellar disk dynamics in the enigmatic TeV gamma-ray binary
+    HESS J0632+057
+  14AB99: Detecting near-infrared thermal emission from the transiting exoplanets
+    KELT-3b and KELT-4b
+  14AC02: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Photometric
+    Component'
+  14AC03: Search for vertical stratification of chemical species abundance among CP
+    stars
+  14AC04: Zero-harassment? The global structure and stellar content of the most isolated
+    nearby galaxies II
+  14AC05: 'Deep optical imaging of gas-rich interacting galaxy groups: NGC 4725/47'
+  14AC06: A homogeneous high-resolution Stokes I+V spectropolarimetric survey of the
+    BRITE-Constellation primary targets
+  14AC07: Nitrogen enrichment, rotation and magnetism in main sequence B-type stars
+  14AC08: Search for Magnetic fields in Post-AGB stars
+  14AC10: 'Missing Mass in Centrigugal Magnetospheres: Leaking or Venting II'
+  14AC12: Are stellar mergers the key to understanding the phenomenon of magnetism
+    in massive stars?
+  14AC13: Searching for the atmosphere of 55Cnc e
+  14AC15: WIRCAM imaging of unbiased high redshift protoclusters
+  14AC16: 'Beyond Virgo: r-band Coverage of the Next Generation Virgo Cluster Survey
+    Area'
+  14AC17: Variability and stellar death in the Sextans Dwarf Spheroidal
+  14AC18: Mapping protoclusters with WIRCAM
+  14AC19: A Stratification Study in the Atmospheres of Field BHB Stars
+  14AC20: Further investigating the nature of the mysterious CEMP-no stars
+  14AC23: 'Monitoring the Perfect Storms: Tracking Weather Patterns across the Brown
+    Dwarf Sequence'
+  14AC98: WIRCAM imaging of unbiased high redshift protoclusters
+  14AC99: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Photometric
+    Component'
+  14AF02: 'The DAFT/FADA survey: constraining cluster evolution and dark energy'
+  14AF03: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Photometric
+    Component'
+  14AF04: 'The History of the Magnetic Sun (Part III: Coma Ber)'
+  14AF05: Completing the transmission spectra for the exoplanets WASP-12b and HAT-P-1b
+    with CFHT transit photometry
+  14AF06: The brightest lenses on the sub-mm sky discovered with Planck/Herschel
+  14AF07: 'Caught in the act: Identifying the stellar counterparts of the brightest
+    Mpc environs on the sub-mm sky'
+  14AF09: Large Scale Structures around medium mass galaxy clusters at intermediate
+    redshift
+  14AF10: The unobscured star formation in intermediate redshift clusters
+  14AF12: Are stellar mergers the key to understanding the phenomenon of magnetism
+    in massive stars?
+  14AF14: 'Exoplanet host stars: SNAPSHOT survey of their magnetic properties'
+  14AF16: Probing the IMF and Star Formation Modes in XUV-disk Galaxies
+  14AF17: Characterizing the evolution of protoplanetary disk accretion
+  14AF19: Doppler Velocimetry of Venus cloud top winds
+  14AF22: The Most Massive Galaxy Clusters across Cosmic Time
+  14AF97: Large Scale Structures around medium mass galaxy clusters at intermediate
+    redshift
+  14AF98: The brightest lenses on the sub-mm sky discovered with Planck/Herschel
+  14AF99: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Photometric
+    Component'
+  14AH01: Astroseismic Calibration of Mg Ib Line Shape as a Stellar Gravimeter.
+  14AH02: Observation of Near-Earth Objects
+  14AH06: Mass fluctuation in Protostars.
+  14AH09: WIRCAM H-band Survey in the Extended GOODS-N Field
+  14AH14: Vetting Candidate Active M Dwarfs with Spectroscopic Binaries & Radial Velocities.
+  14AH21: Finding the Elusive Substellar Membrers of Nearby Young Moving Groups
+  14AH24: Rapid followup of important solar system discoveries from Pan-STARRS
+  14AH31: A search for spectroscopic binary central stars of planetary nebulae
+  14AH37: Completing the Low-Mass Stellar Census of the Youngest Moving Groups.
+  14AH42: Volatile activity in Comets.
+  14AH94: Finding the Elusive Substellar Membrers of Nearby Young Moving Groups
+  14AH95: Completing the Low-Mass Stellar Census of the Youngest Moving Groups.
+  14AH96: A search for spectroscopic binary central stars of planetary nebulae
+  14AH97: UH discretionary program.
+  14AH98: UH discretionary program.
+  14AH99: Rapid followup of important solar system discoveries from Pan-STARRS
+  14AK01: 'The KASI Near-Infrared Survey: Deep Ks imaging in the Subaru GTO2deg^2
+    field'
+  14AK02: Search for the Spatial Density Distribution of Stars and Background Lights
+    in the Vicinity of the Leo Triplet Group of Galaxies
+  14AK03: Near-infrared Photometric Survey of Supergiant Stars and Asymptotic Giant
+    Branch Stars in Nearby Normal Galaxies.
+  14AK04: 'Star Formation Histories of Dwarfs in the Leo I Group: the Group Formation
+    and the Origin of the Large-Scale HI Ring'
+  14AK06: Tracing the merger history of the intriguing elliptical galaxy M85 with
+    globular clusters
+  14AO17: The large-scale environment of QSOs at z~6.
+  14AO24: 'Trident: the fate of the Lyman alpha and ionising photons at z=2'
+  14AO38: Probing the atmosphere of an inflated planet at the edge of tidal disruption
+  14AO46: Determining the albedo an heat-redistribution efficiency of massive exoplanet
+    KOI-13.1
+  14AP05: OSSOS
+  14AP06: OSSOS
+  14AP07: Matlas
+  14AP08: Matlas
+  14AP15: Binamics
+  14AP16: Binamics
+  14AP17: Matysse
+  14AP18: Matysse
+  14AS01: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Photometric
+    Component'
+  14AS02: Tracing the souuthern tidal tail of Palomar 5
+  14AS03: Observing the Earth s  transit  using a lunar eclipse - Hints for characterising
+    exo-Earth
+  14AS05: CFHT MEGACAM Imaging of the H-ATLAS SDP Field - The Saga Continues
+  14AS10: Extended Schmidt Law In Galaxy Outer Disks.
+  14AS99: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Photometric
+    Component'
+  14AT01: Quantifying mass structures along strong-lens lines of sight for accurate
+    cosmology
+  14AT02: WIRCAM H-band Survey in the Extended GOODS-N Field
+  14AT03: A SNAPSHOT observing program to investigate the orbital period of a gamma-ray
+    emitting black widow-type millisecond pulsars
+  14AT05: A CFHT/WIRCAM YSO Survey toward Nearby Star-Forming Regions
+  14AT99: WIRCAM H-band Survey in the Extended GOODS-N Field
+  14BB01: Famished Galaxies or Starbursting Mergers? A Closer Look at Infrared-Bright
+    galaxies in the Zone of Avoidance
+  14BB02: Detecting near-infrared thermal emission from KELT transiting exoplanets
+    - Part II
+  14BB05: "Spectropolarimetric magnetic field measurements\r\nfor Subgiants: Probing\
+    \ the deepening of the convective envelope"
+  14BB07: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  14BB08: ESPaDOnS observation of the TeV gamma-ray binary HESS J0632+057 at periastron
+    for constraint on the pulsar wind
+  14BB09: 'The First Cosmic Metropoles: Unveiling the formation of clusters around
+    quasar groups'
+  14BB97: 'The First Cosmic Metropoles: Unveiling the formation of clusters around
+    quasar groups'
+  14BB98: Detecting near-infrared thermal emission from KELT transiting exoplanets
+    - Part II
+  14BB99: 'The First Cosmic Metropoles: Unveiling the formation of clusters around
+    quasar groups'
+  14BC01: The Evolutionary History of the R Coronae Borealis Stars
+  14BC02: A WIRCAM Survey of the e-MERLIN SuperCLASS Field
+  14BC03: The 2014 Eclipse of the Be Star EE Cephei
+  14BC05: Detailed study of the weak magnetic field of the bright white dwarf 40 Eri
+    B
+  14BC06: Unveiling the Nature of FS CMa Type Stars
+  14BC07: Continued Spectroscopy of the Kepler-field SX Phe stars, many of which are
+    in photometrically-discovered Binary Systems
+  14BC11: "Characterizing the magnetic fields of two recently\r\ndiscovered rare Sigma\
+    \ Ori E type stars"
+  14BC13: 'Catching a speeding exoplanet: TiO lines in the atmosphere of the extremely
+    hot Jupiter WASP-33b'
+  14BC16: Wide Imaging Search for Benchmark Planets
+  14BC17: Measuring Luminosity and Temperature of an Old Brown Dwarf - A Direct Test
+    of Evolutionary Models Based on Secondary Eclipse Observations of LHS6343C
+  14BC18: Age-Dating of Candidate members of Nearby Young Kinematic Groups
+  14BC19: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  14BC20: Completing a K-band survey of the XXL-N field
+  14BC21: 'Interstellar medium in Early-Type Galaxies: imaging the warm ionized gas'
+  14BC22: Weighing the f_gas clusters
+  14BC25: The Inner Gaseous Disks of Herbig Be Stars
+  14BC26: An all-sky high-resolution Stokes I+V spectropolarimetric survey of bright
+    stars complete to V=4
+  14BC27: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  14BC29: 'Finishing off: Trojans and Plutinos as probes of planet building'
+  14BC31: 'MASSIVE-IR: The Structure of the Most Massive Nearby Galaxies as Probed
+    with WIRCam'
+  14BC33: Near-Infrared Imaging of a sample of Nearby Barred Galaxies
+  14BC34: CFHT Large Area U-band Deep Survey
+  14BC37: Constraining the dust opacity law in milecular cloud cores.
+  14BC99: Wide Imaging Search for Benchmark Planets
+  14BD97: M31
+  14BD98: Wide Imaging Search for Benchmark Planets
+  14BD99: Wide Imaging Search for Benchmark Planets
+  14BF02: 'The DAFT/FADA survey: constraining cluster evolution and dark energy'
+  14BF04: Exploring the surface magnetic field of the Mira star chi CYG and its relation
+    with the atmospheric radiative shock wave
+  14BF05: CFHT-Hubble joint transmission spectroscopy of WASP-6b and WASP-12b
+  14BF07: The brightest lenses on the sub-mm sky discovered with Planck/Herschel
+  14BF08: 'Caught in the act: Identifying the stellar counterparts of the brightest
+    Mpc environs on the sub-mm sky'
+  14BF09: 'A needed step toward other Earths: understand the magnetic activity impact
+    on radial-velocity measurements'
+  14BF10: Bcool magnetic snapshot survey of solar-type stars
+  14BF11: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  14BF12: Completing a K-band survey of the XXL-N field
+  14BF13: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    of habitable exo-Earths'
+  14BF14: The Most Massive Galaxy Clusters across Cosmic Time
+  14BF15: Probing the origin of the magnetic field in particle-accelerating colliding-wind
+    binaries
+  14BF16: 'CLAUDS :  CFHT Large-Area U-band Deep Survey'
+  14BF17: Characterizing the evolution of protoplanetary disk accretion
+  14BF99: The brightest lenses on the sub-mm sky discovered with Planck/Herschel
+  14BH07: Rapid followup of important solar system discoveries from Pan-STARRS
+  14BH17: A search for spectroscopic binary central stars of planetary nebulae
+  14BH20: The distribution of stellar light in the Frontier Field clusters
+  14BH21: Observations of Near-Earth Objects
+  14BH24: Finding the Elusive Substellar Members of Nearby Young Moving Groups
+  14BH26: Extreme Brown Dwarfs as Exoplanet Analogs
+  14BH27: Volatile Activity in Comets
+  14BH35: Asteroseismic Calibration of Mg Ib Line Shape as a Stellar Gravimeter
+  14BH97: A search for spectroscopic binary central stars of planetary nebulae
+  14BH98: Extreme Brown Dwarfs as Exoplanet Analogs
+  14BH99: Rapid followup of important solar system discoveries from Pan-STARRS
+  14BK01: 'High resolution spectroscopy study on WR 7a: a quasi-Wolf-Rayet star as
+    a progenitor of Type Ib/c supernova'
+  14BK02: High Resolution Raman Spectroscopy of Symbiotic Stars
+  14BO12: 'Ultra-deep wide-field imaging of a shell elliptical NGC3923 with MegaCam:
+    looking for a new shell at ~220 kpc and constraining gravitational potential'
+  14BO41: Is YSO accretion luminosity variable on minute timescales?
+  14BP05: 'OSSOS: the Outer Solar System Origins Survey'
+  14BP07: 'Matlas: Mass Assembly of early-type GaLAxies with their fine Structures'
+  14BP08: 'Matlas: Mass Assembly of early-type GaLAxies with their fine Structures'
+  14BP15: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  14BP16: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  14BP17: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  14BP18: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  14BS01: 'CLAUDS : CFHT Large-Area U-band Deep Survey'
+  14BS03: Completing CFHT MegaCam u-band Imaging of the H-ATLAS SDP Field
+  14BS04: A pilot search for planets in M31 with microlensing
+  14BT01: Monitoring Long-Term Variability of Active T Tauri Stars (V)
+  14BT02: Physical Characterization of Active Asteroids P/2012 T1 and P/2013 P5
+  14BT03: Quantifying mass structures along strong-lens lines of sight for accurate
+    cosmology
+  14BT04: Target-of-Opportunity Follow-Up Observations of HSC Survey Active Asteroid
+    Candidates
+  15AB01: The signature of mini-Neptunes in the chemical composition of solar type
+    stars
+  15AB02: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  15AB03: The environment of UV-luminous starburst galaxies
+  15AB04: The first detailed abundance analysis of giant stars in the metal-rich globular
+    cluster NGC6366
+  15AB08: Spectro-polarimetric observation of the Be-circumstellar vs. black hole
+    accretion disks in AGL J2241+4454/MWC 656
+  15AB99: The environment of UV-luminous starburst galaxies
+  15AC02: A WIRCAM Survey of the e-MERLIN SuperCLASS Field
+  15AC03: An all-sky high-resolution Stokes I+V spectropolarimetric survey of bright
+    stars complete to V=4
+  15AC09: Evolution during main sequence of magnetic and abundance geometries of magnetic
+    Bp stars of approximately 3.7 Mo
+  15AC11: Spectropolarimetry of rotational and pulsational variable massive stars
+    in M20 and NGC6531
+  15AC13: Galactic Dark Matter properties with Northern Stellar Streams
+  15AC15: New members of the NGC3109 association
+  15AC18: Constraining the dust opacity law in molecular cloud cores
+  15AC20: Mining the most pristine stars in the Galaxy
+  15AC21: The Magnetic Environment of an Extreme Earth
+  15AC24: Accurate Lithium Depletion Boundary for Beta Pictoris moving group
+  15AC26: 'Tracking the NGVS trans-neptunians: measuring the resonant populations
+    in outer solar system'
+  15AC28: 'CLAUDS: CFHT Large Area U-band Deep Survey'
+  15AC30: Measuring Luminosity and Temperature of an Old Brown Dwarf - A Direct Test
+    of Evolutionary Models Based on Secondary Eclipse Observations of LHS6343C
+  15AC32: Wide Imaging Search for Benchmark Planets
+  15AC38: 'MASSIVE-IR: The Structure of the Most Massive Nearby Galaxies as Probed
+    with WIRCam'
+  15AC99: Wide Imaging Search for Benchmark Planets
+  15AF02: 'Exoplanet host stars: snapshot survey of their magnetic properties (2)'
+  15AF03: 'A key test for the spiral-to-S0 transformation: deep NIR imaging in the
+    Abell clusters A496 and A754'
+  15AF04: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  15AF06: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15AF08: 'HD188774: the first magnetic delta Scuti star'
+  15AF09: The Magnetic Environment of an Extreme Earth
+  15AF10: Large Scale Structures around medium mass galaxy clusters at intermediate
+    redshift
+  15AF11: Follow-up of a Kepler mysterious triple star
+  15AF12: 'Caught in act: ram pressure stripping in the Virgo cluster'
+  15AF14: Mining the most pristine stars in the Galaxy
+  15AF15: 'CLAUDS : CFHT Large-Area U-band Deep Survey'
+  15AF16: 'Filling the essential gaps between HST and Spitzer: CFHT Ks-band transmission
+    spectroscopy of WASP-31b, WASP-39b, and HAT-P-12b'
+  15AF17: Copy of Bcool magnetic snapshot survey of solar-type stars
+  15AF93: 'Filling the essential gaps between HST and Spitzer: CFHT Ks-band transmission
+    spectroscopy of WASP-31b, WASP-39b, and HAT-P-12b'
+  15AF94: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15AF95: Large Scale Structures around medium mass galaxy clusters at intermediate
+    redshift
+  15AF96: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15AF97: Mining the most pristine stars in the Galaxy
+  15AF98: 'CLAUDS : CFHT Large-Area U-band Deep Survey'
+  15AF99: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15AH05: 'Spiral Host: The Spatially-resolved Assembly History of a Powerful Radio
+    Galaxy'
+  15AH06: Volatile Activity in Comets
+  15AH08: Rapid followup of important solar system discoveries from Pan-STARRS
+  15AH24: Extreme Brown Dwarfs as Exoplanet Analogs.
+  15AH27: Observations of Near-Earth Objects
+  15AH30: 'Characterizing the Cosmic Infrared Background Fluctuations: Hints for a
+    z > 10'
+  15AH40: Spectroscopy of Kepler Platinum Asteroseismology Standard Stars
+  15AH79: Volatile Activity in Comets
+  15AH80: Active M Dwarf Follow-up Observations with Espadons.
+  15AH81: Completing the CODEX weak lensing mass observations.
+  15AH83: Characterizing faint submm galaxies with cluster lensing.
+  15AH86: High-resolution spectra of nearby calibrator stars to improve M dwarf classification
+    by Gaia
+  15AH94: 'Spiral Host: The Spatially-resolved Assembly History of a Powerful Radio
+    Galaxy'
+  15AH95: 'Spiral Host: The Spatially-resolved Assembly History of a Powerful Radio
+    Galaxy'
+  15AH96: Extreme Brown Dwarfs as Exoplanet Analogs.
+  15AH97: 'Spiral Host: The Spatially-resolved Assembly History of a Powerful Radio
+    Galaxy'
+  15AH98: Completing the CODEX weak lensing mass observations.
+  15AH99: Rapid followup of important solar system discoveries from Pan-STARRS
+  15AK01: Helium giants as supernova progenitors
+  15AK02: Spatial stellar extent and contents of dwarf irregular galaxy NGC 4449
+  15AK05: An Halpha search for overdense region around radio galaxy at z=1.4
+  15AK06: Tracing the Mysterious Halo in the Isolated Massive Disky Galaxy M104
+  15AO05: Completion of the 400d Cosmological Sample Weak Lensing Programme up to
+    redshift 0.55
+  15AP05: 'OSSOS: the Outer Solar System Origins Survey'
+  15AP06: 'OSSOS: the Outer Solar System Origins Survey'
+  15AP07: 'Matlas: Mass Assembly of early-type GaLAxies with their fine Structures'
+  15AP08: 'Matlas: Mass Assembly of early-type GaLAxies with their fine Structures'
+  15AP09: CFHT-LUAU
+  15AP10: CFHT-LUAU
+  15AP15: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  15AP16: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  15AP17: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  15AP18: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  15AP19: 'HMS : the History of the Magnetic Sun'
+  15AP20: 'HMS : the History of the Magnetic Sun'
+  15AS02: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Continued
+    Photometric Monitoring in 2015A'
+  15AS03: 'CLAUDS : CFHT Large-Area U-band Deep Survey'
+  15AS06: 'MaTYSSE-China:  Spots and Radial Velocity Planet Search for Young Stars'
+  15AS07: Systematic Characterization of Exoplanetary Atmospheres
+  15AS99: Systematic Characterization of Exoplanetary Atmospheres
+  15AT01: WIRCAM H-band Survey in the Extended GOODS-N Field
+  15AT02: The Follow-Up Observations for Super-Fast Rotator Candidates
+  15AT04: Color studies of km to sub-km sized asteroids
+  15AT05: Physical Characterization of Active Asteroids 238P, 288P, 311P, P/2010 R2,
+    and P/2012 T1
+  15AT06: CFHT u-band survey of the AKARI NEP wide field
+  15AT08: Y band following-up photometry of very high redshift quasar candidates
+  15AT09: Calibrating Synthetic Spectral Fitting for Exoplanet Host Star Characterization
+  15AT10: 'Tracking the NGVS trans-neptunians: measuring the resonant populations
+    in outer solar system'
+  15AT12: A snapshot observing program to study the IR counterparts of gamma-ray emitting
+    black widow-type millisecond pulsars
+  15AT13: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey: COSMOS
+    field'
+  15AT15: Radial Velocity Observations of the First K2 Planet Candidates
+  15AT17: Measuring Line-of-Sight Structure Toward Strong Gravitational Lenses
+  15AT96: Calibrating Synthetic Spectral Fitting for Exoplanet Host Star Characterization
+  15AT97: WIRCAM H-band Survey in the Extended GOODS-N Field
+  15AT98: Color studies of km to sub-km sized asteroids
+  15AT99: Physical Characterization of Active Asteroids 238P, 288P, 311P, P/2010 R2,
+    and P/2012 T1
+  15BB03: Probing the magnetic accretion geometry of AM Her
+  15BB05: Follow-up ESPaDOnS observations of the TeV gamma-ray binary LS I+61 303
+    for crucial evidence for the nature of the compact object
+  15BB06: The debris field of Triangulum-Andromeda
+  15BB07: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  15BB98: Probing the magnetic accretion geometry of AM Her
+  15BB99: The debris field of Triangulum-Andromeda
+  15BC02: A follow-up study of magnetic fields in Post-AGB stars
+  15BC03: 'Planetary Nebulae and the Halos of giant galaxies: the test case NGC 1023'
+  15BC04: An all-sky high-resolution Stokes I+V spectropolarimetric survey of bright
+    stars complete to V=4
+  15BC05: Searching for the rare super-weak magnetic fields in white dwarf stars
+  15BC07: Unveiling the Nature of FS CMa Type Stars
+  15BC08: Evolution during main sequence of magnetic and abundance geometries of magnetic
+    Bp stars of approximately 3.7 Mo
+  15BC10: 'A large, perfectly matched, Lya-Ha dual narrow-band survey at z=2.23: what
+    does Lya actually tell us?'
+  15BC11: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  15BC12: Wide Imaging Search for Benchmark Planets
+  15BC13: Coordinated optical spectropolarimetry and HST UV spectroscopy of the magnetic
+    O-type star NGC1624-2
+  15BC14: Probing the Long-Term Magnetic Variation of HD 108, the Most Slowly Rotating
+    Of?p Star
+  15BC15: Unveiling the nature of HD166473
+  15BC17: SNAPSHOT Survey of Variable Stars in the Ursa Minor Dwarf Galaxy
+  15BC18: A complete characterization of the physical, magnetic, and rotational properties
+    of magnetic intermediate-mass stars within 100pc
+  15BC19: 'CLAUDS: CFHT Large Area U-band Deep Survey'
+  15BC20: Weighing the f_gas clusters
+  15BC21: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  15BC22: Identification and characterization of young low-mass stars in Columba Association
+  15BC95: Wide Imaging Search for Benchmark Planets
+  15BC96: Searching for the rare super-weak magnetic fields in white dwarf stars
+  15BC97: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  15BC98: Identification and characterization of young low-mass stars in Columba Association
+  15BC99: Wide Imaging Search for Benchmark Planets
+  15BD97: Narrowband imaging of M31
+  15BD98: Wide Imaging Search for Benchmark Planets
+  15BD99: Wide Imaging Search for Benchmark Planets
+  15BF01: 'Search for Magnetic fields in Post-AGB stars :  a focus on RV Tauri stars'
+  15BF02: 'Exoplanet host stars: snapshot survey of their magnetic properties'
+  15BF04: Follow-up of a Kepler mysterious triple star
+  15BF05: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15BF07: Connecting stars and dust in the unusual star forming filament G110-13
+  15BF08: Weighing the f_gas clusters
+  15BF09: Characterization of the faint Milky Way satellites Laevens 1 & 2 with MEGACAM
+  15BF11: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  15BF13: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  15BF95: 'Search for Magnetic fields in Post-AGB stars :  a focus on RV Tauri stars'
+  15BF96: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15BF97: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15BF98: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  15BF99: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  15BH07: Rapid followup of important solar system discoveries from Pan-STARRS
+  15BH14: Observations of Near-Earth Objects
+  15BH15: A search for spectroscopic binary central stars of planetary nebulae
+  15BH20: Extreme Brown Dwarfs as Exoplanet Analogs
+  15BH29: Detection of Halley NEOs
+  15BH30: Volatile Activity in Comets
+  15BH31: Probing the asteroid rotational breakup limit
+  15BH32: Spectroscopy of nearby calibrators for better M dwarf classification by
+    Gaia
+  15BH96: A search for spectroscopic binary central stars of planetary nebulae
+  15BH97: Extreme Brown Dwarfs as Exoplanet Analogs
+  15BH98: Rapid followup of important solar system discoveries from Pan-STARRS
+  15BH99: Rapid followup of important solar system discoveries from Pan-STARRS
+  15BO16: Completion of the 400d Cosmological Sample Weak Lensing Programme up to
+    redshift 0.55
+  15BO33: Topology and evolution of surface magnetic fields in active late-type stars
+  15BO37: A large-scale galaxy overdensity around the z=6.28 QSO SDSSJ1030+0524
+  15BP05: 'OSSOS: the Outer Solar System Origins Survey'
+  15BP06: 'OSSOS: the Outer Solar System Origins Survey'
+  15BP09: 'CFHT-Luau: The CFHT Legacy for the u-band all-sky universe'
+  15BP10: 'CFHT-Luau: The CFHT Legacy for the u-band all-sky universe'
+  15BP15: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  15BP16: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  15BP17: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  15BP18: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  15BP19: 'HMS : the History of the Magnetic Sun'
+  15BP20: 'HMS : the History of the Magnetic Sun'
+  15BQ01: "\_"
+  15BQ03: "\_"
+  15BQ04: "\_"
+  15BQ05: "\_"
+  15BQ06: "\_"
+  15BQ07: "\_"
+  15BQ08: "\_"
+  15BQ09: "\_"
+  15BQ10: "\_"
+  15BQ11: "\_"
+  15BQ12: "\_"
+  15BQ13: "\_"
+  15BQ14: "\_"
+  15BQ15: "\_"
+  15BQ16: "\_"
+  15BS01: Testing the single degenerate channel for type Ia supernova
+  15BS02: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  15BS03: 'Testing the new scenario of star formation: young clusters and jets in
+    the filamentary Planck cold clumps'
+  15BS05: ' Unveiling and characterizing the babies of  the Galactic Snake: a remarkable
+    filamentary dark cloud G133.60+0.10'
+  15BS07: Probing the structure of dark matter haloes by imaging spectacular Einstein
+    rings
+  15BS97: Systematic Characterization of Exoplanetary Atmospheres
+  15BS98: Systematic Characterization of Exoplanetary Atmospheres
+  15BS99: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  15BT01: Photometric redshifts and stellar population ages of galaxies in the AKARI
+    North Ecliptic Field
+  15BT02: 'Monitoring Long-Term Variability of Active T Tauri Stars (V): Progress
+    Report'
+  15BT03: Time-Series H-Band Observations for Cepheids in M33
+  15BT05: A snapshot observing program to study the optical counterparts of gamma-ray
+    emitting black widow-type millisecond pulsars
+  15BT07: Recovery of the Possible Neptune Trojans detected by Pan-STARRS 1
+  15BT09: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey: SXDF'
+  15BT10: Are hydrogen deficient stars mergers of two white dwarfs?
+  15BT11: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  15BT12: Observations of the Activity of Main-Belt Comets P/2010 R2, 233P, and 313P
+  15BT98: Are hydrogen deficient stars mergers of two white dwarfs?
+  15BT99: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey: SXDF'
+  16AC004: 'Planetary Nebulae in the Virgo Cluster Core:  M87 and the ICL'
+  16AC03: Scrutinising the Galactic potential and the mass function of dark sub-halos
+    with the GD-1 stellar stream
+  16AC05: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  16AC07: A census of star formation and AGN feedback in members of groups and cool-core
+    clusters
+  16AC08: Testing the presence of strong toroidal magnetic fields at the surface of
+    tau Scorpii
+  16AC10: Solo Dwarfs in the nearby Universe
+  16AC11: A multispectral analysis of the northern bright shell of IC 443
+  16AC12: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Continued
+    Photometric Monitoring in 2016A'
+  16AC13: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  16AC15: 'A spatially complete view of interacting galaxies: the case of HCG92, Arp84
+    and Arp91'
+  16AC16: Accretion in Action? Searching for Non-Circular Flows in HIghMass Galaxies
+  16AC18: Do irradiated, transiting gas giants go through an L-T transition, like
+    field brown dwarfs?
+  16AC20: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  16AC21: 'WEIRD : Wide orbit Exoplanet search with InfraRed Direct imaging'
+  16AC23: 'The SNAGS Project Nebular Abundances in Nearby Star-Forming Galaxies: A
+    Pilot Study with SITELLE'
+  16AC26: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16AC27: A complete characterization of the physical, magnetic, and rotational properties
+    of magnetic intermediate-mass stars within 100pc
+  16AC28: 'Tracking the NGVS trans-neptunians: precise orbital measurement'
+  16AC31: Spectra of Metal-Poor Stars found in the CFHT PRISTINE Survey
+  16AC32: A search for Zeeman linear polarization in spectral lines of active M dwarfs
+  16AC34: Deep UgRK imaging of the HS1700 (z=2.30) and HS1549 (z=2.85) protoclusters.
+  16AC36: Weighing the f_gas clusters
+  16AC39: A first sensitive search for weak magnetic fields in hot, evolved high mass
+    stars
+  16AC40: Using SITELLE to Map the Pre-Supernova Circumstellar Medium; Detailing the
+    Two Prototypical Wolf-Rayet Nebulae M1-67 and NGC6888
+  16AC42: 'Identification of stellar members of the Columba Association:  new low-mass
+    siblings of the HR 8799 system'
+  16AC43: 'MASSIVE-IR Wrap-Up: The Structure of the Most Massive Nearby Galaxies as
+    Probed with WIRCam'
+  16AC94: Deep UgRK imaging of the HS1700 (z=2.30) and HS1549 (z=2.85) protoclusters.
+  16AC95: Accretion in Action? Searching for Non-Circular Flows in HIghMass Galaxies
+  16AC96: Spectra of Metal-Poor Stars found in the CFHT PRISTINE Survey
+  16AC97: 'WEIRD : Wide orbit Exoplanet search with InfraRed Direct imaging'
+  16AC98: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  16AC99: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16AF02: The Fate of the Stripped Gas in Virgo Cluster Galaxies
+  16AF03: Measuring the magnetic field of the young eruptive star EX Lupi
+  16AF04: Search for magnetic fields in Kepler delta Scuti stars with additional low
+    frequencies
+  16AF05: Characterization of the faint Milky Way dwarf galaxies Draco II and Sagittarius
+    II with MegaCam
+  16AF06: Searching for distant and very faint Milky Way dwarf galaxies from close
+    pairs of RR Lyrae stars
+  16AF07: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Continued
+    Photometric Monitoring in 2016A'
+  16AF09: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  16AF10: Unveiling the star formation in Cygnus-X
+  16AF11: Dust evolution in L134
+  16AF14: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  16AF16: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  16AF17: 'Way to Blue: Complete 3-D Imaging of Large Scale Structures at z~1'
+  16AF19: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16AF20: 'The MATLAS survey: an investigation of the outer stellar halos and globular
+    clusters'
+  16AF25: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  16AF30: A first sensitive search for weak magnetic fields in hot, evolved high mass
+    stars
+  16AF94: Search for magnetic fields in Kepler delta Scuti stars with additional low
+    frequencies
+  16AF95: Search for magnetic fields in Kepler delta Scuti stars with additional low
+    frequencies
+  16AF96: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16AF97: The Fate of the Stripped Gas in Virgo Cluster Galaxies
+  16AF98: Dust evolution in L134
+  16AF99: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  16AH03: Rapid followup of important solar system discoveries from Pan-STARRS
+  16AH04: Testing SITELLE on low surface brightness galaxies
+  16AH09: Mapping the Spatial Structure of [OII] in a Multiple Galaxy Group Merger
+    with SITELLE
+  16AH14: 'HEROES: The Hawaii EROsita Ecliptic-pole Survey'
+  16AH19: A search for spectroscopic binary central stars of planetary nebulae
+  16AH20: Observations of Near-Earth Objects
+  16AH23: Extreme Brown Dwarfs as Exoplanet Analogs
+  16AH29: Probing the asteroid rotational breakup limit
+  16AH31: Detection of cometary NEOs
+  16AH36: "The Manx Comets\x96Testing Solar System Formation Models"
+  16AH41: 'The SNAGS Project Nebular Abundances in Nearby Star-Forming Galaxies: A
+    Pilot Study with SITELLE'
+  16AH92: Extreme Brown Dwarfs as Exoplanet Analogs
+  16AH93: 'The SNAGS Project Nebular Abundances in Nearby Star-Forming Galaxies: A
+    Pilot Study with SITELLE'
+  16AH94: A search for spectroscopic binary central stars of planetary nebulae
+  16AH95: 'HEROES: The Hawaii EROsita Ecliptic-pole Survey'
+  16AH96: 'HEROES: The Hawaii EROsita Ecliptic-pole Survey'
+  16AH97: Mapping CO 2 Abundances with NEOWISE
+  16AH98: Detection of cometary NEOs
+  16AH99: Rapid followup of important solar system discoveries from Pan-STARRS
+  16AO38: 'A large, perfectly matched, Lya-Ha dual narrow-band survey at z=2.2: what
+    does Lya actually tell us?'
+  16AP05: 'OSSOS: the Outer Solar System Origins Survey'
+  16AP06: 'OSSOS: the Outer Solar System Origins Survey'
+  16AP09: 'CFHT-Luau: The CFHT Legacy for the u-band all-sky universe'
+  16AP10: 'CFHT-Luau: The CFHT Legacy for the u-band all-sky universe'
+  16AP15: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  16AP16: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  16AP17: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  16AP18: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  16AP19: 'HMS: the History of the Magnetic Sun'
+  16AP20: 'HMS: the History of the Magnetic Sun'
+  16AQ01: "\_"
+  16AQ02: "\_"
+  16AQ03: "\_"
+  16AS01: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Continued
+    Photometric Monitoring in 2016A'
+  16AS02: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16AS03: Characterizing the most massive galaxy structures at z = 2.24
+  16AS06: A Survey of Faint Quasars at z >= 6 in the NGVS Field
+  16AS07: The First Measurement of Free-Floating Planet Masses with K2 Campaign 9
+    and CFHT
+  16AS96: Characterizing the most massive galaxy structures at z = 2.24
+  16AS97: The First Measurement of Free-Floating Planet Masses with K2 Campaign 9
+    and CFHT
+  16AS98: The First Measurement of Free-Floating Planet Masses with K2 Campaign 9
+    and CFHT
+  16AS99: China Key program
+  16AT01: CFHT u-band survey of the AKARI NEP wide field
+  16AT02: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey: Completing
+    the COSMOS Field'
+  16AT03: A snapshot observing program to study the optical counterparts of gamma-ray
+    emitting black widow-type millisecond pulsars
+  16AT04: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  16AT05: New tools for brown dwarf studies using J, W, H, and CH4ON filters
+  16AT06: Observations of the Activity of Main-Belt Comets 238P, 288P, and 324P
+  16AT08: 'Tracking the NGVS trans-neptunians: precise orbital measurement'
+  16AT09: Identifying the host galaxies of low-z damped Lyman-alpha systems
+  16AT11: Out-gassing activity of Jupiter family comet at heliocentric distance
+  16AT99: CFHT u-band survey of the AKARI NEP wide field
+  16BC01: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  16BC02: Evolution during the main sequence of the magnetic and abundance geometries
+    of magnetic Bp stars
+  16BC03: A census of star formation and AGN feedback in members of groups and cool-core
+    clusters
+  16BC04: A sensitive search for weak magnetic fields in hot evolved stars
+  16BC05: A CFHT WIRCam narrow-band survey for emission line galaxies in the early
+    Universe
+  16BC06: 'A spatially complete view of interacting galaxies: the case of Arp 82,
+    Arp 132 and Arp 202'
+  16BC07: Exploring the most pristine metal-poor stars in Andromeda
+  16BC08: Spectra of Metal-Poor Stars found in the CFHT PRISTINE Survey
+  16BC09: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  16BC10: A CaHK survey of Milky Way faint dwarf galaxies
+  16BC12: Constraining the rotational period of the very slowly rotating magnetic
+    O star HD 54879
+  16BC14: A multispectral analysis of Cygnus Loop
+  16BC16: 'Thermodynamics of HII regions: Sh2-158'
+  16BC17: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  16BC18: 'WEIRD : Wide orbit Exoplanet search with InfraRed Direct imaging'
+  16BC19: 'Characterizing the Closest LINER: Andromeda Bulge.'
+  16BC20: 'Identification of stellar members of the Columba Association:  new low-mass
+    siblings of the HR 8799 system'
+  16BC22: Weighing the f_gas clusters
+  16BC23: 'SOURCES : A wide field, blind search of star forming galaxies in XXL X-ray
+    clusters'
+  16BC24: Using SITELLE to Map the Pre-SN Circumstellar Medium around the WR nebula
+    NGC6888
+  16BC25: A pilot survey of the Planetary Nebulae in the inner halo (R ~ 50 kpc) of
+    M31 with Megacam@CFHT
+  16BC26: CFHT Large-Area U-band Deep Survey
+  16BC27: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  16BC29: Building todays most massive galaxies
+  16BC98: A CFHT WIRCam narrow-band survey for emission line galaxies in the early
+    Universe
+  16BC99: 'WEIRD : Wide orbit Exoplanet search with InfraRed Direct imaging'
+  16BF01: Deep K_S imaging of the DLS F1 field to search for galaxy clusters at z>1.5
+  16BF02: The transition between fossil and dynamo magnetic fields in F stars
+  16BF05: A sensitive search for weak magnetic fields in hot evolved stars
+  16BF07: The magnetic field of young Taurus stars targeted with K2
+  16BF08: Exploring the most pristine metal-poor stars in Andromeda
+  16BF10: Spectra of Metal-Poor Stars found in the CFHT PRISTINE Survey
+  16BF11: A CaHK survey of Milky Way faint dwarf galaxies
+  16BF13: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  16BF15: 'Unveiling the magnetic topologies of slowly rotating M dwarfs : implication
+    for their habitable zone?'
+  16BF18: Precise search of the ninth planet of the solar system
+  16BF22: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  16BF24: Weighing the f_gas clusters
+  16BF25: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16BF27: 'CoolSnap: surveying physical properties of M dwarfs for an optimized search
+    for habitable exo-Earths'
+  16BF28: 'The GOGREEN Survey of dense galaxy environments at 1
+
+    '
+  16BF98: 'The GOGREEN Survey of dense galaxy environments at 1
+
+    '
+  16BH03: 'HEROES: The Hawaii EROsita Ecliptic-pole Survey'
+  16BH04: Rapid followup of important solar system discoveries from Pan-STARRS
+  16BH09: 'HEROES: The Hawaii EROsita Ecliptic-pole Survey'
+  16BH10: Characterization of interesting active solar system objects discovered by
+    Pan-STARRS1
+  16BH11: Mapping circumstellar environment of young stars with spectropolarimetry
+  16BH14: A search for spectroscopic binary central stars of planetary nebulae
+  16BH23: Observations of Near-Earth Objects
+  16BH28: Volatile Activity in Comets
+  16BH35: Extreme Brown Dwarfs as Exoplanet Analogs
+  16BH37: The Planetary Environment of Young M Dwarf Stars
+  16BH41: Spectroscopic-Asteroseismic Calibration for Giant Stars Observed with K2
+  16BH42: "The Manx Comets\xE2\x80\x93Testing Solar System Formation Models"
+  16BH96: Rapid followup of important solar system discoveries from Pan-STARRS
+  16BH97: Volatile Activity in Comets
+  16BH98: Extreme Brown Dwarfs as Exoplanet Analogs
+  16BH99: Rotation of Near Earth Asteroidswith small semi-major axis
+  16BO24: 'A large, perfectly matched, Lya-Ha dual narrow-band survey at z=2.2: what
+    does Lya actually tell us?'
+  16BP05: 'OSSOS: the Outer Solar System Origins Survey'
+  16BP06: 'OSSOS: the Outer Solar System Origins Survey'
+  16BP09: 'CFHT-Luau: The CFHT Legacy for the u-band all-sky universe'
+  16BP10: 'CFHT-Luau: The CFHT Legacy for the u-band all-sky universe'
+  16BP15: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  16BP16: 'Binamics: Binarity and Magnetic Interactions in various classes of Stars'
+  16BP17: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  16BP18: 'Matysse: Magnetic Topologies of Young Stars & the Survival of close-in
+    massive Exoplanets'
+  16BP19: 'HMS: the History of the Magnetic Sun'
+  16BP20: 'HMS: the History of the Magnetic Sun'
+  16BS01: 'CLAUDS: CFHT Large-Area U-band Deep Survey'
+  16BS04: Primordial Environment of Ten Billion Solar Mass Black Holes at the Post
+    Reionization Epoch
+  16BS05: 'Origin of the X-ray Arcs in NGC 5195: AGN Feedback or Triggered Star Formation?'
+  16BT01: 'Monitoring Long-Term Variability of Active T Tauri Stars (V): Progress
+    Report'
+  16BT02: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey: the Final
+    Semester'
+  16BT03: Large-scale intensity mapping of Lyman-alpha emission around 7 QSOs at z
+    = 2.2
+  16BT05: Activity Characterization of Main-Belt Comets 176P, 238P, 288P, and 324P
+  16BT07: Out-gassing activity of Jupiter family comet at large heliocentric distance
+  17AC01: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  17AC02: The Best and Brightest Metal-Poor Star Candidates in the CFHT PRISTINE Survey
+  17AC03: Studying the magnetic fields of fully convective stars in the unsaturated
+    regime
+  17AC05: Kinematics of the CK Vul (Nova 1670) Ejecta
+  17AC07: Newborn Hot Jupiters of T Tauri stars
+  17AC09: A census of star formation and AGN feedback in members of groups and cool-core
+    clusters
+  17AC10: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  17AC12: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Continued
+    Photometric Monitoring in 2017A'
+  17AC15: A CaHK survey of Milky Way faint dwarf galaxies
+  17AC16: Magnetic Pulsations in a Slowly Rotating beta Cep Star?
+  17AC18: Planet engulfment in red giant stars as the origin of rapid rotation and
+    enhanced magnetic dynamos
+  17AC19: 'Imaging the Feeble Giant: Deep Observations of the Dwarf Spheroidal Galaxy
+    Crater 2'
+  17AC21: 'Measuring the sizes of TNOs: astrometry for RECON'
+  17AC23: 'WEIRD : Wide orbit Exoplanet search with InfraRed Direct imaging'
+  17AC24: Accretion in Action? Searching for Non-Circular Flows in HIghMass Galaxies
+  17AC25: 'Characterization of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  17AC29: Measuring the magnetic fields of photospheric active regions detected on
+    zeta Puppis by BRITE-Constellation
+  17AC30: Searching for new young associations with Gaia-DR1 (snapshot survey)
+  17AC31: 'Mapping with Unparalleled Spatial and Spectral Resolution the Gas Around
+    Two Different Types of WR Nebula: NGC6888 and M1-67'
+  17AC33: Continuation of a CFHT WIRCAM narrow-band survey for emission line galaxies
+    in the early Universe
+  17AC97: Measuring the magnetic fields of photospheric active regions detected on
+    zeta Puppis by BRITE-Constellation
+  17AC98: Continuation of a CFHT WIRCAM narrow-band survey for emission line galaxies
+    in the early Universe
+  17AC99: 'Measuring the sizes of TNOs: astrometry for RECON'
+  17AF01: The magnetic field of young Taurus stars targeted with K2 (part B)
+  17AF04: Studying the magnetic fields of fully convective stars in the unsaturated
+    regime
+  17AF05: The transition between fossil and dynamo magnetic fields in F stars
+  17AF06: Newborn Hot Jupiters of T Tauri stars
+  17AF07: Dust properties in the L134 dark cloud from visible and NIR scattering
+  17AF08: Detecting magnetic fields in Ap/Bp stars observed with K2 for magneto-asteroseismology
+  17AF09: High resolution spectroscopy of the metal-poor stars in the CFHT PRISTINE
+    Survey
+  17AF10: A CaHK survey of Milky Way faint dwarf galaxies
+  17AF11: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  17AF12: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  17AF13: 'A Transformative Multi-Object AGN Reverberation Mapping Campaign: Continued
+    Photometric Monitoring in 2017A'
+  17AF15: A Full Census of Baryons in the Most Massive Galaxy Clusters across Cosmic
+    Time
+  17AF16: Magnetic fields of the secondary stars in cataclysmic variables.
+  17AF17: 'Testing environmental effects during early rotational evolution of low
+    mass stars: evaluation of the rotational scenario in the OB association CygOB2'
+  17AF18: The changing magnetic fields of intermediate-mass T Tauri stars
+  17AF19: Optical spectroscopy of IR emission line stars
+  17AF20: 'The tidal tail of Palomar 5: first dynamical detection of the existence
+    of LCDM subhaloes or evidence for alternative gravity?'
+  17AF22: 'The Outer Solar System: now in vivid ugrJ colours'
+  17AF23: 'Unveiling the physical properties of high-z (1
+
+    '
+  17AF25: 'The GOGREEN Survey of dense galaxy environments at 1
+
+    '
+  17AF26: 'Characterization of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  17AF27: Detecting the magnetic field of young stars with strong radio emission.
+  17AF95: Newborn Hot Jupiters of T Tauri stars
+  17AF96: The magnetic field of young Taurus stars targeted with K2 (part B)
+  17AF97: Dust properties in the L134 dark cloud from visible and NIR scattering
+  17AF98: 'Unveiling the physical properties of high-z (1
+
+    '
+  17AF99: The transition between fossil and dynamo magnetic fields in F stars
+  17AH01: Nebular physics ini the late-type galaxy NGC 6822
+  17AH06: Characterization of interesting active solar system objects discovered by
+    Pan-STARRS1
+  17AH09: Rapid followup of important solar system discoveries from Pan-STARRS
+  17AH12: Rapid followup of important solar system discoveries from Pan-STARRS
+  17AH14: Volatile Activity in Comets
+  17AH16: A search for spectroscopic binary central stars of planetary nebulae
+  17AH20: Young Free-Floating Planets in the Solar Neighborhood
+  17AH22: Observations of Near-Earth Objects
+  17AH24: "The Manx Comets\xE2\x80\x93Testing Solar System Formation Models"
+  17AH25: 'Boulders in the Main Belt: the Deepest Asteroid Survey Ever'
+  17AH28: 'New Era Astronomy: Followup of Pan-STARRS Counterparts to LIGO Gravity
+    Wave Events and IceCube Neutrino Events - characterizing the astrophysical transient
+    background.'
+  17AH30: Near-Infrared Monitoring of Periodic Dippers Stars
+  17AH32: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  17AH92: 'HEROES: The Hawaii EROsita Ecliptic-pole Survey'
+  17AH93: A search for spectroscopic binary central stars of planetary nebulae
+  17AH94: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  17AH95: Rotation of Near Earth Asteroids with small semi-major axis
+  17AH96: Rapid followup of important solar system discoveries from Pan-STARRS
+  17AH97: 'Young Free-Floating Planets in the Solar Neighborhood:'
+  17AH98: The Multiplicity and Planetary Environment of Young M Dwarf Stars
+  17AH99: Near-Infrared Monitoring of Periodic Dippers Stars
+  17AO05: 'Fireworks in 3D: Dissecting a supernova factory'
+  17AP30: CFIS
+  17AP31: VESTIGE
+  17AP32: CIPP
+  17AS01: Newborn Hot Jupiters of T Tauri stars
+  17AS04: Deep CFHT Y-band imaging of the Galactic Centre
+  17AS05: 'Discovering the youngest free-floating planets: A transformative survey
+    of Serpens core with the novel W-band filter'
+  17AT01: A snapshot observing program to study the optical counterparts of gamma-ray
+    emitting black widow-type millisecond pulsars
+  17AT02: Quantifying mass structures along strong-lens lines of sight for accurate
+    cosmology
+  17AT03: MEGACAM u-band survey for the first identification of a DLA-traced over-density
+    region
+  17AT04: Newborn Hot Jupiters of T Tauri stars
+  17AT05: New tools for brown dwarf studies using J, W, H, and CH4ON filters
+  17AT06: The Color of Perpendicular Disk Members in Outer Solar System
+  17AT07: Is  the net effect of  feedback on star formation positive or negative ?
+    - A case  study of S242
+  17AT08: A Dark Galaxy/Gas Cloud or Stripped Gas?
+  17AT10: 'Exploring the extreme outer Solar System for hints of a massive planet:
+    tracking trans-Neptunian discoveries from CFIS-WIQD'
+  17AT11: Probing the structure of local supervoids with weak lensing
+  17AT12: Activity Characterization of Main-Belt comet 259P
+  17AT14: Identifying the host galaxies of low-z damped Lyman-alpha systems
+  17AT98: A Dark Galaxy/Gas Cloud or Stripped Gas?
+  17AT99: Quantifying mass structures along strong-lens lines of sight for accurate
+    cosmology
+  17BC01: Modelling field geometries of three white dwarfs with rare super-weak magnetic
+    fields
+  17BC02: Wide-field near-infrared imaging of Maffei 1
+  17BC03: Search for stellar magnetism in Post-AGB stars
+  17BC04: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  17BC05: Metal-poor stars in the Andromeda galaxy
+  17BC06: Measuring the ultra-slow rotation of the magnetic O star HD 54879
+  17BC08: 'Measuring the sizes of TNOs: astrometry for RECON'
+  17BC09: Resonant amplitude libration measurement in the OSSOS sample.
+  17BC10: Nebular O/H Abundance Fluctuations in M31 and M33
+  17BC11: 'A spatially complete view of interacting galaxies: the case of UGC12914/15
+    and Arp270'
+  17BC12: Panoramic View of Star Formation in Rich Galaxy Clusters
+  17BC14: Confirming a Massive Protocluster at Z=3.13?
+  17BC15: 'A return to Thermodynamics of HII regions: Sh2-158'
+  17BC16: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  17BC17: Studying the magnetic fields of fully convective stars in the unsaturated
+    regime
+  17BC18: 'Characterization of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  17BC19: 'Understanding radio, IR and X-ray emission of classical Cepheids: Pulsational
+    modulation of the magnetic field of eta Aql'
+  17BC20: The GOGREEN Survey of dense galaxy environments at 1
+  17BC21: Photometric monitoring of ultracool dwarfs
+  17BC22: The filamentary nebula in NGC 1275
+  17BC23: Masses of the TRAPPIST-1 HZ Planets in Preparation for JWST
+  17BC24: WIRCAM NIR follow-up of very faint X-ray transients discovered by Swift
+  17BC28: Asteroid 3200 Phaethon during an unusually close pass to Earth
+  17BF01: Galaxy distribution, kinematics and star formation in the Cl0016+1609 supercluster
+  17BF02: The magnetic field of young Taurus stars targeted with K2 (part C)
+  17BF03: Are magnetic fields behind the enigmatic variability of Boyajians star ?
+  17BF04: A CaHK survey of Milky Way faint dwarf galaxies --- final B-semester observations
+  17BF06: 'Understanding stellar activity: the first joint space photometry, radial
+    velocity, and polarimetry campaign'
+  17BF07: The changing magnetic fields of intermediate-mass T Tauri stars
+  17BF08: The GOGREEN Survey of dense galaxy environments at 1
+  17BF09: Metal-poor stars in the Andromeda galaxy
+  17BF10: The magnetic field of the secondary star in the cataclysmic variable, AE
+    Aqr
+  17BF11: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  17BF12: Characterisation of the magnetic evolved hot stars 19 Aur and HR3042
+  17BF14: Resonant amplitude libration measurement in the OSSOS sample.
+  17BF15: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  17BF16: 'Characterization of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  17BF17: Nebular O/H Abundance Fluctuations in M31 and M33
+  17BF18: High resolution spectroscopy of the metal-poor stars in the CFHT PRISTINE
+    Survey
+  17BF19: Studying the magnetic fields of fully convective stars in the unsaturated
+    regime
+  17BF21: Continuation of a CFHT WIRCAM narrow-band survey for emission line galaxies
+    in the early Universe
+  17BF99: Nebular O/H Abundance Fluctuations in M31 and M33
+  17BH05: Characterization of interesting active solar system objects discovered by
+    PS1
+  17BH06: Volatile Activity in Comets
+  17BH09: Rapid followup of important solar system discoveries from Pan-STARRS
+  17BH13: Ejected Brown Dwarf Infants
+  17BH16: Ultra-deep Interference Filter Imaging of Herbig-Haro Jets
+  17BH18: Observations of Near-Earth Objects
+  17BH19: "The Manx Comets\xE2\x80\x93Testing Solar System Formation Models"
+  17BH23: 'New Era Astronomy: Followup of Pan-STARRS counterparts to LIGO Gravity
+    Wave Events, IceCube Neutrino Events, and rare transient objects'
+  17BH30: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  17BH35: "Dancing Galaxies: A three-dimensional study with CFHT\xE2\x80\x99s imaging\
+    \ Fourier transform spectrograph of nearby, merging, luminous, infrared galaxy\
+    \ II Zw 96"
+  17BH40: Nebular Abundance Fluctuations in M31 and M33
+  17BH92: The Manx Comets - Testing Solar System Formation Models
+  17BH93: Ejected Brown Dwarf Infants
+  17BH94: The effect of Stellar Multiplicity on Oscillations in Cool stars
+  17BH95: 'New Era Astronomy: Followup on Pan-STARRS counterparts to LIGO gravity
+    wave events, ice cube neutrino events, and rare transient objects'
+  17BH97: Rapid followup of important solar system discoveries from Pan-STARRS
+  17BH98: Search for Near Earth Objects at small solar elongation
+  17BH99: Rapid followup of important solar system discoveries from Pan-STARRS
+  17BO52: The quest for a remnant stellar halo around G1 in Andromeda
+  17BO54: 'Completing the largest matched Lya-Ha dual narrow-band survey at z=2.2:
+    what does Lya actually tell us?'
+  17BP30: CFIS
+  17BP31: VESTIGE
+  17BP32: CIPP
+  17BP97: CFIS
+  17BP98: CFIS
+  17BP99: CFIS
+  17BS01: The identification of r-process elements in Cas A
+  17BS02: 'Exploring the extreme outer Solar System for hints of a massive planet:
+    tracking trans-Neptunian discoveries from CFIS'
+  17BS03: Primordial Environment of the Most Massive Black Hole Within an Ultra-luminous
+    Quasar at z = 6.3
+  17BS04: Mapping cosmic structures around the most massive overdensities with Ly-alpha
+    emitters at z = 3.12/3.20
+  17BS05: Deep Imaging of a Newly Discovered Nebula in Monoceros
+  17BS99: Mapping cosmic structures around the most massive overdensities with Ly-alpha
+    emitters at z = 3.12/3.20
+  17BT01: 'Exploring the extreme outer Solar System for hints of a massive planet:
+    tracking trans-Neptunian discoveries from CFIS'
+  17BT02: Additional Time-Series H-Band Observations for Cepheids in M33
+  17BT03: Monitoring Long-Term Variability of Active T Tauri Stars (VI)
+  17BT04: 'Discovering the youngest free-floating planets: a transformative survey
+    of Taurus with the novel W-band filter'
+  17BT05: Mapping Cosmic Structures around the Most Massive Overdensity with Ly-alpha
+    Emitters at z = 2.25
+  17BT06: IFU Study of Extended AGN Narrow-line Regions at Redshift 0.1-0.2
+  17BT07: Probing a supervoid toward the Cold Spot with weak lensing
+  17BT09: Shape and rotation of Trans-Neptunian Objects
+  18AC01: Uncovering metal-poor stars in the Galactic bulge
+  18AC02: A Survey of Faint Quasars at z >= 6 in the NGVS Field
+  18AC04: 'Star formation and AGN feedback I: A census of active members of cool-core
+    clusters'
+  18AC05: 'Star formation and AGN feedback II: Gas morphology and ionization mechanisms
+    in members of groups'
+  18AC06: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  18AC07: 'Search for stellar magnetism in Post-AGB stars: Follow-up'
+  18AC09: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  18AC10: Characterisation of the magnetic evolved hot star HD167686
+  18AC11: 'Characterisation of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  18AC12: 'Imaging the Feeble Giant: Deep Observations of the Dwarf Spheroidal Galaxy
+    Crater 2'
+  18AC13: 'Renegade magnetic A and B stars: probing the anomalously fast rotators'
+  18AC15: Something remarkable is happening to the magnetic Of?p star HD 148937
+  18AC16: 'Two birds, one stone: are magnetic fields and binarity responsible for
+    the surprising variability of main sequence A stars revealed by Kepler?'
+  18AC17: Measuring the ultra-slow rotation of the magnetic O star HD 54879
+  18AC18: Where are the Magnetic Fields of Hot Subdwarf Stars?
+  18AC19: Continuing Observations of the Extremely Slowly Rotating Magnetic B-type
+    Star xi1 CMa
+  18AC21: Mapping the entire filamentary nebulae in M87 and NGC 5813
+  18AC23: WIRCAM NIR follow-up of very faint X-ray transients discovered by Swift
+  18AC24: Nebular Abundance and Star Formation in Nearby Galaxies
+  18AC25: Studying the nature of HD148330
+  18AC26: A High Spatial Coverage Study of the Mass-Loss History of the WR Wind-Blown
+    Bubble NGC6888
+  18AC27: Photometric monitoring of the L0 dwarf 2MASS J11593850+0057268
+  18AC28: Accretion in Action? Searching for Non-Circular Flows in HIghMass Galaxies
+  18AC29: 'The GOGREEN Survey of dense galaxy environments at 1
+
+    '
+  18AC30: 'A spatially complete view of interacting galaxies: the case of Arp 87 and
+    Arp 285'
+  18AC31: The detection of surface magnetic fields in Nitrogen-unenriched fast rotating
+    O-type stars
+  18AC32: Resolving galaxy proto-clusters from the cosmic infrared background
+  18AC33: Continuation of a CFHT WIRCam narrow-band survey for emission line galaxies
+    in the early Universe
+  18AC34: A multispectral analysis of IC 443 and NGC 6960
+  18AC97: Mapping the entire filamentary nebulae in M87 and NGC 5813
+  18AC98: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  18AC99: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  18AF02: Uncovering metal-poor stars in the Galactic bulge
+  18AF03: 'COSMIC-DANCE: Unravelling the origin of the mass function'
+  18AF04: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  18AF05: Abundance gradients in the Milky Way thick disk from type II Cepheids
+  18AF07: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  18AF08: The changing magnetic fields of intermediate-mass T Tauri stars
+  18AF09: Nebular Abundance and Star Formation in Nearby Galaxies
+  18AF10: 'Understanding stellar activity: the largest joint space photometry, radial
+    velocity, and polarimetry campaign (part II)'
+  18AF11: 'Gaia-CFHT: Rapid-Response Galactic Archaeology'
+  18AF12: Deriving the magnetic map and constraining the innermost regions of the
+    T Tauri S Coronae Australis North.
+  18AF13: 'Characterisation of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  18AF14: Characterisation of the magnetic evolved hot star HD167686
+  18AF15: Resolving galaxy porto-clusters from the cosmic infrared background
+  18AF16: High resolution spectroscopy of the metal-poor stars in the CFHT PRISTINE
+    Survey
+  18AF18: 'Most Massive Clusters in the Universe: filling the z > 0.7 bins'
+  18AF95: 'Understanding stellar activity: the largest joint space photometry, radial
+    velocity, and polarimetry campaign (part II)'
+  18AF96: Resolving galaxy porto-clusters from the cosmic infrared background
+  18AF97: 'Most Massive Clusters in the Universe: filling the z > 0.7 bins'
+  18AF98: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  18AF99: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  18AH08: 'Spatially Resolved Kinematics of Ionized Gas with CFHTs SITELLE in the
+    Merging Luminous Infrared Galaxy: Mrk 266  host of Double AGN'
+  18AH11: Rapid followup of important solar system discoveries from Pan-STARRS
+  18AH13: Driver of Cometary Activity
+  18AH16: Nebular Abundance and Star Formation in Nearby Galaxies
+  18AH19: 'LYNDS 914: A NEW STAR-FORMING REGION IN CYGNUS'
+  18AH22: Observations of Near-Earth Objects
+  18AH26: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  18AH28: The Manx CometsTesting Solar System Formation Models
+  18AH29: Ejected Brown Dwarf Infants
+  18AH31: Characterization of interesting active solar system objects discovered by
+    PS1
+  18AH32: Young Free-Floating Planets In the Nearest Star-Forming Regions
+  18AH33: 'New Era Astronomy: Followup of rare transient objects from Pan-STARRS'
+  18AH35: Confirmation of Isolated Tracklets
+  18AH89: Confirmation of Isolated Tracklets
+  18AH90: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  18AH91: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  18AH92: Young Free-Floating Planets In the Nearest Star-Forming Regions
+  18AH93: Young Free-Floating Planets In the Nearest Star-Forming Regions
+  18AH94: 'LYNDS 914: A NEW STAR-FORMING REGION IN CYGNUS'
+  18AH95: The Manx CometsTesting Solar System Formation Models
+  18AH96: 'New Era Astronomy: Followup of rare transient objects from Pan-STARRS'
+  18AH97: Rapid followup of important solar system discoveries from Pan-STARRS
+  18AH98: Rapid followup of important solar system discoveries from Pan-STARRS
+  18AH99: Search for Near Earth Objects at small solar elongation
+  18AP30: CFIS
+  18AP31: VESTIGE
+  18AP32: CIPP
+  18AQ01: "\_"
+  18AQ02: "\_"
+  18AQ03: "\_"
+  18AQ04: "\_"
+  18AQ05: "\_"
+  18AQ06: "\_"
+  18AQ07: "\_"
+  18AQ08: "\_"
+  18AQ09: "\_"
+  18AQ10: "\_"
+  18AQ11: "\_"
+  18AQ12: "\_"
+  18AQ13: "\_"
+  18AQ14: "\_"
+  18AS01: A Survey of Faint Quasars at z >= 6 in the NGVS Field
+  18AS02: Deep Near-IR Imaging of the IRAC Deep Field (IDF) --- Preparing for the
+    JWST
+  18AS05: Supporting the Final Spitzer Microlensing Campaign with CFHT
+  18AS13: 'The Virgo core PN survey: where galaxies halos meet the cluster space'
+  18AS99: Deep Near-IR Imaging of the IRAC Deep Field (IDF) --- Preparing for the
+    JWST
+  18AT02: First [OIII]5007A image of NGC 1275 to reveal star-forming regions in its
+    multiphase nebula
+  18AT03: Understanding the orientation of protostellar disks in  filamentary clouds.
+  18AT04: High-Velocity Bullet Ejection During the Pre-Planetary Nebula Phase
+  18AT05: J-band imaging of a z7 QSO candidate detected in CO with ALMA
+  18AT06: Unveiling the outskirts of Crater 2
+  18BC02: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  18BC03: Deep r-band imaging of CLoGS galaxy groups
+  18BC04: The lopsided galaxy NGC1637 with SITELLE
+  18BC05: 'Two birds, one stone: are magnetic fields and binarity responsible for
+    the surprising variability of main sequence A stars revealed by Kepler?'
+  18BC06: Panoramic View of Star Formation in Rich Galaxy Clusters
+  18BC07: Search for vertical stratification of chemical species in slowly rotating
+    CP stars
+  18BC08: Characterisation of the magnetic evolved hot stars 13 Mon, 19 Aur and eta
+    Leo
+  18BC09: 'Characterisation of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  18BC10: Warm gas morphology and ionisation mechanisms in the centers of galaxy groups
+    NGC 1060 and NGC 193
+  18BC11: 'Measuring the sizes of TNOs: astrometry for RECON'
+  18BC12: Homogeneous Characterization of the Largest Sample of Stellar Merger Candidates
+  18BC13: 'Glimpse of green light in Andromeda (M31): A survey of Planetary Nebulae
+    in the inner halo (R ~ 50 kpc) with Megacam@CFHT'
+  18BC14: The ESPaDOnS Northern Complement to EDIBLES (ENCorE)
+  18BC16: 'The GOGREEN Survey of dense galaxy environments at 1
+
+    '
+  18BC17: A SITELLE Survey for Broadened H-alpha P-Cygni Profiles in NGC 6946 from
+    Core-collapse Supernovae Light Echoes
+  18BC18: Completing The Best and Brightest Metal-Poor Star Candidates in the original
+    CFHT PRISTINE Survey footprint
+  18BC19: Building a New Cosmological Field in the North Ecliptic Pole with CFHT/WIRCAM
+  18BC20: 'Thermodynamics of HII regions: Orion'
+  18BC21: A High Spatial Coverage Study of the Mass-Loss History of the WR Wind-Blown
+    Bubble NGC 2359
+  18BC22: Characterizing New Members of Young Associations in the Solar Neighborhood
+  18BC24: The surprising discovery of a strong magnetic field in the late B-type star
+    HD 221218
+  18BC98: 'The GOGREEN Survey of dense galaxy environments at 1
+
+    '
+  18BC99: 'Glimpse of green light in Andromeda (M31): A survey of Planetary Nebulae
+    in the inner halo (R ~ 50 kpc) with Megacam@CFHT'
+  18BF01: Star formation in the galaxies of the Cl0016+1609 supercluster
+  18BF02: 'COSMIC-DANCE: Unravelling the origin of the mass function'
+  18BF05: The long-term Halpha variability of LkCa 15
+  18BF06: Characterisation of the magnetic evolved hot stars 13 Mon, 19 Aur and eta
+    Leo
+  18BF07: 'Characterisation of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  18BF08: Characterization of the F stars tau PsA and h Dra, at the transition between
+    fossil and dynamo magnetic fields
+  18BF09: Building a New Cosmological Field in the North Ecliptic Pole with CFHT/WIRCAM
+  18BF10: Short-term evolution of the magnetic field and prominences of the young
+    Sun-like star AP 149
+  18BF13: Abundance gradient in the outer disk from Gaia DR2 newly discovered Cepheids
+  18BF14: Mapping the proper motions of the embedded young stellar population in NGC2264
+  18BF15: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  18BF16: Exploring the dark sector with stellar streams from Gaia and PanSTARRS
+  18BF17: Spectroscopic analysis of Ruprecht 147, a new benchmark star cluster
+  18BF96: Characterisation of the magnetic evolved hot stars 13 Mon, 19 Aur and eta
+    Leo
+  18BF97: 'COSMIC-DANCE: Unravelling the origin of the mass function'
+  18BF98: 'COSMIC-DANCE: Unravelling the origin of the mass function'
+  18BF99: Building a New Cosmological Field in the North Ecliptic Pole with CFHT/WIRCAM
+  18BH08: CFHT Characterization of interesting active solar system objects discovered
+    by PS1
+  18BH09: Rapid followup of important solar system discoveries from Pan-STARRS
+  18BH11: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  18BH14: Observations of Near-Earth Objects
+  18BH18: The Manx Comets Testing Solar System Formation Models
+  18BH19: Ejected Brown Dwarf Infants
+  18BH20: Interpreting the latitudinal structure of the solar wind and transient solar
+    wind phenomena from wide-eld images of the ion tails of comets
+  18BH21: Driver of Cometary Activity
+  18BH29: Confirmation of Isolated Tracklets
+  18BH30: Extending Dynamical Masses to the Planetary-Mass Regime
+  18BH33: Old Clusters for a New Spin on M Dwarf Gyrochronology
+  18BH50: 'Colliding galaxies NGC2207/IC2163: Star-forming fireworks seen with SITELLE'
+  18BH97: "Young free floating planets in the nearest star\r\n\t      forming regions\
+    \ current"
+  18BH99: The Effect of Stellar Multiplicity on Oscillations in Cool Stars
+  18BP30: CFIS
+  18BP31: VESTIGE
+  18BP32: CIPP
+  18BP41: SIGNALS
+  18BP97: CFIS
+  18BP98: CFIS
+  18BP99: CFIS
+  18BS01: Rapid Multimessenger Observations of Compact Binary Mergers Detected by
+    Virgo and LIGO
+  18BS02: Testing the single- and double-degenerate channels for type Ia supernova
+  18BS03: Supporting the Fifth Spitzer Microlensing Campaign with CFHT
+  18BS04: Building a New Cosmological Field in the North Ecliptic Pole with CFHT/WIRCAM
+  18BS06: Confirmation of strong galaxy-glaxy lensing candidates in BOSS
+  18BS07: Evidence for the importance of galaxy interactions in fueling local low-mass
+    AGNs
+  18BS08: 'NIR Imaging of Nearby Galaxies with recent MIR flares: Characterizing Light
+    curve and (sub)-pc Scale Dust'
+  18BS98: Testing the single- and double-degenerate channels for type Ia supernova
+  18BS99: Rapid Multimessenger Observations of Compact Binary Mergers Detected by
+    Virgo and LIGO
+  18BT01: The Emission-line Galaxy Population in Rich Galaxy Clusters
+  18BT02: 'The Outer Solar System: now in vivid ugrJ colours'
+  18BT03: Unveiling the global environment of a quiescent galaxy cluster at z=1.52
+  18BT05: New Insights in short GRBs
+  18BT06: Identifying the host galaxies of low-z damped Lyman-alpha systems
+  18BT07: 'Monitoring Long-Term Variability of Active T Tauri Stars (VI): Progress
+    Report'
+  18BT99: 'The Outer Solar System: now in vivid ugrJ colours'
+  19AC01: Study of the spectral variability of HD85504
+  19AC02: Revealing the nature of HD176232
+  19AC04: Time series of circular polarisation spectra of magnetic WD1105-340
+  19AC05: Measuring the ultra-slow rotation of the magnetic O star HD 54879
+  19AC07: "Brown dwarf properties revealed at high spectral\r\n\t      resolution.\
+    \ A pilot study"
+  19AC08: Deep photometric follow-up of a sinusoidal wiggle in the GD-1 stellar stream,
+    unveiled by Gaia DR2
+  19AC09: WIRCAM NIR follow-up of very faint X-ray transients discovered by Swift
+  19AC10: ToO Monitoring of Optical/IR Counterparts to Gravitational-Wave Events in
+    LIGO/Virgo Observing Run 3
+  19AC11: "Constraining the carbon abundance of a super-Earth\r\n\t      atmosphere"
+  19AC12: 'The chemical inventory of exoplanet tau Bootis b '
+  19AC13: The surprising discovery of a strong magnetic field in the late B-type star
+    HD 221218
+  19AC14: 'Characterisation of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  19AC15: 'A spatially complete view of interacting galaxies: the case of Arp 87 and
+    Arp 285'
+  19AC16: "Atmospheric Characterization of Hot Jupiters using\r\n\t      Transmission\
+    \ Spectroscopy with SPIRou"
+  19AC17: 'The Virgo Core PN Survey: Where Galaxy Halos Meet Intracluster Space'
+  19AC18: Uncovering metal-poor stars in the Galactic bulge
+  19AC19: 'HD 62658: A New Magnetic Eclipsing Hot Binary?'
+  19AC20: Long- and Short-Term Monitoring of the Ultra-Slowly Rotating Magnetic beta
+    Cep Star xi1 CMa
+  19AC21: "Probing the atmosphere of ultra hot Jupiters using\r\n\t      eclipse spectroscopy\
+    \ with SPIRou"
+  19AC22: Magnetic Mapping of the Bp Auroral Magnetosphere Star 3 Sco
+  19AC24: The Size Distribution of Saturns Irregular Moons
+  19AC26: "High resolution spectroscopy and characterization\r\n\t      of M dwarf\
+    \ binaries"
+  19AC27: The fate of the stripped gas in the Virgo galaxy NGC 4569
+  19AC28: The Northern Complement to the EDIBLES survey (ENCorE)
+  19AC29: "Probing the Elemental Compositions of Hot Jupiters\r\n\t      \t      using\
+    \ High-Resolution NIR Spectroscopy"
+  19AC98: Revealing the nature of HD176232
+  19AC99: ToO Monitoring of Optical/IR Counterparts to Gravitational-Wave Events in
+    LIGO/Virgo Observing Run 3
+  19AF01: Star formation in the galaxies of the MACS J1149+2223 supercluster
+  19AF02: "Small Sisters:do M secondaries of planet-hosting\r\n\t      primaries in\
+    \ distant binaries also host planetary systems?"
+  19AF03: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  19AF04: Deciphering the magnetospheric star-disk interaction process in the young
+    star V2062 Oph
+  19AF07: "Transmission spectroscopy of an exo-Earth\r\n\t      atmosphere"
+  19AF08: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  19AF09: Magnetic field topology in the young eruptive star EX Lup
+  19AF11: Exploring the dark sector with Gaias stellar streams
+  19AF14: "Obliquity  measurement  of  the  multiplanetary,\r\n\t      interacting\
+    \  system  Kepler-419"
+  19AF16: "Studying exoplanets evaporation with SPIRou\r\n\t      through helium absortion"
+  19AF17: "High-spectral resolution direct characterization\r\n\t      of young sub-stellar\
+    \ companions imaged around M-stars"
+  19AF18: ' Investigating the nature of a giant HI ring around the early type galaxy
+    AGC 203001'
+  19AF20: 'Characterisation of the magnetic fields of early-type giants: testing the
+    principle of stellar magnetic flux conservation'
+  19AF21: "Gaia-based kinematic survey of Blue Horizontal\r\n\t      Branch stars\
+    \ in the local Halo\r\n"
+  19AF23: Uncovering metal-poor stars in the Galactic bulge
+  19AF26: "Beyond SLS: unveiling the magnetic field and\r\n\t      planets of very\
+    \ active M dwarfs with SPIRou"
+  19AF27: The fate of the stripped gas in the Virgo galaxy NGC 4569
+  19AF98: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  19AF99: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  19AH07: Rapid followup of important solar system discoveries from Pan-STARRS
+  19AH13: CFHT Characterization of interesting active solar system objects discovered
+    by PS1
+  19AH14: Driver of Cometary Activity
+  19AH18: Observations of Near-Earth Objects
+  19AH20: Optical-NIR follow-up campaign of kilonova during the aLIGO/AdVirgo third
+    observing run and other rare transient events.
+  19AH21: Interpreting the latitudinal structure of the solar wind and transient solar
+    wind phenomena from wide-eld images of the ion tails of comets
+  19AH22: The Manx Comets - Testing Solar System Formation Models
+  19AH23: Confirmation of Interstellar Objects
+  19AH24: Ejected Brown Dwarf Infants
+  19AH28: "Wavelength-Dependence of RV Jitter in Young,\r\n\t      Magnetically Active\
+    \ Stars"
+  19AH32: Formation of Giant Planets and Brown Dwarfs on Wide Orbits
+  19AH33: What Orbits a Mysterious Young Dipper Star in Taurus?
+  19AH40: Old Clusters for a New Spin on M Dwarf Gyrochronology
+  19AH98: Extending Dynamical Masses to the Planetary-Mass Regime
+  19AH99: Hyper Suprime-Cam Search for Near Earth Objects at small solar elongation
+  19AO02: The nature of the diffuse stellar envelope around the globular cluster M2
+  19AO36: "Radial velocities of the \"impossible triple star\"\r\n\t      - testing\
+    \ multiplicity,deriving masses, and supporting a\r\n\t      new hypothesis\r\n"
+  19AP30: CFIS
+  19AP31: VESTIGE
+  19AP32: CIPP
+  19AP40: SPIRou Legacy Survey
+  19AP41: The SIGNALS Project
+  19AP97: CFIS
+  19AP98: CFIS
+  19AP99: CFIS
+  19AS01: Deep Near-IR Imaging of the IRAC Dark Field (IDF) -- Preparing for the JWST
+  19AS02: 'SITELLE Observation of X-ray Arcs in NGC 5195:  AGN Feedback or Triggered
+    Star Formation?'
+  19AS04: Constraining metallicity effects on the near-infrared pulsation properties
+    of RR Lyrae variables
+  19AS07: 'The Virgo Core PN Survey: Where Galaxy Halos Meet Intracluster Space'
+  19AS09: Evidence for the importance of galaxy interactions in fueling local low-mass
+    AGNs
+  19AS10: 'NIR Imaging of Nearby Galaxies with MIR flares II: Further Monitoring and
+    Completing the Sample'
+  19AT01: A snapshot observing program to study the optical counterparts of gamma-ray
+    emitting black widow-type millisecond pulsars
+  19AT02: "Exploring Magnetic Fields toward Outbursting YSOs\r\n\t      (I): An Initial\
+    \ Survey"
+  19AT03: 'The Outer Solar System: now in vivid ugrJ colours'
+  19AT04: Panoramic uJK imaging of a prominent protocluster at z = 2.3
+  19AT05: First [OIII]5007A image of NGC 1275 to reveal star-forming regions in its
+    multiphase nebula
+  19AT06: New Insights in short GRBs
+  19AT07: Follow-up Spectroscopic Observations of Two Be Stars Recently with Eruptive
+    Phase and Quiet Phase
+  19AT99: 'The Outer Solar System: now in vivid ugrJ colours'
+  19BC01: Characterizing the Taurid asteroid swarm
+  19BC02: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  19BC03: Measuring the ultra-slow rotation of the magnetic O star HD 54879
+  19BC04: Novel Observations of Brightest Cluster Galaxies with the CFHT
+  19BC05: Echelle Spectroscopy of an M Star to Enable Wavelength Calibration of the
+    NIRISS Instrument Onboard JWST
+  19BC06: Tracking the unprecedented magnetic evolution of the magnetic field of the
+    active M dwarf AD Leo
+  19BC07: "Atmospheric Characterization of Hot Jupiters using\r\n\t      Transmission\
+    \ Spectroscopy with SPIRou"
+  19BC08: "Warm Saturns Atmospheric Characterization :\r\n\t      Investigating the\
+    \ Stellar Environnements Maximizing\r\n\t      Metastable Helium Detection."
+  19BC09: Survey of Planetary Nebulae in Triangulum (M33) with MegaCam@CFHT
+  19BC10: Brown dwarf properties revealed at high spectral resolution
+  19BC12: 'The M86 SITELLE survey: where galaxies halos meet the cluster space'
+  19BC13: Metallicity and ionized gas in a massive spiral galaxy
+  19BC14: Globular clusters in the nearby elliptical Maffei 1
+  19BC17: Panoramic View of Star Formation in Rich Galaxy Clusters
+  19BC18: Tracking small irregular moons
+  19BC19: Target-of-Opportunity Search and Monitoring of Optical Counterparts to Gravitational-Wave
+    Events in LIGO/Virgo Observing Run 3
+  19BC20: 'Measuring the Surface Magnetic Field of the Most Slowly Rotating Of?p Star:
+    HD 108'
+  19BC21: 3D Reconstruction of the Crab Nebula with SITELLE
+  19BC23: Characterisation of the magnetic fields of early-type giants and supergiants
+  19BC24: 'Thermodynamics of HII regions: Orion'
+  19BC25: "RVxTESS: Photometric and Spectropolarimetric\r\n\t      studies of M dwarfs\
+    \ with simultaneous TESS and CFHT/SPIRou\r\n\t      Observations"
+  19BC26: "Probing the atmosphere of ultra hot Jupiters using\r\n\t      eclipse spectroscopy\
+    \ with SPIRou"
+  19BC31: "High resolution spectroscopy and characterization\r\n\t      of M dwarf\
+    \ binaries"
+  19BC33: 'A census of magnetic B-type stars in the Orion OB1 association: detailed
+    investigation of selected targets'
+  19BC34: 'MOBSTER: Spectropolarimetric follow-up of magnetic B-type candidates as
+    identified with TESS'
+  19BC38: 'Measuring the sizes of TNOs: astrometry for RECON'
+  19BC96: "Echelle Spectroscopy of an M Star to Enable\r\n\t      Wavelength Calibration\
+    \ of the NIRISS Instrument Onboard JWST"
+  19BC97: Target-of-Opportunity Search and Monitoring of Optical Counterparts to Gravitational-Wave
+    Events in LIGO/Virgo Observing Run 3
+  19BC98: Searching for and studying the rare super-weak magnetic fields in white
+    dwarf stars
+  19BC99: Target-of-Opportunity Search and Monitoring of Optical Counterparts to Gravitational-Wave
+    Events in LIGO/Virgo Observing Run 3
+  19BF01: "A near-infrared SPIRou spectral atlas of O stars\r\n"
+  19BF02: "JH 223 : The Perfect Dipper\r\n"
+  19BF05: "RVxTESS: Photometric and Spectropolarimetric\r\n\t      Studies of M Dwarfs\
+    \ with Simultaneous TESS and CFHT/SPIRou\r\n\t      Observations\r\n"
+  19BF06: "Small Sisters:do M secondaries of planet-hosting\r\n\t      primaries in\
+    \ distant binaries also host planetary systems?\r\n"
+  19BF08: 'EvOC-Gaia: Detailed chemical properties of the most nearby evolved Open
+    Clusters'
+  19BF09: "Direct characterization of the very young\r\n\t      sub-stellar companion\
+    \ DH Tau b at high-spectral resolution\r\n"
+  19BF10: Homogeneous Weak Lensing masses of the reference XMM-Heritage cluster sample
+  19BF11: "Fluorine in carbon-enhanced metal-poor stars\r\n"
+  19BF13: Measuring Intermediate metallicity Neutron Capture Elements
+  19BF14: "NIR-IR Diffuse Interstellar Bands in the SPIROU era\r\n"
+  19BF15: Magnetic field structure of the enigmatic young accreting binary DQ Tau
+  19BF16: A deep look into the NGC1052 group and its apparently dark matter free dwarf
+    galaxies
+  19BF19: 'Testing cosmology with globular clusters: dark matter -- globular cluster
+    system relation in nearby spiral galaxies'
+  19BF20: Spectroscopic follow-up of the very metal-poor stars candidates in the bright
+    end of the Pristine Survey
+  19BF21: Exploring the dark sector with Gaias stellar streams
+  19BF27: 'The M86 SITELLE survey: where galaxies halos meet the cluster space'
+  19BF28: 'Pushing Galactic Archaeology to its limits with CFHT: Mapping the PRISTINE
+    Galaxy'
+  19BF29: Tracking small irregular moons
+  19BF33: "Optical-nIR synergy: exploring SOPHIE systems with\r\n\t      SPIRou\r\n"
+  19BF35: Magnetic field detection survey for Gamma Doradus stars
+  19BF99: "NIR-IR Diffuse Interstellar Bands in the SPIROU era\r\n"
+  19BH05: Rapid followup of important solar system discoveries from Pan-STARRS
+  19BH11: 'COCONUTS: COol Companions ON Ultrawide orbiTS'
+  19BH18: CFHT MegaCam characterization of interesting solar system objects discovered
+    by UH Surveys
+  19BH19: Observations of Near-Earth Objects
+  19BH20: Extending Dynamical Masses to the Planetary-Mass Regime
+  19BH21: Drivers of Cometary Activity
+  19BH22: The Manx Comets - Testing Solar System Formation Models
+  19BH24: Optical-NIR follow-up campaign of kilonova during the aLIGO/AdVirgo third
+    observing run and other rare transient events
+  19BH31: A Mysterious Periodic Dipper Star in Taurus
+  19BH34: Old Clusters for a New Spin on M Dwarf Gyrochronology
+  19BH92: A Mysterious Periodic Dipper Star in Taurus
+  19BH93: Extending Dynamical Masses to the Planetary-Mass Regime
+  19BH94: 'COCONUTS: COol Companions ON Ultrawide orbiTS'
+  19BH95: Optical-NIR follow-up campaign of kilonova during the aLIGO/AdVirgo third
+    observing run and other rare transient events
+  19BH96: Rapid followup of important solar system discoveries from Pan-STARRS
+  19BH97: Old Clusters for a New Spin on M Dwarf Gyrochronology
+  19BH98: The Manx Comets -- Testing Solar System Formation Models
+  19BH99: Old Clusters for a New Spin on M Dwarf Gyrochronology
+  19BP30: CFIS
+  19BP31: VESTIGE
+  19BP32: CIPP
+  19BP40: SLS
+  19BP41: SIGNALS
+  19BP42: SLS
+  19BP97: CFIS
+  19BP98: CFIS
+  19BP99: CFIS
+  19BS01: Rapid Multimessenger Observations of Compact Binary Mergers Detected by
+    Ligo/Virgo during the O3 Science Run
+  19BS04: CFHT Mapping the Most Distant Protocluster Anchored by A Luminous Quasar
+  19BS06: A Search For White Dwarf Pulsar
+  19BS08: Evidence for the importance of galaxy interactions in fueling local low-mass
+    AGNs
+  19BS09: Study star formation in Galactic filamentary clouds
+  19BS10: "RVxTESS: Photometric and\r\n\t      Spectropolarimetric studies of M dwarfs\
+    \ with simultaneous\r\n\t      TESS and CFHT/SPIRou Observations"
+  19BS11: Searching for Optical Bubble Nebulae around Supersoft Ultraluminous X-ray
+    Sources
+  19BS12: "Probing atmospheric chemistry and evaporation in\r\n\t      two peculiar\
+    \ hot Jupiters"
+  19BS99: Rapid Multimessenger Observations of Compact Binary Mergers Detected by
+    Ligo/Virgo during the O3 Science Run
+  19BT01: Calibrating NIR Period-Luminosity-Metallicity Relations for RR Lyrae in
+    the Globular Clusters
+  19BT02: Monitoring Long-Term Variability of Active T Tauri Stars (VII)
+  19BT03: Is 2011 UB411 really a Plutino?
+  19BT04: Tracking small irregular moons
+  19BT05: Homogeneous Weak Lensing Masses of the Reference XMM-Heritage Cluster Sample
+  19BT06: New Insights in short GRBs
+  19BT07: Copy of The Emission-line Galaxy Population in Rich Galaxy Clusters
+  19BT08: A Pilot u-Band Time Series Survey of a Selected Field in the Galactic Plane
+  19BT09: "Ionised accretion flows and bloated photospheres\r\n\t      in young high-mass\
+    \ stars: observational tests with SPIRou"
+  19BT99: Tracking small irregular moons
+  20AC04: Spectropolarimetry of very slowly rotating magnetic CP stars
+  20AC07: Chemistry of Stars in the Gaia Sausage and Sequoia Merger Remnants
+  20AC19: Continued Monitoring of the Archetypal Magnetic beta Cep Star xi1 CMa
+  20AC21: Measuring the magnetic field of the Ap star eclipsing binary HD 99458
+  20AC22: 'HD 144941: The first member of a new class of magnetic postmain sequence
+    stars'
+  20AC31: A first systematic study of the magnetic fields of classical Cepheids
+  20AC40: 'lambda Lep: an early Btype rapidly rotating magnetic candidate'
+  20AF02: Measuring Intermediate metallicity Neutron Capture Elements
+  20AF05: Using linear polarimetry to estimate spinorbit angles of transiting planets
+  20AF13: Copy of Exploring the dark sector with Gaias stellar streams
+  20AF16: Characterizing the magnetic fields of earlytype giants and supergiants
+  20AF98: Copy of Exploring the dark sector with Gaias stellar streams
+  20AH36: Probing Circumstellar Debris from Rocky Planet Formation around a Young
+    Star
+  20AH96: Probing Circumstellar Debris from Rocky Planet Formation around a Young
+    Star
+  20AS04: Deep investigation of the LAMOST Nenhanced metalpoor field giants
+  20AS19: Revealing the origin of rprocess elements from the renhanced stars
+  20AS20: The followup observation to the extremely lithiumrich dwarfs from LAMOST

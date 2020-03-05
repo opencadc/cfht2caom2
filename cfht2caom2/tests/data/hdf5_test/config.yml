@@ -19,7 +19,7 @@ todo_file_name: todo.txt
 # done.
 use_local_files: True
 # values DEBUG INFO WARNING ERROR
-logging_level: WARNING
+logging_level: DEBUG
 # values True False
 log_to_file: True
 # fully qualified name for a directory to write log files
@@ -82,5 +82,7 @@ task_types:
   - scrape
 features:
   supports_composite: False
+  supports_latest_caom: True
+  supports_multiple_files: False
   use_file_names: True
   use_urls: False

@@ -88,9 +88,12 @@ class CFHTChooser(ec.OrganizeChooser):
     def __init__(self):
         super(CFHTChooser, self).__init__()
 
-    def use_compressed(self):
+    def use_compressed(self, entry):
+        # TODO - figure out wtf is going on, and what code execution I was
+        #  enabling by having this set to True, especially with the following
+        #  comment.
         # store CFHT files in whatever compression format they are sent in
-        return True
+        return False
 
 
 def _run_state():
