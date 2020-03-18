@@ -75,10 +75,11 @@ from caom2pipe import execute_composable as ec
 from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
+from cfht2caom2 import preview_augmentation
 
 
 meta_visitors = [cleanup_augmentation]
-data_visitors = []
+data_visitors = [preview_augmentation]
 
 CFHT_BOOKMARK = 'cfht_timestamp'
 
