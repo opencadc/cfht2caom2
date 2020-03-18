@@ -17,8 +17,6 @@ if [[ ! -e ${PWD}/state.yml ]]; then
     cfht_timestamp:
       last_record: $yesterday
 " > ${PWD}/state.yml
-  else
-    cp /state.yml ${PWD}
   fi
 fi
 
