@@ -72,6 +72,7 @@ import os
 from datetime import datetime
 
 from caom2 import Observation, ProductType, ReleaseType
+from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
 
@@ -90,7 +91,8 @@ def visit(observation, **kwargs):
         raise mc.CadcException('Visitor needs a science_file parameter.')
     cadc_client = kwargs.get('cadc_client')
     if cadc_client is None:
-        raise mc.CadcException('Visitor needs a cadc_client parameter.')
+        logging.warning('Visitor needs a cadc_client parameter to store '
+                        'previews and thumbnails.')
     stream = kwargs.get('stream')
     if stream is None:
         raise mc.CadcException('Visitor needs a stream parameter.')
@@ -108,31 +110,26 @@ def visit(observation, **kwargs):
         for artifact in plane.artifacts.values():
             cfht_name = cn.CFHTName(file_name=science_file,
                                     instrument=observation.instrument.name)
+            if cfht_name.suffix == 'g':
+                # 19-03-20 - seb -
+                # for all 'g' files, use the previews from the 'p' files
+                continue
+
             if cfht_name.file_uri == artifact.uri:
                 count += _do_prev(working_dir, plane, cfht_name, cadc_client,
-                                  stream, observable.metrics)
+                                  stream, observable.metrics,
+                                  observation.observation_id)
+                if cfht_name.suffix == 'p':
+                    count += _update_g_artifact(observation, plane)
                 break
+
     logging.info('Completed preview augmentation for {}.'.format(
         observation.observation_id))
     return {'artifacts': count}
 
 
-# def _check_for_delete(file_name, uri, observable, plane):
-#     """If the preview file doesn't exist, but the artifact that represents it
-#     does, remove that artifact from the Observation instance."""
-#     result = 0
-#     if (observable.rejected.is_no_preview(
-#             file_name) and uri in plane.artifacts.keys()):
-#         logging.warning(
-#             'Removing artifact for non-existent preview {}'.format(uri))
-#         plane.artifacts.pop(uri)
-#         result = 1
-#     return result
-
-
-# def _do_prev(file_id, science_fqn, working_dir, plane, cadc_client, metrics):
 def _do_prev(working_dir, plane, cfht_name, cadc_client,
-             stream, metrics):
+             stream, metrics, obs_id):
     science_fqn = os.path.join(working_dir, cfht_name.file_name)
     preview = cfht_name.prev
     preview_fqn = os.path.join(working_dir, preview)
@@ -141,94 +138,89 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     zoom = cfht_name.zoom
     zoom_fqn = os.path.join(working_dir, zoom)
 
-    if os.access(preview_fqn, 0):
-        os.remove(preview_fqn)
-    # prev_cmd = 'fitscut --all --autoscale=99.5 --asinh-scale --jpg --invert ' \
-    #            '--compass {}'.format(science_fqn)
-    # mc.exec_cmd_redirect(prev_cmd, preview_fqn)
+    # from genWirprevperplane.py
+    # if it's a datacube, just take the first slice
+    # e.g. fitscopy '928690p.fits[*][*,*,1:1]' s1928690p.fits
 
-    # cmd3="ds9 -mosaicimage wcs  %s
-    #           -geometry 256x521
-    #           -scale squared
-    #           -scale mode zscale
-    #           -scale scope global
-    #           -scale datasec yes
-    #           -invert
-    #           -mode no
-    #           -view colorbar no
-    #           -zoom to fit
-    #           -saveimage jpeg  %s -quit" % (fitsfile, prev1file)
+    headers = ac.read_fits_headers(science_fqn)
+    if science_fqn.endswith('.fz'):
+        naxis_3 = headers[0].get('ZNAXIS3', 1)
+    else:
+        naxis_3 = headers[0].get('NAXIS3', 1)
 
-    # cmd4="ds9 -mosaicimage wcs  %s
-    #           -geometry 1024x1289
-    #           -scale squared
-    #           -scale mode zscale
-    #           -scale scope global
-    #           -scale datasec yes
-    #           -invert
-    #           -view colorbar no
-    #           -zoom to fit
-    #           -saveimage jpeg  %s -quit" % (fitsfile, prev2file)
-    mosaic_param = 'iraf'
-    geometry = '1024x1289'
-    prev_cmd = f'xvfb-run ds9 -mosaicimage {mosaic_param} {science_fqn} ' \
-               f'-geometry {geometry} ' \
-               f'-scale squared ' \
-               f'-scale mode zscale ' \
-               f'-scale scope global ' \
-               f'-scale datasec yes ' \
-               f'-invert ' \
-               f'-mode no ' \
-               f'-view colorbar no ' \
-               f'-zoom to fit ' \
-               f'-saveimage jpeg {preview_fqn} ' \
-               f'-quit'
-    mc.exec_cmd(prev_cmd)
+    if naxis_3 != 1:
+        logging.info(f'Observation {obs_id}: using first slice of '
+                     f'{science_fqn}.')
+        temp_science_f_name = cfht_name.file_name.replace('.fz', '_slice.fz')
+        slice_cmd = f'fitscopy {cfht_name.file_name}[*][*,*,1:1,1:1] ' \
+                    f'{temp_science_f_name}'
+        _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
+        science_fqn = f'{working_dir}/{temp_science_f_name}'
 
-    if os.access(thumb_fqn, 0):
-        os.remove(thumb_fqn)
+    zoom_science_fqn = science_fqn
+    num_extensions = headers[0].get('NEXTEND')
+    if num_extensions >= 4:
+        logging.info(f'Observation {obs_id}: using slice for zoom preview of '
+                     f'{science_fqn}.')
+        zoom_science_f_name = cfht_name.file_name.replace('.fits', '_zoom.fits')
+        slice_cmd = f'fitscopy {cfht_name.file_name}[4][*,*,1:1] ' \
+                    f'{zoom_science_f_name}'
+        _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
+
     geometry = '256x521'
-    thumb_cmd = f'xvfb-run ds9 -mosaicimage {mosaic_param} {science_fqn} ' \
-                f'-geometry {geometry} ' \
-                f'-scale squared ' \
-                f'-scale mode zscale ' \
-                f'-scale scope global ' \
-                f'-scale datasec yes ' \
-                f'-invert ' \
-                f'-mode none ' \
-                f'-view colorbar no ' \
-                f'-zoom to fit ' \
-                f'-saveimage jpeg {thumb_fqn} ' \
-                f'-quit'
-    mc.exec_cmd(thumb_cmd)
+    _gen_image(science_fqn, geometry, thumb_fqn)
 
-    # if os.access(zoom_fqn, 0):
-    #     os.remove(zoom_fqn)
-    # geometry = '1024x1289'
-    # zoom_cmd = f'xvfb-run ds9 -mosaicimage {mosaic_param} {science_fqn} ' \
-    #            f'-geometry {geometry} ' \
-    #            f'-scale squared ' \
-    #            f'-scale mode zscale ' \
-    #            f'-scale scope global ' \
-    #            f'-scale datasec yes ' \
-    #            f'-invert ' \
-    #            f'-mode none ' \
-    #            f'-view colorbar no ' \
-    #            f'-zoom to fit ' \
-    #            f'-saveimage jpeg {zoom_fqn} ' \
-    #            f'-quit'
-    # mc.exec_cmd(zoom_cmd)
+    geometry = '1024x1024'
+    _gen_image(science_fqn, geometry, preview_fqn)
+
+    mosaic_param = '-fits'
+    pan_param = '-pan 484 -484 image'
+    zoom_param = '1'
+    _gen_image(zoom_science_fqn, geometry, zoom_fqn, zoom_param,
+               pan_param, mosaic_param)
 
     prev_uri = cfht_name.prev_uri
     thumb_uri = cfht_name.thumb_uri
     zoom_uri = cfht_name.zoom_uri
     _augment(plane, prev_uri, preview_fqn, ProductType.PREVIEW)
     _augment(plane, thumb_uri, thumb_fqn, ProductType.THUMBNAIL)
-    # _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
+    _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
     if cadc_client is not None:
         _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
                       metrics)
-    return 2
+    return 3
+
+
+def _exec_cmd_chdir(working_dir, temp_file, cmd):
+    orig_dir = os.getcwd()
+    try:
+        os.chdir(working_dir)
+        if os.path.exists(temp_file):
+            os.unlink(temp_file)
+        mc.exec_cmd(cmd)
+    finally:
+        os.chdir(orig_dir)
+
+
+def _gen_image(science_fqn, geometry, save_fqn, zoom_param='to fit',
+               pan_param='', mosaic_param='-mosaicimage iraf'):
+    # 20-03-20 - seb - always use iraf - do not trust wcs coming from the data
+    # acquisition. A proper one needs processing which is often not done on
+    # observations.
+    cmd = f'xvfb-run -a ds9 {mosaic_param} {science_fqn} ' \
+          f'{pan_param} ' \
+          f'-geometry {geometry} ' \
+          f'-scale squared ' \
+          f'-scale mode zscale ' \
+          f'-scale scope global ' \
+          f'-scale datasec yes ' \
+          f'-invert ' \
+          f'-mode none ' \
+          f'-view colorbar no ' \
+          f'-zoom {zoom_param} ' \
+          f'-saveimage jpeg {save_fqn} ' \
+          f'-quit'
+    mc.exec_cmd(cmd, timeout=900)  # wait 15 minutes till killing
 
 
 def _store_smalls(cadc_client, working_directory, stream, preview_fname,
@@ -237,8 +229,21 @@ def _store_smalls(cadc_client, working_directory, stream, preview_fname,
                 stream, mime_type='image/jpeg', metrics=metrics)
     mc.data_put(cadc_client, working_directory, thumb_fname, cn.COLLECTION,
                 stream, mime_type='image/jpeg', metrics=metrics)
-    # mc.data_put(cadc_client, working_directory, zoom_fname, cn.COLLECTION,
-    #             stream, mime_type='image/jpeg', metrics=metrics)
+    mc.data_put(cadc_client, working_directory, zoom_fname, cn.COLLECTION,
+                stream, mime_type='image/jpeg', metrics=metrics)
+
+
+def _update_g_artifact(observation, plane):
+    count = 0
+    g_product_id = plane.product_id.replace('p', 'g')
+    if g_product_id in observation.planes.keys():
+        g_plane = observation.planes[g_product_id]
+        for artifact in plane.artifacts.values():
+            if artifact.product_type in [ProductType.THUMBNAIL,
+                                         ProductType.PREVIEW]:
+                g_plane.artifacts.add(artifact)
+                count += 1
+    return count
 
 
 def _augment(plane, uri, fqn, product_type):
