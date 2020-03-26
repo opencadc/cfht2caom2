@@ -41,11 +41,10 @@ VERSION = metadata.get('version', 'none')
 
 # generate the version file
 with open(os.path.join(PACKAGENAME, 'version.py'), 'w') as f:
-    f.write('version = \'{}\'\n'.format(VERSION))	
+    f.write('version = \'{}\'\n'.format(VERSION))
 
-# Treat everything in scripts except README.md as a script to be installed
-scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))
-           if os.path.basename(fname) != 'README.md']
+# Treat nothing in scripts as a script to be installed
+scripts = []
 
 # Define entry points for command-line scripts
 entry_points = {'console_scripts': []}
@@ -76,6 +75,7 @@ class PyTest(TestCommand):
 # ``setup``, since these are now deprecated. See this link for more details:
 # https://groups.google.com/forum/#!topic/astropy-dev/urYO8ckB2uM
 
+
 setup(name=PACKAGENAME,
       version=VERSION,
       description=DESCRIPTION,
@@ -92,14 +92,15 @@ setup(name=PACKAGENAME,
       entry_points=entry_points,
       python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, <4',
       packages=find_packages(),
-      package_data={PACKAGENAME: ['data/*', 'tests/data/*', '*/data/*', '*/tests/data/*']},
+      package_data={PACKAGENAME: ['data/*', 'tests/data/*', '*/data/*',
+                                  '*/tests/data/*']},
       classifiers=[
         'Natural Language :: English',
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6'
       ],
-      cmdclass = {
+      cmdclass={
           'coverage': PyTest,
       }
 )

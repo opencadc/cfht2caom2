@@ -83,9 +83,6 @@ from caom2pipe import manage_composable as mc
 import test_main_app
 
 TEST_FILES_DIR = '/test_files'
-TEST_OBS = '1151210'
-TEST_OBS_FILE = '{}/{}'.format(test_main_app.TEST_DATA_DIR,
-                               'visit_obs_start.xml')
 REJECTED_FILE = os.path.join(test_main_app.TEST_DATA_DIR, 'rejected.yml')
 
 
@@ -95,16 +92,23 @@ def test_preview_augment(ad_put_mock):
     # this should result in three new artifacts being added to every plane:
     # one for a thumbnail and two for previews (one zoom)
 
-    obs = mc.read_obs_from_file(TEST_OBS_FILE)
-
     test_rejected = mc.Rejected(REJECTED_FILE)
     test_config = mc.Config()
     test_observable = mc.Observable(test_rejected, mc.Metrics(test_config))
     cadc_client_mock = Mock()
 
-    test_files = ['1151210o.fits.fz', '1151210s.fits.fz',
-                  '1151210m.fits.fz', '1151210p.fits.fz',
-                  '1151210w.fits.fz', '1151210y.fits.fz', '1151210g.fits.fz']
+    # 1151210 - WIRCam
+    # 1681594 - MegaCam/MegaPrime
+    test_files = {
+        'visit_obs_start_wircam.xml':
+            ['1151210o.fits.fz', '1151210s.fits.fz', '1151210m.fits.fz',
+             '1151210p.fits.fz', '1151210w.fits.fz', '1151210y.fits.fz',
+             '1151210g.fits.fz'],
+        'visit_obs_start_megacam.xml':
+            ['1681594o.fits.fz', '1681594p.fits.fz', '1681594m.fits.fz',
+             '1681594s.fits.fz', '1681594y.fits.fz', '1681594g.fits.gz']
+    }
+
     kwargs = {'working_directory': TEST_FILES_DIR,
               'cadc_client': cadc_client_mock,
               'stream': 'stream',
@@ -113,45 +117,55 @@ def test_preview_augment(ad_put_mock):
     for entry in glob.glob(f'{TEST_FILES_DIR}/*.jpg'):
         os.unlink(entry)
 
-    for f_name in test_files:
-        kwargs['science_file'] = f_name
-
-        test_name = cfht_name.CFHTName(file_name=f_name,
-                                       instrument=md.Inst.WIRCAM)
-        check_number = 1
-        if f_name == '1151210g.fits.fz':
-            check_number = 4
-        assert len(obs.planes[test_name.product_id].artifacts) == \
-            check_number, f'initial condition {f_name}'
-
-        try:
-            test_result = preview_augmentation.visit(obs, **kwargs)
-        except Exception as e:
-            import logging
-            logging.error(e)
-            import traceback
-            logging.error(traceback.format_exc())
-
-        assert test_result is not None, f'expect a result {f_name}'
-        check_number = 3
-        if f_name == '1151210p.fits.fz':
-            check_number = 6
-        elif f_name == '1151210g.fits.fz':
-            check_number = 0
-        assert test_result['artifacts'] == check_number, \
-            f'artifacts should be added {f_name}'
-        assert len(obs.planes[test_name.product_id].artifacts) == 4, \
-            f'new artifacts {f_name}'
-
-        if f_name == '1151210g.fits.fz':
-            assert not ad_put_mock.called, f'ad put mock called for g'
+    for key, value in test_files.items():
+        obs = mc.read_obs_from_file(f'{test_main_app.TEST_DATA_DIR}/{key}')
+        if 'wircam' in key:
+            instrument = md.Inst.WIRCAM
+        elif 'mega' in key:
+            instrument = md.Inst.MEGACAM
         else:
-            for p in [test_name.prev_uri, test_name.thumb_uri,
-                      test_name.zoom_uri]:
-                assert p in obs.planes[test_name.product_id].artifacts.keys(), \
-                    f'no preview {p}'
+            assert False, 'do not understand instrument'
+        for f_name in value:
+            kwargs['science_file'] = f_name
 
-            assert ad_put_mock.called, f'ad put mock not called {f_name}'
-            assert ad_put_mock.call_count == 3, f'ad put called wrong number ' \
-                                                f'of times {f_name}'
-            ad_put_mock.reset_mock()
+            test_name = cfht_name.CFHTName(file_name=f_name,
+                                           instrument=instrument)
+            check_number = 1
+            if test_name.suffix == 'g':
+                check_number = 4
+            assert len(obs.planes[test_name.product_id].artifacts) == \
+                check_number, f'initial condition {f_name}'
+
+            try:
+                test_result = preview_augmentation.visit(obs, **kwargs)
+            except Exception as e:
+                import logging
+                logging.error(e)
+                import traceback
+                logging.error(traceback.format_exc())
+                assert False
+
+            assert test_result is not None, f'expect a result {f_name}'
+            check_number = 3
+            if test_name.suffix == 'p':
+                check_number = 6
+            elif test_name.suffix == 'g':
+                check_number = 0
+            assert test_result['artifacts'] == check_number, \
+                f'artifacts should be added {f_name}'
+            assert len(obs.planes[test_name.product_id].artifacts) == 4, \
+                f'new artifacts {f_name}'
+
+            if test_name.suffix == 'g':
+                assert not ad_put_mock.called, f'ad put mock called for g'
+            else:
+                for p in [test_name.prev_uri, test_name.thumb_uri,
+                          test_name.zoom_uri]:
+                    assert p in \
+                           obs.planes[test_name.product_id].artifacts.keys(), \
+                           f'no preview {p}'
+
+                assert ad_put_mock.called, f'ad put mock not called {f_name}'
+                assert ad_put_mock.call_count == 3, \
+                    f'ad put called wrong number of times {f_name}'
+                ad_put_mock.reset_mock()

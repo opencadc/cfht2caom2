@@ -71,10 +71,11 @@ import os
 
 from datetime import datetime
 
-from caom2 import Observation, ProductType, ReleaseType
+from caom2 import Observation, ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
+from cfht2caom2 import metadata as md
 
 __all__ = ['visit']
 
@@ -118,6 +119,8 @@ def visit(observation, **kwargs):
             if cfht_name.file_uri == artifact.uri:
                 count += _do_prev(working_dir, plane, cfht_name, cadc_client,
                                   stream, observable.metrics,
+                                  observation.intent,
+                                  observation.instrument.name,
                                   observation.observation_id)
                 if cfht_name.suffix == 'p':
                     count += _update_g_artifact(observation, plane)
@@ -129,7 +132,7 @@ def visit(observation, **kwargs):
 
 
 def _do_prev(working_dir, plane, cfht_name, cadc_client,
-             stream, metrics, obs_id):
+             stream, metrics, intent, instrument, obs_id):
     science_fqn = os.path.join(working_dir, cfht_name.file_name)
     preview = cfht_name.prev
     preview_fqn = os.path.join(working_dir, preview)
@@ -143,41 +146,75 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     # e.g. fitscopy '928690p.fits[*][*,*,1:1]' s1928690p.fits
 
     headers = ac.read_fits_headers(science_fqn)
-    if science_fqn.endswith('.fz'):
-        naxis_3 = headers[0].get('ZNAXIS3', 1)
-    else:
-        naxis_3 = headers[0].get('NAXIS3', 1)
-
-    if naxis_3 != 1:
-        logging.info(f'Observation {obs_id}: using first slice of '
-                     f'{science_fqn}.')
-        temp_science_f_name = cfht_name.file_name.replace('.fz', '_slice.fz')
-        slice_cmd = f'fitscopy {cfht_name.file_name}[*][*,*,1:1,1:1] ' \
-                    f'{temp_science_f_name}'
-        _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
-        science_fqn = f'{working_dir}/{temp_science_f_name}'
+    num_extensions = headers[0].get('NEXTEND')
 
     zoom_science_fqn = science_fqn
-    num_extensions = headers[0].get('NEXTEND')
-    if num_extensions >= 4:
-        logging.info(f'Observation {obs_id}: using slice for zoom preview of '
-                     f'{science_fqn}.')
-        zoom_science_f_name = cfht_name.file_name.replace('.fits', '_zoom.fits')
-        slice_cmd = f'fitscopy {cfht_name.file_name}[4][*,*,1:1] ' \
-                    f'{zoom_science_f_name}'
-        _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
+
+    # set up the correct input file - may need to use fitscopy
+    rotate_param = ''
+    if md.Inst(instrument) is md.Inst.WIRCAM:
+        if science_fqn.endswith('.fz'):
+            naxis_3 = headers[0].get('ZNAXIS3', 1)
+        else:
+            naxis_3 = headers[0].get('NAXIS3', 1)
+
+        if naxis_3 != 1:
+            logging.info(f'Observation {obs_id}: using first slice of '
+                         f'{science_fqn}.')
+            temp_science_f_name = cfht_name.file_name.replace('.fz', '_slice.fz')
+            slice_cmd = f'fitscopy {cfht_name.file_name}[*][*,*,1:1,1:1] ' \
+                        f'{temp_science_f_name}'
+            _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
+            science_fqn = f'{working_dir}/{temp_science_f_name}'
+
+        if num_extensions >= 4:
+            logging.info(f'Observation {obs_id}: using slice for zoom preview '
+                         f'of {science_fqn}.')
+            zoom_science_f_name = cfht_name.file_name.replace(
+                '.fits', '_zoom.fits')
+            slice_cmd = f'fitscopy {cfht_name.file_name}[4][*,*,1:1] ' \
+                        f'{zoom_science_f_name}'
+            _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
+    elif md.Inst(instrument) in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+        rotate_param = '-rotate 180'
+
+    # set up the correct parameters to the ds9 command
+    scope_param = 'local'
+    if intent is ObservationIntentType.SCIENCE:
+        scope_param = 'global'
 
     geometry = '256x521'
-    _gen_image(science_fqn, geometry, thumb_fqn)
+    _gen_image(science_fqn, geometry, thumb_fqn, scope_param, rotate_param)
 
     geometry = '1024x1024'
-    _gen_image(science_fqn, geometry, preview_fqn)
+    if md.Inst(instrument) in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+        _gen_image(science_fqn, geometry, preview_fqn, scope_param,
+                   rotate_param, mode_param='')
+    else:
+        _gen_image(science_fqn, geometry, preview_fqn, scope_param,
+                   rotate_param)
 
     mosaic_param = '-fits'
-    pan_param = '-pan 484 -484 image'
     zoom_param = '1'
-    _gen_image(zoom_science_fqn, geometry, zoom_fqn, zoom_param,
-               pan_param, mosaic_param)
+    scope_param = 'global'
+    # set zoom parameters
+    if md.Inst(instrument) is md.Inst.WIRCAM:
+        pan_param = '-pan 484 -484 image'
+    elif md.Inst(instrument) in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+        pan_param = '-pan -9 1780'
+        rotate_param = '-rotate 180'
+        if num_extensions >= 23:
+            rotate_param = ''
+            mosaic_param = f'-fits {zoom_science_fqn}[23]'
+            zoom_science_fqn = ''
+        elif num_extensions >= 14:
+            mosaic_param = f'-fits {zoom_science_fqn}[14]'
+            zoom_science_fqn = ''
+        else:
+            mosaic_param = f'-fits {zoom_science_fqn}[1]'
+            zoom_science_fqn = ''
+    _gen_image(zoom_science_fqn, geometry, zoom_fqn, scope_param, rotate_param,
+               zoom_param, pan_param, mosaic_param)
 
     prev_uri = cfht_name.prev_uri
     thumb_uri = cfht_name.thumb_uri
@@ -202,20 +239,23 @@ def _exec_cmd_chdir(working_dir, temp_file, cmd):
         os.chdir(orig_dir)
 
 
-def _gen_image(science_fqn, geometry, save_fqn, zoom_param='to fit',
-               pan_param='', mosaic_param='-mosaicimage iraf'):
+def _gen_image(science_fqn, geometry, save_fqn, scope_param, rotate_param,
+               zoom_param='to fit',
+               pan_param='', mosaic_param='-mosaicimage iraf',
+               mode_param='-mode none'):
     # 20-03-20 - seb - always use iraf - do not trust wcs coming from the data
     # acquisition. A proper one needs processing which is often not done on
     # observations.
     cmd = f'xvfb-run -a ds9 {mosaic_param} {science_fqn} ' \
           f'{pan_param} ' \
           f'-geometry {geometry} ' \
+          f'{rotate_param} ' \
           f'-scale squared ' \
           f'-scale mode zscale ' \
-          f'-scale scope global ' \
+          f'-scale scope {scope_param} ' \
           f'-scale datasec yes ' \
           f'-invert ' \
-          f'-mode none ' \
+          f'{mode_param} ' \
           f'-view colorbar no ' \
           f'-zoom {zoom_param} ' \
           f'-saveimage jpeg {save_fqn} ' \
