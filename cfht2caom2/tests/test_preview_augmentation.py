@@ -97,16 +97,15 @@ def test_preview_augment(ad_put_mock):
     test_observable = mc.Observable(test_rejected, mc.Metrics(test_config))
     cadc_client_mock = Mock()
 
-    # 1151210 - WIRCam
-    # 1681594 - MegaCam/MegaPrime
     test_files = {
         'visit_obs_start_wircam.xml':
             ['1151210o.fits.fz', '1151210s.fits.fz', '1151210m.fits.fz',
              '1151210p.fits.fz', '1151210w.fits.fz', '1151210y.fits.fz',
              '1151210g.fits.fz'],
-        'visit_obs_start_megacam.xml':
-            ['1681594o.fits.fz', '1681594p.fits.fz', '1681594m.fits.fz',
-             '1681594s.fits.fz', '1681594y.fits.fz', '1681594g.fits.gz']
+        'visit_obs_start_megacam_sci.xml':
+            ['1927963f.fits.fz', '1927963o.fits.fz', '1927963p.fits.fz'],
+        'visit_obs_start_megacam_cal.xml':
+            ['979412b.fits.fz', '979412o.fits.fz', '979412p.fits.fz']
     }
 
     kwargs = {'working_directory': TEST_FILES_DIR,
@@ -147,7 +146,7 @@ def test_preview_augment(ad_put_mock):
 
             assert test_result is not None, f'expect a result {f_name}'
             check_number = 3
-            if test_name.suffix == 'p':
+            if test_name.suffix == 'p' and instrument is md.Inst.WIRCAM:
                 check_number = 6
             elif test_name.suffix == 'g':
                 check_number = 0
