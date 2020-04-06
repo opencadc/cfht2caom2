@@ -1104,7 +1104,8 @@ def accumulate_bp(bp, uri, instrument):
     #
     # Gemini is all range, make Mega* range too, and WIRCam too
     # if I re-consider TODO
-    if instrument not in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+    if instrument not in [md.Inst.MEGACAM, md.Inst.MEGAPRIME,
+                          md.Inst.WIRCAM]:
         bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
         bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
         bp.set('Chunk.energy.axis.error.rnder', 1.0)
@@ -1540,6 +1541,10 @@ def update(observation, **kwargs):
                             chunk.naxis = None
                             chunk.energy_axis = None
                             chunk.time_axis = None
+
+                        filter_md = md.filter_cache.get_svo_filter(
+                            instrument, filter_name)
+                        _update_energy_range(chunk, filter_name, filter_md)
 
         if isinstance(observation, DerivedObservation):
             if derived_type is ProvenanceType.IMCMB:

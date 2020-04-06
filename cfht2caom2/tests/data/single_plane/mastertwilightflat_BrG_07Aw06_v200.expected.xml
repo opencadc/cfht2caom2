@@ -63,31 +63,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-0f55-015d38784d45" caom2:lastModified="2017-07-12T20:23:15.513" caom2:maxLastModified="2017-07-12T20:23:15.513" caom2:metaChecksum="md5:817c62e734d7c380c2f26acbbdbb849c" caom2:accMetaChecksum="md5:10dcc62a440caaecd42addf17f63ee6c" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>2.9779234791400002e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.17208514077e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>21571.955233743</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>21869.747581657</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>BrG.WC8305</caom2:bandpassName>
+                    <caom2:bandpassName>BrG</caom2:bandpassName>
                     <caom2:resolvingPower>72.93958881029678</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -121,31 +122,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-0f55-015d38784d5f" caom2:lastModified="2017-07-12T20:23:15.513" caom2:maxLastModified="2017-07-12T20:23:15.513" caom2:metaChecksum="md5:3b97e5d4f247928e536f92a8da055fc9" caom2:accMetaChecksum="md5:9d3e72bffc76ff96c65f2ebc7423dde0" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>2.9779234791400002e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.17208514077e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>21571.955233743</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>21869.747581657</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>BrG.WC8305</caom2:bandpassName>
+                    <caom2:bandpassName>BrG</caom2:bandpassName>
                     <caom2:resolvingPower>72.93958881029678</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -179,31 +181,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-0f55-015d38784d64" caom2:lastModified="2017-07-12T20:23:15.513" caom2:maxLastModified="2017-07-12T20:23:15.513" caom2:metaChecksum="md5:1ee34ef2aa59a78571f380b1182f5325" caom2:accMetaChecksum="md5:88b0299f40b816974b663bc14e5f31a3" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>2.9779234791400002e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.17208514077e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>21571.955233743</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>21869.747581657</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>BrG.WC8305</caom2:bandpassName>
+                    <caom2:bandpassName>BrG</caom2:bandpassName>
                     <caom2:resolvingPower>72.93958881029678</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -237,31 +240,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-0f55-015d38784d69" caom2:lastModified="2017-07-12T20:23:15.513" caom2:maxLastModified="2017-07-12T20:23:15.513" caom2:metaChecksum="md5:897da43b3b02083cea01c4a51ca60f50" caom2:accMetaChecksum="md5:6f4909216b17bd2ba811520371aa73b7" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>2.9779234791400002e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.17208514077e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>21571.955233743</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>21869.747581657</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>BrG.WC8305</caom2:bandpassName>
+                    <caom2:bandpassName>BrG</caom2:bandpassName>
                     <caom2:resolvingPower>72.93958881029678</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>

@@ -61,31 +61,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="13ea65b1-5145-4a04-b4fc-857e098bb15b" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:1e40867056cfe6ca748b8cf412022035" caom2:accMetaChecksum="md5:c96a1826d18d8254d80feb2fe203752b" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>3.986740226312e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.3201083661629e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>23001.7466503134</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>23400.4206729446</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>CO.WC8306</caom2:bandpassName>
+                    <caom2:bandpassName>CO</caom2:bandpassName>
                     <caom2:resolvingPower>58.19562435622134</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -119,31 +120,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="bef90330-7e0b-4738-ba6a-73a2425e9e5a" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:c36571655fadc5492c1c3276e299a14e" caom2:accMetaChecksum="md5:1286ce635f856c0cac34aaa418a54727" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>3.986740226312e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.3201083661629e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>23001.7466503134</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>23400.4206729446</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>CO.WC8306</caom2:bandpassName>
+                    <caom2:bandpassName>CO</caom2:bandpassName>
                     <caom2:resolvingPower>58.19562435622134</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -177,31 +179,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="1747f8aa-95de-48fb-9693-54af98ff031f" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:29352361a5cd6131f1e26b85eae7c18a" caom2:accMetaChecksum="md5:3e3e52927d8e64ba489a6a692716c1cc" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>3.986740226312e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.3201083661629e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>23001.7466503134</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>23400.4206729446</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>CO.WC8306</caom2:bandpassName>
+                    <caom2:bandpassName>CO</caom2:bandpassName>
                     <caom2:resolvingPower>58.19562435622134</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -235,31 +238,32 @@
               <caom2:chunks>
                 <caom2:chunk caom2:id="88206ad6-15c2-4bab-b5ee-e2ea7904d915" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:4fa285bc113dc7019a3b4b47166b1fb6" caom2:accMetaChecksum="md5:fbc0fa597e1e331a12aea7a9945e62c8" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:energyAxis>4</caom2:energyAxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>3.986740226312e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>2.3201083661629e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>23001.7466503134</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>23400.4206729446</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>CO.WC8306</caom2:bandpassName>
+                    <caom2:bandpassName>CO</caom2:bandpassName>
                     <caom2:resolvingPower>58.19562435622134</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>

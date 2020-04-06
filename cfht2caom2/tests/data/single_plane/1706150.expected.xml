@@ -65,25 +65,27 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.13365930599e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>1.1892682965300001e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>11836.0000000005</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>11949.3659305995</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
+                    <caom2:bandpassName>LowOH2</caom2:bandpassName>
                     <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -120,25 +122,27 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.13365930599e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>1.1892682965300001e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>11836.0000000005</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>11949.3659305995</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
+                    <caom2:bandpassName>LowOH2</caom2:bandpassName>
                     <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -175,25 +179,27 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.13365930599e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>1.1892682965300001e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>11836.0000000005</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>11949.3659305995</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
+                    <caom2:bandpassName>LowOH2</caom2:bandpassName>
                     <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -230,25 +236,27 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.13365930599e-08</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>1.1892682965300001e-06</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>11836.0000000005</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>11949.3659305995</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>LowOH2.WC8102</caom2:bandpassName>
+                    <caom2:bandpassName>LowOH2</caom2:bandpassName>
                     <caom2:resolvingPower>104.90526476924546</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
