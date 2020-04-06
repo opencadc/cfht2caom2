@@ -73,6 +73,7 @@ from datetime import datetime
 
 from caom2 import Observation, ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
+from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -281,7 +282,10 @@ def _update_g_artifact(observation, plane):
         for artifact in plane.artifacts.values():
             if artifact.product_type in [ProductType.THUMBNAIL,
                                          ProductType.PREVIEW]:
-                g_plane.artifacts.add(artifact)
+                features = mc.Features()
+                features.supports_latest_caom = True
+                artifact_copy = cc.copy_artifact(artifact, features)
+                g_plane.artifacts.add(artifact_copy)
                 count += 1
     return count
 

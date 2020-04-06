@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="553f6cc5-1bd8-4d16-ab5e-5739c186bd86" caom2:metaProducer="cfht2caom2/0.1.0">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>1013337</caom2:observationID>
+  <caom2:observationID>1013337x</caom2:observationID>
   <caom2:metaRelease>2008-07-31T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>1013337</caom2:sequenceNumber>
   <caom2:algorithm>
@@ -26,7 +26,7 @@
   <caom2:instrument>
     <caom2:name>MegaPrime</caom2:name>
     <caom2:keywords>
-      <caom2:keyword>Normal</caom2:keyword>
+      <caom2:keyword>INSTMODE=Normal</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>
   <caom2:environment>
@@ -66,8 +66,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -114,20 +112,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -168,8 +168,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -216,20 +214,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -270,8 +270,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -318,20 +316,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -372,8 +372,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -420,20 +418,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -474,8 +474,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -522,20 +520,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -576,8 +576,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -624,20 +622,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -678,8 +678,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -726,20 +724,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -780,8 +780,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -828,20 +826,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -882,8 +882,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -930,20 +928,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -984,8 +984,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1032,20 +1030,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1086,8 +1086,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1134,20 +1132,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1188,8 +1188,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1236,20 +1234,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1290,8 +1290,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1338,20 +1336,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1392,8 +1392,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1440,20 +1438,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1494,8 +1494,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1542,20 +1540,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1596,8 +1596,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1644,20 +1642,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1698,8 +1698,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1746,20 +1744,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1800,8 +1800,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1848,20 +1846,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -1902,8 +1902,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -1950,20 +1948,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2004,8 +2004,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2052,20 +2050,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2106,8 +2106,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2154,20 +2152,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2208,8 +2208,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2256,20 +2254,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2310,8 +2310,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2358,20 +2356,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2412,8 +2412,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2460,20 +2458,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2514,8 +2514,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2562,20 +2560,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2616,8 +2616,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2664,20 +2662,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2718,8 +2718,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2766,20 +2764,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2820,8 +2820,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2868,20 +2866,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -2922,8 +2922,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -2970,20 +2968,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3024,8 +3024,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3072,20 +3070,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3126,8 +3126,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3174,20 +3172,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3228,8 +3228,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3276,20 +3274,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3330,8 +3330,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3378,20 +3376,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3432,8 +3432,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3480,20 +3478,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3534,8 +3534,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3582,20 +3580,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
@@ -3636,8 +3636,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
-                  <caom2:energyAxis>4</caom2:energyAxis>
-                  <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -3684,20 +3682,22 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>m</caom2:cunit>
+                        <caom2:cunit>A</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
                         <caom2:rnder>1.0</caom2:rnder>
                       </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.2193797137385e-07</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>6.2818880318809e-07</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
+                      <caom2:range>
+                        <caom2:start>
+                          <caom2:pix>0.5</caom2:pix>
+                          <caom2:val>5672.19817501165</caom2:val>
+                        </caom2:start>
+                        <caom2:end>
+                          <caom2:pix>1.5</caom2:pix>
+                          <caom2:val>6891.577888750149</caom2:val>
+                        </caom2:end>
+                      </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>

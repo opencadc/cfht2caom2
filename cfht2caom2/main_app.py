@@ -107,7 +107,49 @@ Conversation with CW/SF 02-01-19:
 
 - conclusion - one plane / file, because users want to see one row / file in
   the query results
+
+  JJK - slack - 01-04-20
+  CFHT files are independent, in that, for example, a user does not require a
+  'p' file to understand the content of a 'b' file. Given this independence, it
+  is acceptable to map one plane / file.
+
+  SF - slack - 02-04-20
+  - MegaCam - the logic should be probably be 2 planes: p and o for science.
+            - all cfht exposures are sorted by EXPNUM if i understand their
+            data acquisition. b,f,d,x should be 1 plane observations.
+            - my assumption is that the b,f,d,x have no reason to have a
+            processed equivalent.
+
+  Typical science with the actual data - more or less what Elixir does:
+  - do something like: p = (o - <b>) / ( <f - <b> > )
+  - where <x> is the average of a bunch of x frames
+
+
+CFHT Energy:
+
+slack - 08-01-20
+- PD - Well, espadons is a special case because using bounds allows one to
+define "tiles" and then the SODA cutout service can extract the subset of
+tiles that overlap the desired region. That's the best that can be done
+because it is not possible to create a CoordFunction1D to say what the
+wavelength of each pixel is
+- PD - Bounds provides more detail than range and enables a crude tile-based
+cutout operation later. If the covergage had significant gaps (eg SCUBA or
+SCUBA2 from JCMT) then the extra detail in bounds would enable better
+discovery (as the gaps would be captured in the plane metadata). In the case
+of espandons I don't tkink the gaps are significant (iirc, espandons is an
+eschelle spetrograph but I don't recall whether the discontinuity between
+eschelle was a small gap or an overlap)
+- PD - So: bounds provides more detail and it can in principle improve data
+discovery (if gaps) and enable extraction of subsections of the spectrum via
+the SODA service. Espandons was one of the use cases that justified having
+bounds there
+- SF - ok now that is clearer, i think we need the information that is
+contained in bounds, gaps need to be captured. so keep bounds. if you decide
+to remove range, then advanced users would have to dig in the info to
+understand range is first and last bounds if i understand correctly.
 """
+
 import copy
 import importlib
 import logging
@@ -123,12 +165,13 @@ from caom2 import ProductType, DerivedObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
 from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
 from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
-from caom2 import ObservableAxis
+from caom2 import ObservableAxis, CoordError
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
+from caom2pipe import translate_composable as tc
 
 from cfht2caom2 import cfht_builder as cb
 from cfht2caom2 import cfht_name as cn
@@ -365,6 +408,8 @@ def get_espadons_exptime(params):
 
 def get_instrument_keywords(header):
     inst_mode = header.get('INSTMODE')
+    if inst_mode is not None:
+        inst_mode = f'INSTMODE={inst_mode}'
     temp = header.get('SITSTEP')
     sit_step = None
     if temp is not None:
@@ -1057,24 +1102,28 @@ def accumulate_bp(bp, uri, instrument):
     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
     #
-    bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
-    bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
-    bp.set('Chunk.energy.axis.error.rnder', 1.0)
-    bp.set('Chunk.energy.axis.error.syser', 1.0)
-    bp.set('Chunk.energy.axis.function.delta',
-           'get_energy_function_delta(params)')
-    bp.set('Chunk.energy.axis.function.naxis',
-           'get_energy_function_naxis(params)')
-    bp.set('Chunk.energy.axis.function.refCoord.pix',
-           'get_energy_function_pix(params)')
-    bp.set('Chunk.energy.axis.function.refCoord.val',
-           'get_energy_function_val(params)')
-    bp.clear('Chunk.energy.bandpassName')
-    bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
-    bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power(params)')
-    bp.set('Chunk.energy.specsys', 'TOPOCENT')
-    bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
-    bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
+    # Gemini is all range, make Mega* range too, and WIRCam too
+    # if I re-consider TODO
+    if instrument not in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+        bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
+        bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
+        bp.set('Chunk.energy.axis.error.rnder', 1.0)
+        bp.set('Chunk.energy.axis.error.syser', 1.0)
+        bp.set('Chunk.energy.axis.function.delta',
+               'get_energy_function_delta(params)')
+        bp.set('Chunk.energy.axis.function.naxis',
+               'get_energy_function_naxis(params)')
+        bp.set('Chunk.energy.axis.function.refCoord.pix',
+               'get_energy_function_pix(params)')
+        bp.set('Chunk.energy.axis.function.refCoord.val',
+               'get_energy_function_val(params)')
+        bp.clear('Chunk.energy.bandpassName')
+        bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
+        bp.set('Chunk.energy.resolvingPower',
+               'get_energy_resolving_power(params)')
+        bp.set('Chunk.energy.specsys', 'TOPOCENT')
+        bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
+        bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
 
     bp.set('Chunk.position.axis.axis1.cunit', 'deg')
     bp.set('Chunk.position.axis.axis2.cunit', 'deg')
@@ -1390,7 +1439,7 @@ def update(observation, **kwargs):
                             _update_observable(part, chunk, cfht_name.suffix,
                                                observation.observation_id)
 
-                    elif instrument is md.Inst.MEGAPRIME:
+                    elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
                         # type calibration) and/or position info not in header
@@ -1402,17 +1451,25 @@ def update(observation, **kwargs):
 
                         # CW
                         # Ignore energy wcs if some type of calibration file
-                        # or filter='None' or 'Open' or cdelt4=0.0 (no filter
-                        # match)
-                        cdelt_value = -1.0
-                        if (chunk.energy is not None and
-                                chunk.energy.axis is not None and
-                                chunk.energy.axis.function is not None):
-                            cdelt_value = chunk.energy.axis.function.delta
+                        # or filter='None' or 'Open' or there is no filter
+                        # match
+                        #
+                        # SGo - use range for energy with filter information
+                        filter_md = md.filter_cache.get_svo_filter(
+                            instrument, filter_name)
                         if (filter_name is None or filter_name == 'Open' or
-                                cdelt_value == 0.0 or
-                                plane.product_id[-1] in ['b', 'l', 'd']):
+                                ac.FilterMetadataCache.get_fwhm(
+                                    filter_md) is None or
+                                plane.product_id[-1] in ['b', 'l', 'd'] or
+                                observation.type in ['DARK']):
                             cc.reset_energy(chunk)
+                        else:
+                            _update_energy_range(chunk, filter_name, filter_md)
+
+                        # PD - in general, do not assign, unless the wcs
+                        # metadata is in the FITS header
+                        if chunk.time_axis is not None:
+                            chunk.time_axis = None
 
                     elif instrument is md.Inst.SITELLE:
                         if chunk.energy_axis is not None:
@@ -1605,6 +1662,19 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
     logging.debug(f'End _update_energy_espadons for {obs_id}')
 
 
+def _update_energy_range(chunk, filter_name, filter_md):
+    """
+    Make the MegaCam/MegaPrime energy metadata look more like the
+    Gemini metadata.
+    """
+    cc.build_chunk_energy_range(chunk, filter_name, filter_md)
+    if chunk.energy is not None:
+        chunk.energy.ssysobs = 'TOPOCENT'
+        chunk.energy.ssyssrc = 'TOPOCENT'
+        # values from caom2megacam.default, caom2megacamdetrend.default
+        chunk.energy.axis.error = CoordError(1.0, 1.0)
+
+
 def _update_observable(part, chunk, suffix, obs_id):
     logging.debug(f'Begin _update_observable for {obs_id}')
     # caom2IngestEspadons.py, l828
@@ -1711,27 +1781,9 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
         # CD4_4 value update is expressly NOT done, because the CD4_4 value
         # is already set from the first pass-through - need to figure out a
         # way to fix this .... sigh
-        parser = FitsParser(unmodified_headers[1:], bp, uri)
-        parser.augment_observation(obs, uri, cfht_name.product_id)
 
-        # re-home the chunk information to be consistent with accepted CAOM
-        # patterns of part/chunk relationship - i.e. part 0 never has chunks
-        # if the file being represented has extensions. This
-        # relationship gets missed when only using the headers[1:], so
-        # shift all the chunks up by one, and set the 0th to no chunks
-        for plane in obs.planes.values():
-            if plane.product_id != cfht_name.product_id:
-                continue
-            for artifact in plane.artifacts.values():
-                if artifact.uri == uri and len(artifact.parts) > 1:
-                    count = len(artifact.parts)
-                    ii = count
-                    while ii > 1:
-                        part_ii_minus_1 = artifact.parts[str(ii-2)]
-                        part_ii = artifact.parts[str(ii-1)]
-                        part_ii.chunks[0] = part_ii_minus_1.chunks[0]
-                        ii -= 1
-                    artifact.parts['0'].chunks = TypedList(Chunk, )
+        tc.add_headers_to_obs_by_blueprint(
+            obs, unmodified_headers[1:], bp, uri, cfht_name.product_id)
 
     logging.debug(f'End _update_observation_metadata.')
     return idx

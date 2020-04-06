@@ -36,7 +36,7 @@
   <caom2:instrument>
     <caom2:name>SITELLE</caom2:name>
     <caom2:keywords>
-      <caom2:keyword>SCAN</caom2:keyword>
+      <caom2:keyword>INSTMODE=SCAN</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>
   <caom2:planes>

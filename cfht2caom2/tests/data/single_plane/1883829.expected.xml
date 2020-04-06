@@ -35,7 +35,7 @@
     <caom2:name>ESPaDOnS</caom2:name>
     <caom2:keywords>
       <caom2:keyword>R=65,000</caom2:keyword>
-      <caom2:keyword>Spectroscopy,</caom2:keyword>
+      <caom2:keyword>INSTMODE=Spectroscopy,</caom2:keyword>
       <caom2:keyword>star+sky,</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>

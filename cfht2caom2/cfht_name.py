@@ -83,7 +83,7 @@ ARCHIVE = 'CFHT'
 class CFHTName(mc.StorageName):
     """Naming rules:
     - support mixed-case file name storage, and mixed-case obs id values
-    - support fz files in storage
+    - support fz and gz files in storage
     - product id == file id
     - the file_name attribute has ALL the extensions, including compression
       type.
@@ -105,12 +105,17 @@ class CFHTName(mc.StorageName):
         self._file_name = file_name
         self._file_id = CFHTName.remove_extensions(file_name)
         self._suffix = self._file_id[-1]
-        if self.is_simple and not self.is_master_cal:
-            self.obs_id = self._file_id[:-1]
+        if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
+            self._obs_id = self._file_id
+            if self._suffix in ['o', 'p']:
+                self._obs_id = self._file_id[:-1]
         else:
-            self.obs_id = self._file_id
-            if self.is_derived_sitelle:
-                self.obs_id = self.obs_id.replace(self._suffix, 'p')
+            if self.is_simple and not self.is_master_cal:
+                self.obs_id = self._file_id[:-1]
+            else:
+                self.obs_id = self._file_id
+                if self.is_derived_sitelle:
+                    self.obs_id = self.obs_id.replace(self._suffix, 'p')
         self._logger = logging.getLogger(__name__)
         self._logger.debug(self)
 

@@ -46,7 +46,38 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
       </caom2:provenance>
+      <caom2:position/>
+      <caom2:energy/>
+      <caom2:time/>
+      <caom2:polarization/>
       <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-b144-2059f8cc9aa9" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:b16898ae00ae5a295066a019f6b141d4" caom2:accMetaChecksum="md5:7dcb79e786999a540bf3883b90a4db51">
+          <caom2:uri>ad:CFHT/1681594_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>317686</caom2:contentLength>
+          <caom2:contentChecksum>md5:04888153edf85e362365c75a660e1839</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-8b9d-d6768c7601c1" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:aefd2f3063499611a09a539d68120fde" caom2:accMetaChecksum="md5:bd1c83be0e9745de3dbdec25ba62daf4">
+          <caom2:uri>ad:CFHT/1681594_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>23304</caom2:contentLength>
+          <caom2:contentChecksum>md5:8fe29b15205b0a65d73a9e2315e6e814</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-a3b0-e3fe52db2da9" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:ad777b4b8c8b90324ba33e62c8894602" caom2:accMetaChecksum="md5:7ebbcc0e5f91a71d2a1f213cd2028fa9">
+          <caom2:uri>ad:CFHT/1681594_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>328458</caom2:contentLength>
+          <caom2:contentChecksum>md5:6163e96cbf4f9c3c8aa428b3b73eec14</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-4e62-0158d2ac72ff" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:ecae13d42070665490859537d3e5d10e" caom2:accMetaChecksum="md5:6b4844a7ed18c4e4dfaa20f70b4e4e1f">
           <caom2:uri>ad:CFHT/1681594m.fits.fz</caom2:uri>
           <caom2:productType>auxiliary</caom2:productType>
@@ -472,7 +503,7 @@
       </caom2:artifacts>
     </caom2:plane>
     <caom2:plane caom2:id="00000000-0000-0000-0b6d-01433377c34a" caom2:lastModified="2013-12-27T09:52:04.297" caom2:maxLastModified="2019-11-06T05:41:45.206" caom2:metaChecksum="md5:7999a47b7bba316410a2b90e2ea13ae8" caom2:accMetaChecksum="md5:4e544d273ea7cbdd71bda8130645da05">
-      <caom2:productID>1681594g</caom2:productID>
+      <caom2:productID>1681594og</caom2:productID>
       <caom2:metaRelease>2013-12-27T09:39:46.000</caom2:metaRelease>
       <caom2:dataRelease>2015-02-28T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
@@ -487,7 +518,199 @@
           <caom2:keyword/>
         </caom2:keywords>
       </caom2:provenance>
+      <caom2:position>
+        <caom2:bounds xsi:type="caom2:Polygon">
+          <caom2:points>
+            <caom2:point>
+              <caom2:cval1>40.00959421018029</caom2:cval1>
+              <caom2:cval2>64.60291643774178</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.175462196788914</caom2:cval1>
+              <caom2:cval2>64.60236891278552</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.17113886071268</caom2:cval1>
+              <caom2:cval2>64.96072937661089</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>40.015145978809464</caom2:cval1>
+              <caom2:cval2>64.9611392814987</caom2:cval2>
+            </caom2:point>
+          </caom2:points>
+          <caom2:samples>
+            <caom2:vertices>
+              <caom2:vertex>
+                <caom2:cval1>39.57894337436788</caom2:cval1>
+                <caom2:cval2>64.78883572943549</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.17392101943977</caom2:cval1>
+                <caom2:cval2>64.78820988363961</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.17113886071274</caom2:cval1>
+                <caom2:cval2>64.9607293766109</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.57876805964779</caom2:cval1>
+                <caom2:cval2>64.96136008646333</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.5777134463065</caom2:cval1>
+                <caom2:cval2>64.60299268252439</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.17546219678891</caom2:cval1>
+                <caom2:cval2>64.60236891278551</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.172711072444756</caom2:cval1>
+                <caom2:cval2>64.77488843335597</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.577533503781254</caom2:cval1>
+                <caom2:cval2>64.77551703668183</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>40.00959421018024</caom2:cval1>
+                <caom2:cval2>64.60291643774178</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.6073348063384</caom2:cval1>
+                <caom2:cval2>64.60346711699279</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.60734240520314</caom2:cval1>
+                <caom2:cval2>64.7759914931432</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>40.01217310467476</caom2:cval1>
+                <caom2:cval2>64.77543645268648</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>40.012529761024915</caom2:cval1>
+                <caom2:cval2>64.78861932687491</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.607501229281254</caom2:cval1>
+                <caom2:cval2>64.78917516035692</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.60751051429328</caom2:cval1>
+                <caom2:cval2>64.96169952992611</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>40.015145978809485</caom2:cval1>
+                <caom2:cval2>64.9611392814987</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+            </caom2:vertices>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>
+          <caom2:naxis1>4246</caom2:naxis1>
+          <caom2:naxis2>4257</caom2:naxis2>
+        </caom2:dimension>
+        <caom2:sampleSize>0.30326652659309505</caom2:sampleSize>
+      </caom2:position>
+      <caom2:energy>
+        <caom2:bounds>
+          <caom2:lower>1.4865e-06</caom2:lower>
+          <caom2:upper>1.7755000000000002e-06</caom2:upper>
+          <caom2:samples>
+            <caom2:sample>
+              <caom2:lower>1.4865e-06</caom2:lower>
+              <caom2:upper>1.7755000000000002e-06</caom2:upper>
+            </caom2:sample>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>1</caom2:dimension>
+        <caom2:resolvingPower>5.64</caom2:resolvingPower>
+        <caom2:sampleSize>2.890000000000001e-07</caom2:sampleSize>
+        <caom2:bandpassName>H.WC8201</caom2:bandpassName>
+        <caom2:emBand>Infrared</caom2:emBand>
+      </caom2:energy>
+      <caom2:time>
+        <caom2:bounds>
+          <caom2:lower>56653.4026207</caom2:lower>
+          <caom2:upper>56653.40267857037</caom2:upper>
+          <caom2:samples>
+            <caom2:sample>
+              <caom2:lower>56653.4026207</caom2:lower>
+              <caom2:upper>56653.40267857037</caom2:upper>
+            </caom2:sample>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>1</caom2:dimension>
+        <caom2:resolution>5.0</caom2:resolution>
+        <caom2:sampleSize>5.7870369346346706e-05</caom2:sampleSize>
+        <caom2:exposure>5.0</caom2:exposure>
+      </caom2:time>
+      <caom2:polarization/>
       <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-9e01-e20c7f2219ad" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:e562935a4da464314edce1bec904ee88" caom2:accMetaChecksum="md5:3f4ee6f922b05796aae1ebf2b55092fd">
+          <caom2:uri>ad:CFHT/1681594_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>317686</caom2:contentLength>
+          <caom2:contentChecksum>md5:04888153edf85e362365c75a660e1839</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-8ac4-3954c15ac565" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:76db8729eece6819aa6c2a06593708a5" caom2:accMetaChecksum="md5:9302721ee9728f4edc5fdc511e00f5a1">
+          <caom2:uri>ad:CFHT/1681594_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>23304</caom2:contentLength>
+          <caom2:contentChecksum>md5:8fe29b15205b0a65d73a9e2315e6e814</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-a7b7-a79126b955d2" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:dade9da70b8686e61dddad1bf8b95849" caom2:accMetaChecksum="md5:294d9b7af97dffa7dfe8a768847cb821">
+          <caom2:uri>ad:CFHT/1681594_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>328458</caom2:contentLength>
+          <caom2:contentChecksum>md5:6163e96cbf4f9c3c8aa428b3b73eec14</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-0b6d-01433377c488" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:e59171f914a35a42e7ccb09c8cd60b78" caom2:accMetaChecksum="md5:b7122ebc6894dd081271d896fb03adc6">
           <caom2:uri>ad:CFHT/1681594g.fits.gz</caom2:uri>
           <caom2:productType>auxiliary</caom2:productType>
@@ -1012,25 +1235,6 @@
             </caom2:part>
           </caom2:parts>
         </caom2:artifact>
-      </caom2:artifacts>
-    </caom2:plane>
-    <caom2:plane caom2:id="00000000-0000-0000-0b6d-01433377c34a" caom2:lastModified="2013-12-27T09:52:04.297" caom2:maxLastModified="2019-11-06T05:41:45.206" caom2:metaChecksum="md5:7999a47b7bba316410a2b90e2ea13ae8" caom2:accMetaChecksum="md5:4e544d273ea7cbdd71bda8130645da05">
-      <caom2:productID>1681594o</caom2:productID>
-      <caom2:metaRelease>2013-12-27T09:39:46.000</caom2:metaRelease>
-      <caom2:dataRelease>2015-02-28T00:00:00.000</caom2:dataRelease>
-      <caom2:dataProductType>image</caom2:dataProductType>
-      <caom2:calibrationLevel>1</caom2:calibrationLevel>
-      <caom2:provenance>
-        <caom2:name>IIWI</caom2:name>
-        <caom2:project>STANDARD PIPELINE</caom2:project>
-        <caom2:producer>CFHT</caom2:producer>
-        <caom2:runID>13Bw02</caom2:runID>
-        <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:keywords>
-          <caom2:keyword/>
-        </caom2:keywords>
-      </caom2:provenance>
-      <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-0b6d-01433377c350" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:a9eb699205ed435e07ccc789e1a09694" caom2:accMetaChecksum="md5:c1a263cbc4f34e77a7b04d8d139ca5bc">
           <caom2:uri>ad:CFHT/1681594o.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
@@ -1476,7 +1680,199 @@
           <caom2:planeURI>caom:CFHT/1681594/1681594og</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
+      <caom2:position>
+        <caom2:bounds xsi:type="caom2:Polygon">
+          <caom2:points>
+            <caom2:point>
+              <caom2:cval1>39.980000333528004</caom2:cval1>
+              <caom2:cval2>64.5891346520582</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.143471495287486</caom2:cval1>
+              <caom2:cval2>64.58688474119995</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.1346697335028</caom2:cval1>
+              <caom2:cval2>64.9463100259958</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.98117536095711</caom2:cval1>
+              <caom2:cval2>64.94876012348183</caom2:cval2>
+            </caom2:point>
+          </caom2:points>
+          <caom2:samples>
+            <caom2:vertices>
+              <caom2:vertex>
+                <caom2:cval1>39.545641946677605</caom2:cval1>
+                <caom2:cval2>64.7748031704939</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.139604271869395</caom2:cval1>
+                <caom2:cval2>64.7732681570211</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.13466973350283</caom2:cval1>
+                <caom2:cval2>64.9463100259958</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.5433268816556</caom2:cval1>
+                <caom2:cval2>64.94785578633646</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.54667725384692</caom2:cval1>
+                <caom2:cval2>64.58841196136152</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.14347149528747</caom2:cval1>
+                <caom2:cval2>64.58688474119997</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.13859636991107</caom2:cval1>
+                <caom2:cval2>64.75990625328114</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.54438507625502</caom2:cval1>
+                <caom2:cval2>64.76144411201084</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.98000033352803</caom2:cval1>
+                <caom2:cval2>64.58913465205822</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.57637839511597</caom2:cval1>
+                <caom2:cval2>64.58878855197216</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.574274477396386</caom2:cval1>
+                <caom2:cval2>64.76198498600112</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.98048495272448</caom2:cval1>
+                <caom2:cval2>64.76233245205368</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.980682964698374</caom2:cval1>
+                <caom2:cval2>64.77556233297882</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.57427339274988</caom2:cval1>
+                <caom2:cval2>64.7752152009781</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.572141256968536</caom2:cval1>
+                <caom2:cval2>64.94841159819197</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.981175360957096</caom2:cval1>
+                <caom2:cval2>64.94876012348185</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+            </caom2:vertices>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>
+          <caom2:naxis1>4246</caom2:naxis1>
+          <caom2:naxis2>4255</caom2:naxis2>
+        </caom2:dimension>
+        <caom2:sampleSize>0.3043170000036993</caom2:sampleSize>
+      </caom2:position>
+      <caom2:energy>
+        <caom2:bounds>
+          <caom2:lower>1.4865e-06</caom2:lower>
+          <caom2:upper>1.7755000000000002e-06</caom2:upper>
+          <caom2:samples>
+            <caom2:sample>
+              <caom2:lower>1.4865e-06</caom2:lower>
+              <caom2:upper>1.7755000000000002e-06</caom2:upper>
+            </caom2:sample>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>1</caom2:dimension>
+        <caom2:resolvingPower>5.64</caom2:resolvingPower>
+        <caom2:sampleSize>2.890000000000001e-07</caom2:sampleSize>
+        <caom2:bandpassName>H.WC8201</caom2:bandpassName>
+        <caom2:emBand>Infrared</caom2:emBand>
+      </caom2:energy>
+      <caom2:time>
+        <caom2:bounds>
+          <caom2:lower>56653.4026207</caom2:lower>
+          <caom2:upper>56653.40267857037</caom2:upper>
+          <caom2:samples>
+            <caom2:sample>
+              <caom2:lower>56653.4026207</caom2:lower>
+              <caom2:upper>56653.40267857037</caom2:upper>
+            </caom2:sample>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>1</caom2:dimension>
+        <caom2:resolution>5.0</caom2:resolution>
+        <caom2:sampleSize>5.7870369346346706e-05</caom2:sampleSize>
+        <caom2:exposure>5.0</caom2:exposure>
+      </caom2:time>
+      <caom2:polarization/>
       <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-8240-8571c7d49a1a" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:f393efb3e22e510339fe1450e872d6bc" caom2:accMetaChecksum="md5:95de3da3a260846dd935b0b9124f4deb">
+          <caom2:uri>ad:CFHT/1681594_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>317686</caom2:contentLength>
+          <caom2:contentChecksum>md5:04888153edf85e362365c75a660e1839</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-afa9-a7d1ad3086e8" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:9e45ffde9435359aaad27bb13b5a4de7" caom2:accMetaChecksum="md5:de2b3ad902b1077b76ccd1bd199f0753">
+          <caom2:uri>ad:CFHT/1681594_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>23304</caom2:contentLength>
+          <caom2:contentChecksum>md5:8fe29b15205b0a65d73a9e2315e6e814</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-a5d2-70f6101c9a46" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:61a75a6eb1b8a969da791296edbc4890" caom2:accMetaChecksum="md5:c6bff0c127c0b3b63e456e841d4c5460">
+          <caom2:uri>ad:CFHT/1681594_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>328458</caom2:contentLength>
+          <caom2:contentChecksum>md5:6163e96cbf4f9c3c8aa428b3b73eec14</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-96f0-0143d9fa6ae7" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:22bf8afc9ca56367fef4f85c0f434229" caom2:accMetaChecksum="md5:214250a05842e1edc9999caac8781c79">
           <caom2:uri>ad:CFHT/1681594p.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
@@ -1922,7 +2318,199 @@
           <caom2:planeURI>caom:CFHT/1681594/1681594og</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
+      <caom2:position>
+        <caom2:bounds xsi:type="caom2:Polygon">
+          <caom2:points>
+            <caom2:point>
+              <caom2:cval1>39.980000333528004</caom2:cval1>
+              <caom2:cval2>64.5891346520582</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.143471495287486</caom2:cval1>
+              <caom2:cval2>64.58688474119995</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.1346697335028</caom2:cval1>
+              <caom2:cval2>64.9463100259958</caom2:cval2>
+            </caom2:point>
+            <caom2:point>
+              <caom2:cval1>39.98117536095711</caom2:cval1>
+              <caom2:cval2>64.94876012348183</caom2:cval2>
+            </caom2:point>
+          </caom2:points>
+          <caom2:samples>
+            <caom2:vertices>
+              <caom2:vertex>
+                <caom2:cval1>39.545641946677605</caom2:cval1>
+                <caom2:cval2>64.7748031704939</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.139604271869395</caom2:cval1>
+                <caom2:cval2>64.7732681570211</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.13466973350283</caom2:cval1>
+                <caom2:cval2>64.9463100259958</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.5433268816556</caom2:cval1>
+                <caom2:cval2>64.94785578633646</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.54667725384692</caom2:cval1>
+                <caom2:cval2>64.58841196136152</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.14347149528747</caom2:cval1>
+                <caom2:cval2>64.58688474119997</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.13859636991107</caom2:cval1>
+                <caom2:cval2>64.75990625328114</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.54438507625502</caom2:cval1>
+                <caom2:cval2>64.76144411201084</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.98000033352803</caom2:cval1>
+                <caom2:cval2>64.58913465205822</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.57637839511597</caom2:cval1>
+                <caom2:cval2>64.58878855197216</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.574274477396386</caom2:cval1>
+                <caom2:cval2>64.76198498600112</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.98048495272448</caom2:cval1>
+                <caom2:cval2>64.76233245205368</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.980682964698374</caom2:cval1>
+                <caom2:cval2>64.77556233297882</caom2:cval2>
+                <caom2:type>2</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.57427339274988</caom2:cval1>
+                <caom2:cval2>64.7752152009781</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.572141256968536</caom2:cval1>
+                <caom2:cval2>64.94841159819197</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>39.981175360957096</caom2:cval1>
+                <caom2:cval2>64.94876012348185</caom2:cval2>
+                <caom2:type>1</caom2:type>
+              </caom2:vertex>
+              <caom2:vertex>
+                <caom2:cval1>0.0</caom2:cval1>
+                <caom2:cval2>0.0</caom2:cval2>
+                <caom2:type>0</caom2:type>
+              </caom2:vertex>
+            </caom2:vertices>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>
+          <caom2:naxis1>4246</caom2:naxis1>
+          <caom2:naxis2>4255</caom2:naxis2>
+        </caom2:dimension>
+        <caom2:sampleSize>0.3043170000036993</caom2:sampleSize>
+      </caom2:position>
+      <caom2:energy>
+        <caom2:bounds>
+          <caom2:lower>1.4865e-06</caom2:lower>
+          <caom2:upper>1.7755000000000002e-06</caom2:upper>
+          <caom2:samples>
+            <caom2:sample>
+              <caom2:lower>1.4865e-06</caom2:lower>
+              <caom2:upper>1.7755000000000002e-06</caom2:upper>
+            </caom2:sample>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>1</caom2:dimension>
+        <caom2:resolvingPower>5.64</caom2:resolvingPower>
+        <caom2:sampleSize>2.890000000000001e-07</caom2:sampleSize>
+        <caom2:bandpassName>H.WC8201</caom2:bandpassName>
+        <caom2:emBand>Infrared</caom2:emBand>
+      </caom2:energy>
+      <caom2:time>
+        <caom2:bounds>
+          <caom2:lower>56653.4026207</caom2:lower>
+          <caom2:upper>56653.40267857037</caom2:upper>
+          <caom2:samples>
+            <caom2:sample>
+              <caom2:lower>56653.4026207</caom2:lower>
+              <caom2:upper>56653.40267857037</caom2:upper>
+            </caom2:sample>
+          </caom2:samples>
+        </caom2:bounds>
+        <caom2:dimension>1</caom2:dimension>
+        <caom2:resolution>5.0</caom2:resolution>
+        <caom2:sampleSize>5.7870369346346706e-05</caom2:sampleSize>
+        <caom2:exposure>5.0</caom2:exposure>
+      </caom2:time>
+      <caom2:polarization/>
       <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-9bfa-528b55512c34" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:b2627beaf9e32b0a3320d786de770828" caom2:accMetaChecksum="md5:d6979ddae1a6a171b6e458c0cc3a38e7">
+          <caom2:uri>ad:CFHT/1681594_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>317686</caom2:contentLength>
+          <caom2:contentChecksum>md5:04888153edf85e362365c75a660e1839</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-8ed3-ad59a52f9424" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:8a483bdb6a9f6329d7c5c992e5f135ed" caom2:accMetaChecksum="md5:b36baf93584ca417588fdaccb0475638">
+          <caom2:uri>ad:CFHT/1681594_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>23304</caom2:contentLength>
+          <caom2:contentChecksum>md5:8fe29b15205b0a65d73a9e2315e6e814</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-b63b-9c96af0dd988" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:5b50a17be33f98f15c93b3e97f21e172" caom2:accMetaChecksum="md5:a9aec2d6dd753439318c0967a4bc4561">
+          <caom2:uri>ad:CFHT/1681594_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>328458</caom2:contentLength>
+          <caom2:contentChecksum>md5:6163e96cbf4f9c3c8aa428b3b73eec14</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-a8d2-0143df4a2170" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:76b894f5c3bb883e516626518fd9cff3" caom2:accMetaChecksum="md5:3a3c5977efe31d470cd2f4d74f6a03ed">
           <caom2:uri>ad:CFHT/1681594s.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
@@ -2361,7 +2949,38 @@
         <caom2:runID>13Bw02</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
       </caom2:provenance>
+      <caom2:position/>
+      <caom2:energy/>
+      <caom2:time/>
+      <caom2:polarization/>
       <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-8335-7c5eb509ff1c" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:ebaa7eb5df26d31d84438d98c0af5fe1" caom2:accMetaChecksum="md5:ea812f6c12e6a183409d33a9c6ff582d">
+          <caom2:uri>ad:CFHT/1681594_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>317686</caom2:contentLength>
+          <caom2:contentChecksum>md5:04888153edf85e362365c75a660e1839</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-9211-652be90e90d3" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:4561b1fb005f882e2adbe9649efab248" caom2:accMetaChecksum="md5:1a25b3d308cf0c4e56b64a12f982fb99">
+          <caom2:uri>ad:CFHT/1681594_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>23304</caom2:contentLength>
+          <caom2:contentChecksum>md5:8fe29b15205b0a65d73a9e2315e6e814</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-9e1f-865ce959f2eb" caom2:lastModified="2018-07-02T08:19:58.233" caom2:maxLastModified="2018-07-02T08:19:58.233" caom2:metaChecksum="md5:df2d9960f0f77b0df77674f19b0652e0" caom2:accMetaChecksum="md5:03011232c14deb06334053ed85acb2a4">
+          <caom2:uri>ad:CFHT/1681594_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>328458</caom2:contentLength>
+          <caom2:contentChecksum>md5:6163e96cbf4f9c3c8aa428b3b73eec14</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-d887-0158d2ac881d" caom2:lastModified="2017-11-23T04:09:40.033" caom2:maxLastModified="2017-11-23T04:09:40.033" caom2:metaChecksum="md5:fc2bae69a54d024adea99824b48ca222" caom2:accMetaChecksum="md5:dd280915cd00c9334710210671b66b71">
           <caom2:uri>ad:CFHT/1681594y.fits.fz</caom2:uri>
           <caom2:productType>auxiliary</caom2:productType>

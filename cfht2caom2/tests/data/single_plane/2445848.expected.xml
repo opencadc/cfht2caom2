@@ -34,7 +34,7 @@
   <caom2:instrument>
     <caom2:name>SITELLE</caom2:name>
     <caom2:keywords>
-      <caom2:keyword>IMAGING,SITSTEP=0,SITSTEPS=0</caom2:keyword>
+      <caom2:keyword>INSTMODE=IMAGING,SITSTEP=0,SITSTEPS=0</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>
   <caom2:environment>
