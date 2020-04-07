@@ -1426,7 +1426,7 @@ def update(observation, **kwargs):
                             # suffix list from caom2IngestEspadons.py, l389
                             # 'b', 'd', 'c', 'f', 'x'
                             # with missing spatial indicator keywords
-                            if (plane.product_id[-1] in ['a', 'i', 'o', 'p']
+                            if (cfht_name.suffix in ['a', 'i', 'o', 'p']
                                     and radecsys.lower() != 'null' and
                                     headers[idx].get('RA_DEG') is not None and
                                     headers[idx].get('DEC_DEG') is not None):
@@ -1435,8 +1435,7 @@ def update(observation, **kwargs):
                             else:
                                 cc.reset_position(chunk)
 
-                        if (plane.product_id[-1] in ['i', 'p'] and
-                                cfht_name.suffix == plane.product_id[-1]):
+                        if (cfht_name.suffix in ['i', 'p']):
                             _update_observable(part, chunk, cfht_name.suffix,
                                                observation.observation_id)
 
@@ -1445,7 +1444,7 @@ def update(observation, **kwargs):
                         # Ignore position wcs if a calibration file (except 'x'
                         # type calibration) and/or position info not in header
                         # or binned 8x8
-                        if (plane.product_id[-1] in ['b', 'l', 'd', 'f'] or
+                        if (cfht_name.suffix in ['b', 'l', 'd', 'f'] or
                                 ccdbin == 8 or radecsys is None or
                                 ctype1 is None):
                             cc.reset_position(chunk)
@@ -1462,7 +1461,7 @@ def update(observation, **kwargs):
                         if (filter_name is None or filter_name == 'Open' or
                                 ac.FilterMetadataCache.get_fwhm(
                                     filter_md) is None or
-                                plane.product_id[-1] in ['b', 'l', 'd'] or
+                                cfht_name.suffix in ['b', 'l', 'd'] or
                                 observation.type in ['DARK']):
                             cc.reset_energy(chunk)
                         else:
@@ -1484,12 +1483,12 @@ def update(observation, **kwargs):
                         if chunk.time_axis is not None:
                             chunk.time_axis = 4
 
-                        if (plane.product_id[-1] in ['a', 'o', 'x'] and
+                        if (cfht_name.suffix in ['a', 'o', 'x'] and
                                 chunk.position is None):
                             _update_position_sitelle(chunk, headers[idx],
                                                      observation.observation_id)
 
-                        if plane.product_id[-1] == 'p':
+                        if cfht_name.suffix == 'p':
                             if chunk.position.axis.function is None:
                                 _update_position_function_sitelle(
                                     chunk, headers[idx],
@@ -1497,21 +1496,19 @@ def update(observation, **kwargs):
                             _update_sitelle_plane(observation, uri)
 
                     elif instrument is md.Inst.WIRCAM:
-                        if ((chunk.time is not None and
-                             cfht_name.suffix == plane.product_id[-1])):
+                        if chunk.time is not None:
                             _update_wircam_time(
                                 chunk, headers, idx, cfht_name,
                                 observation.type,
                                 observation.observation_id, fqn)
 
-                        if (plane.product_id[-1] in ['f'] or
+                        if (cfht_name.suffix in ['f'] or
                                 observation.type in
                                 ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
                             cc.reset_position(chunk)
                             chunk.naxis = None
 
-                        if (cfht_name.suffix == 'g' and
-                                plane.product_id[-1] == 'g'):
+                        if cfht_name.suffix == 'g':
                             _update_wircam_position(part, chunk, headers, idx,
                                                     observation.observation_id)
                             temp_bandpass_name = headers[idx].get('FILTER')
@@ -1520,7 +1517,7 @@ def update(observation, **kwargs):
 
                         # position axis check is to determine if naxis should
                         # be set
-                        if (plane.product_id[-1] in ['d', 'f', 'g'] and
+                        if (cfht_name.suffix in ['d', 'f', 'g'] and
                                 chunk.position_axis_1 is None):
                             # PD - 17-01-20
                             #  This is a FLAT field exposure so the position
@@ -1564,16 +1561,16 @@ def update(observation, **kwargs):
                                            cn.COLLECTION,
                                            _repair_filename_provenance_value,
                                            observation.observation_id)
-        if instrument is md.Inst.WIRCAM and plane.product_id[-1] in ['p', 's']:
+        if instrument is md.Inst.WIRCAM and cfht_name.suffix in ['p', 's']:
             # caom2IngestWircam.py, l193
             # CW 09-01-20
             # Only the 'o' is input
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
-        elif instrument is md.Inst.ESPADONS and plane.product_id[-1] == 'i':
+        elif instrument is md.Inst.ESPADONS and cfht_name.suffix == 'i':
             # caom2IngestEspadons.py, l714
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
         elif (instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM] and
-              plane.product_id[-1] == 'p'):
+              cfht_name.suffix == 'p'):
             # caom2IngestMegacam.py, l142
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
 
