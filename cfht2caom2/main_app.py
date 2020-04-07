@@ -1449,6 +1449,7 @@ def update(observation, **kwargs):
                                 ccdbin == 8 or radecsys is None or
                                 ctype1 is None):
                             cc.reset_position(chunk)
+                            chunk.naxis = None
 
                         # CW
                         # Ignore energy wcs if some type of calibration file
@@ -1507,6 +1508,7 @@ def update(observation, **kwargs):
                                 observation.type in
                                 ['BPM', 'DARK', 'FLAT', 'WEIGHT']):
                             cc.reset_position(chunk)
+                            chunk.naxis = None
 
                         if (cfht_name.suffix == 'g' and
                                 plane.product_id[-1] == 'g'):

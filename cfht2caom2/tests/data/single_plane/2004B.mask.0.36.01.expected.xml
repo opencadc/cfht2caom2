@@ -38,42 +38,42 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Elixir/</caom2:reference>
         <caom2:inputs>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.26.0/2004B.mask.0.26.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.28.0/2004B.mask.0.28.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.21.0/2004B.mask.0.21.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.20.0/2004B.mask.0.20.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.25.0/2004B.mask.0.25.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.02.0/2004B.mask.0.02.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.32.0/2004B.mask.0.32.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.11.0/2004B.mask.0.11.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.29.0/2004B.mask.0.29.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.35.0/2004B.mask.0.35.01</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2004B.mask.0.18.0/2004B.mask.0.18.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.03.0/2004B.mask.0.03.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.17.0/2004B.mask.0.17.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.23.0/2004B.mask.0.23.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.07.0/2004B.mask.0.07.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.24.0/2004B.mask.0.24.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.27.0/2004B.mask.0.27.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.10.0/2004B.mask.0.10.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.33.0/2004B.mask.0.33.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.05.0/2004B.mask.0.05.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.22.0/2004B.mask.0.22.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.12.0/2004B.mask.0.12.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.09.0/2004B.mask.0.09.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.34.0/2004B.mask.0.34.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.16.0/2004B.mask.0.16.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.15.0/2004B.mask.0.15.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.13.0/2004B.mask.0.13.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.08.0/2004B.mask.0.08.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.06.0/2004B.mask.0.06.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.02.0/2004B.mask.0.02.01</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2004B.mask.0.14.0/2004B.mask.0.14.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.04.0/2004B.mask.0.04.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.31.0/2004B.mask.0.31.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.17.0/2004B.mask.0.17.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.28.0/2004B.mask.0.28.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.12.0/2004B.mask.0.12.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.24.0/2004B.mask.0.24.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.33.0/2004B.mask.0.33.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.20.0/2004B.mask.0.20.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.32.0/2004B.mask.0.32.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.07.0/2004B.mask.0.07.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.26.0/2004B.mask.0.26.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.25.0/2004B.mask.0.25.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.34.0/2004B.mask.0.34.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.15.0/2004B.mask.0.15.01</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2004B.mask.0.19.0/2004B.mask.0.19.01</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2004B.mask.0.01.0/2004B.mask.0.01.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.00.0/2004B.mask.0.00.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.11.0/2004B.mask.0.11.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.35.0/2004B.mask.0.35.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.13.0/2004B.mask.0.13.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.29.0/2004B.mask.0.29.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.10.0/2004B.mask.0.10.01</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/2004B.mask.0.30.0/2004B.mask.0.30.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.23.0/2004B.mask.0.23.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.06.0/2004B.mask.0.06.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.31.0/2004B.mask.0.31.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.03.0/2004B.mask.0.03.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.08.0/2004B.mask.0.08.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.05.0/2004B.mask.0.05.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.04.0/2004B.mask.0.04.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.16.0/2004B.mask.0.16.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.09.0/2004B.mask.0.09.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.00.0/2004B.mask.0.00.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.22.0/2004B.mask.0.22.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.27.0/2004B.mask.0.27.01</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2004B.mask.0.21.0/2004B.mask.0.21.01</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
@@ -91,7 +91,6 @@
               <caom2:name>1</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="5bf65852-5845-4513-bc3c-ac037cee5fc5" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -120,7 +119,6 @@
               <caom2:name>2</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="bd4386ec-da48-4f15-bcdb-758619e40264" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -149,7 +147,6 @@
               <caom2:name>3</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="5f9c4e23-b4f4-4d6c-a3d2-7ab6fae319c5" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -178,7 +175,6 @@
               <caom2:name>4</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="77685ae7-3060-477b-8702-524f5c59f5dc" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -207,7 +203,6 @@
               <caom2:name>5</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="cea685b4-4f46-407d-99d2-e9fdf2218ddd" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -236,7 +231,6 @@
               <caom2:name>6</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="bbd5808b-fc96-4a30-97ba-6a3258e19adc" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -265,7 +259,6 @@
               <caom2:name>7</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="bbb8f9f1-4fd4-4eaf-b505-230fd7524551" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -294,7 +287,6 @@
               <caom2:name>8</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="b060bca6-84cf-4054-ab02-dbb16d143836" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -323,7 +315,6 @@
               <caom2:name>9</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="43137a67-5e0d-4f45-baac-6d5874567636" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -352,7 +343,6 @@
               <caom2:name>10</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="e6a34cab-82c5-49f2-b9fb-dcad6957dadb" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -381,7 +371,6 @@
               <caom2:name>11</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="dea956bf-d4bb-40c6-9236-abf82c9e0d30" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -410,7 +399,6 @@
               <caom2:name>12</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="4ab02d5e-6dd9-4d59-bf58-1ad8cb79a79e" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -439,7 +427,6 @@
               <caom2:name>13</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="9ebc541b-8f1b-41fe-abe5-3b252fc01efd" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -468,7 +455,6 @@
               <caom2:name>14</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="502c1f69-6ef2-45b7-a3e0-e7fd4620605c" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -497,7 +483,6 @@
               <caom2:name>15</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="3378d764-5630-4459-be6f-698a28e86f84" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -526,7 +511,6 @@
               <caom2:name>16</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="7c290f79-0960-422c-a910-45758adfa559" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -555,7 +539,6 @@
               <caom2:name>17</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="bc874e06-fe53-4243-a2ff-b71cae34ab3e" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -584,7 +567,6 @@
               <caom2:name>18</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="b6b97897-ac34-4f39-a4ca-51c532e216c9" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -613,7 +595,6 @@
               <caom2:name>19</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="040e4444-2897-4444-a819-360efc35a1a8" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -642,7 +623,6 @@
               <caom2:name>20</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="c0bc3888-580b-4c51-aec0-b1cd35f4bf74" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -671,7 +651,6 @@
               <caom2:name>21</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="79d06765-f73d-4df7-bcc3-88c33223586b" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -700,7 +679,6 @@
               <caom2:name>22</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="6dce606f-ce09-4b66-a12a-e873d912e4e5" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -729,7 +707,6 @@
               <caom2:name>23</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="18be56ea-b2fe-402b-b5d2-a31168b8668b" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -758,7 +735,6 @@
               <caom2:name>24</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="606b3508-bce9-4034-877f-db69e31a5c7d" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -787,7 +763,6 @@
               <caom2:name>25</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="86d55464-ea38-438d-b398-8bb7c0eb5172" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -816,7 +791,6 @@
               <caom2:name>26</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="e85b3f55-b83c-4c06-855e-97f60398b8e6" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -845,7 +819,6 @@
               <caom2:name>27</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="be331bab-0a7d-4730-b08e-d3fe029de68f" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -874,7 +847,6 @@
               <caom2:name>28</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="9b92e4e3-a295-43b6-ae2a-bba1d2ea18af" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -903,7 +875,6 @@
               <caom2:name>29</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="906efdbb-6a58-49a1-97ca-8d5bee5310a8" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -932,7 +903,6 @@
               <caom2:name>30</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="7725528d-12e5-4f77-aebd-bdc9d896fbb9" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -961,7 +931,6 @@
               <caom2:name>31</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="9edb21e1-2eea-4546-aa59-f48a41f069ed" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -990,7 +959,6 @@
               <caom2:name>32</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="d5f70094-3bdf-46a3-8363-a11a38621c1e" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1019,7 +987,6 @@
               <caom2:name>33</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="1a0096dd-7003-4041-a18e-bfbcf40e5661" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1048,7 +1015,6 @@
               <caom2:name>34</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="e59eb798-1dc7-4e2c-b2a3-558045c5adbe" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1077,7 +1043,6 @@
               <caom2:name>35</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="919df9af-d6da-46c5-81c8-4e0722c3e70e" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1106,7 +1071,6 @@
               <caom2:name>36</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="3f21bebe-ad6f-466c-aea7-ef53227fee80" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1137,41 +1101,41 @@
     </caom2:plane>
   </caom2:planes>
   <caom2:members>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.26.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.27.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.34.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.02.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.17.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.29.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.15.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.20.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.22.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.24.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.00.0</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2004B.mask.0.33.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.21.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.03.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.18.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.09.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.11.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.35.0</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2004B.mask.0.04.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.14.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.23.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.12.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.32.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.01.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.07.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.05.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.10.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.06.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.25.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.13.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.30.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.08.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.21.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.17.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.22.0</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2004B.mask.0.28.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.00.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.32.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.24.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.13.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.25.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.35.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.14.0</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2004B.mask.0.31.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.19.0</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2004B.mask.0.16.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.23.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.03.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.30.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.10.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.29.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.09.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.34.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.20.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.26.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.18.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.02.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.27.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.01.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.19.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.15.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.07.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.06.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.11.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.08.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.12.0</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/2004B.mask.0.05.0</caom2:observationURI>
   </caom2:members>
 </caom2:Observation>

@@ -70,7 +70,6 @@
               <caom2:name>1</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="5a89a0b5-ac9a-4f08-a28f-d9799d3359ee" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:f11774108d6279735652af9e7e243d0e" caom2:accMetaChecksum="md5:4f7daa18e4bbc63a199a322359a6b18c" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:time>
                     <caom2:axis>
@@ -102,7 +101,6 @@
               <caom2:name>2</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="2cf88443-ffe1-480e-a196-9e8ec769956e" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:640c7b87013e24babe3bd77200e8874b" caom2:accMetaChecksum="md5:80396555abf02c58fab30868cb2e7cca" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:time>
                     <caom2:axis>
@@ -134,7 +132,6 @@
               <caom2:name>3</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="253b0c58-0b36-42e0-828c-6e8454b651df" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:a7e9f2765829994a8b5c9b289793daeb" caom2:accMetaChecksum="md5:e8716d4703113a712e7029a70532e3fb" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:time>
                     <caom2:axis>
@@ -166,7 +163,6 @@
               <caom2:name>4</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="23c033fe-e838-415a-bc1e-acf215ed4150" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:3a8c2a6442ae17111bedc55a43b9374e" caom2:accMetaChecksum="md5:58117cda05bcb2f78c2590608b46075d" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:time>
                     <caom2:axis>

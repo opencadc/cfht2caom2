@@ -24,3 +24,15 @@
 2462928a.fits.fz
 787355d.fits.gz
 981337m.fits.fz
+2463854b.fits.fz
+2463857d.fits.fz
+2463796p.fits.fz
+03Am02.dark.1800.36.00.fits.fz
+03Am05.fringe.z.36.00.fits.fz
+07Bm06.flat.z.36.02.fits.fz
+1000003f.fits.fz
+1013337x.fits.fz
+19Bm03.bias.0.40.00.fits.fz
+2004B.mask.0.36.01.fits.fz
+718955l.fits.fz
+979412b.fits.fz
