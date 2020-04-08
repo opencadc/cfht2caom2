@@ -324,12 +324,13 @@ def _augment(plane, uri, fqn, product_type):
 
 
 def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
+    # from genSiteprevperplane.py
     sitelle = fits.open(science_fqn)
 
     # Make a RGB colour image if it's a calibrated 3D cube
     # scan through cube to look for strongest lines
     data = sitelle[0].data
-    logging.info(f'{data.shape}, {data.size}')
+    logging.debug(f'{data.shape}, {data.size}')
 
     # trim off ends to make 2048x2048
     data = data[:, 8:2056]
@@ -337,31 +338,31 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
     # trim off 30% of spectral edges - might be noisy
     nspecaxis = data.shape[0]
     numedgechannels = int(0.15 * nspecaxis)
-    logging.info(f'{numedgechannels}')
+    logging.debug(f'{numedgechannels}')
 
     data[:numedgechannels, :, :] = 0.0
     data[(-1 * numedgechannels):, :, :] = 0.0
     nspecaxis = data.shape[0]
     nspataxis = data.shape[1] * data.shape[2]
-    logging.info(f'{nspecaxis}, {nspataxis}, {data.size}, {data.shape}')
+    logging.debug(f'{nspecaxis}, {nspataxis}, {data.size}, {data.shape}')
     data2d = reshape(data, (nspecaxis, -1))
-    logging.info(f'{data2d.shape}')
+    logging.debug(f'{data2d.shape}')
 
     for k in range(nspecaxis):
         medianvswavenumber = median(data2d[k, :])
         data2d[k, :] = data2d[k, :] - medianvswavenumber
     meanbgsubvswavenumber = mean(data2d, axis=1)
 
-    logging.info(f'{meanbgsubvswavenumber}, {meanbgsubvswavenumber.shape}')
+    logging.debug(f'{meanbgsubvswavenumber}, {meanbgsubvswavenumber.shape}')
     indexmax1 = nanargmax(meanbgsubvswavenumber)
-    logging.info(f'{indexmax1}, {meanbgsubvswavenumber[indexmax1]}')
+    logging.debug(f'{indexmax1}, {meanbgsubvswavenumber[indexmax1]}')
 
     # remove 7 channels around strongest line
     indexmax1lo = indexmax1 - 3
     indexmax1hi = indexmax1 + 3
     meanbgsubvswavenumber[indexmax1lo:indexmax1hi] = 0.0
     indexmax2 = nanargmax(meanbgsubvswavenumber)
-    logging.info(f'{indexmax2}, {meanbgsubvswavenumber[indexmax2]}')
+    logging.debug(f'{indexmax2}, {meanbgsubvswavenumber[indexmax2]}')
 
     # remove 7 channels around second strongest line
     indexmax2lo = indexmax2 - 3
@@ -371,16 +372,23 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
     indexmax1hiline = indexmax1 + 1
     indexmax2loline = indexmax2 - 1
     indexmax2hiline = indexmax2 + 1
-    logging.info(f'{indexmax1loline}, {indexmax1hiline}, {indexmax2loline}, '
+    logging.debug(f'{indexmax1loline}, {indexmax1hiline}, {indexmax2loline}, '
                  f'{indexmax2hiline}')
-    logging.info(f'{meanbgsubvswavenumber}')
+    logging.debug(f'{meanbgsubvswavenumber}')
 
     w = where(meanbgsubvswavenumber > 0.0)
-    logging.info(f'{w[0]}')
+    logging.debug(f'{w[0]}')
 
     head = sitelle[0].header
     del head['NAXIS3']
+    del head['CTYPE3']
+    del head['CRVAL3']
+    del head['CUNIT3']
+    del head['CRPIX3']
+    del head['CDELT3']
     head['NAXIS'] = 2
+    head['WCSAXES'] = 2
+
     head['NAXIS1'] = 1024
     head['NAXIS2'] = 1024
 
@@ -391,11 +399,11 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
     # Make two line images in 3 different sizes
     dataline1 = data[indexmax1loline:indexmax1hiline, :, :]
     data2dline1 = mean(dataline1, axis=0)
-    logging.info(f'{data2dline1.shape}')
+    logging.debug(f'{data2dline1.shape}')
 
     dataline2 = data[indexmax2loline:indexmax2hiline, :, :]
     data2dline2 = mean(dataline2, axis=0)
-    logging.info(f'{data2dline2.shape}')
+    logging.debug(f'{data2dline2.shape}')
 
     # Make "continuum" image with two strongest lines removed in 3 different
     # sizes and add this to line image so whole image not green
@@ -404,70 +412,45 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
 
     data2dline1pluscont = data2dline1 + data2dcont
     data2dline2pluscont = data2dline2 + data2dcont
-    logging.info(f'{mean(data2dline1)}, {mean(data2dline1pluscont)}, '
+    logging.debug(f'{mean(data2dline1)}, {mean(data2dline1pluscont)}, '
                  f'{mean(data2dline2pluscont)}, {mean(data2dcont)}')
 
-    data2dline1size1024 = _rebin_factor(data2dline1pluscont, (1024, 1024))
-    data2dline1size256 = _rebin_factor(data2dline1pluscont, (256, 256))
-    data2dline1zoom1024 = data2dline1pluscont[512:1536, 512:1536]
-    logging.info(f'{data2dline1size1024.shape}, {data2dline1size256.shape}, '
-                 f'{data2dline1zoom1024.shape}')
-    fits.writeto('imageline1size1024.fits', data2dline1size1024, head,
-                 clobber=True)
-    fits.writeto('imageline1size256.fits', data2dline1size256, head256,
-                 clobber=True)
-    fits.writeto('imageline1zoom1024.fits', data2dline1zoom1024, head,
-                 clobber=True)
-
-    data2dline2size1024 = _rebin_factor(data2dline2pluscont, (1024, 1024))
-    data2dline2size256 = _rebin_factor(data2dline2pluscont, (256, 256))
-    data2dline2zoom1024 = data2dline2pluscont[512:1536, 512:1536]
-    logging.info(f'{data2dline2size1024.shape}, {data2dline2size256.shape}, '
-                 f'{data2dline2zoom1024.shape}')
-    fits.writeto('imageline2size1024.fits', data2dline2size1024, head,
-                 clobber=True)
-    fits.writeto('imageline2size256.fits', data2dline2size256, head256,
-                 clobber=True)
-    fits.writeto('imageline2zoom1024.fits', data2dline2zoom1024, head,
-                 clobber=True)
-
-    data2dcontsize1024 = _rebin_factor(data2dcont, (1024, 1024))
-    data2dcontsize256 = _rebin_factor(data2dcont, (256, 256))
-    data2dcontzoom1024 = data2dcont[512:1536, 512:1536]
-    logging.info(f'{data2dcontsize1024.shape}, {data2dcontsize256.shape}, '
-                 f'{data2dcontzoom1024.shape}')
-    fits.writeto('imagecontsize1024.fits', data2dcontsize1024, head,
-                 clobber=True)
-    fits.writeto('imagecontsize256.fits', data2dcontsize256, head256,
-                 clobber=True)
-    fits.writeto('imagecontzoom1024.fits', data2dcontzoom1024, head,
-                 clobber=True)
+    _create_rgb_inputs(data2dline1pluscont, head, head256,
+                       'imageline1size1024.fits', 'imageline1size256.fits',
+                       'imageline1zoom1024.fits')
+    _create_rgb_inputs(data2dline2pluscont, head, head256,
+                       'imageline2size1024.fits', 'imageline2size256.fits',
+                       'imageline2zoom1024.fits')
+    _create_rgb_inputs(data2dcont, head, head256,
+                       'imagecontsize1024.fits', 'imagecontsize256.fits',
+                       'imagecontzoom1024.fits')
 
     os.system("pwd")
     del data
     del datanolines
     sitelle.close(science_fqn)
 
-    # aplpy.make_rgb_image(['imageline1size1024.fits',
-    # 'imageline2size1024.fits','imagecontsize1024.fits'],
-    #  prev2file,stretch_r='linear',stretch_g='linear',stretch_b='linear',
-    #  pmax_r=99.5,pmax_g=99.5,pmax_b=99.5,pmin_r=20.0,pmin_g=80.0,pmin_b=20.0)
-    aplpy.make_rgb_image(['imageline1size1024.fits', 'imageline2size1024.fits',
-                          'imagecontsize1024.fits'], prev_fqn,
-                         stretch_r='linear', stretch_g='linear',
-                         stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
-                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)
+    _create_rgb('imageline1size1024.fits', 'imageline2size1024.fits',
+                'imagecontsize1024.fits', prev_fqn)
+    _create_rgb('imageline1size256.fits', 'imageline2size256.fits',
+                'imagecontsize256.fits', thumb_fqn)
+    _create_rgb('imageline1zoom1024.fits', 'imageline2zoom1024.fits',
+                'imagecontzoom1024.fits', zoom_fqn)
 
-    aplpy.make_rgb_image(['imageline1size256.fits',
-                          'imageline2size256.fits',
-                          'imagecontsize256.fits'], thumb_fqn,
-                         stretch_r='linear', stretch_g='linear',
-                         stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
-                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)
 
-    aplpy.make_rgb_image(['imageline1zoom1024.fits',
-                          'imageline2zoom1024.fits',
-                          'imagecontzoom1024.fits'], zoom_fqn,
+def _create_rgb_inputs(input_data, head, head256, preview_f_name, thumb_f_name,
+                       zoom_f_name):
+    size1024 = _rebin_factor(input_data, (1024, 1024))
+    size256 = _rebin_factor(input_data, (256, 256))
+    zoom1024 = input_data[512:1536, 512:1536]
+    logging.debug(f'{size1024.shape}, {size256.shape}, {zoom1024.shape}')
+    fits.writeto(preview_f_name, size1024, head, clobber=True)
+    fits.writeto(thumb_f_name, size256, head256, clobber=True)
+    fits.writeto(zoom_f_name, zoom1024, head, clobber=True)
+
+
+def _create_rgb(line1_f_name, line2_f_name, cont_f_name, fqn):
+    aplpy.make_rgb_image([line1_f_name, line2_f_name, cont_f_name], fqn,
                          stretch_r='linear', stretch_g='linear',
                          stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
                          pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)

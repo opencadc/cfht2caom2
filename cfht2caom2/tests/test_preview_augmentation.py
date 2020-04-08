@@ -109,7 +109,7 @@ def test_preview_augment(ad_put_mock):
         'visit_obs_start_sitelle_calibrated_cube.xml':
             ['2359320p.fits'],
         'visit_obs_start_sitelle.xml':
-            ['2359320o.fits.fz', '2359320v.fits.fz']
+            ['2359320o.fits.fz']
     }
 
     kwargs = {'working_directory': TEST_FILES_DIR,
@@ -160,8 +160,12 @@ def test_preview_augment(ad_put_mock):
                 check_number = 0
             assert test_result['artifacts'] == check_number, \
                 f'artifacts should be added {f_name}'
-            assert len(obs.planes[test_name.product_id].artifacts) == 4, \
-                f'new artifacts {f_name}'
+
+            end_artifact_count = 4
+            if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
+                end_artifact_count = 6
+            assert len(obs.planes[test_name.product_id].artifacts) == \
+                end_artifact_count, f'new artifacts {f_name}'
 
             if test_name.suffix == 'g':
                 assert not ad_put_mock.called, f'ad put mock called for g'
