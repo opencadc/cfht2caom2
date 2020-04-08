@@ -66,10 +66,13 @@
 #
 # ***********************************************************************
 #
+import aplpy
 import logging
 import os
 
+from astropy.io import fits
 from datetime import datetime
+from numpy import *
 
 from caom2 import Observation, ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
@@ -121,7 +124,7 @@ def visit(observation, **kwargs):
                 count += _do_prev(working_dir, plane, cfht_name, cadc_client,
                                   stream, observable.metrics,
                                   observation.intent,
-                                  observation.instrument.name,
+                                  md.Inst(observation.instrument.name),
                                   observation.observation_id)
                 if cfht_name.suffix == 'p':
                     count += _update_g_artifact(observation, plane)
@@ -142,18 +145,40 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     zoom = cfht_name.zoom
     zoom_fqn = os.path.join(working_dir, zoom)
 
-    # from genWirprevperplane.py
-    # if it's a datacube, just take the first slice
-    # e.g. fitscopy '928690p.fits[*][*,*,1:1]' s1928690p.fits
+    if instrument is md.Inst.SITELLE and plane.product_id[-1] == 'p':
+        _sitelle_calibrated_cube(science_fqn, thumb_fqn, preview_fqn, zoom_fqn)
+    else:
+        _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
+                     working_dir, intent, thumb_fqn,
+                     preview_fqn, zoom_fqn)
 
+    prev_uri = cfht_name.prev_uri
+    thumb_uri = cfht_name.thumb_uri
+    zoom_uri = cfht_name.zoom_uri
+    _augment(plane, prev_uri, preview_fqn, ProductType.PREVIEW)
+    _augment(plane, thumb_uri, thumb_fqn, ProductType.THUMBNAIL)
+    _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
+    if cadc_client is not None:
+        _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
+                      metrics)
+    return 3
+
+
+def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
+                 working_dir, intent, thumb_fqn,
+                 preview_fqn, zoom_fqn):
     headers = ac.read_fits_headers(science_fqn)
     num_extensions = headers[0].get('NEXTEND')
 
     zoom_science_fqn = science_fqn
 
+    # from genWirprevperplane.py
+    # if it's a datacube, just take the first slice
+    # e.g. fitscopy '928690p.fits[*][*,*,1:1]' s1928690p.fits
+
     # set up the correct input file - may need to use fitscopy
     rotate_param = ''
-    if md.Inst(instrument) is md.Inst.WIRCAM:
+    if instrument is md.Inst.WIRCAM:
         if science_fqn.endswith('.fz'):
             naxis_3 = headers[0].get('ZNAXIS3', 1)
         else:
@@ -176,19 +201,28 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
             slice_cmd = f'fitscopy {cfht_name.file_name}[4][*,*,1:1] ' \
                         f'{zoom_science_f_name}'
             _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
-    elif md.Inst(instrument) in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+    elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         rotate_param = '-rotate 180'
 
     # set up the correct parameters to the ds9 command
     scope_param = 'local'
-    if intent is ObservationIntentType.SCIENCE:
+    if (instrument is md.Inst.SITELLE or
+            intent is ObservationIntentType.SCIENCE):
         scope_param = 'global'
 
+    # 20-03-20 - seb - always use iraf - do not trust wcs coming from the data
+    # acquisition. A proper one needs processing which is often not done on
+    # observations.
+    mosaic_param = '-mosaicimage iraf'
+    if instrument is md.Inst.SITELLE:
+        mosaic_param = ''
+
     geometry = '256x521'
-    _gen_image(science_fqn, geometry, thumb_fqn, scope_param, rotate_param)
+    _gen_image(science_fqn, geometry, thumb_fqn, scope_param, rotate_param,
+               mosaic_param=mosaic_param)
 
     geometry = '1024x1024'
-    if md.Inst(instrument) in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+    if instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
                    rotate_param, mode_param='')
     else:
@@ -199,9 +233,9 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     zoom_param = '1'
     scope_param = 'global'
     # set zoom parameters
-    if md.Inst(instrument) is md.Inst.WIRCAM:
+    if instrument is md.Inst.WIRCAM:
         pan_param = '-pan 484 -484 image'
-    elif md.Inst(instrument) in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+    elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         pan_param = '-pan -9 1780'
         rotate_param = '-rotate 180'
         if num_extensions >= 23:
@@ -214,19 +248,10 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
         else:
             mosaic_param = f'-fits {zoom_science_fqn}[1]'
             zoom_science_fqn = ''
+    elif instrument is md.Inst.SITELLE:
+        pan_param = '-pan -512 1544'
     _gen_image(zoom_science_fqn, geometry, zoom_fqn, scope_param, rotate_param,
                zoom_param, pan_param, mosaic_param)
-
-    prev_uri = cfht_name.prev_uri
-    thumb_uri = cfht_name.thumb_uri
-    zoom_uri = cfht_name.zoom_uri
-    _augment(plane, prev_uri, preview_fqn, ProductType.PREVIEW)
-    _augment(plane, thumb_uri, thumb_fqn, ProductType.THUMBNAIL)
-    _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
-    if cadc_client is not None:
-        _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
-                      metrics)
-    return 3
 
 
 def _exec_cmd_chdir(working_dir, temp_file, cmd):
@@ -242,7 +267,7 @@ def _exec_cmd_chdir(working_dir, temp_file, cmd):
 
 def _gen_image(science_fqn, geometry, save_fqn, scope_param, rotate_param,
                zoom_param='to fit',
-               pan_param='', mosaic_param='-mosaicimage iraf',
+               pan_param='', mosaic_param='',
                mode_param='-mode none'):
     # 20-03-20 - seb - always use iraf - do not trust wcs coming from the data
     # acquisition. A proper one needs processing which is often not done on
@@ -296,3 +321,168 @@ def _augment(plane, uri, fqn, product_type):
         temp = plane.artifacts[uri]
     plane.artifacts[uri] = mc.get_artifact_metadata(
         fqn, product_type, ReleaseType.DATA, uri, temp)
+
+
+def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
+    sitelle = fits.open(science_fqn)
+
+    # Make a RGB colour image if it's a calibrated 3D cube
+    # scan through cube to look for strongest lines
+    data = sitelle[0].data
+    logging.info(f'{data.shape}, {data.size}')
+
+    # trim off ends to make 2048x2048
+    data = data[:, 8:2056]
+
+    # trim off 30% of spectral edges - might be noisy
+    nspecaxis = data.shape[0]
+    numedgechannels = int(0.15 * nspecaxis)
+    logging.info(f'{numedgechannels}')
+
+    data[:numedgechannels, :, :] = 0.0
+    data[(-1 * numedgechannels):, :, :] = 0.0
+    nspecaxis = data.shape[0]
+    nspataxis = data.shape[1] * data.shape[2]
+    logging.info(f'{nspecaxis}, {nspataxis}, {data.size}, {data.shape}')
+    data2d = reshape(data, (nspecaxis, -1))
+    logging.info(f'{data2d.shape}')
+
+    for k in range(nspecaxis):
+        medianvswavenumber = median(data2d[k, :])
+        data2d[k, :] = data2d[k, :] - medianvswavenumber
+    meanbgsubvswavenumber = mean(data2d, axis=1)
+
+    logging.info(f'{meanbgsubvswavenumber}, {meanbgsubvswavenumber.shape}')
+    indexmax1 = nanargmax(meanbgsubvswavenumber)
+    logging.info(f'{indexmax1}, {meanbgsubvswavenumber[indexmax1]}')
+
+    # remove 7 channels around strongest line
+    indexmax1lo = indexmax1 - 3
+    indexmax1hi = indexmax1 + 3
+    meanbgsubvswavenumber[indexmax1lo:indexmax1hi] = 0.0
+    indexmax2 = nanargmax(meanbgsubvswavenumber)
+    logging.info(f'{indexmax2}, {meanbgsubvswavenumber[indexmax2]}')
+
+    # remove 7 channels around second strongest line
+    indexmax2lo = indexmax2 - 3
+    indexmax2hi = indexmax2 + 3
+    meanbgsubvswavenumber[indexmax2lo:indexmax2hi] = 0.0
+    indexmax1loline = indexmax1 - 1
+    indexmax1hiline = indexmax1 + 1
+    indexmax2loline = indexmax2 - 1
+    indexmax2hiline = indexmax2 + 1
+    logging.info(f'{indexmax1loline}, {indexmax1hiline}, {indexmax2loline}, '
+                 f'{indexmax2hiline}')
+    logging.info(f'{meanbgsubvswavenumber}')
+
+    w = where(meanbgsubvswavenumber > 0.0)
+    logging.info(f'{w[0]}')
+
+    head = sitelle[0].header
+    del head['NAXIS3']
+    head['NAXIS'] = 2
+    head['NAXIS1'] = 1024
+    head['NAXIS2'] = 1024
+
+    head256 = head
+    head256['NAXIS1'] = 256
+    head256['NAXIS2'] = 256
+
+    # Make two line images in 3 different sizes
+    dataline1 = data[indexmax1loline:indexmax1hiline, :, :]
+    data2dline1 = mean(dataline1, axis=0)
+    logging.info(f'{data2dline1.shape}')
+
+    dataline2 = data[indexmax2loline:indexmax2hiline, :, :]
+    data2dline2 = mean(dataline2, axis=0)
+    logging.info(f'{data2dline2.shape}')
+
+    # Make "continuum" image with two strongest lines removed in 3 different
+    # sizes and add this to line image so whole image not green
+    datanolines = data[w[0], :, :]
+    data2dcont = mean(datanolines, axis=0)
+
+    data2dline1pluscont = data2dline1 + data2dcont
+    data2dline2pluscont = data2dline2 + data2dcont
+    logging.info(f'{mean(data2dline1)}, {mean(data2dline1pluscont)}, '
+                 f'{mean(data2dline2pluscont)}, {mean(data2dcont)}')
+
+    data2dline1size1024 = _rebin_factor(data2dline1pluscont, (1024, 1024))
+    data2dline1size256 = _rebin_factor(data2dline1pluscont, (256, 256))
+    data2dline1zoom1024 = data2dline1pluscont[512:1536, 512:1536]
+    logging.info(f'{data2dline1size1024.shape}, {data2dline1size256.shape}, '
+                 f'{data2dline1zoom1024.shape}')
+    fits.writeto('imageline1size1024.fits', data2dline1size1024, head,
+                 clobber=True)
+    fits.writeto('imageline1size256.fits', data2dline1size256, head256,
+                 clobber=True)
+    fits.writeto('imageline1zoom1024.fits', data2dline1zoom1024, head,
+                 clobber=True)
+
+    data2dline2size1024 = _rebin_factor(data2dline2pluscont, (1024, 1024))
+    data2dline2size256 = _rebin_factor(data2dline2pluscont, (256, 256))
+    data2dline2zoom1024 = data2dline2pluscont[512:1536, 512:1536]
+    logging.info(f'{data2dline2size1024.shape}, {data2dline2size256.shape}, '
+                 f'{data2dline2zoom1024.shape}')
+    fits.writeto('imageline2size1024.fits', data2dline2size1024, head,
+                 clobber=True)
+    fits.writeto('imageline2size256.fits', data2dline2size256, head256,
+                 clobber=True)
+    fits.writeto('imageline2zoom1024.fits', data2dline2zoom1024, head,
+                 clobber=True)
+
+    data2dcontsize1024 = _rebin_factor(data2dcont, (1024, 1024))
+    data2dcontsize256 = _rebin_factor(data2dcont, (256, 256))
+    data2dcontzoom1024 = data2dcont[512:1536, 512:1536]
+    logging.info(f'{data2dcontsize1024.shape}, {data2dcontsize256.shape}, '
+                 f'{data2dcontzoom1024.shape}')
+    fits.writeto('imagecontsize1024.fits', data2dcontsize1024, head,
+                 clobber=True)
+    fits.writeto('imagecontsize256.fits', data2dcontsize256, head256,
+                 clobber=True)
+    fits.writeto('imagecontzoom1024.fits', data2dcontzoom1024, head,
+                 clobber=True)
+
+    os.system("pwd")
+    del data
+    del datanolines
+    sitelle.close(science_fqn)
+
+    # aplpy.make_rgb_image(['imageline1size1024.fits',
+    # 'imageline2size1024.fits','imagecontsize1024.fits'],
+    #  prev2file,stretch_r='linear',stretch_g='linear',stretch_b='linear',
+    #  pmax_r=99.5,pmax_g=99.5,pmax_b=99.5,pmin_r=20.0,pmin_g=80.0,pmin_b=20.0)
+    aplpy.make_rgb_image(['imageline1size1024.fits', 'imageline2size1024.fits',
+                          'imagecontsize1024.fits'], prev_fqn,
+                         stretch_r='linear', stretch_g='linear',
+                         stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
+                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)
+
+    aplpy.make_rgb_image(['imageline1size256.fits',
+                          'imageline2size256.fits',
+                          'imagecontsize256.fits'], thumb_fqn,
+                         stretch_r='linear', stretch_g='linear',
+                         stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
+                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)
+
+    aplpy.make_rgb_image(['imageline1zoom1024.fits',
+                          'imageline2zoom1024.fits',
+                          'imagecontzoom1024.fits'], zoom_fqn,
+                         stretch_r='linear', stretch_g='linear',
+                         stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
+                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)
+
+
+def _rebin_factor(a, newshape):
+    """
+    Rebin an array to a new shape.
+
+    # newshape must be a factor of a.shape.
+    """
+    assert len(a.shape) == len(newshape)
+    assert not sometrue(mod(a.shape, newshape))
+
+    slices = [slice(None, None, mc.to_int(old / new)) for old, new in
+              zip(a.shape, newshape)]
+    logging.error(slices)
+    return a[slices]

@@ -105,7 +105,11 @@ def test_preview_augment(ad_put_mock):
         'visit_obs_start_megacam_sci.xml':
             ['1927963f.fits.fz', '1927963o.fits.fz', '1927963p.fits.fz'],
         'visit_obs_start_megacam_cal.xml':
-            ['979412b.fits.fz', '979412o.fits.fz', '979412p.fits.fz']
+            ['979412b.fits.fz', '979412o.fits.fz', '979412p.fits.fz'],
+        'visit_obs_start_sitelle_calibrated_cube.xml':
+            ['2359320p.fits'],
+        'visit_obs_start_sitelle.xml':
+            ['2359320o.fits.fz', '2359320v.fits.fz']
     }
 
     kwargs = {'working_directory': TEST_FILES_DIR,
@@ -122,6 +126,8 @@ def test_preview_augment(ad_put_mock):
             instrument = md.Inst.WIRCAM
         elif 'mega' in key:
             instrument = md.Inst.MEGACAM
+        elif 'sitelle' in key:
+            instrument = md.Inst.SITELLE
         else:
             assert False, 'do not understand instrument'
         for f_name in value:
@@ -132,6 +138,8 @@ def test_preview_augment(ad_put_mock):
             check_number = 1
             if test_name.suffix == 'g':
                 check_number = 4
+            elif test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
+                check_number = 3
             assert len(obs.planes[test_name.product_id].artifacts) == \
                 check_number, f'initial condition {f_name}'
 

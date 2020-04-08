@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM opencadc/astropy:3.8-slim
 # ADD docker-apt-install /usr/local/bin
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -40,7 +40,8 @@ RUN git clone https://github.com/HEASARC/cfitsio && \
 
 WORKDIR /usr/src/app
 
-RUN pip3 install bs4
+RUN pip3 install aplpy \
+    bs4
 
 ARG OPENCADC_REPO=opencadc
 ARG OMC_REPO=opencadc-metadata-curation
