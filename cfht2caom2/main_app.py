@@ -1405,12 +1405,18 @@ def update(observation, **kwargs):
                         # wc.Wcsprm.html#astropy.wcs.Wcsprm.cdfix
                         chunk.time.axis.function.delta = 0.0
 
-                    if (chunk.energy is not None and
-                            chunk.energy.bandpass_name in ['NONE', 'Open']):
-                        # CW
-                        # If no or "open" filter then set filter name to
-                        # null
-                        chunk.energy.bandpass_name = None
+                    if chunk.energy is not None:
+                        if chunk.energy.bandpass_name in ['NONE', 'Open']:
+                            # CW
+                            # If no or "open" filter then set filter name to
+                            # null
+                            chunk.energy.bandpass_name = None
+
+                        if (chunk.energy.axis is not None and
+                                chunk.energy.axis.axis is not None and
+                                chunk.energy.axis.axis.ctype is not None):
+                            if chunk.energy.axis.axis.cunit == '1 / m':
+                                chunk.energy.axis.axis.cunit = 'm**-1'
 
                     if instrument is md.Inst.ESPADONS:
                         if chunk.time is not None:

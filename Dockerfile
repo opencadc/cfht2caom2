@@ -21,6 +21,8 @@ RUN pip3 install  --no-cache-dir \
         deprecated \
         ftputil \
         importlib-metadata \
+        PyYAML \
+        pytz \
         spherical-geometry \
         vos
 
