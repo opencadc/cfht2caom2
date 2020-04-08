@@ -380,14 +380,6 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
     logging.debug(f'{w[0]}')
 
     head = sitelle[0].header
-    del head['NAXIS3']
-    del head['CTYPE3']
-    del head['CRVAL3']
-    del head['CUNIT3']
-    del head['CRPIX3']
-    del head['CDELT3']
-    head['NAXIS'] = 2
-    head['WCSAXES'] = 2
 
     head['NAXIS1'] = 1024
     head['NAXIS2'] = 1024
@@ -453,7 +445,8 @@ def _create_rgb(line1_f_name, line2_f_name, cont_f_name, fqn):
     aplpy.make_rgb_image([line1_f_name, line2_f_name, cont_f_name], fqn,
                          stretch_r='linear', stretch_g='linear',
                          stretch_b='linear', pmax_r=99.5, pmax_g=99.5,
-                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0)
+                         pmax_b=99.5, pmin_r=50.0, pmin_g=95.0, pmin_b=50.0,
+                         embed_avm_tags=False)
 
 
 def _rebin_factor(a, newshape):
@@ -467,5 +460,5 @@ def _rebin_factor(a, newshape):
 
     slices = [slice(None, None, mc.to_int(old / new)) for old, new in
               zip(a.shape, newshape)]
-    logging.error(slices)
+    logging.debug(slices)
     return a[slices]

@@ -103,13 +103,16 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
-        if self._config.use_local_files:
-            cwd = os.getcwd()
-            headers = fits2caom2.get_cadc_headers(f'file://{cwd}/{entry}')
+        if mc.StorageName.is_hdf5(entry):
+            headers = []
         else:
-            headers_str = mc.get_cadc_headers_client(
-                self._config.archive, entry, self._data_client)
-            headers = ac.make_headers_from_string(headers_str)
+            if self._config.use_local_files:
+                cwd = os.getcwd()
+                headers = fits2caom2.get_cadc_headers(f'file://{cwd}/{entry}')
+            else:
+                headers_str = mc.get_cadc_headers_client(
+                    self._config.archive, entry, self._data_client)
+                headers = ac.make_headers_from_string(headers_str)
 
         instrument = CFHTBuilder.get_instrument(headers, entry)
         return cn.CFHTName(file_name=entry, instrument=instrument)
