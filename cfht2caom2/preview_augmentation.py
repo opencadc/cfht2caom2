@@ -199,6 +199,10 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                         f'{temp_science_f_name}'
             _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
             science_fqn = f'{working_dir}/{temp_science_f_name}'
+            #
+            # if cfht_name.suffix == 'g':
+            #     # SF - 09-04-20 - for 'g' zoom use the slice
+            #     zoom_science_fqn = science_fqn
 
         if num_extensions >= 4:
             logging.info(f'Observation {obs_id}: using slice for zoom preview '
@@ -208,6 +212,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
             slice_cmd = f'fitscopy {cfht_name.file_name}[4][*,*,1:1] ' \
                         f'{zoom_science_f_name}'
             _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
+            zoom_science_fqn = f'{working_dir}/{zoom_science_f_name}'
 
         # SF - 08-04-20 - change to minmax for 'm' files instead of zscale
         if cfht_name.suffix == 'm':
@@ -247,6 +252,9 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     # set zoom parameters
     if instrument is md.Inst.WIRCAM:
         pan_param = '-pan 484 -484 image'
+        if cfht_name.suffix == 'g':
+            pan_param = ''
+            zoom_param = 'to fit'
     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         pan_param = '-pan -9 1780'
         rotate_param = '-rotate 180'
