@@ -94,7 +94,7 @@ class CFHTChooser(ec.OrganizeChooser):
         #  enabling by having this set to True, especially with the following
         #  comment.
         # store CFHT files in whatever compression format they are sent in
-        return False
+        return True
 
 
 def _run_state():

@@ -36,3 +36,14 @@
 2004B.mask.0.36.01.fits.fz
 718955l.fits.fz
 979412b.fits.fz
+2384125p.fits
+2384125z.hdf5
+2384125v.fits.fz
+1819176f.fits.fz
+1944968p.fits.fz
+2115407c.fits.fz
+2270807b.fits.fz
+2270827d.fits.fz
+2352723o.fits.fz
+2445397p.fits.fz
+2445848a.fits.fz

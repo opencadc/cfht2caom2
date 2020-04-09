@@ -1915,8 +1915,8 @@ def _update_sitelle_plane(observation, uri):
                                 f'Unexpected extension name pattern for '
                                 f'artifact URI {p_artifact_key} in '
                                 f'{observation.observation_id}.')
-            z_plane.artifacts[z_artifact_key].parts = \
-                p_plane.artifacts[p_artifact_key].parts
+            for part in p_plane.artifacts[p_artifact_key].parts.values():
+                z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
             z_plane.artifacts[z_artifact_key].meta_producer = \
                 p_plane.artifacts[p_artifact_key].meta_producer
             z_plane.provenance = p_plane.provenance

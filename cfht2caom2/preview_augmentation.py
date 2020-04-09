@@ -106,6 +106,8 @@ def visit(observation, **kwargs):
         raise mc.CadcException('Visitor needs a observable parameter.')
 
     count = 0
+    cfht_name = cn.CFHTName(file_name=science_file,
+                            instrument=observation.instrument.name)
     for plane in observation.planes.values():
         if (plane.data_release is None or
                 plane.data_release > datetime.utcnow()):
@@ -113,21 +115,12 @@ def visit(observation, **kwargs):
                          'thumbnail creation.'.format(plane.product_id))
             continue
         for artifact in plane.artifacts.values():
-            cfht_name = cn.CFHTName(file_name=science_file,
-                                    instrument=observation.instrument.name)
-            if cfht_name.suffix == 'g':
-                # 19-03-20 - seb -
-                # for all 'g' files, use the previews from the 'p' files
-                continue
-
             if cfht_name.file_uri == artifact.uri:
                 count += _do_prev(working_dir, plane, cfht_name, cadc_client,
                                   stream, observable.metrics,
                                   observation.intent,
                                   md.Inst(observation.instrument.name),
                                   observation.observation_id)
-                if cfht_name.suffix == 'p':
-                    count += _update_g_artifact(observation, plane)
                 break
 
     logging.info('Completed preview augmentation for {}.'.format(
@@ -178,16 +171,21 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
 
     # set up the correct input file - may need to use fitscopy
     rotate_param = ''
+    scale_param = 'zscale'
     if instrument is md.Inst.WIRCAM:
         if science_fqn.endswith('.fz'):
             naxis_3 = headers[0].get('ZNAXIS3', 1)
         else:
             naxis_3 = headers[0].get('NAXIS3', 1)
 
-        if naxis_3 != 1:
+        # SF - 08-04-20 - for 'g' use fitscopy, then regular ds9 for zoom
+        # calibration. This is a change from guidance of 19-03-20, which was
+        # to use the previews from 'p' files for the 'g' files
+        if naxis_3 != 1 or cfht_name.suffix == 'g':
             logging.info(f'Observation {obs_id}: using first slice of '
                          f'{science_fqn}.')
-            temp_science_f_name = cfht_name.file_name.replace('.fz', '_slice.fz')
+            temp_science_f_name = cfht_name.file_name.replace(
+                '.fz', '_slice.fz')
             slice_cmd = f'fitscopy {cfht_name.file_name}[*][*,*,1:1,1:1] ' \
                         f'{temp_science_f_name}'
             _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
@@ -201,6 +199,11 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
             slice_cmd = f'fitscopy {cfht_name.file_name}[4][*,*,1:1] ' \
                         f'{zoom_science_f_name}'
             _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
+
+        # SF - 08-04-20 - change to minmax for 'm' files instead of zscale
+        if cfht_name.suffix == 'm':
+            scale_param = 'minmax'
+
     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         rotate_param = '-rotate 180'
 
@@ -219,15 +222,15 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
 
     geometry = '256x521'
     _gen_image(science_fqn, geometry, thumb_fqn, scope_param, rotate_param,
-               mosaic_param=mosaic_param)
+               mosaic_param=mosaic_param, scale_param=scale_param)
 
     geometry = '1024x1024'
     if instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
-                   rotate_param, mode_param='')
+                   rotate_param, mode_param='', scale_param=scale_param)
     else:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
-                   rotate_param)
+                   rotate_param, scale_param=scale_param)
 
     mosaic_param = '-fits'
     zoom_param = '1'
@@ -251,7 +254,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     elif instrument is md.Inst.SITELLE:
         pan_param = '-pan -512 1544'
     _gen_image(zoom_science_fqn, geometry, zoom_fqn, scope_param, rotate_param,
-               zoom_param, pan_param, mosaic_param)
+               zoom_param, pan_param, mosaic_param, scale_param=scale_param)
 
 
 def _exec_cmd_chdir(working_dir, temp_file, cmd):
@@ -268,7 +271,7 @@ def _exec_cmd_chdir(working_dir, temp_file, cmd):
 def _gen_image(science_fqn, geometry, save_fqn, scope_param, rotate_param,
                zoom_param='to fit',
                pan_param='', mosaic_param='',
-               mode_param='-mode none'):
+               mode_param='-mode none', scale_param=''):
     # 20-03-20 - seb - always use iraf - do not trust wcs coming from the data
     # acquisition. A proper one needs processing which is often not done on
     # observations.
@@ -277,7 +280,7 @@ def _gen_image(science_fqn, geometry, save_fqn, scope_param, rotate_param,
           f'-geometry {geometry} ' \
           f'{rotate_param} ' \
           f'-scale squared ' \
-          f'-scale mode zscale ' \
+          f'-scale mode {scale_param} ' \
           f'-scale scope {scope_param} ' \
           f'-scale datasec yes ' \
           f'-invert ' \
@@ -297,22 +300,6 @@ def _store_smalls(cadc_client, working_directory, stream, preview_fname,
                 stream, mime_type='image/jpeg', metrics=metrics)
     mc.data_put(cadc_client, working_directory, zoom_fname, cn.COLLECTION,
                 stream, mime_type='image/jpeg', metrics=metrics)
-
-
-def _update_g_artifact(observation, plane):
-    count = 0
-    g_product_id = plane.product_id.replace('p', 'g')
-    if g_product_id in observation.planes.keys():
-        g_plane = observation.planes[g_product_id]
-        for artifact in plane.artifacts.values():
-            if artifact.product_type in [ProductType.THUMBNAIL,
-                                         ProductType.PREVIEW]:
-                features = mc.Features()
-                features.supports_latest_caom = True
-                artifact_copy = cc.copy_artifact(artifact, features)
-                g_plane.artifacts.add(artifact_copy)
-                count += 1
-    return count
 
 
 def _augment(plane, uri, fqn, product_type):

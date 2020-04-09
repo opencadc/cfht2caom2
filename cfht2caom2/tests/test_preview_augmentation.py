@@ -136,9 +136,7 @@ def test_preview_augment(ad_put_mock):
             test_name = cfht_name.CFHTName(file_name=f_name,
                                            instrument=instrument)
             check_number = 1
-            if test_name.suffix == 'g':
-                check_number = 4
-            elif test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
+            if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
                 check_number = 3
             assert len(obs.planes[test_name.product_id].artifacts) == \
                 check_number, f'initial condition {f_name}'
@@ -154,10 +152,6 @@ def test_preview_augment(ad_put_mock):
 
             assert test_result is not None, f'expect a result {f_name}'
             check_number = 3
-            if test_name.suffix == 'p' and instrument is md.Inst.WIRCAM:
-                check_number = 6
-            elif test_name.suffix == 'g':
-                check_number = 0
             assert test_result['artifacts'] == check_number, \
                 f'artifacts should be added {f_name}'
 
@@ -167,16 +161,13 @@ def test_preview_augment(ad_put_mock):
             assert len(obs.planes[test_name.product_id].artifacts) == \
                 end_artifact_count, f'new artifacts {f_name}'
 
-            if test_name.suffix == 'g':
-                assert not ad_put_mock.called, f'ad put mock called for g'
-            else:
-                for p in [test_name.prev_uri, test_name.thumb_uri,
-                          test_name.zoom_uri]:
-                    assert p in \
-                           obs.planes[test_name.product_id].artifacts.keys(), \
-                           f'no preview {p}'
+            for p in [test_name.prev_uri, test_name.thumb_uri,
+                      test_name.zoom_uri]:
+                assert p in \
+                       obs.planes[test_name.product_id].artifacts.keys(), \
+                       f'no preview {p}'
 
-                assert ad_put_mock.called, f'ad put mock not called {f_name}'
-                assert ad_put_mock.call_count == 3, \
-                    f'ad put called wrong number of times {f_name}'
-                ad_put_mock.reset_mock()
+            assert ad_put_mock.called, f'ad put mock not called {f_name}'
+            assert ad_put_mock.call_count == 3, \
+                f'ad put called wrong number of times {f_name}'
+            ad_put_mock.reset_mock()
