@@ -189,7 +189,8 @@ def _vo_mock(url):
 
 def _identify_inst_mock(uri):
     lookup = {md.Inst.MEGAPRIME: ['2452990p', '979412b', '979412o', '979412p',
-                                  '1927963f', '1927963o', '1927963p'],
+                                  '1927963f', '1927963o', '1927963p',
+                                  '675258o'],
               md.Inst.SITELLE: ['2384125']}
     result = None
     for key, value in lookup.items():
@@ -206,7 +207,7 @@ def _identify_inst_mock(uri):
                 '718955' in uri or '07Bm06.flat' in uri or '2463854' in uri or
                 '03Am02.dark' in uri or '1000003' in uri or
                 '03Am05.fringe' in uri or '1265044' in uri):
-            result = md.Inst.MEGACAM
+            result = md.Inst.MEGAPRIME
         elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
               '2281792' in uri or '1681594' in uri or '981337' in uri or
               'master' in uri or '1706150' in uri or '1758254' in uri or

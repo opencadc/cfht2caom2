@@ -131,6 +131,9 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             try:
                 inst = md.Inst(instrument)
             except ValueError:
-                raise mc.CadcException(
-                    f'Unknown value for instrument {instrument} for {entry}.')
+                if instrument == 'CFHT MegaPrime':
+                    inst = md.Inst.MEGAPRIME
+                else:
+                    raise mc.CadcException(f'Unknown value for instrument '
+                                           f'{instrument} for {entry}.')
         return inst

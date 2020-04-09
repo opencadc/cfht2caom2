@@ -47,3 +47,4 @@
 2352723o.fits.fz
 2445397p.fits.fz
 2445848a.fits.fz
+675258o.fits.fz

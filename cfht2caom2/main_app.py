@@ -513,10 +513,10 @@ def get_plane_data_release(header):
         run_id = _get_run_id(header)
         if run_id == 'SMEARING':
             result = header.get('DATE')
-        elif run_id[3] == 'E' or run_id[3] == 'Q':
+        elif (run_id[3] == 'E' or run_id[3] == 'Q') and date_obs is not None:
             result = f'{date_obs}T00:00:00'
         else:
-            logging.warning('REL_DATE not in header. Derive from DATE-OBS.')
+            logging.warning('REL_DATE not in header. Derive from RUNID.')
             semester = mc.to_int(run_id[0:2])
             rel_year = 2000 + semester + 1
             if run_id[2] == 'A':
@@ -866,6 +866,17 @@ def get_time_refcoord_val_derived(header):
     return mjd_obs
 
 
+def get_time_refcoord_val_simple(header):
+    result = _get_mjd_obs(header)
+    if result is None:
+        temp = header.get('DATE-OBS')
+        if temp is None:
+            # from caom2IngestMegacam.py, l549
+            temp = header.get('DATE')
+        result = ac.get_datetime(temp)
+    return result
+
+
 def get_espadons_time_refcoord_val(params):
     header, suffix, uri = _decompose_params(params)
     if suffix == 'p':
@@ -907,7 +918,13 @@ def _get_filename(header):
 
 
 def _get_instrument(header):
-    return md.Inst(header.get('INSTRUME'))
+    try:
+        result = md.Inst(header.get('INSTRUME'))
+    except ValueError:
+        # set the entry parameter to nothing, as it's only used to check
+        # for hdf5
+        result = cb.CFHTBuilder.get_instrument([header, {}], '')
+    return result
 
 
 def _get_mjd_obs(header):
@@ -957,7 +974,12 @@ def _get_run_id(header):
     run_id = header.get('RUNID')
     if (run_id is not None and (len(run_id) < 3 or len(run_id) > 9 or
                                 run_id == 'CFHT')):
-        # a well-known default value that indicates the past
+        # a well-known default value that indicates the past, as specified in
+        # caom2IngestMegacam.py, l392
+        # caom2IngestWircamdetrend.py, l314
+        # caom2IngestEspadons.py, l522
+        logging.warning(f'Setting RUNID to default 17BE for '
+                        f'{header.get("FILENAME")}.')
         run_id = '17BE'
     return run_id
 
@@ -1052,8 +1074,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Observation.proposal.project', 'get_proposal_project(header)')
     bp.set('Observation.proposal.title', 'get_proposal_title(header)')
 
-    bp.clear('Observation.instrument.name')
-    bp.add_fits_attribute('Observation.instrument.name', 'INSTRUME')
+    bp.set('Observation.instrument.name', instrument.value)
     bp.set('Observation.instrument.keywords',
            'get_instrument_keywords(header)')
 
@@ -1152,7 +1173,7 @@ def accumulate_bp(bp, uri, instrument):
         bp.set('Chunk.time.axis.function.delta',
                'get_time_refcoord_delta_simple(params)')
         bp.set('Chunk.time.axis.function.refCoord.val',
-               '_get_mjd_obs(header)')
+               'get_time_refcoord_val_simple(header)')
     else:
         bp.set('Chunk.time.axis.function.delta',
                'get_time_refcoord_delta_derived(header)')
@@ -1464,7 +1485,8 @@ def update(observation, **kwargs):
                         # SGo - use range for energy with filter information
                         filter_md = md.filter_cache.get_svo_filter(
                             instrument, filter_name)
-                        if (filter_name is None or filter_name == 'Open' or
+                        if (filter_name is None or
+                                filter_name in ['Open', 'NONE'] or
                                 ac.FilterMetadataCache.get_fwhm(
                                     filter_md) is None or
                                 cfht_name.suffix in ['b', 'l', 'd'] or
@@ -1915,8 +1937,13 @@ def _update_sitelle_plane(observation, uri):
                                 f'Unexpected extension name pattern for '
                                 f'artifact URI {p_artifact_key} in '
                                 f'{observation.observation_id}.')
+            features = mc.Features()
+            features.supports_latest_caom = True
             for part in p_plane.artifacts[p_artifact_key].parts.values():
                 z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
+                for chunk in part.chunks:
+                    z_plane.artifacts[z_artifact_key].parts[part.name].chunks.\
+                        append(cc.copy_chunk(chunk, features))
             z_plane.artifacts[z_artifact_key].meta_producer = \
                 p_plane.artifacts[p_artifact_key].meta_producer
             z_plane.provenance = p_plane.provenance
