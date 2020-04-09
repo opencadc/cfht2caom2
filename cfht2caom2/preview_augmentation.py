@@ -199,10 +199,6 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                         f'{temp_science_f_name}'
             _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
             science_fqn = f'{working_dir}/{temp_science_f_name}'
-            #
-            # if cfht_name.suffix == 'g':
-            #     # SF - 09-04-20 - for 'g' zoom use the slice
-            #     zoom_science_fqn = science_fqn
 
         if num_extensions >= 4:
             logging.info(f'Observation {obs_id}: using slice for zoom preview '
@@ -241,10 +237,12 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     geometry = '1024x1024'
     if instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
-                   rotate_param, mode_param='', scale_param=scale_param)
+                   rotate_param, mosaic_param=mosaic_param, mode_param='',
+                   scale_param=scale_param)
     else:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
-                   rotate_param, scale_param=scale_param)
+                   rotate_param, mosaic_param=mosaic_param,
+                   scale_param=scale_param)
 
     mosaic_param = '-fits'
     zoom_param = '1'
@@ -271,7 +269,8 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     elif instrument is md.Inst.SITELLE:
         pan_param = '-pan -512 1544'
     _gen_image(zoom_science_fqn, geometry, zoom_fqn, scope_param, rotate_param,
-               zoom_param, pan_param, mosaic_param, scale_param=scale_param)
+               zoom_param, pan_param, mosaic_param=mosaic_param,
+               scale_param=scale_param)
 
 
 def _exec_cmd_chdir(working_dir, temp_file, cmd):
