@@ -184,8 +184,17 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
         if naxis_3 != 1 or cfht_name.suffix == 'g':
             logging.info(f'Observation {obs_id}: using first slice of '
                          f'{science_fqn}.')
-            temp_science_f_name = cfht_name.file_name.replace(
-                '.fz', '_slice.fz')
+            # TODO - fix this
+            if cfht_name.file_name.endswith('.fz'):
+                temp_science_f_name = cfht_name.file_name.replace(
+                    '.fz', '_slice.fz')
+            elif cfht_name.file_name.endswith('.gz'):
+                temp_science_f_name = cfht_name.file_name.replace(
+                    '.gz', '_slice.gz')
+            else:
+                temp_science_f_name = cfht_name.file_name.replace(
+                    '.fits', '_slice.fits')
+
             slice_cmd = f'fitscopy {cfht_name.file_name}[*][*,*,1:1,1:1] ' \
                         f'{temp_science_f_name}'
             _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
