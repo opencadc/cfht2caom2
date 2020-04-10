@@ -118,7 +118,7 @@ def visit(observation, **kwargs):
             if cfht_name.file_uri == artifact.uri:
                 count += _do_prev(working_dir, plane, cfht_name, cadc_client,
                                   stream, observable.metrics,
-                                  observation.intent,
+                                  observation.intent, observation.type,
                                   md.Inst(observation.instrument.name),
                                   observation.observation_id)
                 break
@@ -129,7 +129,7 @@ def visit(observation, **kwargs):
 
 
 def _do_prev(working_dir, plane, cfht_name, cadc_client,
-             stream, metrics, intent, instrument, obs_id):
+             stream, metrics, intent, obs_type, instrument, obs_id):
     science_fqn = os.path.join(working_dir, cfht_name.file_name)
     preview = cfht_name.prev
     preview_fqn = os.path.join(working_dir, preview)
@@ -142,7 +142,7 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
         _sitelle_calibrated_cube(science_fqn, thumb_fqn, preview_fqn, zoom_fqn)
     else:
         _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
-                     working_dir, intent, thumb_fqn,
+                     working_dir, intent, obs_type, thumb_fqn,
                      preview_fqn, zoom_fqn)
 
     prev_uri = cfht_name.prev_uri
@@ -158,7 +158,7 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
 
 
 def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
-                 working_dir, intent, thumb_fqn,
+                 working_dir, intent, obs_type, thumb_fqn,
                  preview_fqn, zoom_fqn):
     headers = ac.read_fits_headers(science_fqn)
     num_extensions = headers[0].get('NEXTEND')
@@ -210,12 +210,17 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
             _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
             zoom_science_fqn = f'{working_dir}/{zoom_science_f_name}'
 
-        # SF - 08-04-20 - change to minmax for 'm' files instead of zscale
-        if cfht_name.suffix == 'm':
-            scale_param = 'minmax'
-
     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         rotate_param = '-rotate 180'
+        # SF - 09-04-20 - mosaic MEFs i.e. number of HDU > 1
+        mode_param = ''
+        if num_extensions > 1:
+            mode_param = '-mode none'
+
+    # SF - 08-04-20 - change to minmax for 'm' files instead of zscale
+    # 'm' is equivalent to 'MASK'
+    if cfht_name.suffix == 'm' or obs_type == 'MASK':
+        scale_param = 'minmax'
 
     # set up the correct parameters to the ds9 command
     scope_param = 'local'
@@ -237,7 +242,8 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     geometry = '1024x1024'
     if instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
-                   rotate_param, mosaic_param=mosaic_param, mode_param='',
+                   rotate_param, mosaic_param=mosaic_param,
+                   mode_param=mode_param,
                    scale_param=scale_param)
     else:
         _gen_image(science_fqn, geometry, preview_fqn, scope_param,
