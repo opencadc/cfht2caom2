@@ -126,13 +126,19 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             if instrument is None:
                 instrument = headers[1].get('INSTRUME')
                 if instrument is None:
-                    raise mc.CadcException(
-                        f'Could not identify instrument for {entry}.')
+                    instrument = headers[0].get('DETECTOR')
+                    if instrument is None:
+                        instrument = headers[1].get('DETECTOR')
+                        if instrument is None:
+                            raise mc.CadcException(
+                                f'Could not identify instrument for {entry}.')
             try:
                 inst = md.Inst(instrument)
             except ValueError:
                 if instrument == 'CFHT MegaPrime':
                     inst = md.Inst.MEGAPRIME
+                elif instrument == 'megacam':
+                    inst = md.Inst.MEGACAM
                 else:
                     raise mc.CadcException(f'Unknown value for instrument '
                                            f'{instrument} for {entry}.')

@@ -84,19 +84,6 @@ data_visitors = [preview_augmentation]
 CFHT_BOOKMARK = 'cfht_timestamp'
 
 
-class CFHTChooser(ec.OrganizeChooser):
-
-    def __init__(self):
-        super(CFHTChooser, self).__init__()
-
-    def use_compressed(self, entry):
-        # TODO - figure out wtf is going on, and what code execution I was
-        #  enabling by having this set to True, especially with the following
-        #  comment.
-        # store CFHT files in whatever compression format they are sent in
-        return True
-
-
 def _run_state():
     config = mc.Config()
     config.get_executors()
@@ -129,9 +116,10 @@ def _run_by_builder():
     config = mc.Config()
     config.get_executors()
     builder = cfht_builder.CFHTBuilder(config)
-    chooser = CFHTChooser()
-    return rc.run_by_todo(config, builder, chooser, main_app.APPLICATION,
-                          meta_visitors, data_visitors)
+    return rc.run_by_todo(config, builder, chooser=None,
+                          command_name=main_app.APPLICATION,
+                          meta_visitors=meta_visitors,
+                          data_visitors=data_visitors)
 
 
 def run_by_builder():

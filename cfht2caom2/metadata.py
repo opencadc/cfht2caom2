@@ -88,8 +88,7 @@ class Inst(Enum):
 
 # key is CFHT metadata
 # value is SVO url piece
-INSTRUMENT_REPAIR_LOOKUP = {Inst.WIRCAM: 'Wircam',
-                            Inst.MEGAPRIME: 'MegaPrime'}
+INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
 
 # CW/SF 17-12-19 - content from conversation
 # CW

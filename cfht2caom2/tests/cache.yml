@@ -1,76 +1,37 @@
 energy_defaults:
-  Brackett_gamma:
-    cw: 21720.8514077
-    fwhm: 297.792347914
-  C1:
+  SITELLE.C1:
     cw: null
     fwhm: null
-  C2:
+  SITELLE.C2:
     cw: null
     fwhm: null
-  C3:
+  SITELLE.C3:
     cw: null
     fwhm: null
-  C4:
+  SITELLE.C4:
     cw: null
     fwhm: null
-  CO:
-    cw: 23201.083661629
-    fwhm: 398.6740226312
-  FakeBlank:
+  Wircam.FakeBlank:
     cw: null
     fwhm: null
-  H:
-    cw: 16308.4244171
-    fwhm: 2911.26276156
-  H2:
-    cw: 21301.6814833
-    fwhm: 294.535926397
-  J:
-    cw: 12540.5396521
-    fwhm: 1587.5275506
-  Ks:
-    cw: 21500.3675632
-    fwhm: 3270.46092509
-  LowOH2:
-    cw: 11892.6829653
-    fwhm: 113.365930599
   MegaPrime.None:
     cw: 6200.0
     fwhm: 6000.0
-  N393.MP1111:
+  MegaCam.PHG.MP9999:
     cw: 6200.0
     fwhm: 6000.0
-  OIII:MP7504:
-    cw: 0.0
-    fwhm: 0.0
-  PHG.MP9999:
-    cw: 6200.0
-    fwhm: 6000.0
-  SN1:
+  SITELLE.SN1:
     cw: null
     fwhm: null
-  SN2:
+  SITELLE.SN2:
     cw: null
     fwhm: null
-  SN3:
+  SITELLE.SN3:
     cw: null
     fwhm: null
   WIRCam.None:
     cw: 17000.0
     fwhm: 14000.0
-  Y:
-    cw: 10253.5056354
-    fwhm: 1105.32902776
-  r:
-    cw: 6281.8880318809
-    fwhm: 1219.3797137385
-  r_sdss:
-    cw: 6397.8502250119
-    fwhm: 1473.6290523795
-  z:
-    cw: 10134.051008786
-    fwhm: 3731.8979824276
 filter_repair_lookup:
   BrG: Brackett_gamma
   CN.MP7803: CN

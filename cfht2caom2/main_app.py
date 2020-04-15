@@ -443,6 +443,13 @@ def get_obs_intent(header):
     return result
 
 
+def get_obs_type(header):
+    result = header.get('OBSTYPE')
+    if result is not None and result == 'FRPTS':
+        result = 'FRINGE'
+    return result
+
+
 def get_obs_sequence_number(params):
     header, suffix, uri = _decompose_params(params)
     instrument = _get_instrument(header)
@@ -679,7 +686,8 @@ def get_mega_provenance_last_executed(header):
     result = get_provenance_last_executed(header)
     if result is None:
         result = header.get('DATEPROC')
-        result = mc.make_time(result)
+        if result is not None:
+            result = mc.make_time(result)
     return result
 
 
@@ -972,9 +980,13 @@ def _get_ra_dec(header):
 
 def _get_run_id(header):
     run_id = header.get('RUNID')
-    if (run_id is not None and (len(run_id) < 3 or len(run_id) > 9 or
-                                run_id == 'CFHT')):
-        # a well-known default value that indicates the past, as specified in
+    if run_id is None:
+        run_id = header.get('CRUNID')
+
+    if (run_id is not None and
+            (len(run_id) < 3 or len(run_id) > 9 or run_id == 'CFHT')):
+        # a well-known default value that indicates the past, as specified
+        # in
         # caom2IngestMegacam.py, l392
         # caom2IngestWircamdetrend.py, l314
         # caom2IngestEspadons.py, l522
@@ -1057,8 +1069,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Observation.metaRelease', 'MET_DATE')
 
     bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
-    bp.clear('Observation.type')
-    bp.add_fits_attribute('Observation.type', 'OBSTYPE')
+    bp.set('Observation.type', 'get_obs_type(header)')
 
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
@@ -1349,6 +1360,13 @@ def update(observation, **kwargs):
                 f'Ingesting the hdf5 plane for {observation.observation_id}')
         else:
             instrument = cb.CFHTBuilder.get_instrument(headers, uri)
+
+    if instrument is md.Inst.MEGACAM:
+        # need the 'megacam' for the filter lookup at SVO, but there is only
+        # a 'MegaPrime' instrument in the CAOM collection at CADC
+        # see e.g. 2003A.frpts.z.36.00
+        observation.instrument = cc.copy_instrument(observation.instrument,
+                                                    md.Inst.MEGAPRIME.value)
 
     # fqn is not always defined, ffs
     if uri is not None:
@@ -1777,45 +1795,47 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
     idx = 0
     run_id = headers[0].get('RUNID')
     if run_id is None:
-        idx = 1
+        run_id = headers[0].get('CRUNID')
+        if run_id is None:
+            idx = 1
 
-        logging.warning(f'Resetting the header/blueprint relationship for '
-                        f'{cfht_name.file_name} in {obs.observation_id}')
-        instrument = _get_instrument(headers[idx])
-        if fqn is not None:
-            # use the fqn to define the URI
-            # TODO - leaking name structure here
-            extension = '.fz'
-            if instrument is md.Inst.ESPADONS:
-                extension = '.gz'
-            uri = mc.build_uri(cn.ARCHIVE,
-                               os.path.basename(fqn).replace('.header',
-                                                             extension))
-            # this is the fits2caom2 implementation, which returns
-            # a list structure
-            unmodified_headers = get_cadc_headers(f'file://{fqn}')
-        elif uri is not None:
-            # this is the fits2caom2 implementation, which returns
-            # a list structure
-            unmodified_headers = get_cadc_headers(uri)
-        else:
-            raise mc.CadcException(f'Cannot retrieve un-modified headers for '
-                                   f'{uri}')
-        module = importlib.import_module(__name__)
-        bp = ObsBlueprint(module=module)
-        accumulate_bp(bp, uri, instrument)
+            logging.warning(f'Resetting the header/blueprint relationship for '
+                            f'{cfht_name.file_name} in {obs.observation_id}')
+            instrument = _get_instrument(headers[idx])
+            if fqn is not None:
+                # use the fqn to define the URI
+                # TODO - leaking name structure here
+                extension = '.fz'
+                if instrument is md.Inst.ESPADONS:
+                    extension = '.gz'
+                uri = mc.build_uri(cn.ARCHIVE,
+                                   os.path.basename(fqn).replace('.header',
+                                                                 extension))
+                # this is the fits2caom2 implementation, which returns
+                # a list structure
+                unmodified_headers = get_cadc_headers(f'file://{fqn}')
+            elif uri is not None:
+                # this is the fits2caom2 implementation, which returns
+                # a list structure
+                unmodified_headers = get_cadc_headers(uri)
+            else:
+                raise mc.CadcException(f'Cannot retrieve un-modified headers '
+                                       f'for {uri}')
+            module = importlib.import_module(__name__)
+            bp = ObsBlueprint(module=module)
+            accumulate_bp(bp, uri, instrument)
 
-        # re-read the headers from disk, because the first pass through
-        # caom2gen will have modified the header content based on the
-        # original blueprint  # TODO this is not a long-term implementation
-        # the execution goes through and sets the CDELT4 value, then from
-        # that sets the CD4_4 value. Then the second time through, the
-        # CD4_4 value update is expressly NOT done, because the CD4_4 value
-        # is already set from the first pass-through - need to figure out a
-        # way to fix this .... sigh
+            # re-read the headers from disk, because the first pass through
+            # caom2gen will have modified the header content based on the
+            # original blueprint  # TODO this is not a long-term implementation
+            # the execution goes through and sets the CDELT4 value, then from
+            # that sets the CD4_4 value. Then the second time through, the
+            # CD4_4 value update is expressly NOT done, because the CD4_4 value
+            # is already set from the first pass-through - need to figure out a
+            # way to fix this .... sigh
 
-        tc.add_headers_to_obs_by_blueprint(
-            obs, unmodified_headers[1:], bp, uri, cfht_name.product_id)
+            tc.add_headers_to_obs_by_blueprint(
+                obs, unmodified_headers[1:], bp, uri, cfht_name.product_id)
 
     logging.debug(f'End _update_observation_metadata.')
     return idx

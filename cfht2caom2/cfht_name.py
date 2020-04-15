@@ -176,8 +176,8 @@ class CFHTName(mc.StorageName):
     @property
     def is_master_cal(self):
         return ('weight' in self._file_id or 'master' in self._file_id or
-                    'hotpix' in self._file_id or 'badpix' in self._file_id or
-                    'deadpix' in self._file_id or 'dark' in self._file_id)
+                'hotpix' in self._file_id or 'badpix' in self._file_id or
+                'deadpix' in self._file_id or 'dark' in self._file_id)
 
     @property
     def has_polarization(self):
