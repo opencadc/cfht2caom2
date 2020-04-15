@@ -119,9 +119,31 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
     @staticmethod
     def get_instrument(headers, entry):
+        """
+        SF - 15-04-20 - slack - what if there's no INSTRUME or DETECTOR
+        keyword?
+        something like: if CFHT: if has(INSTRUME) then
+        MEGA else if NEXTEND>30 then MEGA else...
+
+        On MegaPrime vs MegaCam values from SVO:
+        megaprime == full instrument (optics+camera) ,
+        megacam == camera
+
+        SVO has mistakes (they say megacam=CCD+mirror+optics), but i think the
+        Megaprime entry has a lot more filters. So to be consistent, we should
+        always use the Megaprime entry
+
+        SGo - make the 'always use Megaprime' happen here by setting the
+        instrument to MegaPrime.
+
+        :param headers: astropy fits headers
+        :param entry: string for error logging
+        :return: md.Inst instance
+        """
         if mc.StorageName.is_hdf5(entry):
             inst = md.Inst.SITELLE
         else:
+            nextend = None
             instrument = headers[0].get('INSTRUME')
             if instrument is None:
                 instrument = headers[1].get('INSTRUME')
@@ -130,16 +152,22 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                     if instrument is None:
                         instrument = headers[1].get('DETECTOR')
                         if instrument is None:
-                            raise mc.CadcException(
-                                f'Could not identify instrument for {entry}.')
-            try:
-                inst = md.Inst(instrument)
-            except ValueError:
-                if instrument == 'CFHT MegaPrime':
-                    inst = md.Inst.MEGAPRIME
-                elif instrument == 'megacam':
-                    inst = md.Inst.MEGACAM
-                else:
-                    raise mc.CadcException(f'Unknown value for instrument '
-                                           f'{instrument} for {entry}.')
+                            nextend = headers[0].get('NEXTEND')
+                            if nextend is None:
+                                raise mc.CadcException(f'Could not identify '
+                                                       f'instrument for '
+                                                       f'{entry}.')
+            if instrument is None and nextend is not None and nextend > 30:
+                inst = md.Inst.MEGAPRIME
+            else:
+                try:
+                    inst = md.Inst(instrument)
+                except ValueError:
+                    if (instrument == 'CFHT MegaPrime' or
+                            instrument == 'megacam'):
+                        inst = md.Inst.MEGAPRIME
+                    else:
+                        raise mc.CadcException(f'Unknown value for instrument '
+                                               f'{instrument} and {nextend} for '
+                                               f'{entry}.')
         return inst

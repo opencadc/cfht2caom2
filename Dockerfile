@@ -57,6 +57,7 @@ RUN git clone https://github.com/${OMC_REPO}/caom2pipe.git && \
 
 RUN git clone https://github.com/${OMC_REPO}/cfht2caom2.git && \
     cp ./cfht2caom2/scripts/config.yml / && \
+    cp ./cfht2caom2/scripts/cache.yml / && \
     cp ./cfht2caom2/scripts/docker-entrypoint.sh / && \
     pip3 install ./cfht2caom2
 
