@@ -1664,6 +1664,11 @@ def _is_derived(headers, cfht_name, obs_id):
     if cfht_name.is_derived_sitelle and cfht_name.suffix == 'z':
         result = True
         derived_type = ProvenanceType.UNDEFINED
+    if cfht_name.instrument is md.Inst.MEGAPRIME and cfht_name.suffix == 'p':
+        # 'p' files are processed and do have IMCMB inputs, but they are
+        # additional planes on SimpleObservations, not Derived. See header
+        # discussion.
+        result = False
     return result, derived_type
 
 

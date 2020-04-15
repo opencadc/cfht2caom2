@@ -191,7 +191,8 @@ def _identify_inst_mock(uri):
     lookup = {md.Inst.MEGAPRIME: ['2452990p', '979412b', '979412o', '979412p',
                                   '1927963f', '1927963o', '1927963p',
                                   '675258o', '2003A.frpts.z.36.00',
-                                  '02Bm05.scatter.g.36.00'],
+                                  '02Bm05.scatter.g.36.00', '1257365o',
+                                  '1257365p'],
               md.Inst.SITELLE: ['2384125']}
     result = None
     for key, value in lookup.items():
