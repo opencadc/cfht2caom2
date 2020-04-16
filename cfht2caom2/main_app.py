@@ -255,7 +255,7 @@ def get_energy_function_delta(params):
         else:
             filter_name = header.get('FILTER')
             instrument = _get_instrument(header)
-            temp = md.filter_cache.get_svo_filter(instrument, filter_name)
+            temp = _get_filter_md(instrument, filter_name, uri)
             result = ac.FilterMetadataCache.get_fwhm(temp)
     return result
 
@@ -303,7 +303,7 @@ def get_energy_function_val(params):
         else:
             filter_name = header.get('FILTER')
             instrument = _get_instrument(header)
-            temp = md.filter_cache.get_svo_filter(instrument, filter_name)
+            temp = _get_filter_md(instrument, filter_name, uri)
             result = ac.FilterMetadataCache.get_central_wavelength(temp)
     return result
 
@@ -1518,8 +1518,8 @@ def update(observation, **kwargs):
                         # match
                         #
                         # SGo - use range for energy with filter information
-                        filter_md = md.filter_cache.get_svo_filter(
-                            instrument, filter_name)
+                        filter_md = _get_filter_md(
+                            instrument, filter_name, uri)
                         if (filter_name is None or
                                 filter_name in ['Open', 'NONE'] or
                                 ac.FilterMetadataCache.get_fwhm(
@@ -1604,8 +1604,8 @@ def update(observation, **kwargs):
                             chunk.energy_axis = None
                             chunk.time_axis = None
 
-                        filter_md = md.filter_cache.get_svo_filter(
-                            instrument, filter_name)
+                        filter_md = _get_filter_md(
+                            instrument, filter_name, uri)
                         _update_energy_range(chunk, filter_name, filter_md)
 
         if isinstance(observation, DerivedObservation):
@@ -1643,6 +1643,15 @@ def update(observation, **kwargs):
 
     logging.debug('Done update.')
     return observation
+
+
+def _get_filter_md(instrument, filter_name, entry):
+    temp = md.filter_cache.get_svo_filter(instrument, filter_name)
+    if not md.filter_cache.is_cached(instrument, filter_name):
+        # want to stop ingestion if the filter name is not expected
+        raise mc.CadcException(f'Could not find filter metadata for '
+                               f'{filter_name} in {entry}.')
+    return temp
 
 
 def _is_derived(headers, cfht_name, obs_id):

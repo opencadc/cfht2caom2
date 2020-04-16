@@ -40,6 +40,7 @@ filter_repair_lookup:
   CN.MP7803: CN
   CaHK.MP9303: CaHK
   Halpha.MP7604: Halpha_off
+  HaOFF.MP7604: Halpha_off
   Halpha.MP7605: Halpha_on
   Halpha.MP9603: Halpha
   Halpha.MP9604: Halpha_Off_2
