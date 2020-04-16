@@ -95,7 +95,7 @@ class CFHTName(mc.StorageName):
                  instrument=None, ad_uri=None):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
-        # including the .fz to indicate compression  # TODO no longer true
+        # including the .fz | .gz | '' to indicate compression type
         super(CFHTName, self).__init__(
             None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
             compression='')

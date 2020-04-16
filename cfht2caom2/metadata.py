@@ -170,6 +170,7 @@ class CFHTCache(mc.Cache):
                     count += 1
         if updated_content:
             self.save()
+        self._cached_semesters.append(CFHTCache.semester(run_id))
 
     def get_title(self, run_id):
         result = self._project_titles.get(run_id)

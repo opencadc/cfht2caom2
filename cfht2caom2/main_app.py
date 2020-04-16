@@ -1801,7 +1801,7 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
     #   and need to be accessible as extension 0 for the observation, plane,
     #   artifact
     # - so then - do I need the blueprint before it's been modified?
-    #   maybe instead of storing the blueprint I just call accumulatee_bp?
+    #   maybe instead of storing the blueprint I just call accumulate_bp?
 
     # and I'm back trying to figure out how to undo the doing ...
     # the first time through, the CD4_4 value is set from CDELT4,
@@ -1964,15 +1964,15 @@ def _update_sitelle_plane(observation, uri):
             # replicate the plane-level information from the p plane to the
             # z plane
             p_plane = observation.planes[observation.observation_id]
-            p_artifact_key = uri.replace('z', 'p').replace('.hdf5', '.fits.fz')
+            p_artifact_key = uri.replace('z', 'p', 1).replace('.hdf5', '.fits.fz')
             if p_artifact_key not in p_plane.artifacts.keys():
                 p_artifact_key = uri.replace(
                     'z', 'p').replace('.hdf5', '.fits')
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = uri.replace('z', 'p').replace(
+                    p_artifact_key = uri.replace('z', 'p', 1).replace(
                         '.hdf5', '.fits.gz')
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = uri.replace('z', 'p').replace(
+                        p_artifact_key = uri.replace('z', 'p', 1).replace(
                             '.hdf5', '.fits.header')
                         if p_artifact_key not in p_plane.artifacts.keys():
                             raise mc.CadcException(

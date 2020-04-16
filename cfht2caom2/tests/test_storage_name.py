@@ -107,6 +107,14 @@ def test_is_valid():
     assert test_subject.file_uri == 'ad:CFHT/2384125z.hdf5', 'wrong uri'
     assert not test_subject.is_simple, 'should be derived'
 
+    test_subject = CFHTName(file_name='2384125p.fits.fz',
+                            instrument='SITELLE')
+    assert not test_subject.simple_by_suffix, 'should be derived'
+    assert test_subject.obs_id == '2384125p', 'wrong obs id'
+    assert test_subject.file_id == '2384125p', 'wrong file id'
+    assert test_subject.file_uri == 'ad:CFHT/2384125p.fits.fz', 'wrong uri'
+    assert not test_subject.is_simple, 'should be derived'
+
     test_subject = CFHTName(file_name='979412p.fits.fz',
                             instrument='MegaPrime')
     assert test_subject.simple_by_suffix, 'should be simple'
