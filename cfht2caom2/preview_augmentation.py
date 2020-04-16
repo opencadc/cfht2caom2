@@ -151,15 +151,15 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     _augment(plane, prev_uri, preview_fqn, ProductType.PREVIEW)
     _augment(plane, thumb_uri, thumb_fqn, ProductType.THUMBNAIL)
     _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
-    if cadc_client is not None:
-        _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
-                      metrics)
+    _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
+                  metrics)
     return 3
 
 
 def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                  working_dir, intent, obs_type, thumb_fqn,
                  preview_fqn, zoom_fqn):
+    delete_list = []
     headers = ac.read_fits_headers(science_fqn)
     num_extensions = headers[0].get('NEXTEND')
 
@@ -199,6 +199,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                         f'{temp_science_f_name}'
             _exec_cmd_chdir(working_dir, temp_science_f_name, slice_cmd)
             science_fqn = f'{working_dir}/{temp_science_f_name}'
+            delete_list.append(science_fqn)
 
         if num_extensions >= 4:
             logging.info(f'Observation {obs_id}: using slice for zoom preview '
@@ -209,6 +210,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                         f'{zoom_science_f_name}'
             _exec_cmd_chdir(working_dir, zoom_science_f_name, slice_cmd)
             zoom_science_fqn = f'{working_dir}/{zoom_science_f_name}'
+            delete_list.append(zoom_science_fqn)
 
     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
         rotate_param = '-rotate 180'
@@ -277,6 +279,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     _gen_image(zoom_science_fqn, geometry, zoom_fqn, scope_param, rotate_param,
                zoom_param, pan_param, mosaic_param=mosaic_param,
                scale_param=scale_param)
+    _delete_list_of_files(delete_list)
 
 
 def _exec_cmd_chdir(working_dir, temp_file, cmd):
@@ -316,12 +319,19 @@ def _gen_image(science_fqn, geometry, save_fqn, scope_param, rotate_param,
 
 def _store_smalls(cadc_client, working_directory, stream, preview_fname,
                   thumb_fname, zoom_fname, metrics):
-    mc.data_put(cadc_client, working_directory, preview_fname, cn.COLLECTION,
-                stream, mime_type='image/jpeg', metrics=metrics)
-    mc.data_put(cadc_client, working_directory, thumb_fname, cn.COLLECTION,
-                stream, mime_type='image/jpeg', metrics=metrics)
-    mc.data_put(cadc_client, working_directory, zoom_fname, cn.COLLECTION,
-                stream, mime_type='image/jpeg', metrics=metrics)
+    if cadc_client is not None:
+        mc.data_put(cadc_client, working_directory, preview_fname,
+                    cn.COLLECTION, stream, mime_type='image/jpeg',
+                    metrics=metrics)
+        mc.data_put(cadc_client, working_directory, thumb_fname, cn.COLLECTION,
+                    stream, mime_type='image/jpeg', metrics=metrics)
+        mc.data_put(cadc_client, working_directory, zoom_fname, cn.COLLECTION,
+                    stream, mime_type='image/jpeg', metrics=metrics)
+        # if there's no client, leave the files behind - this is consistent
+        # with TaskType.SCRAPE expectations
+        _delete_list_of_files([f'{working_directory}/{preview_fname}',
+                               f'{working_directory}/{thumb_fname}',
+                               f'{working_directory}/{zoom_fname}'])
 
 
 def _augment(plane, uri, fqn, product_type):
@@ -382,7 +392,7 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
     indexmax2loline = indexmax2 - 1
     indexmax2hiline = indexmax2 + 1
     logging.debug(f'{indexmax1loline}, {indexmax1hiline}, {indexmax2loline}, '
-                 f'{indexmax2hiline}')
+                  f'{indexmax2hiline}')
     logging.debug(f'{meanbgsubvswavenumber}')
 
     w = where(meanbgsubvswavenumber > 0.0)
@@ -414,7 +424,7 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
     data2dline1pluscont = data2dline1 + data2dcont
     data2dline2pluscont = data2dline2 + data2dcont
     logging.debug(f'{mean(data2dline1)}, {mean(data2dline1pluscont)}, '
-                 f'{mean(data2dline2pluscont)}, {mean(data2dcont)}')
+                  f'{mean(data2dline2pluscont)}, {mean(data2dcont)}')
 
     _create_rgb_inputs(data2dline1pluscont, head, head256,
                        'imageline1size1024.fits', 'imageline1size256.fits',
@@ -437,6 +447,15 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
                 'imagecontsize256.fits', thumb_fqn)
     _create_rgb('imageline1zoom1024.fits', 'imageline2zoom1024.fits',
                 'imagecontzoom1024.fits', zoom_fqn)
+    _delete_list_of_files(['./imageline1size1024.fits',
+                           './imageline1size256.fits',
+                           './imageline1zoom1024.fits',
+                           './imageline2size1024.fits',
+                           './imageline2size256.fits',
+                           './imageline2zoom1024.fits',
+                           './imagecontsize1024.fits',
+                           './imagecontsize256.fits',
+                           './imagecontzoom1024.fits'])
 
 
 def _create_rgb_inputs(input_data, head, head256, preview_f_name, thumb_f_name,
@@ -458,16 +477,22 @@ def _create_rgb(line1_f_name, line2_f_name, cont_f_name, fqn):
                          embed_avm_tags=False)
 
 
-def _rebin_factor(a, newshape):
-    """
-    Rebin an array to a new shape.
+def _delete_list_of_files(file_list):
+    for entry in file_list:
+        logging.error(f'Deleting {entry}')
+        os.unlink(entry)
 
-    # newshape must be a factor of a.shape.
+
+def _rebin_factor(a, new_shape):
     """
-    assert len(a.shape) == len(newshape)
-    assert not sometrue(mod(a.shape, newshape))
+    Re-bin an array to a new shape.
+
+    :param new_shape must be a factor of a.shape.
+    """
+    assert len(a.shape) == len(new_shape)
+    assert not sometrue(mod(a.shape, new_shape))
 
     slices = [slice(None, None, mc.to_int(old / new)) for old, new in
-              zip(a.shape, newshape)]
+              zip(a.shape, new_shape)]
     logging.debug(slices)
     return a[slices]
