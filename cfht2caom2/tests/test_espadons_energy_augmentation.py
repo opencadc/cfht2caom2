@@ -65,107 +65,28 @@
 #  $Revision: 4 $
 #
 # ***********************************************************************
-#
 
-import os
-import sys
-
-from caom2.obs_reader_writer import CAOM24_NAMESPACE
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, main_app, metadata
+from cfht2caom2 import espadons_energy_augmentation
 
-from mock import patch
 import test_main_app
 
-# structured by observation id, list of file ids that make up a multi-plane
-# observation
-DIR_NAME = 'multi_plane'
-LOOKUP = {'979339': ['979339i.fits.gz', '979339o.fits.gz'],
-          '2281792': ['2281792s.fits.fz', '2281792p.fits.fz',
-                      '2281792o.fits.fz', '2281792g.fits.gz'],
-          '1151210': ['1151210g.fits.fz', '1151210m.fits.fz',
-                      '1151210w.fits.gz'],
-          '979412': ['979412o.fits.fz', '979412p.fits.fz'],
-          '1257365': ['1257365o.fits.fz', '1257365p.fits.fz'],
-          # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
-          #             '1927963p.fits.fz'],
-          # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
-          '2384125p': ['2384125p.fits.fz', '2384125z.hdf5'],
-          # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
-          # '2460606': ['2460606i.fits.gz']
-          }
 
+def test_visit():
+    product_id = '2460606i'
+    f_name = f'{product_id}.fits.gz'
+    obs_fqn = f'{test_main_app.TEST_DATA_DIR}/multi_plane/2460606.expected.xml'
+    obs = mc.read_obs_from_file(obs_fqn)
 
-def pytest_generate_tests(metafunc):
-    obs_id_list = []
-    for ii in LOOKUP:
-        obs_id_list.append(ii)
-    metafunc.parametrize('test_name', obs_id_list)
+    # pre-conditions
+    uri = f'ad:CFHT/{product_id}.fits.gz'
+    assert obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy \
+        is None, 'expect to assign'
+    kwargs = {'science_file': f_name,
+              'working_directory': test_main_app.TEST_FILES_DIR}
 
-
-@patch('cfht2caom2.main_app._identify_instrument')
-@patch('caom2utils.fits2caom2.CadcDataClient')
-@patch('caom2pipe.astro_composable.get_vo_table')
-def test_multi_plane(svofps_mock, data_client_mock, inst_mock, test_name):
-    metadata.filter_cache.connected = True
-    inst_mock.side_effect = test_main_app._identify_inst_mock
-    obs_id = test_name
-    lineage = _get_lineage(obs_id)
-    actual_fqn = '{}/{}/{}.actual.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
-
-    local = _get_local(test_name)
-    plugin = test_main_app.PLUGIN
-
-    if os.path.exists(actual_fqn):
-        os.remove(actual_fqn)
-
-    data_client_mock.return_value.get_file_info.side_effect = \
-        test_main_app._get_file_info
-    svofps_mock.side_effect = test_main_app._vo_mock
-
-    # cannot use the --not_connected parameter in this test, because the
-    # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
-    # as well
-    sys.argv = \
-        (f'{main_app.APPLICATION} --quiet --no_validate --caom_namespace '
-         f'{CAOM24_NAMESPACE} --observation {cfht_name.COLLECTION} {test_name} '
-         f'--local {local} --plugin {plugin} --module {plugin} --out '
-         f'{actual_fqn} --lineage {lineage}').split()
-    print(sys.argv)
-    main_app.to_caom2()
-    expected_fqn = '{}/{}/{}.expected.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
-    compare_result = mc.compare_observations(actual_fqn, expected_fqn)
-    if compare_result is not None:
-        raise AssertionError(compare_result)
-    # assert False  # cause I want to see logging messages
-
-
-def _get_lineage(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        fits = mc.get_lineage(cfht_name.ARCHIVE,
-                              cfht_name.CFHTName.remove_extensions(ii), ii)
-        result = f'{result } {fits}'
-    return result
-
-
-def _get_local(obs_id):
-    result = ''
-    root = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}'
-    if '979339' in obs_id:
-        result = f'{test_main_app.TEST_FILES_DIR}/979339i.fits ' \
-                 f'{root}/979339o.fits.header'
-    elif '2384125p' in obs_id:
-        # result = f'{root}/2384125p.fits.header ' \
-        #          f'{root}/2384125v.fits.header' \
-        #          f'{root}/2384125z.hdf5'
-        # result = f'{root}/2384125z.hdf5'
-        result = f'{root}/2384125p.fits.header ' \
-                 f'{root}/2384125z.hdf5'
-    else:
-        for ii in LOOKUP[obs_id]:
-            result = f'{result} {root}/' \
-                     f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
-    return result
+    test_result = espadons_energy_augmentation.visit(obs, **kwargs)
+    assert test_result is not None, 'expect a result'
+    assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
+    assert obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy \
+        is not None, 'expect to assign'

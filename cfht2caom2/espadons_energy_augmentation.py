@@ -65,107 +65,84 @@
 #  $Revision: 4 $
 #
 # ***********************************************************************
-#
 
-import os
-import sys
+import logging
 
-from caom2.obs_reader_writer import CAOM24_NAMESPACE
+from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
+from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, main_app, metadata
-
-from mock import patch
-import test_main_app
-
-# structured by observation id, list of file ids that make up a multi-plane
-# observation
-DIR_NAME = 'multi_plane'
-LOOKUP = {'979339': ['979339i.fits.gz', '979339o.fits.gz'],
-          '2281792': ['2281792s.fits.fz', '2281792p.fits.fz',
-                      '2281792o.fits.fz', '2281792g.fits.gz'],
-          '1151210': ['1151210g.fits.fz', '1151210m.fits.fz',
-                      '1151210w.fits.gz'],
-          '979412': ['979412o.fits.fz', '979412p.fits.fz'],
-          '1257365': ['1257365o.fits.fz', '1257365p.fits.fz'],
-          # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
-          #             '1927963p.fits.fz'],
-          # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
-          '2384125p': ['2384125p.fits.fz', '2384125z.hdf5'],
-          # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
-          # '2460606': ['2460606i.fits.gz']
-          }
+from cfht2caom2 import cfht_name as cn
+from cfht2caom2 import main_app
+from cfht2caom2 import metadata as md
 
 
-def pytest_generate_tests(metafunc):
-    obs_id_list = []
-    for ii in LOOKUP:
-        obs_id_list.append(ii)
-    metafunc.parametrize('test_name', obs_id_list)
+def visit(observation, **kwargs):
+    mc.check_param(observation, Observation)
+
+    working_dir = kwargs.get('working_directory', './')
+    science_file = kwargs.get('science_file')
+    if science_file is None:
+        raise mc.CadcException('Visitor needs a science_file parameter.')
+
+    cfht_name = cn.CFHTName(file_name=science_file,
+                            instrument=observation.instrument.name)
+    count = 0
+    if (cfht_name.instrument is md.Inst.ESPADONS and
+            cfht_name.suffix in ['i', 'p']):
+        for plane in observation.planes.values():
+            for artifact in plane.artifacts.values():
+                logging.error(cfht_name.file_uri)
+                logging.error(artifact.uri)
+                if cfht_name.file_uri == artifact.uri:
+                    count += _do_energy(artifact, science_file, working_dir)
+    logging.info('Completed ESPaDOnS energy augmentation for {}.'.format(
+        observation.observation_id))
+    return {'chunks': count}
 
 
-@patch('cfht2caom2.main_app._identify_instrument')
-@patch('caom2utils.fits2caom2.CadcDataClient')
-@patch('caom2pipe.astro_composable.get_vo_table')
-def test_multi_plane(svofps_mock, data_client_mock, inst_mock, test_name):
-    metadata.filter_cache.connected = True
-    inst_mock.side_effect = test_main_app._identify_inst_mock
-    obs_id = test_name
-    lineage = _get_lineage(obs_id)
-    actual_fqn = '{}/{}/{}.actual.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
+def _do_energy(artifact, science_file, working_dir):
+    # PD slack 08-01-20
+    # espadons is a special case because using bounds allows one to
+    # define "tiles" and then the SODA cutout service can extract the
+    # subset of tiles that overlap the desired region. That's the best
+    # that can be done because it is not possible to create a
+    # CoordFunction1D to say what the wavelength of each pixel is
+    #
+    # If the coverage had significant gaps (eg SCUBA or SCUBA2 from
+    # JCMT)  then the extra detail in bounds would enable better
+    # discovery (as the gaps would be captured in the plane metadata).
+    # In the case of espadons I don't think the gaps  are significant
+    # (iirc, espadons is an eschelle spectrograph but I don't recall
+    # whether the discontinuity between eschelle was a small gap or an
+    # overlap)
+    #
+    # So: bounds provides more detail and it can in principle improve
+    # data discovery (if gaps) and enable extraction of subsections of
+    # the spectrum via the SODA service. Espadons was one of the use
+    # cases that justified having bounds there
 
-    local = _get_local(test_name)
-    plugin = test_main_app.PLUGIN
+    # SF slack 08-01-20
+    # We need the information that is contained in bounds. Gaps need
+    # to be captured. So keep bounds. If you decide to remove range,
+    # then advanced users would have to dig in the info to understand
+    # range is first and last bounds.
 
-    if os.path.exists(actual_fqn):
-        os.remove(actual_fqn)
-
-    data_client_mock.return_value.get_file_info.side_effect = \
-        test_main_app._get_file_info
-    svofps_mock.side_effect = test_main_app._vo_mock
-
-    # cannot use the --not_connected parameter in this test, because the
-    # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
-    # as well
-    sys.argv = \
-        (f'{main_app.APPLICATION} --quiet --no_validate --caom_namespace '
-         f'{CAOM24_NAMESPACE} --observation {cfht_name.COLLECTION} {test_name} '
-         f'--local {local} --plugin {plugin} --module {plugin} --out '
-         f'{actual_fqn} --lineage {lineage}').split()
-    print(sys.argv)
-    main_app.to_caom2()
-    expected_fqn = '{}/{}/{}.expected.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
-    compare_result = mc.compare_observations(actual_fqn, expected_fqn)
-    if compare_result is not None:
-        raise AssertionError(compare_result)
-    # assert False  # cause I want to see logging messages
-
-
-def _get_lineage(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        fits = mc.get_lineage(cfht_name.ARCHIVE,
-                              cfht_name.CFHTName.remove_extensions(ii), ii)
-        result = f'{result } {fits}'
-    return result
-
-
-def _get_local(obs_id):
-    result = ''
-    root = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}'
-    if '979339' in obs_id:
-        result = f'{test_main_app.TEST_FILES_DIR}/979339i.fits ' \
-                 f'{root}/979339o.fits.header'
-    elif '2384125p' in obs_id:
-        # result = f'{root}/2384125p.fits.header ' \
-        #          f'{root}/2384125v.fits.header' \
-        #          f'{root}/2384125z.hdf5'
-        # result = f'{root}/2384125z.hdf5'
-        result = f'{root}/2384125p.fits.header ' \
-                 f'{root}/2384125z.hdf5'
-    else:
-        for ii in LOOKUP[obs_id]:
-            result = f'{result} {root}/' \
-                     f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
-    return result
+    # read in the complete fits file, including the data
+    fqn = f'{working_dir}/{science_file}'
+    logging.info(f'Reading data from {fqn}.')
+    hdus = ac.read_fits_data(fqn)
+    wave = hdus[0].data[0, :]
+    axis = Axis('WAVE', 'nm')
+    coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
+    coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
+    params = {'header': hdus[0].header,
+              'uri': artifact.uri}
+    resolving_power = main_app.get_espadons_energy_resolving_power(params)
+    artifact.parts['0'].chunks[0].energy = SpectralWCS(
+        coord_axis,
+        specsys='TOPOCENT',
+        ssysobs='TOPOCENT',
+        ssyssrc='TOPOCENT',
+        resolving_power=resolving_power)
+    hdus.close()
+    return 1

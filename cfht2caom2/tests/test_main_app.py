@@ -193,7 +193,8 @@ def _identify_inst_mock(uri):
                                   '675258o', '2003A.frpts.z.36.00',
                                   '02Bm05.scatter.g.36.00', '1257365o',
                                   '1257365p'],
-              md.Inst.SITELLE: ['2384125']}
+              md.Inst.SITELLE: ['2384125'],
+              md.Inst.ESPADONS: ['2460606']}
     result = None
     for key, value in lookup.items():
         for entry in value:

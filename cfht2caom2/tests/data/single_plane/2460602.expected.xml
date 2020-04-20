@@ -70,8 +70,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>3</caom2:positionAxis1>
                   <caom2:positionAxis2>4</caom2:positionAxis2>
-                  <caom2:energyAxis>1</caom2:energyAxis>
-                  <caom2:timeAxis>5</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>

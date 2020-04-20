@@ -70,8 +70,6 @@
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>3</caom2:positionAxis1>
                   <caom2:positionAxis2>4</caom2:positionAxis2>
-                  <caom2:energyAxis>1</caom2:energyAxis>
-                  <caom2:timeAxis>5</caom2:timeAxis>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -132,7 +130,6 @@
                       </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:resolvingPower>65000.0</caom2:resolvingPower>
                   </caom2:energy>

@@ -743,6 +743,7 @@ def get_espadons_provenance_name(header):
     comments = header.get('COMMENT')
     if comments is not None:
         for comment in comments:
+            logging.error(comment)
             if 'Upena' in comment:
                 result = 'UPENA'
                 break
@@ -1078,9 +1079,11 @@ def accumulate_bp(bp, uri, instrument):
     the set method to reference a function call.
     """
     logging.debug('Begin accumulate_bp.')
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     bp.configure_position_axes((1, 2))
     bp.configure_time_axis(3)
-    bp.configure_energy_axis(4)
+    if cfht_name.has_energy:
+        bp.configure_energy_axis(4)
     bp.configure_observable_axis(6)
 
     bp.set('Observation.intent', 'get_obs_intent(header)')
@@ -1471,13 +1474,20 @@ def update(observation, **kwargs):
                         if (chunk.energy.axis is not None and
                                 chunk.energy.axis.axis is not None and
                                 chunk.energy.axis.axis.ctype is not None):
+                            # PD 08-04-20
+                            # the correct way to express "inverse meter" is
+                            # either  m**-1 or m^-1
+                            #
+                            # we support both exponentiations but convert ^
+                            # to ** so I guess at that time we thought ** was
+                            # the more common style.
                             if chunk.energy.axis.axis.cunit == '1 / m':
                                 chunk.energy.axis.axis.cunit = 'm**-1'
 
                     if instrument is md.Inst.ESPADONS:
-                        if chunk.time is not None:
-                            # consistent with caom2IngestEspadons.py
-                            chunk.time_axis = 5
+                        # if chunk.time is not None:
+                        #     # consistent with caom2IngestEspadons.py
+                        #     chunk.time_axis = 5
                         # TODO - use cfht_name as a parameter here
                         _update_energy_espadons(
                             chunk, plane.product_id[-1], headers, idx,
@@ -1497,10 +1507,15 @@ def update(observation, **kwargs):
                             else:
                                 cc.reset_position(chunk)
 
-                        if (cfht_name.suffix in ['i', 'p']):
+                        if cfht_name.suffix in ['i', 'p']:
                             _update_observable(part, chunk, cfht_name.suffix,
                                                observation.observation_id)
 
+                        if chunk.naxis == 2:
+                            if chunk.energy is not None:
+                                chunk.energy_axis = None
+                            if chunk.time is not None:
+                                chunk.time_axis = None
                     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1690,6 +1705,7 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
         params = {'header': headers[idx],
                   'uri': uri}
         resolving_power = get_espadons_energy_resolving_power(params)
+        coord_axis = None
         if suffix in ['a', 'c', 'f', 'o', 'x']:
             naxis1 = get_energy_function_naxis(params)
             cdelt1 = get_energy_function_delta(params)
@@ -1698,45 +1714,16 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
             ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1)*cdelt1)
             coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
             coord_axis = CoordAxis1D(axis=axis, range=coord_range)
-        elif suffix in ['i', 'p']:
-            # PD slack 08-01-20
-            # espadons is a special case because using bounds allows one to
-            # define "tiles" and then the SODA cutout service can extract the
-            # subset of tiles that overlap the desired region. That's the best
-            # that can be done because it is not possible to create a
-            # CoordFunction1D to say what the wavelength of each pixel is
-            #
-            # If the coverage had significant gaps (eg SCUBA or SCUBA2 from
-            # JCMT)  then the extra detail in bounds would enable better
-            # discovery (as the gaps would be captured in the plane metadata).
-            # In the case of espadons I don't think the gaps  are significant
-            # (iirc, espadons is an eschelle spectrograph but I don't recall
-            # whether the discontinuity between eschelle was a small gap or an
-            # overlap)
-            #
-            # So: bounds provides more detail and it can in principle improve
-            # data discovery (if gaps) and enable extraction of subsections of
-            # the spectrum via the SODA service. Espadons was one of the use
-            # cases that justified having bounds there
-
-            # SF slack 08-01-20
-            # We need the information that is contained in bounds. Gaps need
-            # to be captured. So keep bounds. If you decide to remove range,
-            # then advanced users would have to dig in the info to understand
-            # range is first and last bounds.
-
-            # read in the complete fits file, including the data
-            logging.info(f'Reading data from {fqn}.')
-            hdus = ac.read_fits_data(fqn)
-            wave = hdus[idx].data[0, :]
-            coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
-            coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
-            hdus.close()
-        elif suffix in ['b', 'd']:
+            ssysobs = 'TOPOCENT'
+            if suffix == 'o':
+                ssysobs = None
+        elif suffix in ['b', 'd', 'i', 'p']:
+            # i, p, are done in the espadons energy data visitor, and b, d are
+            # not done at all
             return
         chunk.energy = SpectralWCS(coord_axis,
                                    specsys='TOPOCENT',
-                                   ssysobs='TOPOCENT',
+                                   ssysobs=ssysobs,
                                    ssyssrc='TOPOCENT',
                                    resolving_power=resolving_power)
         chunk.energy_axis = 1

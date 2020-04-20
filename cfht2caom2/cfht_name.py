@@ -181,6 +181,11 @@ class CFHTName(mc.StorageName):
                 'scatter' in self._file_id)
 
     @property
+    def has_energy(self):
+        return not (self._instrument is md.Inst.ESPADONS and
+                    self._suffix in ['i', 'p'])
+
+    @property
     def has_polarization(self):
         return self._suffix in ['p'] and self._instrument is md.Inst.ESPADONS
 
