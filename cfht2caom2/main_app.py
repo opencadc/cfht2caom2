@@ -1155,7 +1155,6 @@ def accumulate_bp(bp, uri, instrument):
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
     #
     # Gemini is all range, make Mega* range too, and WIRCam too
-    # if I re-consider TODO
     if instrument not in [md.Inst.MEGACAM, md.Inst.MEGAPRIME,
                           md.Inst.WIRCAM]:
         bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
@@ -1229,6 +1228,8 @@ def accumulate_espadons_bp(bp, cfht_name):
     Observation level.
     """
     logging.debug('Begin accumulate_espadons_bp.')
+
+    bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     bp.set('Plane.provenance.keywords',
            'get_espadons_provenance_keywords(params)')
@@ -1720,6 +1721,8 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
         elif suffix in ['b', 'd', 'i', 'p']:
             # i, p, are done in the espadons energy data visitor, and b, d are
             # not done at all
+            # CW caom2IngestEspadons.py, l393
+            # Ignore energy wcs if some type of calibration file
             return
         chunk.energy = SpectralWCS(coord_axis,
                                    specsys='TOPOCENT',
