@@ -109,7 +109,11 @@ def test_preview_augment(ad_put_mock):
         'visit_obs_start_sitelle_calibrated_cube.xml':
             ['2359320p.fits'],
         'visit_obs_start_sitelle.xml':
-            ['2359320o.fits.fz']
+            ['2359320o.fits.fz'],
+        'visit_obs_start_espadons.xml':
+            ['2460606i.fits.gz', '2460606o.fits.gz'],
+        'visit_obs_start_espadons_cal.xml':
+            ['1001063b.fits.gz']
     }
 
     kwargs = {'working_directory': TEST_FILES_DIR,
@@ -128,6 +132,8 @@ def test_preview_augment(ad_put_mock):
             instrument = md.Inst.MEGACAM
         elif 'sitelle' in key:
             instrument = md.Inst.SITELLE
+        elif 'espadons' in key:
+            instrument = md.Inst.ESPADONS
         else:
             assert False, 'do not understand instrument'
         for f_name in value:
@@ -151,24 +157,33 @@ def test_preview_augment(ad_put_mock):
                 assert False
 
             assert test_result is not None, f'expect a result {f_name}'
+
             check_number = 3
+            end_artifact_count = 4
+            expected_call_count = 3
+            f_name_list = [test_name.prev_uri, test_name.thumb_uri,
+                           test_name.zoom_uri]
+            if instrument is md.Inst.ESPADONS and test_name.suffix == 'i':
+                check_number = 2
+                expected_call_count = 2
+                end_artifact_count = 3
+                f_name_list = [test_name.prev_uri, test_name.thumb_uri]
+
             assert test_result['artifacts'] == check_number, \
                 f'artifacts should be added {f_name}'
 
-            end_artifact_count = 4
             if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
                 end_artifact_count = 6
             assert len(obs.planes[test_name.product_id].artifacts) == \
                 end_artifact_count, f'new artifacts {f_name}'
 
-            for p in [test_name.prev_uri, test_name.thumb_uri,
-                      test_name.zoom_uri]:
+            for p in f_name_list:
                 assert p in \
                        obs.planes[test_name.product_id].artifacts.keys(), \
                        f'no preview {p}'
 
             assert ad_put_mock.called, f'ad put mock not called {f_name}'
-            assert ad_put_mock.call_count == 3, \
+            assert ad_put_mock.call_count == expected_call_count, \
                 f'ad put called wrong number of times {f_name}'
             ad_put_mock.reset_mock()
     # assert False

@@ -71,12 +71,11 @@ import logging
 import os
 
 from astropy.io import fits
-from datetime import datetime
+from matplotlib import pylab
 from numpy import *
 
 from caom2 import Observation, ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
-from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -109,11 +108,6 @@ def visit(observation, **kwargs):
     cfht_name = cn.CFHTName(file_name=science_file,
                             instrument=observation.instrument.name)
     for plane in observation.planes.values():
-        if (plane.data_release is None or
-                plane.data_release > datetime.utcnow()):
-            logging.info('Plane {} is proprietary. No preview access or '
-                         'thumbnail creation.'.format(plane.product_id))
-            continue
         for artifact in plane.artifacts.values():
             if cfht_name.file_uri == artifact.uri:
                 count += _do_prev(working_dir, plane, cfht_name, cadc_client,
@@ -139,26 +133,217 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     zoom_fqn = os.path.join(working_dir, zoom)
 
     if instrument is md.Inst.SITELLE and plane.product_id[-1] == 'p':
-        _sitelle_calibrated_cube(science_fqn, thumb_fqn, preview_fqn, zoom_fqn)
+        count = _sitelle_calibrated_cube(science_fqn, thumb_fqn, preview_fqn,
+                                         zoom_fqn)
+    elif instrument is md.Inst.ESPADONS and plane.product_id[-1] in ['i', 'p']:
+        count = _do_espadons_science(science_fqn, cfht_name, thumb_fqn,
+                                     preview_fqn)
     else:
-        _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
-                     working_dir, intent, obs_type, thumb_fqn,
-                     preview_fqn, zoom_fqn)
+        count = _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
+                             working_dir, intent, obs_type, thumb_fqn,
+                             preview_fqn, zoom_fqn)
 
     prev_uri = cfht_name.prev_uri
     thumb_uri = cfht_name.thumb_uri
     zoom_uri = cfht_name.zoom_uri
     _augment(plane, prev_uri, preview_fqn, ProductType.PREVIEW)
     _augment(plane, thumb_uri, thumb_fqn, ProductType.THUMBNAIL)
-    _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
-    _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
-                  metrics)
-    return 3
+    if instrument is md.Inst.ESPADONS and plane.product_id[-1] in ['i', 'p']:
+        _store_smalls(cadc_client, working_dir, stream, preview, thumb, None,
+                      metrics)
+    else:
+        _augment(plane, zoom_uri, zoom_fqn, ProductType.PREVIEW)
+        _store_smalls(cadc_client, working_dir, stream, preview, thumb, zoom,
+                      metrics)
+    return count
+
+
+def _do_espadons_science(science_fqn, cfht_name, thumb_fqn, preview_fqn):
+    logging.debug(f'Do espadons science preview augmentation with '
+                  f'{science_fqn}')
+    # from genEspaprevperplane.py
+
+    #Polarization scale factor
+    pScale=5.0
+
+    espadons = fits.open(science_fqn)
+    ext = 0
+    try:
+        ignore = espadons[0].header['OBJECT']
+    except LookupError:
+        ext = 1
+        ignore = espadons[1].header['OBJECT']
+
+    bzero = espadons[ext].header.get('BZERO')
+    bscale = espadons[ext].header.get('BSCALE')
+
+    if bzero is not None and bzero > 0.0:
+        # wavelength array (nm)
+        sw = bscale * (espadons[ext].data[0]) - bzero
+        # intensity array (normalized)
+        si = bscale * (espadons[ext].data[1]) - bzero
+        if cfht_name.suffix == 'p':
+            # Stokes array
+            sp = bscale * (espadons[ext].data[2]) - bzero
+    else:
+        sw = espadons[ext].data[0]  # wavelength array (nm)
+        si = espadons[ext].data[1]  # intensity array (normalized)
+        if cfht_name.suffix == 'p':
+            sp = espadons[ext].data[2]  # Stokes array
+
+    espadons.close(science_fqn)
+    logging.debug(espadons[ext].shape, sw, si)
+
+    npix = sw.shape[0]
+
+    swa = 10.0 * sw
+    sia = arange(0., npix, 1.0)
+    if cfht_name.suffix == 'p':
+        spa = arange(0., npix, 1.0)
+
+    # determine upper/lower y limits for two planes from intensity values
+    for i in range(sia.shape[0]):
+        sia[i] = float(si[i])
+        if cfht_name.suffix == 'p':
+            spa[i] = float(sp[i]) * pScale  # increase scale of polarization
+
+    fig = pylab.figure(figsize=(10.24, 10.24), dpi=100)
+
+    label = f'{cfht_name.product_id}: object'
+
+    # First subplot
+    wlLow = 4300.0
+    wlHigh = 4600.0
+
+    wl = swa[(swa > wlLow) & (swa < wlHigh)]
+    flux = sia[(swa > wlLow) & (swa < wlHigh)]
+    wlSort = wl[wl.argsort()]
+    fluxSort = flux[wl.argsort()]
+    if cfht_name.suffix == 'p':
+        pflux = spa[(swa > wlLow) & (swa < wlHigh)]
+        pfluxSort = pflux[wl.argsort()]
+        flux = append(flux, pflux)
+    ymax = 1.1 * max(flux)
+    ymin = min([0.0, min(flux) - (ymax - max(flux))])
+
+    pylab.subplot(2, 1, 1)
+    pylab.grid(True)
+    pylab.plot(wlSort, fluxSort, color='k')
+    if cfht_name.suffix == 'p':
+        pylab.plot(wlSort, pfluxSort, color='b')
+        pylab.text(4408.0, (ymin + 0.02 * (ymax - ymin)),
+                   'Stokes spectrum (x5)', size=16, color='b')
+    pylab.xlabel(r'Wavelength ($\AA$)', color='k')
+    pylab.ylabel(r'Relative Intensity', color='k')
+    pylab.title(label, color='m', fontweight='bold')
+    pylab.text(4412.0, (ymin + 0.935 * (ymax - ymin)), 'Intensity spectrum',
+               size=16)
+    pylab.ylim(ymin, ymax)
+
+    # Second subplot
+    wlLow = 6500.0
+    wlHigh = 6750.0
+    wl = swa[(swa > wlLow) & (swa < wlHigh)]
+    flux = sia[(swa > wlLow) & (swa < wlHigh)]
+    wlSort = wl[wl.argsort()]
+    fluxSort = flux[wl.argsort()]
+    if cfht_name.suffix == 'p':
+        pflux = spa[(swa > wlLow) & (swa < wlHigh)]
+        pfluxSort = pflux[wl.argsort()]
+        flux=append(flux, pflux)
+        logging.debug(flux)
+    ymax = 1.1 * max(flux)
+    ymin = min([0.0, min(flux) - (ymax - max(flux))])
+
+    pylab.subplot(2, 1, 2)
+    pylab.grid(True)
+    pylab.plot(wlSort, fluxSort, color='k')
+    if cfht_name.suffix == 'p':
+        pylab.plot(wlSort, pfluxSort, color='b')
+        pylab.text(6589.0, (ymin + 0.02 * (ymax - ymin)),
+                   'Stokes spectrum (x5)', size=16, color='b')
+    pylab.xlabel(r'Wavelength ($\AA$)', color='k')
+    pylab.ylabel(r'Relative Intensity', color='k')
+    pylab.title(label, color='m', fontweight='bold')
+    pylab.text(6593.0, (ymin + 0.935 * (ymax - ymin)), 'Intensity spectrum',
+               size=16)
+    pylab.ylim(ymin, ymax)
+    logging.debug(f'Saving preview for file {science_fqn}.')
+    pylab.savefig(preview_fqn, format='jpg')
+
+    # Make 256^2 version using ImageMagick convert
+    logging.debug(f'Generating thumbnail for file {science_fqn}.')
+    convert_cmd = f'convert {preview_fqn} -resize 256x256 {thumb_fqn}'
+    mc.exec_cmd(convert_cmd)
+    return 2
 
 
 def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                  working_dir, intent, obs_type, thumb_fqn,
                  preview_fqn, zoom_fqn):
+    """
+                256               1024                zoom
+    ESPaDOnS:
+    mosaic      ''                ''                  -fits
+    pan         ''                ''                  ''
+    rotate      ''                ''                  ''
+    scale       zscale            zscale              zscale
+    scope       global            global              global
+    mode        -mode none        -mode none          -mode none
+    zoom        to fit            to fit              1
+
+    MegaPrime, not 'p' and 'o':
+    mosaic     -mosaicimage iraf -mosaicimage iraf    -fits
+    pan        ''                ''                   -pan -9 1780
+    scale      zscale            zscale               zscale
+    scope      local             local                global
+    mode       -mode none        ''                   -mode none
+    zoom       to fit            to fit               1
+
+    MegaPrime, 'p' and 'o':
+    mosaic     -mosaicimage wcs  -mosaicimage wcs     -fits
+    pan        ''                ''                   -pan -9 1780
+    scale      zscale            zscale               zscale
+    scope      global            global               global
+    mode       -mode none        ''                   -mode none
+    zoom       to fit            to fit               1
+
+    MegaPrime extensions:
+    rotate[23] -rotate 180       -rotate 180          ''
+    rotate[14] -rotate 180       -rotate 180          -rotate 180
+    rotate[1]  -rotate 180       -rotate 180          -rotate 180
+
+    WIRCam 'o', 'p', 'and 's':
+    mosaic     -mosaicimage wcs  -mosaicimage wcs     -fits
+    rotate     ''                ''                   ''
+    scale      zscale            zscale               zscale
+    scope      global            global               global
+    mode       -mode none        ''                   -mode none
+    zoom       to fit            to fit               1
+
+    WIRCam not 'o', 'p', 'and 's':
+    mosaic     -mosaicimage iraf -mosaicimage iraf    -fits
+    rotate     ''                ''                   ''
+    scale      zscale            zscale               zscale
+    scope      local             local                global
+    mode       -mode none        ''                   -mode none
+    zoom       to fit            to fit               1
+
+    WIRCam extensions:
+    pan[4]     ''               ''                    -pan 484 -484
+    pan[1]     ''               ''                    -pan -484 -484
+
+    SITELLE 2D images:
+    mosaic     ''               ''                    -fits
+    pan        ''               ''                    -pan -512 1544
+    rotate     ''               ''                    ''
+    scale      zscale           zscale                zscale
+    scope      global           global                global
+    mode       -mode none       -mode none            -mode none
+    zoom       to fit           to fit                1
+
+    """
+    logging.debug(f'Do ds9 preview augmentation with {science_fqn}')
     delete_list = []
     headers = ac.read_fits_headers(science_fqn)
     num_extensions = headers[0].get('NEXTEND')
@@ -226,7 +411,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
 
     # set up the correct parameters to the ds9 command
     scope_param = 'local'
-    if (instrument is md.Inst.SITELLE or
+    if (instrument in [md.Inst.ESPADONS, md.Inst.SITELLE] or
             intent is ObservationIntentType.SCIENCE):
         scope_param = 'global'
 
@@ -234,7 +419,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     # acquisition. A proper one needs processing which is often not done on
     # observations.
     mosaic_param = '-mosaicimage iraf'
-    if instrument is md.Inst.SITELLE:
+    if instrument in [md.Inst.SITELLE, md.Inst.ESPADONS]:
         mosaic_param = ''
 
     geometry = '256x521'
@@ -256,7 +441,9 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     zoom_param = '1'
     scope_param = 'global'
     # set zoom parameters
-    if instrument is md.Inst.WIRCAM:
+    if instrument is md.Inst.ESPADONS:
+        pan_param = ''
+    elif instrument is md.Inst.WIRCAM:
         pan_param = '-pan 484 -484 image'
         if cfht_name.suffix == 'g':
             pan_param = ''
@@ -280,6 +467,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                zoom_param, pan_param, mosaic_param=mosaic_param,
                scale_param=scale_param)
     _delete_list_of_files(delete_list)
+    return 3
 
 
 def _exec_cmd_chdir(working_dir, temp_file, cmd):
@@ -321,12 +509,15 @@ def _store_smalls(cadc_client, working_directory, stream, preview_fname,
                   thumb_fname, zoom_fname, metrics):
     if cadc_client is not None:
         mc.data_put(cadc_client, working_directory, preview_fname,
-                    cn.COLLECTION, stream, mime_type='image/jpeg',
+                    cn.COLLECTION, stream, mime_type=MIME_TYPE,
                     metrics=metrics)
         mc.data_put(cadc_client, working_directory, thumb_fname, cn.COLLECTION,
-                    stream, mime_type='image/jpeg', metrics=metrics)
-        mc.data_put(cadc_client, working_directory, zoom_fname, cn.COLLECTION,
-                    stream, mime_type='image/jpeg', metrics=metrics)
+                    stream, mime_type=MIME_TYPE, metrics=metrics)
+        if zoom_fname is not None:
+            mc.data_put(cadc_client, working_directory, zoom_fname,
+                        cn.COLLECTION, stream, mime_type=MIME_TYPE,
+                        metrics=metrics)
+
         # if there's no client, leave the files behind - this is consistent
         # with TaskType.SCRAPE expectations
         _delete_list_of_files([f'{working_directory}/{preview_fname}',
@@ -343,6 +534,8 @@ def _augment(plane, uri, fqn, product_type):
 
 
 def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
+    logging.debug(f'Do sitelle calibrated cube preview augmentation with '
+                  f'{science_fqn}')
     # from genSiteprevperplane.py
     sitelle = fits.open(science_fqn)
 
@@ -456,6 +649,7 @@ def _sitelle_calibrated_cube(science_fqn, thumb_fqn, prev_fqn, zoom_fqn):
                            './imagecontsize1024.fits',
                            './imagecontsize256.fits',
                            './imagecontzoom1024.fits'])
+    return 3
 
 
 def _create_rgb_inputs(input_data, head, head256, preview_f_name, thumb_f_name,
@@ -479,8 +673,9 @@ def _create_rgb(line1_f_name, line2_f_name, cont_f_name, fqn):
 
 def _delete_list_of_files(file_list):
     for entry in file_list:
-        logging.error(f'Deleting {entry}')
-        os.unlink(entry)
+        if os.path.exists(entry):
+            logging.warning(f'Deleting {entry}')
+            os.unlink(entry)
 
 
 def _rebin_factor(a, new_shape):
