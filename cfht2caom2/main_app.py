@@ -743,7 +743,6 @@ def get_espadons_provenance_name(header):
     comments = header.get('COMMENT')
     if comments is not None:
         for comment in comments:
-            logging.error(comment)
             if 'Upena' in comment:
                 result = 'UPENA'
                 break
