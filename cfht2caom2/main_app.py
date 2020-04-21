@@ -1503,8 +1503,10 @@ def update(observation, **kwargs):
                                     and radecsys.lower() != 'null' and
                                     headers[idx].get('RA_DEG') is not None and
                                     headers[idx].get('DEC_DEG') is not None):
-                                chunk.position_axis_1 = 3
-                                chunk.position_axis_2 = 4
+                                # conform to stricter WCS validation
+                                chunk.position_axis_1 = None
+                                chunk.position_axis_2 = None
+                                chunk.naxis = None
                             else:
                                 cc.reset_position(chunk)
 
@@ -1512,11 +1514,10 @@ def update(observation, **kwargs):
                             _update_observable(part, chunk, cfht_name.suffix,
                                                observation.observation_id)
 
-                        if chunk.naxis == 2:
-                            if chunk.energy is not None:
-                                chunk.energy_axis = None
-                            if chunk.time is not None:
-                                chunk.time_axis = None
+                        if chunk.energy is not None:
+                            chunk.energy_axis = None
+                        if chunk.time is not None:
+                            chunk.time_axis = None
                     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1698,9 +1699,13 @@ def _is_derived(headers, cfht_name, obs_id):
 
 
 def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
-    logging.debug(f'Begin _update_energy_espadons for {obs_id}')
-    cfht_name = cn.CFHTName(file_name=os.path.basename(fqn),
-                            instrument=md.Inst.ESPADONS)
+    logging.debug(f'Begin _update_energy_espadons for {obs_id} {uri} {fqn}')
+    if fqn is None:
+        cfht_name = cn.CFHTName(ad_uri=uri,
+                                instrument=md.Inst.ESPADONS)
+    else:
+        cfht_name = cn.CFHTName(file_name=os.path.basename(fqn),
+                                instrument=md.Inst.ESPADONS)
     if cfht_name.suffix == suffix:
         axis = Axis('WAVE', 'nm')
         params = {'header': headers[idx],

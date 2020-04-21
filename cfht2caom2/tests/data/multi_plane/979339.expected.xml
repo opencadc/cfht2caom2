@@ -78,10 +78,7 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-9d43-01408b10d444" caom2:lastModified="2013-08-17T06:57:51.687" caom2:maxLastModified="2013-08-17T06:57:51.687" caom2:metaChecksum="md5:3abbe250e71b1272fc60971db25c653a" caom2:accMetaChecksum="md5:cdaf8a61ec9ad06668f51c0f5fdd02f2" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
                   <caom2:observableAxis>2</caom2:observableAxis>
-                  <caom2:positionAxis1>3</caom2:positionAxis1>
-                  <caom2:positionAxis2>4</caom2:positionAxis2>
                   <caom2:observable>
                     <caom2:dependent>
                       <caom2:axis>
@@ -193,9 +190,6 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-510a-01408b10befd" caom2:lastModified="2013-08-17T06:57:51.687" caom2:maxLastModified="2013-08-17T06:57:51.687" caom2:metaChecksum="md5:44d831a1866b852e9b22f25382825afa" caom2:accMetaChecksum="md5:eb5ea10df10028843f14fa617bb492fd" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:positionAxis1>3</caom2:positionAxis1>
-                  <caom2:positionAxis2>4</caom2:positionAxis2>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
