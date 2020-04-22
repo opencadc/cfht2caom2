@@ -1494,19 +1494,18 @@ def update(observation, **kwargs):
                             artifact.uri, fqn, observation.observation_id)
 
                         if chunk.position is not None:
+                            # conform to stricter WCS validation
+                            chunk.position_axis_1 = None
+                            chunk.position_axis_2 = None
+                            chunk.naxis = None
                             # CW - Ignore position wcs if a calibration file
                             # suffix list from caom2IngestEspadons.py, l389
                             # 'b', 'd', 'c', 'f', 'x'
                             # with missing spatial indicator keywords
-                            if (cfht_name.suffix in ['a', 'i', 'o', 'p']
+                            if not (cfht_name.suffix in ['a', 'i', 'o', 'p']
                                     and radecsys.lower() != 'null' and
                                     headers[idx].get('RA_DEG') is not None and
                                     headers[idx].get('DEC_DEG') is not None):
-                                # conform to stricter WCS validation
-                                chunk.position_axis_1 = None
-                                chunk.position_axis_2 = None
-                                chunk.naxis = None
-                            else:
                                 cc.reset_position(chunk)
 
                         if cfht_name.suffix in ['i', 'p']:
