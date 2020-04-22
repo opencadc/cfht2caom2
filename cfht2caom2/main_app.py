@@ -903,6 +903,21 @@ def get_time_refcoord_delta_simple(params):
     return exp_time
 
 
+def get_spirou_exptime(params):
+    # caom2IngestSpirou.py, l530+
+    header, suffix, uri = _decompose_params(params)
+    result = None
+    if suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
+        result = header.get('EXPTIME')
+    elif suffix == 'p':
+        result = header.get('TOTETIME')
+    else:
+        result = header.get('DARKTIME')
+    if result is None:
+        logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
+    return result
+
+
 def get_spirou_provenance_name(header):
     result = None
     temp = header.get('RAMPSWV')
@@ -919,20 +934,44 @@ def get_spirou_provenance_version(header):
     return result
 
 
+def get_spirou_resolution(params):
+    # caom2IngestSpirou.py, l530+
+    header, suffix, uri = _decompose_params(params)
+    result = get_spirou_time_refcoord_delta(params)
+    if suffix == 'r':
+        result = result * (24.0 * 3600.0)
+    else:
+        result = get_spirou_exptime(params)
+    if result is None:
+        logging.warning(f'No Time WCS resolution value for {uri}.')
+    return result
+
+
 def get_spirou_time_refcoord_delta(params):
     # caom2IngestSpirou.py, l530+
     header, suffix, uri = _decompose_params(params)
     result = None
     if suffix == 'r':
         temp = header.get('FRMTIME')
-    elif suffix in ['e', 's', 't']:
-        temp = header.get('EXPTIME')
+    elif suffix == 'p':
+        temp = header.get('TOTETIME')
     else:
         temp = header.get('DARKTIME')
     if temp is None:
         logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
     else:
         result = temp / (24.0 * 3600.0)
+    return result
+
+
+def get_spirou_time_refcoord_naxis(params):
+    # caom2IngestSpirou.py, l557
+    header, suffix, uri = _decompose_params(params)
+    result = 1.0
+    if suffix == 'r':
+        result = header.get('NREADS')
+    if result is None:
+        logging.warning(f'No Time WCS refcoord.naxis value for {uri}.')
     return result
 
 
@@ -1416,9 +1455,6 @@ def accumulate_spirou_bp(bp, uri, cfht_name):
     bp.set('Chunk.energy.axis.error.syser', 0.001)
     bp.set('Chunk.energy.resolvingPower', 73000.0)
 
-    bp.set('Chunk.time.axis.function.delta',
-           'get_spirou_time_refcoord_delta(params)')
-
     # values from caom2spirou.default
     bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
     bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
@@ -1439,6 +1475,13 @@ def accumulate_spirou_bp(bp, uri, cfht_name):
            'get_position_coordsys_from_0th_header(header)')
     bp.set('Chunk.position.equinox',
            'get_position_equinox_from_0th_header(header)')
+
+    bp.set('Chunk.time.axis.function.delta',
+           'get_spirou_time_refcoord_delta(params)')
+    bp.set('Chunk.time.axis.function.naxis',
+           'get_spirou_time_refcoord_naxis(params)')
+    bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
+    bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
 
 
 def accumulate_wircam_bp(bp, uri, cfht_name):
@@ -1554,7 +1597,7 @@ def update(observation, **kwargs):
             # do only the work for the applicable plane
             continue
 
-        if instrument is md.Inst.SPIROU:
+        if instrument is md.Inst.SPIROU and not cfht_name.suffix == 'r':
             cc.rename_parts(observation, headers)
 
         if observation.algorithm.name == 'scan':
@@ -1787,6 +1830,10 @@ def update(observation, **kwargs):
         elif (instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM] and
               cfht_name.suffix == 'p'):
             # caom2IngestMegacam.py, l142
+            _update_plane_provenance_p(plane, observation.observation_id, 'o')
+        elif (instrument is md.Inst.SPIROU and
+              cfht_name.suffix in ['e', 's', 't']):
+            # caom2IngestSpirou.py, l584
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
 
     # relies on update_plane_provenance being called

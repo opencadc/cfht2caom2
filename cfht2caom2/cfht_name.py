@@ -209,7 +209,9 @@ class CFHTName(mc.StorageName):
         result = False
         if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',
                              'w', 'x', 'y']
-                or self.simple_by_suffix or self.is_master_cal):
+                or self.simple_by_suffix or self.is_master_cal or
+                (self._instrument is md.Inst.SPIROU and self._suffix in
+                 ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v'])):
             result = True
         return result
 
@@ -218,7 +220,10 @@ class CFHTName(mc.StorageName):
         return ((self._suffix in ['p', 's'] and
                  self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME,
                                       md.Inst.WIRCAM]) or
-                (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS))
+                (self._suffix == 'i' and
+                 self._instrument is md.Inst.ESPADONS) or
+                (self._suffix in ['e', 'p', 's', 't', 'v'] and
+                 self._instrument is md.Inst.SPIROU))
 
     @property
     def suffix(self):
