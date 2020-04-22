@@ -1753,6 +1753,47 @@
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>
+    <caom2:plane caom2:id="0895b067-d5cd-4c13-91e9-cf4393791a8b" caom2:lastModified="2019-11-09T15:24:30.756" caom2:maxLastModified="2020-01-28T01:23:32.524" caom2:metaChecksum="md5:b68c757c1f410bde98ca3cd367a944d2" caom2:accMetaChecksum="md5:f7dfb2630fb70c4a1100a28b3ccbcc9b" caom2:metaProducer="cfht2caom2/0.1.0">
+      <caom2:productID>2401734s</caom2:productID>
+      <caom2:metaRelease>2024-01-31T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2024-01-31T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>spectrum</caom2:dataProductType>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:provenance>
+        <caom2:name>DRS</caom2:name>
+        <caom2:version>SPIROU_0.5.000</caom2:version>
+        <caom2:project>STANDARD PIPELINE</caom2:project>
+        <caom2:producer>CFHT</caom2:producer>
+        <caom2:runID>18Ap01</caom2:runID>
+        <caom2:reference>https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_pipeline.php</caom2:reference>
+        <caom2:inputs>
+          <caom2:planeURI>caom:CFHT/2401734/2401734o</caom2:planeURI>
+        </caom2:inputs>
+      </caom2:provenance>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="a0fbb4a2-773b-41d5-8739-880f4a2eb622" caom2:lastModified="2019-11-09T15:24:30.756" caom2:maxLastModified="2019-11-09T15:24:30.756" caom2:metaChecksum="md5:df4430a8de7f5e5c402324c8fbf336eb" caom2:accMetaChecksum="md5:c191c64a1a81b1e969a6795d98015d84" caom2:metaProducer="cfht2caom2/0.1.0">
+          <caom2:uri>ad:CFHT/2401734s.fits</caom2:uri>
+          <caom2:productType>science</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentChecksum>md5:e6268a7bfe3f2c427cfb965675aaa792</caom2:contentChecksum>
+          <caom2:parts>
+            <caom2:part caom2:id="5dd61ad4-90e6-4daa-b785-84f7d12f6362" caom2:lastModified="2019-11-09T15:24:30.756" caom2:maxLastModified="2019-11-09T15:24:30.756" caom2:metaChecksum="md5:e56fb83777eeb9c3e442b4ba0b4ba849" caom2:accMetaChecksum="md5:c3826008fa7fac692c7c6cbf834f4fd1">
+              <caom2:name>0</caom2:name>
+              <caom2:chunks/>
+            </caom2:part>
+            <caom2:part caom2:id="0df7384e-0ed6-4b7e-a555-ab60dc66a781" caom2:lastModified="2019-11-09T15:24:30.756" caom2:maxLastModified="2019-11-09T15:24:30.756" caom2:metaChecksum="md5:8951253b2c85cd9c64ec3db386ef1617" caom2:accMetaChecksum="md5:a3fa80d365c33a07bf31b306d980c0ab">
+              <caom2:name>UniformVelocity</caom2:name>
+              <caom2:chunks/>
+            </caom2:part>
+            <caom2:part caom2:id="8baebeda-1c1a-46f9-a526-176c172e45c4" caom2:lastModified="2019-11-09T15:24:30.756" caom2:maxLastModified="2019-11-09T15:24:30.756" caom2:metaChecksum="md5:f2d460e86784d337b34333395ccd82be" caom2:accMetaChecksum="md5:720d0e0862f02b279b859b383fa85db5">
+              <caom2:name>UniformWavelength</caom2:name>
+              <caom2:chunks/>
+            </caom2:part>
+          </caom2:parts>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
     <caom2:plane caom2:id="4e8a2fb3-5119-4b9d-9f96-58700dfa5086" caom2:lastModified="2019-11-10T01:40:48.785" caom2:maxLastModified="2019-11-10T01:40:48.785" caom2:metaChecksum="md5:780ffabe269d07dddb165f56efcead11" caom2:accMetaChecksum="md5:3df141c43985c6676376b71c9fe0a6f4" caom2:metaProducer="cfht2caom2/0.1.0">
       <caom2:productID>2401734t</caom2:productID>
       <caom2:metaRelease>2024-01-31T00:00:00.000</caom2:metaRelease>

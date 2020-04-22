@@ -1743,10 +1743,16 @@ def update(observation, **kwargs):
                     elif instrument is md.Inst.SPIROU:
                         _update_position_spirou(
                             chunk, headers[idx], observation.observation_id)
+
+                        if cfht_name.suffix == 's':
+                            part.chunks = TypedList(Chunk,)
                         # stricter WCS validation
                         chunk.naxis = None
                         if chunk.energy is not None:
                             chunk.energy_axis = None
+                            if observation.type == 'DARK':
+                                # caom2IngestSpirou.py, l514
+                                chunk.energy = None
                         if chunk.time is not None:
                             chunk.time_axis = None
                         if chunk.position is not None:
