@@ -121,6 +121,8 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, test_name):
     extension = '.fz'
     if instrument is md.Inst.ESPADONS:
         extension = '.gz'
+    elif instrument is md.Inst.SPIROU:
+        extension = ''
     file_name = basename.replace('.header', extension)
     cfht_name = CFHTName(file_name=file_name,
                          instrument=instrument)
@@ -194,7 +196,8 @@ def _identify_inst_mock(uri):
                                   '02Bm05.scatter.g.36.00', '1257365o',
                                   '1257365p'],
               md.Inst.SITELLE: ['2384125'],
-              md.Inst.ESPADONS: ['2460606', '769448b']}
+              md.Inst.ESPADONS: ['2460606', '769448b'],
+              md.Inst.SPIROU: ['2401727a', '2401712f', '2401728c', '2401734']}
     result = None
     for key, value in lookup.items():
         for entry in value:

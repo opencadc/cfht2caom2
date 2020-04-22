@@ -1,0 +1,577 @@
+SIMPLE  =                    T / Standard FITS                                  
+BITPIX  =                   16 / Bits per pixel (not applicable)                
+NAXIS   =                    0 / No image data with primary header              
+EXTEND  =                    T / File contains extensions                       
+NEXTEND =                    4 / Number of extensions                           
+FILENAME= '2401728c.fits'      / Base filename at acquisition                   
+PATHNAME= '/data/sessions/spirou/engineering/AT5/AT5-12/2018-04-24_16-09-27' / O
+DATE    = '2018-04-25T03:20:49' / UTC Date of file creation                     
+HSTTIME = 'Tue Apr 24 17:20:49 HST 2018' / Local time in Hawaii                 
+IMAGESWV= 'DetCom-SPIRou v1.02 svn 12177 (compiled Apr 08 2018)' / Image creatio
+RAMPSWV = 'fitspipe v2.08 (Apr 06 2018)' / RAMP fitting software version        
+OBSTYPE = 'COMPARISON'         / Observation / Exposure type                    
+EXPTYPE = 'COMPARISON'         / See OBSTYPE                                    
+EXPREQ  =              601.767 / [sec] Requested integration time               
+EXPTIME =              601.767 / [sec] Integration time                         
+INTTIME =              601.767 / See EXPTIME                                    
+DARKTIME=              607.339 / [sec] Dark current time                        
+FRMTIME =              5.57192 / [sec] Frame time, cadence of IR reads          
+NRESETS =                    1 / Number of resets before integration            
+NREADS  =                  109 / Number of reads in ramp sequence               
+HXRGVER = 'v5.0 Engineering'   /HXRG IDL software version number                
+FASTMODE=                    0 /SlowMode=0,FasMode=1'                           
+NEXTRAP =                    0 /Number of extral pixels per row                 
+NEXTRAL =                    0 /Number of extral line per frame                 
+REFOUT  =                    0 /Reference output.0 disabled; 1 enabled with ref 
+REFPIXEL=                    0 /Interleave reference pixel mode. 0 disabled; 1 e
+ASIC_NUM= '91      '           /ASIC serial number                              
+SCA_ID  = '18860   '           /SCA number                                      
+MUXTYPE =                    4 /1- H1RG; 2- H2RG; 4- H4RG                       
+NOUTPUTS=                   32 /Number of detector outputs                      
+NADCS   =                    1 /Number of averaged ADCs used per output         
+PDDECTOR=                    0 /Power down detector                             
+CLKOFF  =                    0 /Turn off clocks                                 
+WARMTST =                    0 /0- cold test; 1- warm test                      
+CLOCKING=                    1 /0- normal clocking; 1- enhanced horizonal clocki
+GLBRESET=                    0 /0- pixel-by-pixel or line-by-line rest; 1- globa
+FRMODE  =                    0 /0- full frame mode; 1- window mode              
+CAMLINK =                    0 /If Camlink readout enabled (1 enabled)          
+EXPMODE =                    0 /0- Ramp mode; 1- Fowler sampling mode           
+MCLK    =              10.0000 /MHz. Master Clock.                              
+ACQTYPE =                    2 /Dark Current Ramp Sequence(2)                   
+DATAMODE=                    5 /Parallel read, 8 bit bus, 16 bit data           
+DATLEVEL=                    1 /0- CMO; 1- LVDS                                 
+ASICGAIN=                   12 /12 (18dB large Cin)                             
+NOMGAIN =                   12 /12 (18dB large Cin)                             
+AMPRESET=                    0 /0- Reset once per frame; 1- Reset once per row  
+KTCREMOV=                    0 /0- No kTC Removal; 1- kTC Removal               
+SRCCUR  =                    0 /0-No source current to inp ; 1 - Source current 
+AMPINPUT=                    1 /0- VREFMAIN as ref; 1- InPCommon as ref; 2- user
+SATURATE=                60000 / Saturation value (ADU)                         
+GAIN    =                0.999 / Amplifier gain (electrons/ADU)                 
+RDNOISE =                 10.9 / Read noise (electrons)                         
+INSTRUME= 'SPIRou  '           / Instrument Name                                
+CMMTOBS = 'N/A     '                                                            
+CMMTSEQ = 'N/A     '                                                            
+OBJECT  = 'm1      '                                                            
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Engineering'                                                         
+RUNID   = '18AE90  '                                                            
+OBJMAG  =                  0.0 / Target magnitude                               
+QRUNID  = '17AQ29  '           / queue run id                                   
+QOBSERVE= 'Callie  '           / queue observer                                 
+QCOORD  = 'Todd    '           / queue coordinator                              
+REL_DATE= '2018-04-25T03:20:49 '  /ueue release date                            
+MET_DATE= '2018-04-25T03:20:49 '  /ueue metadata release date                   
+SNRGOAL =                  8.0 / Goal SNR per pixel per frame                   
+OBJTEMP =                  0.0 / Object effective temperature                   
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'manual  '           / Telescope Control System status                
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+DATE-OBS= '2018-04-25'         / Date at start of observation (UTC)             
+UTIME   = '3:10:23.44'         / Time at start of observation (UTC)             
+UTC-OBS = '3:10:23.44'         / Time at start of observation (UTC)             
+MJDATE  =        58233.1322157 / Modified Julian Date at start of observation   
+MJD-OBS =        58233.1322157 / Modified Julian Date at start of observation   
+SIDTIME = '7:00:53.32'         / Sidereal time at start of observation          
+LST-OBS = '7:00:53.32'         / Sidereal time at start of exposure             
+DATEEND = '2018-04-25'         / Date at end of observation (UTC)               
+UTCEND  = '3:20:51.81'         / Time at end of observation (UTC)               
+MJDEND  =        58233.1394885 / Modified Julian Date at end of observation     
+LSTEND  = '7:11:23.40'         / Sidereal time at end of exposure               
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+RA      = '7:00:52.44'         / Telescope right ascension                      
+DEC     = '19:45:31.3'         / Telescope declination                          
+HA      = '0:00:00.88'         / Telescope hour angle at start of exposure      
+HAEND   = '0:10:30.96'         / Telescope hour angle at end of exposure        
+INSTZRA =                 0.00 / Instrument zero for RA in arc seconds          
+INSTZDEC=                 0.00 / Instrument zero for Dec in arc seconds         
+RA_DEG  =           105.218500 / Telescope right ascension in degrees           
+DEC_DEG =            19.758694 / Telescope declination in degrees               
+OBJNAME = 'Null    '           / Target name                                    
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '0:00:00.00'         / Target right ascension                         
+OBJDEC  = '0:00:00.0'          / Target declination                             
+OBJRAPM =                 0.00 / Target right ascension proper motion in as/yr  
+OBJDECPM=                 0.00 / Target declination proper motion in as/yr      
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'Cass    '           / TCS guider name                                
+GUIEQUIN=              2018.31 / TCS guider equinox                             
+GUIRADEC= 'GAPPT   '           / TCS guider system for equinox                  
+GUIRA   = '0:00:00.00'         / TCS guider right ascension                     
+GUIDEC  = '0:00:00.0'          / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = 'Null    '           / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =             -120.000 / Telescope bonnette guide probe X position      
+YPROBE  =             -120.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =              413.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.000 / Airmass at start of observation                
+TELALT  =              89.9254 / Telescope altitude at start of observation, deg
+TELAZ   =             180.2198 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                359.9 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=               154.40 / Angle from object to moon at start in degrees  
+MOONPHAS=                 0.77 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'True    '           / Moon up? True or False                         
+MOONALT =                39.40 / Moon altitude at start in degrees              
+MOONAZ  =                91.00 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+FOCUSPOS=                11800 / Telescope focus encoder readout in microns     
+TELFOCUS=                11800 / Telescope focus encoder readout in microns     
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= '        '           / TCS GPS read out in BCD                        
+TCSGPSTM=          -9999.90000 / TCS GPS clock time in decimal hours            
+TCSRBUSS= '        '           / TCS RBUSS clock time                           
+TCSEPICS= '        '           / TCS EPICS clock time                           
+TCSAMODE= 'U       '           / TCS acquire mode - T/O/G/g/P for t/o/g coords  
+TCSMJD  =        -9999.9000000 / TCS MJD                                        
+TCSLST  =          -9999.90000 / TCS LST in decimal hours                       
+TCSAPHA =          -9999.90000 / TCS apparent hour angle in degrees             
+TCSAPDEC=          -9999.90000 / TCS apparent declination in degrees            
+TCSOBHA =          -9999.90000 / TCS observed hour angle in degrees             
+TCSOBDEC=          -9999.90000 / TCS observed declination in degrees            
+TCSENHA =                -9999 / TCS hour angle absolute encoder in bits        
+TCSENDEC=                -9999 / TCS declination absolute encoder in bits       
+TCSEDHA =          -9999.90000 / TCS hour angle absolute encoder in degrees     
+TCSEDDEC=          -9999.90000 / TCS declination absolute encoder in degrees    
+TCSINHA =                -9999 / TCS hour angle incremental encoder in bits     
+TCSINDEC=                -9999 / TCS declination incremental encoder in bits    
+TCSSEHA =             -9999.90 / TCS hour angle servo error in arcsec           
+TCSSEDEC=             -9999.90 / TCS declination servo error in arcsec          
+TCSGEHA =             -9999.90 / TCS hour angle guider error in arcsec          
+TCSGEDEC=             -9999.90 / TCS declination guider error in arcsec         
+TCSPMHA =            -9999.900 / TCS hour angle pointing model output in arcsec 
+TCSPMDEC=            -9999.900 / TCS declination pointing model output in arcsec
+TCSAMHA =            -9999.900 / TCS hour angle encoder model in arcsec         
+TCSAMDEC=            -9999.900 / TCS declination encoder model in arcsec        
+TCSVMHA =            -9999.900 / TCS hour angle virtual encoder model in arcsec 
+TCSVMDEC=            -9999.900 / TCS declination virtual encoder model in arcsec
+TCSCREEP=            -9999.900 / TCS declination creep model in arcsec          
+TCSMVRA =           -9999.9000 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=           -9999.9000 / TCS declination acquisition move in arcsec     
+TCSMVX  =            -9999.900 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =            -9999.900 / TCS secondary guider acquisition y move in mm  
+SB_ADC_S= 'OFF     '           / SPIRou ADC tracking state (on/off)             
+SBADC1_P=                314.0 / SPIRou ADC 1 angle at start of exp (degrees)   
+SBADC2_P=                314.0 / SPIRou ADC 2 angle at start of exp (degrees)   
+SBCALI_P= 'P4      '           / SPIRou calibwh predefined position or angle    
+SBDENS_P=                  0.0 / SPIRou guiding density at start of exp         
+SBRHB1_P= 'P16     '           / SPIRou rhomb 1 predefined position or angle    
+SBRHB2_P= 'P2      '           / SPIRou rhomb 2 predefined position or angle    
+SBETEM_P= 'P1      '           / SPIRou eecalibpk predefined position or angle  
+SB_INJ_T=                 8.35 / SPIRou tinject temp at start of exp (deg C)    
+SB_POL_T=                 6.74 / SPIRou tpolar temp at start of exp (deg C)     
+SB_CS1_T=             -9999.00 / SPIRou tcoldstop 1 temp at start of exp (deg C)
+SB_CS2_T=             -9999.00 / SPIRou tcoldstop 2 temp at start of exp (deg C)
+SB_CB1_T=                12.45 / SPIRou tcabinet 1 temp at start of exp (deg C) 
+SB_CB2_T=                15.76 / SPIRou tcabinet 2 temp at start of exp (deg C) 
+SBIAVL1S= 'OFF     '           / SPIRou injection LED status (on/off)           
+SBIAVL2S= 'OFF     '           / SPIRou fiber LED status (on/off)               
+SBETEL_S= 'OFF     '           / SPIRou end to end halogen light status (on/off)
+SB_CSC_S= 'OFF     '           / SPIRou coldstop cell status (On / Off)         
+SEADC1_P=                314.0 / SPIRou ADC 1 angle at end of exp (degrees)     
+SEADC2_P=                314.0 / SPIRou ADC 2 angle at end of exp (degrees)     
+SEDENS_P=                  0.0 / SPIRou guiding density at end of exp           
+SE_INJ_T=                 8.34 / SPIRou tinject temp at end of exp (deg C)      
+SE_POL_T=                 6.76 / SPIRou tpolar temp at end of exp (deg C)       
+SE_CS1_T=             -9999.00 / SPIRou tcoldstop 1 temp at end of exp (deg C)  
+SE_CS2_T=             -9999.00 / SPIRou tcoldstop 2 temp at end of exp (deg C)  
+SE_CB1_T=                11.90 / SPIRou tcabinet 1 temp at end of exp (deg C)   
+SE_CB2_T=                15.03 / SPIRou tcabinet 2 temp at end of exp (deg C)   
+SBCREF_P= 'pos_pk  '           / SPIRou Reference Fiber Position (predefined)   
+SBCCAS_P= 'pos_hc1 '           / SPIRou Cassegrain Fiber Position (predefined)  
+SBCDEN_P=                  3.3 / SPIRou Calib-Reference density (0 to 3.3)      
+SBAGIT_S= 'ON      '           / SPIRou fiber agitator state (On, Off)          
+SBCMIR_P= 'cold    '           / SPIRou Mirror Position (predefined)            
+SBCLHC1S= 'ON      '           / SPIRou Hollow Cathod Lamp#1 Status             
+SBCLHC1W= 'READY   '           / SPIRou Hollow Cathod Lamp#1 Warming State      
+SBCLHC1C=                  8.2 / SPIRou Hollow Cathod Lamp#1 Current (mA)       
+SBCLHC2S= 'OFF     '           / SPIRou Hollow Cathod Lamp#2 Status             
+SBCLHC2W= 'OFF     '           / SPIRou Hollow Cathod Lamp#2 Warming State      
+SBCLHC2C=                  0.0 / SPIRou Hollow Cathod Lamp#2 Current (mA)       
+SBCLWL_S= 'OFF     '           / SPIRou White Lamp Status (On, Off, Err)        
+SBCLWL_C=                  0.0 / SPIRou White Lamp Current (mA)                 
+SBWLSH_S= 'CLOSED  '           / SPIRou White Lamp Shutter State (open, closed) 
+SBCTEC_S= 'ON      '           / SPIRou ColdSource Status (On, Off, Err)        
+SBCTECCT=               -24.95 / SPIRou ColdSource Cold Face Temp (deg C)       
+SBCTECHT=                12.23 / SPIRou ColdSource Hot Face Temp (deg C)        
+SBCCPRIT=                11.04 / SPIRou Cold plate Reg Input Temp (deg C)       
+SBCCCU_T=                22.93 / SPIRou Control Unit Temperature (deg C)        
+SBCCPROT=                11.60 / SPIRou Cold plate Reg Output Temp (deg C)      
+SBCFBI_T=                11.21 / SPIRou Flux Balance Input Temp (deg C)         
+SBCWLS_T=                13.89 / SPIRou White Lamp slot Temp (deg C)            
+SBCLSUAT=                15.36 / SPIRou Lamps Selection Unit Ambient Temp (deg C
+SBCFPI_T=               23.978 / SPIRou Fabry Perot Internal Temp: FPBody(deg C)
+SBCFPE_T=               24.000 / SPIRou Fabry Perot External Temp: FPCase(deg C)
+SBCFPB_P=                0.174 / SPIRou Fabry Perot Internal Pressure (mbar)    
+SBCFPP_V=               76.000 / SPIRou Fabry Perot Heater Power (%)            
+SBCFPR_S= 'LOW     '           / SPIRou Fabry Perot Heater Range                
+SECTECCT=               -25.10 / SPIRou ColdSource Cold Face Temp (deg C)       
+SECTECHT=                12.35 / SPIRou ColdSource Hot Face Temp (deg C)        
+SECCPRIT=                10.94 / SPIRou Cold plate Regulation Input Temp (deg C)
+SECCCU_T=                22.80 / SPIRou Control Unit Temp (degree C)            
+SECCPROT=                11.60 / SPIRou Cold plate regulation output Temp (deg C
+SECFBI_T=                11.35 / SPIRou Flux Balance Input Temp (deg C)         
+SECWLS_T=                13.72 / SPIRou White Lamp slot Temp (deg C)            
+SECLHC1C=                  8.2 / SPIRou Hollow Cathod Lamp#1 Current (mA)       
+SECLHC2C=                  0.0 / SPIRou Hollow Cathod Lamp#2 Current (mA)       
+SECLWL_C=                  0.0 / SPIRou White Lamp Current (A)                  
+SECLSUAT=                13.72 / SPIRou Lamps Selection Unit Ambient Temp (deg C
+SECFPI_T=               23.978 / SPIRou Fabry Perot Internal Temp: FPBody (deg C
+SECFPE_T=               24.000 / SPIRou Fabry Perot External Temp: FPCase (deg C
+SECFPB_P=                0.174 / SPIRou Fabry Perot Internal Pressure (mbar)    
+SECFPP_V=               76.000 / SPIRou Fabry Perot Heater Power (%)            
+SECFPR_S= 'LOW     '           / SPIRou Fabry Perot Heater Range                
+SBVGA_CP=             0.000600 / SPIRou Vacuum A CG Pressure at start (Torr)    
+SBVGA_IP=             8.32E-07 / SPIRou Vacuum A IG Pressure at start (Torr)    
+SBVGB_CP=             0.000600 / SPIRou Vacuum B CG Pressure at start (Torr)    
+SBVGB_IP=             8.30E-07 / SPIRou Vacuum B IG Pressure at start (Torr)    
+SBMK00_T=             73.50008 / SPIRou MicroK Temp #00 at start (deg K)        
+SBMK01_T=             73.49980 / SPIRou MicroK Temp #01 at start (deg K)        
+SBMK02_T=             73.50022 / SPIRou MicroK Temp #02 at start (deg K)        
+SBMK03_T=             73.91862 / SPIRou MicroK Temp #03 at start (deg K)        
+SBMK04_T=             73.62778 / SPIRou MicroK Temp #04 at start (deg K)        
+SBMK05_T=             73.37900 / SPIRou MicroK Temp #05 at start (deg K)        
+SBMK06_T=             73.51700 / SPIRou MicroK Temp #06 at start (deg K)        
+SBMK07_T=             73.72911 / SPIRou MicroK Temp #07 at start (deg K)        
+SBLS000T=              84.7399 / SPIRou Lakeshore 0 Temp #00 at start (deg K)   
+SBLS001T=              79.2033 / SPIRou Lakeshore 0 Temp #01 at start (deg K)   
+SBLS002T=              79.5734 / SPIRou Lakeshore 0 Temp #02 at start (deg K)   
+SBLS003T=              78.6674 / SPIRou Lakeshore 0 Temp #03 at start (deg K)   
+SBLS004T=              67.8366 / SPIRou Lakeshore 0 Temp #04 at start (deg K)   
+SBLS005T=              45.0020 / SPIRou Lakeshore 0 Temp #05 at start (deg K)   
+SBLS006T=              44.9987 / SPIRou Lakeshore 0 Temp #06 at start (deg K)   
+SBLS007T=              56.8599 / SPIRou Lakeshore 0 Temp #07 at start (deg K)   
+SBLS008T=              81.6291 / SPIRou Lakeshore 0 Temp #08 at start (deg K)   
+SBLS009T=              77.0043 / SPIRou Lakeshore 0 Temp #09 at start (deg K)   
+SBLS010T=              85.2397 / SPIRou Lakeshore 0 Temp #10 at start (deg K)   
+SBLS011T=              86.4300 / SPIRou Lakeshore 0 Temp #11 at start (deg K)   
+SBLS100T=              74.4136 / SPIRou Lakeshore 1 Temp #00 at start (deg K)   
+SBLS101T=              74.4598 / SPIRou Lakeshore 1 Temp #01 at start (deg K)   
+SBLS102T=              74.5521 / SPIRou Lakeshore 1 Temp #02 at start (deg K)   
+SBLS103T=              74.7297 / SPIRou Lakeshore 1 Temp #03 at start (deg K)   
+SBLS104T=              74.5127 / SPIRou Lakeshore 1 Temp #04 at start (deg K)   
+SBLS105T=              74.3697 / SPIRou Lakeshore 1 Temp #05 at start (deg K)   
+SBLS106T=              74.3930 / SPIRou Lakeshore 1 Temp #06 at start (deg K)   
+SBLS107T=              74.5015 / SPIRou Lakeshore 1 Temp #07 at start (deg K)   
+SBLS108T=             270.7280 / SPIRou Lakeshore 1 Temp #08 at start (deg K)   
+SBLS109T=              90.0004 / SPIRou Lakeshore 1 Temp #09 at start (deg K)   
+SBLS110T=              80.0016 / SPIRou Lakeshore 1 Temp #10 at start (deg K)   
+SBLS111T=              85.6605 / SPIRou Lakeshore 1 Temp #11 at start (deg K)   
+SBL00I_T=              73.5001 / SPIRou Loop #0 Temp at start (deg K)           
+SBL00H_V=               24.531 / SPIRou Loop #0 Heater Output at start (%)      
+SBL01I_T=              73.4998 / SPIRou Loop #1 Temp at start (deg K)           
+SBL01H_V=               25.242 / SPIRou Loop #1 Heater Output at start (%)      
+SBL02I_T=              73.5002 / SPIRou Loop #2 Temp at start (deg K)           
+SBL02H_V=               22.726 / SPIRou Loop #2 Heater Output at start (%)      
+SBL03I_T=              77.0043 / SPIRou Loop #3 Temp at start (deg K)           
+SBL03H_V=                7.797 / SPIRou Loop #3 Heater Output at start (%)      
+SBL04I_T=              84.7399 / SPIRou Loop #4 Temp at start (deg K)           
+SBL04H_V=               14.315 / SPIRou Loop #4 Heater Output at start (%)      
+SBL05I_T=              79.2033 / SPIRou Loop #5 Temp at start (deg K)           
+SBL05H_V=               14.445 / SPIRou Loop #5 Heater Output at start (%)      
+SBL06I_T=              79.5734 / SPIRou Loop #6 Temp at start (deg K)           
+SBL06H_V=               14.316 / SPIRou Loop #6 Heater Output at start (%)      
+SBL07I_T=              78.6674 / SPIRou Loop #7 Temp at start (deg K)           
+SBL07H_V=               13.485 / SPIRou Loop #7 Heater Output at start (%)      
+SBL08I_T=              80.0016 / SPIRou Loop #8 Temp at start (deg K)           
+SBL08H_V=                1.101 / SPIRou Loop #8 Heater Output at start (%)      
+SBL09I_T=              90.0004 / SPIRou Loop #9 Temp at start (deg K)           
+SBL09H_V=                5.615 / SPIRou Loop #9 Heater Output at start (%)      
+SBL10I_T=              45.0020 / SPIRou Loop #10 Temp at start (deg K)          
+SBL10H_V=               18.860 / SPIRou Loop #10 Heater Output at start (%)     
+SBL11I_T=              44.9987 / SPIRou Loop #11 Temp at start (deg K)          
+SBL11H_V=               29.164 / SPIRou Loop #11 Heater Output at start (%)     
+SBL12I_T=              86.4300 / SPIRou Loop #12 Temp at start (deg K)          
+SBL12H_V=                5.140 / SPIRou Loop #12 Heater Output at start (%)     
+SBL13I_T=              85.2397 / SPIRou Loop #13 Temp at start (deg K)          
+SBL13H_V=                4.689 / SPIRou Loop #13 Heater Output at start (%)     
+SEVGA_CP=             0.000600 / SPIRou Vacuum A CG Pressure at end (Torr)      
+SEVGA_IP=             8.32E-07 / SPIRou Vacuum A IG Pressure at end (Torr)      
+SEVGB_CP=             0.000600 / SPIRou Vacuum B CG Pressure at end (Torr)      
+SEVGB_IP=             8.31E-07 / SPIRou Vacuum B IG Pressure at end (Torr)      
+SEMK00_T=             73.50010 / SPIRou MicroK Temp #00 at end (deg K)          
+SEMK01_T=             73.50011 / SPIRou MicroK Temp #01 at end (deg K)          
+SEMK02_T=             73.49970 / SPIRou MicroK Temp #02 at end (deg K)          
+SEMK03_T=             73.91829 / SPIRou MicroK Temp #03 at end (deg K)          
+SEMK04_T=             73.62777 / SPIRou MicroK Temp #04 at end (deg K)          
+SEMK05_T=             73.37877 / SPIRou MicroK Temp #05 at end (deg K)          
+SEMK06_T=             73.51706 / SPIRou MicroK Temp #06 at end (deg K)          
+SEMK07_T=             73.72874 / SPIRou MicroK Temp #07 at end (deg K)          
+SELS000T=              84.7399 / SPIRou Lakeshore 0 Temp #00 at end (deg K)     
+SELS001T=              79.2035 / SPIRou Lakeshore 0 Temp #01 at end (deg K)     
+SELS002T=              79.5717 / SPIRou Lakeshore 0 Temp #02 at end (deg K)     
+SELS003T=              78.6668 / SPIRou Lakeshore 0 Temp #03 at end (deg K)     
+SELS004T=              67.8398 / SPIRou Lakeshore 0 Temp #04 at end (deg K)     
+SELS005T=              45.0012 / SPIRou Lakeshore 0 Temp #05 at end (deg K)     
+SELS006T=              44.9970 / SPIRou Lakeshore 0 Temp #06 at end (deg K)     
+SELS007T=              56.8613 / SPIRou Lakeshore 0 Temp #07 at end (deg K)     
+SELS008T=              81.6297 / SPIRou Lakeshore 0 Temp #08 at end (deg K)     
+SELS009T=              77.0012 / SPIRou Lakeshore 0 Temp #09 at end (deg K)     
+SELS010T=              85.2386 / SPIRou Lakeshore 0 Temp #10 at end (deg K)     
+SELS011T=              86.4348 / SPIRou Lakeshore 0 Temp #11 at end (deg K)     
+SELS100T=              74.4144 / SPIRou Lakeshore 1 Temp #00 at end (deg K)     
+SELS101T=              74.4612 / SPIRou Lakeshore 1 Temp #01 at end (deg K)     
+SELS102T=              74.5501 / SPIRou Lakeshore 1 Temp #02 at end (deg K)     
+SELS103T=              74.7302 / SPIRou Lakeshore 1 Temp #03 at end (deg K)     
+SELS104T=              74.5136 / SPIRou Lakeshore 1 Temp #04 at end (deg K)     
+SELS105T=              74.3707 / SPIRou Lakeshore 1 Temp #05 at end (deg K)     
+SELS106T=              74.3953 / SPIRou Lakeshore 1 Temp #06 at end (deg K)     
+SELS107T=              74.5011 / SPIRou Lakeshore 1 Temp #07 at end (deg K)     
+SELS108T=             270.7240 / SPIRou Lakeshore 1 Temp #08 at end (deg K)     
+SELS109T=              89.9977 / SPIRou Lakeshore 1 Temp #09 at end (deg K)     
+SELS110T=              79.9979 / SPIRou Lakeshore 1 Temp #10 at end (deg K)     
+SELS111T=              85.6701 / SPIRou Lakeshore 1 Temp #11 at end (deg K)     
+SEL00I_T=              73.5001 / SPIRou Loop #0 Temp at end (deg K)             
+SEL00H_V=               24.538 / SPIRou Loop #0 Heater Output at end (%)        
+SEL01I_T=              73.5001 / SPIRou Loop #1 Temp at end (deg K)             
+SEL01H_V=               25.267 / SPIRou Loop #1 Heater Output at end (%)        
+SEL02I_T=              73.4997 / SPIRou Loop #2 Temp at end (deg K)             
+SEL02H_V=               22.770 / SPIRou Loop #2 Heater Output at end (%)        
+SEL03I_T=              77.0012 / SPIRou Loop #3 Temp at end (deg K)             
+SEL03H_V=                7.870 / SPIRou Loop #3 Heater Output at end (%)        
+SEL04I_T=              84.7399 / SPIRou Loop #4 Temp at end (deg K)             
+SEL04H_V=               14.316 / SPIRou Loop #4 Heater Output at end (%)        
+SEL05I_T=              79.2035 / SPIRou Loop #5 Temp at end (deg K)             
+SEL05H_V=               14.409 / SPIRou Loop #5 Heater Output at end (%)        
+SEL06I_T=              79.5717 / SPIRou Loop #6 Temp at end (deg K)             
+SEL06H_V=               14.629 / SPIRou Loop #6 Heater Output at end (%)        
+SEL07I_T=              78.6668 / SPIRou Loop #7 Temp at end (deg K)             
+SEL07H_V=               13.589 / SPIRou Loop #7 Heater Output at end (%)        
+SEL08I_T=              79.9979 / SPIRou Loop #8 Temp at end (deg K)             
+SEL08H_V=                1.109 / SPIRou Loop #8 Heater Output at end (%)        
+SEL09I_T=              89.9977 / SPIRou Loop #9 Temp at end (deg K)             
+SEL09H_V=                5.616 / SPIRou Loop #9 Heater Output at end (%)        
+SEL10I_T=              45.0012 / SPIRou Loop #10 Temp at end (deg K)            
+SEL10H_V=               18.853 / SPIRou Loop #10 Heater Output at end (%)       
+SEL11I_T=              44.9970 / SPIRou Loop #11 Temp at end (deg K)            
+SEL11H_V=               29.320 / SPIRou Loop #11 Heater Output at end (%)       
+SEL12I_T=              86.4348 / SPIRou Loop #12 Temp at end (deg K)            
+SEL12H_V=                4.621 / SPIRou Loop #12 Heater Output at end (%)       
+SEL13I_T=              85.2386 / SPIRou Loop #13 Temp at end (deg K)            
+SEL13H_V=                4.799 / SPIRou Loop #13 Heater Output at end (%)       
+DOMESHUT= 'CLOSED  '           / Dome shutter state (OPEN/CLOSED)               
+MIRRCOV = 'CLOSED  '           / Mirror cover state (OPEN/CLOSED)               
+WINDSCR =                    0 / Windscreen elevation in degrees                
+DOMELOUV= 'Null    '           / Dome louver state (OPEN/CLOSED)                
+VENTMODE= 'MANUAL  '           / Dome venting control mode                      
+VENTL1  = 'UNKNOWN:23:0:0'     / Dome vent L1 door and vane configuration       
+VENTL2  = 'UNKNOWN:0:0:0'      / Dome vent L2 door and vane configuration       
+VENTL3  = 'UNKNOWN:0:0:0'      / Dome vent L3 door and vane configuration       
+VENTL4  = 'UNKNOWN:0:0:0'      / Dome vent L4 door and vane configuration       
+VENTL5  = 'UNKNOWN:0:0:0'      / Dome vent L5 door and vane configuration       
+VENTL6  = 'UNKNOWN:0:0:0'      / Dome vent L6 door and vane configuration       
+VENTR1  = 'UNKNOWN:0:0:0'      / Dome vent R1 door and vane configuration       
+VENTR2  = 'UNKNOWN:0:0:0'      / Dome vent R2 door and vane configuration       
+VENTR3  = 'UNKNOWN:0:0:11'     / Dome vent R3 door and vane configuration       
+VENTR4  = 'UNKNOWN:0:0:0'      / Dome vent R4 door and vane configuration       
+VENTR5  = 'UNKNOWN:0:0:0'      / Dome vent R5 door and vane configuration       
+VENTR6  = 'UNKNOWN:0:0:0'      / Dome vent R6 door and vane configuration       
+TESPMIRE=                -1.10 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 3.11 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 3.01 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 4.10 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=               851.29 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 4.00 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=             -9999.90 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=               855.06 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 5.50 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 5.28 / 06 temp, air, top ring west deg C              
+TEANRLSB=                12.16 / 19 temp, air, north rail support beam deg C    
+TESHRSET=                16.69 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 5.01 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 4.68 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 5.38 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 4.91 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 5.06 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 4.52 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                 7.20 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                 6.40 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=               619.60 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 4.79 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 4.50 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 4.83 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                 4.55 / 61 temp, surface, floor above control room degC
+TESPIERN=                 6.40 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 4.90 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 5.20 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 5.47 / 86 temp, air, weather tower deg C              
+WINDSPED=                 7.18 / 84 wind speed, weather tower knots             
+WINDDIR =               283.68 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                31.10 / 87 relative humidity, weather tower %          
+PRESSURE=               617.30 / 31 barometric pressure, control room mb        
+DDSEEMEN=             -9999.90 / Dome DIMM mean seeing, arc seconds             
+DDSEEMED=             -9999.90 / Dome DIMM median seeing, arc seconds           
+DDSEEMOD=             -9999.90 / Dome DIMM mode seeing, arc seconds             
+DDSEESTD=             -9999.90 / Dome DIMM seeing deviation, arc seconds        
+WMSEEMEN=             -9999.90 / Weather tower MASS mean seeing, arc seconds    
+WMSEEMED=             -9999.90 / Weather tower MASS median seeing, arc seconds  
+WMSEEMOD=             -9999.90 / Weather tower MASS mode seeing, arc seconds    
+WMSEESTD=             -9999.90 / Weather tower MASS seeing deviation, arc second
+WDSEEMEN=             -9999.90 / Weather tower DIMM mean seeing, arc seconds    
+WDSEEMED=             -9999.90 / Weather tower DIMM median seeing, arc seconds  
+WDSEEMOD=             -9999.90 / Weather tower DIMM mode seeing, arc seconds    
+WDSEESTD=             -9999.90 / Weather tower DIMM seeing deviation, arc second
+SPOZPMEN=             -9999.90 / SkyProbe (orig) mean absorption, magnitude     
+SPOZPMED=             -9999.90 / SkyProbe (orig) median absorption, magnitude   
+SPOZPMOD=             -9999.90 / SkyProbe (orig) mode absorption, magnitude     
+SPOZPSTD=             -9999.90 / SkyProbe (orig) absorption deviation, magnitude
+EXPNUM  =              2401728 / CFHT odometer number                           
+OBSID   =              2401728 / See EXPNUM                                     
+CMPLTEXP=                    1                                                  
+NEXP    =                    1                                                  
+CRUNID  = '18Ap01  '           / Camera run ID                                  
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             
+XTENSION= 'IMAGE   '                                                            
+BITPIX  =                  -32 / Bits per pixel                                 
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 4096 / Number of pixel columns                        
+NAXIS2  =                 4096 / Number of pixel rows                           
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+EXTNAME = 'slope   '           / Extension name                                 
+END                                                                             
+XTENSION= 'IMAGE   '                                                            
+BITPIX  =                  -32 / Bits per pixel                                 
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 4096 / Number of pixel columns                        
+NAXIS2  =                 4096 / Number of pixel rows                           
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+EXTNAME = 'intercept'          / Extension name                                 
+END                                                                             
+XTENSION= 'IMAGE   '                                                            
+BITPIX  =                  -32 / Bits per pixel                                 
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 4096 / Number of pixel columns                        
+NAXIS2  =                 4096 / Number of pixel rows                           
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+EXTNAME = 'errslope'           / Extension name                                 
+END                                                                             
+XTENSION= 'IMAGE   '                                                            
+BITPIX  =                   16 / Bits per pixel                                 
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 4096 / Number of pixel columns                        
+NAXIS2  =                 4096 / Number of pixel rows                           
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+BZERO   =                  0.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+EXTNAME = 'count   '           / Extension name                                 
+END                                                                             

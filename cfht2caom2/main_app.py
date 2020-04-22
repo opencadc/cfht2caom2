@@ -222,6 +222,10 @@ def get_calibration_level(params):
     return result
 
 
+def get_dec_deg_from_0th_header(header):
+    return header.get('DEC_DEG')
+
+
 def get_energy_ctype(header):
     result = None
     if _has_energy(header):
@@ -507,7 +511,8 @@ def get_wircam_obs_type(params):
 def get_plane_data_product_type(header):
     instrument = _get_instrument(header)
     result = DataProductType.IMAGE
-    if instrument is md.Inst.ESPADONS:
+    # caom2spirou.default
+    if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
         result = DataProductType.SPECTRUM
     return result
 
@@ -562,6 +567,14 @@ def get_plane_data_release(header):
                     rel_year += 1
                     result = f'{rel_year}-02-28T00:00:00'
     return result
+
+
+def get_position_coordsys_from_0th_header(header):
+    return header.get('RADECSYS')
+
+
+def get_position_equinox_from_0th_header(header):
+    return header.get('EQUINOX')
 
 
 def get_polarization_function_val(header):
@@ -782,6 +795,10 @@ def get_espadons_provenance_version(header):
     return result
 
 
+def get_ra_deg_from_0th_header(header):
+    return header.get('RA_DEG')
+
+
 def get_target_position_cval1(header):
     ra, ignore_dec = _get_ra_dec(header)
     if ra is None:
@@ -884,6 +901,39 @@ def get_time_refcoord_delta_simple(params):
         # units are days for raw retrieval values
         exp_time = exp_time / 86400.0
     return exp_time
+
+
+def get_spirou_provenance_name(header):
+    result = None
+    temp = header.get('RAMPSWV')
+    if temp is not None:
+        result = temp.split(' v')[0]
+    return result
+
+
+def get_spirou_provenance_version(header):
+    result = None
+    temp = header.get('RAMPSWV')
+    if temp is not None:
+        result = temp.split(' v')[1]
+    return result
+
+
+def get_spirou_time_refcoord_delta(params):
+    # caom2IngestSpirou.py, l530+
+    header, suffix, uri = _decompose_params(params)
+    result = None
+    if suffix == 'r':
+        temp = header.get('FRMTIME')
+    elif suffix in ['e', 's', 't']:
+        temp = header.get('EXPTIME')
+    else:
+        temp = header.get('DARKTIME')
+    if temp is None:
+        logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
+    else:
+        result = temp / (24.0 * 3600.0)
+    return result
 
 
 def get_time_refcoord_val_derived(header):
@@ -1216,6 +1266,8 @@ def accumulate_bp(bp, uri, instrument):
         accumulate_mega_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.SITELLE:
         accumulate_sitelle_bp(bp, uri, cfht_name)
+    elif instrument is md.Inst.SPIROU:
+        accumulate_spirou_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.WIRCAM:
         accumulate_wircam_bp(bp, uri, cfht_name)
 
@@ -1320,6 +1372,73 @@ def accumulate_sitelle_bp(bp, uri, cfht_name):
            '_get_mjd_start(header)')
 
     logging.debug('End accumulate_sitelle_bp.')
+
+
+def accumulate_spirou_bp(bp, uri, cfht_name):
+    """Configure the SPIRou-specific ObsBlueprint at the CAOM model
+    Observation level.
+    """
+    if cfht_name.suffix == 'r':
+        pass
+    elif cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
+        bp.set('Plane.provenance.name', 'get_spirou_provenance_name(header)')
+        bp.set('Plane.provenance.reference',
+               'http://www.cfht.hawaii.edu/Instruments/SPIRou/')
+        bp.set('Plane.provenance.version',
+               'get_spirou_provenance_version(header)')
+    else:
+        bp.set('Plane.provenance.name', 'DRS')
+        bp.set('Plane.provenance.reference',
+               'https://www.cfht.hawaii.edu/Instruments/SPIRou/'
+               'SPIRou_pipeline.php')
+        bp.clear('Plane.provenance.version')
+        bp.add_fits_attribute('Plane.provenance.version', 'VERSION')
+
+    # from caom2IngestSpirou.py, l654
+    # CW - Do energy stuff for raw and calibrated data
+    # Initial numbers to be updated once have some reduced spectra
+    # This was based on 50 orders of 4000 pix each covering 0.98 to 2.35
+    # microns. New numbers based on reduced spectra 0.955 to 2.515 microns
+    # TODO - should update old ones some time
+    # naxis6 = 1
+    # crpix6 = 0.5
+    # crval6 = 955.0
+    # cdelt6 = 1560.0
+    #
+    # other values from caom2spirou.default
+    bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
+    bp.set('Chunk.energy.axis.axis.cunit', 'nm')
+    bp.set('Chunk.energy.axis.function.delta', 1560.0)
+    bp.set('Chunk.energy.axis.function.naxis', 1)
+    bp.set('Chunk.energy.axis.function.refCoord.pix', 0.5)
+    bp.set('Chunk.energy.axis.function.refCoord.val', 955.0)
+    bp.set('Chunk.energy.axis.error.rnder', 0.001)
+    bp.set('Chunk.energy.axis.error.syser', 0.001)
+    bp.set('Chunk.energy.resolvingPower', 73000.0)
+
+    bp.set('Chunk.time.axis.function.delta',
+           'get_spirou_time_refcoord_delta(params)')
+
+    # values from caom2spirou.default
+    bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
+    bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
+    bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
+    bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
+    bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
+    bp.set('Chunk.position.axis.function.refCoord.coord1.val',
+           'get_ra_deg_from_0th_header(header)')
+    bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
+    bp.set('Chunk.position.axis.function.refCoord.coord2.val',
+           'get_dec_deg_from_0th_header(header)')
+    bp.set('Chunk.position.axis.function.cd11', -0.00035833)
+    bp.set('Chunk.position.axis.function.cd12', 0.0)
+    bp.set('Chunk.position.axis.function.cd21', 0.0)
+    bp.set('Chunk.position.axis.function.cd22', 0.00035833)
+
+    bp.set('Chunk.position.coordsys',
+           'get_position_coordsys_from_0th_header(header)')
+    bp.set('Chunk.position.equinox',
+           'get_position_equinox_from_0th_header(header)')
 
 
 def accumulate_wircam_bp(bp, uri, cfht_name):
@@ -1434,6 +1553,10 @@ def update(observation, **kwargs):
         if plane.product_id != cfht_name.product_id:
             # do only the work for the applicable plane
             continue
+
+        if instrument is md.Inst.SPIROU:
+            cc.rename_parts(observation, headers)
+
         if observation.algorithm.name == 'scan':
             plane.data_product_type = DataProductType.CUBE
             if plane.provenance is not None:
@@ -1448,6 +1571,7 @@ def update(observation, **kwargs):
             else:
                 time_delta = get_time_refcoord_delta_derived(headers[idx])
             for part in artifact.parts.values():
+
                 for c in part.chunks:
                     chunk_idx = part.chunks.index(c)
                     chunk = part.chunks[chunk_idx]
@@ -1572,6 +1696,19 @@ def update(observation, **kwargs):
                                     chunk, headers[idx],
                                     observation.observation_id, idx)
                             _update_sitelle_plane(observation, uri)
+
+                    elif instrument is md.Inst.SPIROU:
+                        _update_position_spirou(
+                            chunk, headers[idx], observation.observation_id)
+                        # stricter WCS validation
+                        chunk.naxis = None
+                        if chunk.energy is not None:
+                            chunk.energy_axis = None
+                        if chunk.time is not None:
+                            chunk.time_axis = None
+                        if chunk.position is not None:
+                            chunk.position_axis_1 = None
+                            chunk.position_axis_2 = None
 
                     elif instrument is md.Inst.WIRCAM:
                         if chunk.time is not None:
@@ -1873,6 +2010,21 @@ def _update_plane_provenance_p(plane, obs_id, suffix):
     plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}{suffix}')
     plane.provenance.inputs.add(plane_uri)
     logging.debug(f'End _update_plane_provenance_p for {obs_id}')
+
+
+def _update_position_spirou(chunk, header, obs_id):
+    logging.debug(f'Begin _update_position_spirou for {obs_id}')
+    # from caom2IngestSpirou.py, l499+
+    # CW - ignore position wcs if a calibration file
+    obs_type = _get_obstype(header)
+    ra_deg = header.get('RA_DEG')
+    dec_deg = header.get('DEC_DEG')
+    ra_dec_sys = header.get('RADECSYS')
+    if (obs_type not in ['OBJECT', 'ALIGN'] or
+            (ra_deg is None and dec_deg is None and
+             (ra_dec_sys is None or ra_dec_sys.lower() == 'null'))):
+        cc.reset_position(chunk)
+    logging.debug(f'Begin _update_position_spirou for {obs_id}')
 
 
 def _update_position_sitelle(chunk, header, obs_id):

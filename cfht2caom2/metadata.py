@@ -82,6 +82,7 @@ class Inst(Enum):
     MEGACAM = 'MegaCam'
     MEGAPRIME = 'MegaPrime'
     SITELLE = 'SITELLE'
+    SPIROU = 'SPIRou'
     WIRCAM = 'WIRCam'
     NONE = None
 
