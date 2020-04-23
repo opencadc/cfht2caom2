@@ -504,7 +504,7 @@ def _do_spirou_intensity_spectrum(science_fqn, cfht_name, thumb_fqn,
         sw = ravel(sw2d)
         si = ravel(si2d)
         sp = ravel(sp2d)
-        pScale = 5.0 * np.max(si)
+        pScale = 5.0 * max(si)
 
     if cfht_name.suffix == 's':
         # using uniform wavelength bins
