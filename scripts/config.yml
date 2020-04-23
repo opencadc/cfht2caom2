@@ -1,4 +1,4 @@
-working_directory: /usr/src/app/cfht2caom2
+working_directory: /usr/src/app
 # the netrc_filename value must be a fully-qualified name
 # netrc_filename: /usr/src/app/netrc
 # this is the name of the proxy certificate file supplied 

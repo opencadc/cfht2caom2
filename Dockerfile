@@ -12,7 +12,7 @@ RUN apt-get install -y \
     python3-tz \
     python3-yaml
 
-RUN pip3 install  --no-cache-dir \
+RUN pip install  --no-cache-dir \
         cadcdata \
         cadctap \
         caom2 \
@@ -43,24 +43,25 @@ RUN git clone https://github.com/HEASARC/cfitsio && \
 
 WORKDIR /usr/src/app
 
-RUN pip3 install aplpy \
+RUN pip install aplpy \
     bs4
 
+ARG OPENCADC_BRANCH=master
 ARG OPENCADC_REPO=opencadc
 ARG OMC_REPO=opencadc-metadata-curation
 
-RUN git clone https://github.com/${OPENCADC_REPO}/caom2tools.git && \
-    pip3 install ./caom2tools/caom2 && \
-    pip3 install ./caom2tools/caom2utils
+RUN git clone https://github.com/${OPENCADC_REPO}/caom2tools.git --branch ${OPENCADC_BRANCH} --single-branch && \
+    pip install ./caom2tools/caom2 && \
+    pip install ./caom2tools/caom2utils
 
 RUN git clone https://github.com/${OMC_REPO}/caom2pipe.git && \
-    pip3 install ./caom2pipe
+    pip install ./caom2pipe
 
 RUN git clone https://github.com/${OMC_REPO}/cfht2caom2.git && \
     cp ./cfht2caom2/scripts/config.yml / && \
     cp ./cfht2caom2/scripts/cache.yml / && \
     cp ./cfht2caom2/scripts/docker-entrypoint.sh / && \
-    pip3 install ./cfht2caom2
+    pip install ./cfht2caom2
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
