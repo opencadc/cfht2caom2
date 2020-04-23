@@ -138,6 +138,10 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     elif instrument is md.Inst.ESPADONS and plane.product_id[-1] in ['i', 'p']:
         count = _do_espadons_science(science_fqn, cfht_name, thumb_fqn,
                                      preview_fqn)
+    elif (instrument is md.Inst.SPIROU and
+          plane.product_id[-1] in ['e', 'p', 's', 't']):
+        count = _do_spirou_intensity_spectrum(science_fqn, cfht_name,
+                                              thumb_fqn, preview_fqn)
     else:
         count = _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                              working_dir, intent, obs_type, thumb_fqn,
@@ -148,7 +152,9 @@ def _do_prev(working_dir, plane, cfht_name, cadc_client,
     zoom_uri = cfht_name.zoom_uri
     _augment(plane, prev_uri, preview_fqn, ProductType.PREVIEW)
     _augment(plane, thumb_uri, thumb_fqn, ProductType.THUMBNAIL)
-    if instrument is md.Inst.ESPADONS and plane.product_id[-1] in ['i', 'p']:
+    if ((instrument is md.Inst.ESPADONS and cfht_name.suffix in ['i', 'p']) or
+            (instrument is md.Inst.SPIROU and
+             cfht_name.suffix in ['e', 'p', 's', 't'])):
         _store_smalls(cadc_client, working_dir, stream, preview, thumb, None,
                       metrics)
     else:
@@ -342,6 +348,15 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     mode       -mode none       -mode none            -mode none
     zoom       to fit           to fit                1
 
+    SPIRou Raw 2D:
+    mosaic     ''               ''                    -fits
+    pan        ''               ''                    ''
+    rotate     ''               ''                    ''
+    scale      zscale           zscale                zscale
+    scope      global           global                global
+    mode       -mode none       -mode none            -mode none
+    zoom       to fit           to fit                1
+
     """
     logging.debug(f'Do ds9 preview augmentation with {science_fqn}')
     delete_list = []
@@ -411,7 +426,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
 
     # set up the correct parameters to the ds9 command
     scope_param = 'local'
-    if (instrument in [md.Inst.ESPADONS, md.Inst.SITELLE] or
+    if (instrument in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU] or
             intent is ObservationIntentType.SCIENCE):
         scope_param = 'global'
 
@@ -419,7 +434,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     # acquisition. A proper one needs processing which is often not done on
     # observations.
     mosaic_param = '-mosaicimage iraf'
-    if instrument in [md.Inst.SITELLE, md.Inst.ESPADONS]:
+    if instrument in [md.Inst.SITELLE, md.Inst.ESPADONS, md.Inst.SPIROU]:
         mosaic_param = ''
 
     geometry = '256x521'
@@ -441,7 +456,7 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
     zoom_param = '1'
     scope_param = 'global'
     # set zoom parameters
-    if instrument is md.Inst.ESPADONS:
+    if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
         pan_param = ''
     elif instrument is md.Inst.WIRCAM:
         pan_param = '-pan 484 -484 image'
@@ -468,6 +483,117 @@ def _do_ds9_prev(science_fqn, instrument, obs_id, cfht_name,
                scale_param=scale_param)
     _delete_list_of_files(delete_list)
     return 3
+
+
+def _do_spirou_intensity_spectrum(science_fqn, cfht_name, thumb_fqn,
+                                  preview_fqn):
+
+    spirou = fits.open(science_fqn)
+    #Polarization scale factor
+
+    if cfht_name.suffix in ['e', 't']:
+        sw2d = spirou['WaveAB'].data  # wavelength array (nm)
+        si2d = spirou['FluxAB'].data  # intensity array (normalized)
+        sw = ravel(sw2d)
+        si = ravel(si2d)
+
+    if cfht_name.suffix == 'p':
+        sw2d = spirou['WaveAB'].data  # wavelength array (nm)
+        si2d = spirou['StokesI'].data  # intensity array (normalized)
+        sp2d = spirou['Pol'].data  # Pol Stokes array
+        sw = ravel(sw2d)
+        si = ravel(si2d)
+        sp = ravel(sp2d)
+        pScale = 5.0 * np.max(si)
+
+    if cfht_name.suffix == 's':
+        # using uniform wavelength bins
+        sw = spirou[1].data.field(0)
+        si = spirou[1].data.field(1)
+
+    spirou.close(science_fqn)
+    npix = sw.shape[0]
+
+    swa = 10.0 * sw
+    sia = arange(0.,npix,1.0)
+    if cfht_name.suffix == 'p':
+        spa = arange(0., npix, 1.0)
+    # determine upper/lower y limits for two planels from intensity values
+    for i in range(sia.shape[0]):
+        sia[i] = float(si[i])
+        if cfht_name.suffix == 'p':
+            spa[i] = float(sp[i]) * pScale  # increase scale of polarization
+    label = f'{cfht_name.product_id}: object'
+
+    # First subplot
+    wlLow = 15000.0
+    wlHigh = 15110.0
+
+    wl = swa[(swa > wlLow) & (swa < wlHigh)]
+    flux = sia[(swa > wlLow) & (swa < wlHigh)]
+    wlSort = wl[wl.argsort()]
+    fluxSort = flux[wl.argsort()]
+    if cfht_name.suffix == 'p':
+        pflux = spa[(swa > wlLow) & (swa < wlHigh)]
+        pfluxSort = pflux[wl.argsort()]
+        flux = append(flux, pflux)
+    ymax = 1.1 * max(flux)
+    ymin = min([0.0, min(flux) - (ymax - max(flux))])
+    logging.debug(ymin, ymax)
+    if isnan(ymax):
+        ymax = 1
+
+    pylab.subplot(2, 1, 1)
+    # pylab.clf()
+    pylab.grid(True)
+    pylab.plot(wlSort, fluxSort, color='k')
+    if cfht_name.suffix == 'p':
+        pylab.plot(wlSort, pfluxSort, color='b')
+        pylab.text(15030.0, (ymin + 0.02 * (ymax - ymin)), 'Stokes spectrum',
+                   size=16, color='b')
+    pylab.xlabel(r'Wavelength ($\AA$)', color='k')
+    pylab.ylabel(r'Relative Intensity', color='k')
+    pylab.title(label, color='m', fontweight='bold')
+    pylab.text(15030.0, (ymin + 0.935 * (ymax - ymin)), 'Intensity spectrum',
+               size=16)
+    pylab.ylim(ymin, ymax)
+
+    # Second subplot
+    wlLow = 22940.0
+    wlHigh = 23130.0
+    wl = swa[(swa > wlLow) & (swa < wlHigh)]
+    flux = sia[(swa > wlLow) & (swa < wlHigh)]
+    wlSort = wl[wl.argsort()]
+    fluxSort = flux[wl.argsort()]
+    if cfht_name.suffix == 'p':
+        pflux = spa[(swa > wlLow) & (swa < wlHigh)]
+        pfluxSort = pflux[wl.argsort()]
+        flux = append(flux, pflux)
+    ymax = 1.1 * max(flux)
+    ymin = min([0.0, min(flux) - (ymax - max(flux))])
+    logging.debug(ymin, ymax)
+    if isnan(ymax):
+        ymax = 1
+
+    pylab.subplot(2, 1, 2)
+    pylab.grid(True)
+    pylab.plot(wlSort, fluxSort, color='k')
+    if cfht_name.suffix == 'p':
+        pylab.plot(wlSort, pfluxSort, color='b')
+        pylab.text(22990.0, (ymin + 0.02 * (ymax - ymin)), 'Stokes spectrum',
+                   size=16, color='b')
+    pylab.xlabel(r'Wavelength ($\AA$)', color='k')
+    pylab.ylabel(r'Relative Intensity', color='k')
+    pylab.title(label, color='m', fontweight='bold')
+    pylab.text(22990.0, (ymin + 0.935 * (ymax - ymin)), 'Intensity spectrum',
+               size=16)
+    pylab.ylim(ymin, ymax)
+    pylab.savefig(preview_fqn, format='jpg')
+
+    # Make 256^2 version using ImageMagick convert
+    convert_cmd=f'convert {preview_fqn} -resize 256x256 {thumb_fqn}'
+    mc.exec_cmd(convert_cmd)
+    return 2
 
 
 def _exec_cmd_chdir(working_dir, temp_file, cmd):

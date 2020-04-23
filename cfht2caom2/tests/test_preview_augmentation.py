@@ -113,7 +113,10 @@ def test_preview_augment(ad_put_mock):
         'visit_obs_start_espadons.xml':
             ['2460606i.fits.gz', '2460606o.fits.gz'],
         'visit_obs_start_espadons_cal.xml':
-            ['1001063b.fits.gz']
+            ['1001063b.fits.gz'],
+        'visit_obs_start_spirou.xml': ['2401734o.fits', '2401734e.fits',
+                                       '2401734r.fits', '2401734s.fits',
+                                       '2401734t.fits', '2401734v.fits']
     }
 
     kwargs = {'working_directory': TEST_FILES_DIR,
@@ -134,6 +137,8 @@ def test_preview_augment(ad_put_mock):
             instrument = md.Inst.SITELLE
         elif 'espadons' in key:
             instrument = md.Inst.ESPADONS
+        elif 'spirou' in key:
+            instrument = md.Inst.SPIROU
         else:
             assert False, 'do not understand instrument'
         for f_name in value:
@@ -163,7 +168,9 @@ def test_preview_augment(ad_put_mock):
             expected_call_count = 3
             f_name_list = [test_name.prev_uri, test_name.thumb_uri,
                            test_name.zoom_uri]
-            if instrument is md.Inst.ESPADONS and test_name.suffix == 'i':
+            if ((instrument is md.Inst.ESPADONS and test_name.suffix == 'i') or
+                    (instrument is md.Inst.SPIROU and
+                     test_name.suffix in ['e', 'p', 's', 't'])):
                 check_number = 2
                 expected_call_count = 2
                 end_artifact_count = 3
