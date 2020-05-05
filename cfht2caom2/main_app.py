@@ -137,17 +137,27 @@ wavelength of each pixel is
 cutout operation later. If the covergage had significant gaps (eg SCUBA or
 SCUBA2 from JCMT) then the extra detail in bounds would enable better
 discovery (as the gaps would be captured in the plane metadata). In the case
-of espandons I don't tkink the gaps are significant (iirc, espandons is an
+of espadons I don't think the gaps are significant (iirc, espadons is an
 eschelle spetrograph but I don't recall whether the discontinuity between
 eschelle was a small gap or an overlap)
 - PD - So: bounds provides more detail and it can in principle improve data
 discovery (if gaps) and enable extraction of subsections of the spectrum via
-the SODA service. Espandons was one of the use cases that justified having
+the SODA service. Espadons was one of the use cases that justified having
 bounds there
 - SF - ok now that is clearer, i think we need the information that is
 contained in bounds, gaps need to be captured. so keep bounds. if you decide
 to remove range, then advanced users would have to dig in the info to
 understand range is first and last bounds if i understand correctly.
+
+
+CFHT WCS:
+- CW - 28-04-20
+- These raw SITELLE observations have a weird data format where 2048x2048
+  images from the two interferometer arms (which are images of the same single
+  field) are stitched together into a single 2048x4100ish image. So there is
+  no contiguous wcs describing the raw data and in any case nobody wants to
+  cut out of it.
+
 """
 
 import copy
@@ -1619,17 +1629,7 @@ def update(observation, **kwargs):
                     chunk_idx = part.chunks.index(c)
                     chunk = part.chunks[chunk_idx]
 
-                    if (time_delta == 0.0 and
-                            chunk.time.axis.function.delta == 1.0):
-                        # undo the effects of the astropy cdfix call on a
-                        # matrix, in fits2caom2.WcsParser, which sets the
-                        # diagonal element of the matrix to unity if all
-                        # keywords associated with a given axis were
-                        # omitted.
-                        # See:
-                        # https://docs.astropy.org/en/stable/api/astropy.
-                        # wc.Wcsprm.html#astropy.wcs.Wcsprm.cdfix
-                        chunk.time.axis.function.delta = 0.0
+                    cc.undo_astropy_cdfix_call(chunk, time_delta)
 
                     if chunk.energy is not None:
                         if chunk.energy.bandpass_name in ['NONE', 'Open']:
