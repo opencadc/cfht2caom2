@@ -29,7 +29,7 @@ energy_defaults:
   SITELLE.SN3:
     cw: null
     fwhm: null
-  WIRCam.None:
+  Wircam.None:
     cw: 17000.0
     fwhm: 14000.0
 filter_repair_lookup:

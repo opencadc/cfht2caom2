@@ -457,6 +457,14 @@ def get_meta_release(header):
     return result
 
 
+def get_obs_environment_humidity(header):
+    result = header.get('RELHUMID')
+    if result is not None and result < 0.0:
+        logging.warning(f'RELHUMID invalid value {result}.')
+        result = None
+    return result
+
+
 def get_obs_intent(header):
     # CW
     # Determine Observation.intent = obs.intent = "science" or "calibration"
@@ -465,15 +473,9 @@ def get_obs_intent(header):
     result = ObservationIntentType.CALIBRATION
     obs_type = _get_obstype(header)
     if obs_type == 'OBJECT':
-        run_id = header.get('RUNID').lower()
-        if run_id is None or len(run_id) < 4:
-            file_name = _get_filename(header)
-            if file_name is not None:
-                if file_name[-1] == 'o':
-                    result = ObservationIntentType.SCIENCE
-        else:
-            if run_id[3] != 'q':
-                result = ObservationIntentType.SCIENCE
+        run_id = _get_run_id(header)
+        if run_id[3].lower() != 'q':
+            result = ObservationIntentType.SCIENCE
     return result
 
 
@@ -553,15 +555,13 @@ def get_plane_data_release(header):
     # QSO data is indicated in the fits headers by the keyword REL_DATE."
 
     result = header.get('REL_DATE')
-    date_obs = None
-    run_id = None
     if result is None:
         date_obs = header.get('DATE-OBS')
         run_id = _get_run_id(header)
         if run_id is not None:
             if run_id == 'SMEARING':
                 result = header.get('DATE')
-            elif ((run_id[3] == 'E' or run_id[3] == 'Q')
+            elif ((run_id[3].lower() == 'e' or run_id[3].lower() == 'q')
                   and date_obs is not None):
                 result = f'{date_obs}T00:00:00'
             else:
@@ -1106,17 +1106,18 @@ def _get_run_id(header):
     run_id = header.get('RUNID')
     if run_id is None:
         run_id = header.get('CRUNID')
-
-    if (run_id is not None and
-            (len(run_id) < 3 or len(run_id) > 9 or run_id == 'CFHT')):
-        # a well-known default value that indicates the past, as specified
-        # in
-        # caom2IngestMegacam.py, l392
-        # caom2IngestWircamdetrend.py, l314
-        # caom2IngestEspadons.py, l522
-        logging.warning(f'Setting RUNID to default 17BE for '
-                        f'{header.get("FILENAME")}.')
-        run_id = '17BE'
+    if run_id is not None:
+        if len(run_id) < 3 or len(run_id) > 9 or run_id == 'CFHT':
+            # a well-known default value that indicates the past, as
+            # specified in
+            # caom2IngestMegacam.py, l392
+            # caom2IngestWircamdetrend.py, l314
+            # caom2IngestEspadons.py, l522
+            logging.warning(f'Setting RUNID to default 17BE for '
+                            f'{header.get("FILENAME")}.')
+            run_id = '17BE'
+        else:
+            run_id = run_id.strip()
     return run_id
 
 
@@ -1190,8 +1191,8 @@ def accumulate_bp(bp, uri, instrument):
 
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
-    bp.clear('Observation.environment.humidity')
-    bp.add_fits_attribute('Observation.environment.humidity', 'RELHUMID')
+    bp.set('Observation.environment.humidity',
+           'get_obs_environment_humidity(header)')
 
     # TODO title is select title from runid_title where proposal_id = 'runid'
     bp.clear('Observation.proposal.id')
@@ -1596,6 +1597,8 @@ def update(observation, **kwargs):
     radecsys = headers[idx].get('RADECSYS')
     ctype1 = headers[idx].get('CTYPE1')
     filter_name = headers[idx].get('FILTER')
+    if filter_name is None and len(headers) > idx + 1:
+        filter_name = headers[idx+1].get('FILTER')
 
     for plane in observation.planes.values():
         if plane.product_id != cfht_name.product_id:
