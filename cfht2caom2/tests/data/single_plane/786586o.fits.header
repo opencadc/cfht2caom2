@@ -1,0 +1,609 @@
+SIMPLE  =                    T / Standard FITS                                  
+BITPIX  =                   16 / Bits per pixel (not applicable)                
+NAXIS   =                    0 / No image data with primary header              
+EXTEND  =                    T / File contains extensions                       
+NEXTEND =                    2 / Number of extensions                           
+COMMENT                                                                         
+COMMENT Observation Summary                                                     
+COMMENT -------------------                                                     
+COMMENT file 786586o, raster FULL, etype OBJECT, etime 01, filter               
+COMMENT timing board code: /cfht/src/medusa/deti/detectors/wircam/mar27_Erun/   
+COMMENT Guiding not booted                                                      
+CMMTOBS = '        '                                                            
+CMMTSEQ = '        '                                                            
+OBJECT  = '        '                                                            
+OBSERVER= '        '                                                            
+PI_NAME = '        '                                                            
+RUNID   = '        '                                                            
+COMMENT                                                                         
+COMMENT General Information                                                     
+COMMENT -------------------                                                     
+COMMENT                                                                         
+FILENAME= '786586o '           / Base filename at acquisition                   
+PATHNAME= '/data/noeau/wircam/mar23storage' / Original directory name at acquisi
+DATE    = '2005-03-25T00:26:55' / UTC Date of file creation                     
+HSTTIME = 'Thu Mar 24 14:26:55 HST 2005' / Local time in Hawaii                 
+IMAGESWV= 'CFHT DetCom v0.10 (Mar 24 2005)' / Image creation software version   
+COMMENT                                                                         
+COMMENT Detector                                                                
+COMMENT --------                                                                
+DETECTOR= 'WIRCam  '                                                            
+DETSIZE = '[1:4096,1:4096]'    / Total data pixels in full mosaic               
+RASTER  = 'FULL    '           / Active raster description                      
+PIXSIZE1=                 18.0 / Pixel size for axis 1 (microns)                
+PIXSIZE2=                 18.0 / Pixel size for axis 2 (microns)                
+PIXSCAL1=               0.3000 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=               0.3000 / Pixel scale for axis 2 (arcsec/pixel)          
+IRFPA1  = 'HAWAII-2RG-#10'     / Name of the detector in ext 1 (N-W)            
+IRFPA2  = 'HAWAII-2RG-#01'     / Name of the detector in ext 2 (N-E)            
+IRFPA3  = 'Null    '           / Name of the detector in ext 3 (S-E)            
+IRFPA4  = 'Null    '           / Name of the detector in ext 4 (S-W)            
+MAXLIN  =                65535 / Maximum linearity value (ADU)                  
+SATURATE=                65535 / Saturation value (ADU)                         
+NIRFPA  = '2       '           / Number of IR focal plane arrays                
+MDCOORDS= '1       '           / Number of unique microdithering positions      
+MDREPEAT=                    1 / Number of iterations of microdithering pattern 
+MDCOORD1= 'Null    '           / Microdithering position 1 (X,Y pixels)         
+MDCOORD2= 'Null    '           / Microdithering position 2 (X,Y pixels)         
+MDCOORD3= 'Null    '           / Microdithering position 3 (X,Y pixels)         
+MDCOORD4= 'Null    '           / Microdithering position 4 (X,Y pixels)         
+CMPLTEXP=                -9999 / Cube depth of last successfully completed exp. 
+FIELDTYP= 'target  '           / Astronomical field type (target, sky, or other)
+CHIPBIAS=                 1000 / Science frame chip bias added to CDS value     
+CONSWV  = '...=0   '           / Controller software DSPID and SERNO versions   
+TIMESYS = 'UTC     '           / Time System for DATExxxx                       
+OBSTYPE = 'OBJECT  '           / Observation/ Exposure type                     
+EXPTYPE = 'OBJECT  '           / OBSTYPE is the new name for this               
+EXPNUM  =               786586 / CFHT odometer number                           
+OBSID   =               786586 / CFHT odometer number                           
+EXPREQ  =               1.0000 / Requested integration time (seconds)           
+EXPTIME =               1.0000 / Integration time (seconds)                     
+INTTIME =               6.0000 / EXPTIME + reset time                           
+RDTIME  =               5.0000 / read time                                      
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+INSTRUME= 'WIRCam  '           / Instrument Name                                
+NCCDS   =                    2 / Number of IR arrays                            
+NAMPS   =                    8 / Number of amplifiers per chip                  
+FOCNEXPO=                    5 / Nexp in focus sequence                         
+FOCSTART=                  4.4 / First userfocus value                          
+FOCSTEP =                  0.2 / userfocus step size                            
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             
+XTENSION= 'IMAGE   '                                                            
+BITPIX  =                   16 / 16bit 2s complement 0..65535 (BZERO=32768)     
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 2048 / Number of pixel columns                        
+NAXIS2  =                 2048 / Number of pixel rows                           
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+COMMENT                                                                         
+COMMENT Observation Summary                                                     
+COMMENT -------------------                                                     
+COMMENT file 786586o-3, raster FULL, etype OBJECT, etime 01, filter             
+COMMENT timing board code: /cfht/src/medusa/deti/detectors/wircam/mar27_Erun/   
+COMMENT Guiding not booted                                                      
+CMMTOBS = '        '                                                            
+CMMTSEQ = '        '                                                            
+OBJECT  = '        '                                                            
+OBSERVER= '        '                                                            
+PI_NAME = '        '                                                            
+RUNID   = '        '                                                            
+COMMENT                                                                         
+COMMENT Guiding not booted                                                      
+COMMENT                                                                         
+FILENAME= '786586o '           / Base filename at acquisition                   
+PATHNAME= '/data/noeau/wircam/mar23storage' / Original directory name at acquisi
+EXTNAME = 'HAWAII-2RG-#10'     / Extension name                                 
+DATE    = '2005-03-25T00:26:55' / UTC Date of file creation                     
+HSTTIME = 'Thu Mar 24 14:26:55 HST 2005' / Local time in Hawaii                 
+IMAGESWV= 'CFHT DetCom v0.10 (Mar 24 2005)' / Image creation software version   
+COMMENT                                                                         
+COMMENT Detector                                                                
+COMMENT --------                                                                
+DETECTOR= 'WIRCam  '                                                            
+DETSIZE = '[1:4096,1:4096]'    / Total data pixels in full mosaic               
+RASTER  = 'FULL    '           / Active raster description                      
+PIXSIZE1=                 18.0 / Pixel size for axis 1 (microns)                
+PIXSIZE2=                 18.0 / Pixel size for axis 2 (microns)                
+PIXSCAL1=               0.3000 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=               0.3000 / Pixel scale for axis 2 (arcsec/pixel)          
+IRFPA1  = 'HAWAII-2RG-#10'     / Name of the detector in ext 1 (N-W)            
+IRFPA2  = 'HAWAII-2RG-#01'     / Name of the detector in ext 2 (N-E)            
+IRFPA3  = 'Null    '           / Name of the detector in ext 3 (S-E)            
+IRFPA4  = 'Null    '           / Name of the detector in ext 4 (S-W)            
+DETSEC  = '[1:2048,1:2048]'    / Mosaic area of the detector                    
+CHIPSIZE= '[1:4096,1:4096]'    / Detector imaging area sizes                    
+DATASEC = '[1:4096,1:4096]'    / Imaging area of the detector                   
+LIN1PCT =                -9999 / Level at 1% linearity departure (ADU)          
+LIN3PCT =                -9999 / Level at 3% linearity departure (ADU)          
+LIN5PCT =                -9999 / Level at 5% linearity departure (ADU)          
+MAXLIN  =                65535 / Maximum linearity value (ADU)                  
+SATURATE=                65535 / Saturation value (ADU)                         
+GAIN    =            -1.00E+04 / Amplifier gain (electrons/ADU)                 
+GAINERR =             -9999.00 / Converting gain uncertainty (e-/ADU)           
+RDNOISE =            -1.00E+04 / Read noise (electrons)                         
+RDNOISER=              -9999.0 / Read noise uncertainty (electrons)             
+DARKCUR =              -9999.0 / Dark current (e-/pixel/hour)                   
+QEPOINTS= 'J=-9999.9% K=-9999.9%' / QE%@wavelength in nm                        
+NIRFPA  = '2       '           / Number of IR focal plane arrays                
+MDCOORDS= '1       '           / Number of unique microdithering positions      
+MDREPEAT=                    1 / Number of iterations of microdithering pattern 
+MDCOORD1= 'Null    '           / Microdithering position 1 (X,Y pixels)         
+MDCOORD2= 'Null    '           / Microdithering position 2 (X,Y pixels)         
+MDCOORD3= 'Null    '           / Microdithering position 3 (X,Y pixels)         
+MDCOORD4= 'Null    '           / Microdithering position 4 (X,Y pixels)         
+CMPLTEXP=                -9999 / Cube depth of last successfully completed exp. 
+FIELDTYP= 'target  '           / Astronomical field type (target, sky, or other)
+CHIPBIAS=                 1000 / Science frame chip bias added to CDS value     
+CONSWV  = '...=0   '           / Controller software DSPID and SERNO versions   
+INHERIT =                    T / Inherit global keywords                        
+TIMESYS = 'UTC     '           / Time System for DATExxxx                       
+OBSTYPE = 'OBJECT  '           / Observation/ Exposure type                     
+EXPTYPE = 'OBJECT  '           / OBSTYPE is the new name for this               
+EXPNUM  =               786586 / CFHT odometer number                           
+OBSID   =               786586 / CFHT odometer number                           
+EXPREQ  =               1.0000 / Requested integration time (seconds)           
+EXPTIME =               1.0000 / Integration time (seconds)                     
+INTTIME =               6.0000 / EXPTIME + reset time                           
+RDTIME  =               5.0000 / read time                                      
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+CRPIX1  =               2048.0 / WCS Coordinate reference pixel                 
+CRPIX2  =               2048.0 / WCS Coordinate reference pixel                 
+CD1_1   =          8.33300E-05 / WCS Coordinate scale matrix                    
+CD1_2   =              0.00000 / WCS Coordinate scale matrix                    
+CD2_1   =              0.00000 / WCS Coordinate scale matrix                    
+CD2_2   =          8.33300E-05 / WCS Coordinate scale matrix                    
+INSTRUME= 'WIRCam  '           / Instrument Name                                
+FOCNEXPO=                    5 / Nexp in focus sequence                         
+FOCSTART=                  4.4 / First userfocus value                          
+FOCSTEP =                  0.2 / userfocus step size                            
+COMMENT                                                                         
+COMMENT Telescope                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'manual  '           / Telescope Control System status                
+DATE-OBS= '2005-03-25'         / Date at start of observation (UTC)             
+UTIME   = '0:26:37.57'         / Time at start of observation (UT)              
+UTC-OBS = '0:26:37.57'         / Time at start of observation (UTC)             
+MJDATE  =        53454.0184904 / Modified Julian Date at start of observation   
+MJD-OBS =        53454.0184904 / Modified Julian Date at start of obs.          
+SIDTIME = '2:15:02.44'         / Sidereal time at start of observation          
+LST-OBS = '2:15:02.44'         / Sidereal time at start of exposure             
+EPOCH   =               2000.0 / Equinox of coordinates                         
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+RA      = '2:14:43.40'         / Object right ascension                         
+DEC     = '19:59:58.4'         / Object declination                             
+RA_DEG  =            33.680833 / Object right ascension in degrees              
+DEC_DEG =            19.999556 / Object declination in degrees                  
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'WIRCam  '           / TCS guider name                                
+GUIEQUIN=              2005.23 / TCS guider equinox                             
+GUIRADEC= 'GAPPT   '           / TCS guider system for equinox                  
+GUIRA   = '0:00:00.00'         / TCS guider right ascension                     
+GUIDEC  = '0:00:00.0'          / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = '        '           / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =                0.000 / Telescope bonnette guide probe X position      
+YPROBE  =                0.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =                0.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.000 / Airmass at start of observation                
+TELALT  =             -9999.90 / Telescope altitude at start of observation, deg
+TELAZ   =             -9999.90 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                359.7 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=               174.50 / Angle from object to moon at start in degrees  
+MOONPHAS=                 1.00 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'False   '           / Moon up? True or False                         
+MOONALT =               -46.30 / Moon altitude at start in degrees              
+MOONAZ  =                60.70 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'WIRCam  '           / Telescope focus in use                         
+TELCONF = 'WIRCam  '           / Telescope focus in use                         
+FOCUSPOS=                    4 / Telescope focus encoder readout                
+TELFOCUS=                    4 / Telescope focus encoder readout                
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= 'Null    '           / TCS GPS read out in BCD                        
+TCSGPSTM=          -9999.90000 / TCS GPS clock time in decimal hours            
+TCSRBUSS= 'Null    '           / TCS RBUSS clock time                           
+TCSEPICS= 'Null    '           / TCS EPICS clock time                           
+TCSAMODE= 'U       '           / TCS acquisition mode - T/O/G/g for t/o/g coords
+TCSMJD  =        -9999.9000000 / TCS MJD                                        
+TCSLST  =          -9999.90000 / TCS LST in decimal hours                       
+TCSAPHA =           -9999.9000 / TCS apparent hour angle in degrees             
+TCSAPDEC=           -9999.9000 / TCS apparent declination in degrees            
+TCSOBHA =           -9999.9000 / TCS observed hour angle in degrees             
+TCSOBDEC=           -9999.9000 / TCS observed declination in degrees            
+TCSENHA =                -9999 / TCS hour angle encoder bits reading            
+TCSENDEC=                -9999 / TCS declination encoder bits reading           
+TCSEDHA =           -9999.9000 / TCS hour angle encoder in degrees              
+TCSEDDEC=           -9999.9000 / TCS declination encoder in degrees             
+TCSMVRA =           -9999.9000 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=           -9999.9000 / TCS declination acquisition move in arcsec     
+TCSMVX  =              -9999.9 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =              -9999.9 / TCS secondary guider acquisition y move in mm  
+FILTER  = 'H2      '           / description of filter                          
+WHEELAID=                    0 / 'wheel' A position                             
+WHEELADE= 'Open    '           / description of filter                          
+WHEELALB=               0.8300 / lower bound of filter A (units/%?)             
+WHEELAUB=                2.600 / upper bound of filter A (units/%?)             
+WHEELBID=                    4 / 'wheel' B position                             
+WHEELBDE= 'H2.WC8304'          / description of filter                          
+WHEELBLB=                2.106 / lower bound of filter B (units/%?)             
+WHEELBUB=                2.138 / upper bound of filter B (units/%?)             
+TESPMIRE=                 1.37 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 1.78 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 1.59 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 1.35 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=                 2.18 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 0.62 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=                 2.11 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 2.11 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 2.78 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 3.40 / 06 temp, air, top ring west deg C              
+TEANRLSB=                10.23 / 19 temp, air, north rail support beam deg C    
+TESHRSET=              9999.00 / 08 temp, surface, horseshoe east top deg C     
+TESTELTL=               269.84 / 49 temp, surface, telescope truss low deg C    
+TESTELTH=                12.54 / 52 temp, surface, telescope truss high deg C   
+TEALOWWS=                 2.60 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                 5.42 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=                 4.10 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 2.62 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 2.02 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 3.09 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                -1.99 / 61 temp, surface, floor above control room degC
+TESPIERN=                 2.58 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 3.25 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 4.28 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 4.35 / 86 temp, air, weather tower deg C              
+WINDSPED=                45.39 / 84 wind speed, weather tower knots             
+WINDDIR =               264.52 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                32.99 / 87 relative humidity, weather tower %          
+PRESSURE=               615.28 / 31 barometric pressure, control room mb        
+COMMENT                                                                         
+COMMENT Telescope                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             
+XTENSION= 'IMAGE   '                                                            
+BITPIX  =                   16 / 16bit 2s complement 0..65535 (BZERO=32768)     
+NAXIS   =                    2 / Number of axes                                 
+NAXIS1  =                 2048 / Number of pixel columns                        
+NAXIS2  =                 2048 / Number of pixel rows                           
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+COMMENT                                                                         
+COMMENT Observation Summary                                                     
+COMMENT -------------------                                                     
+COMMENT file 786586o-3, raster FULL, etype OBJECT, etime 01, filter             
+COMMENT timing board code: /cfht/src/medusa/deti/detectors/wircam/mar27_Erun/   
+COMMENT Guiding not booted                                                      
+CMMTOBS = '        '                                                            
+CMMTSEQ = '        '                                                            
+OBJECT  = '        '                                                            
+OBSERVER= '        '                                                            
+PI_NAME = '        '                                                            
+RUNID   = '        '                                                            
+COMMENT                                                                         
+COMMENT Guiding not booted                                                      
+COMMENT                                                                         
+FILENAME= '786586o '           / Base filename at acquisition                   
+PATHNAME= '/data/noeau/wircam/mar23storage' / Original directory name at acquisi
+EXTNAME = 'HAWAII-2RG-#01'     / Extension name                                 
+DATE    = '2005-03-25T00:26:55' / UTC Date of file creation                     
+HSTTIME = 'Thu Mar 24 14:26:55 HST 2005' / Local time in Hawaii                 
+IMAGESWV= 'CFHT DetCom v0.10 (Mar 24 2005)' / Image creation software version   
+COMMENT                                                                         
+COMMENT Detector                                                                
+COMMENT --------                                                                
+DETECTOR= 'WIRCam  '                                                            
+DETSIZE = '[1:4096,1:4096]'    / Total data pixels in full mosaic               
+RASTER  = 'FULL    '           / Active raster description                      
+PIXSIZE1=                 18.0 / Pixel size for axis 1 (microns)                
+PIXSIZE2=                 18.0 / Pixel size for axis 2 (microns)                
+PIXSCAL1=               0.3000 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=               0.3000 / Pixel scale for axis 2 (arcsec/pixel)          
+IRFPA1  = 'HAWAII-2RG-#10'     / Name of the detector in ext 1 (N-W)            
+IRFPA2  = 'HAWAII-2RG-#01'     / Name of the detector in ext 2 (N-E)            
+IRFPA3  = 'Null    '           / Name of the detector in ext 3 (S-E)            
+IRFPA4  = 'Null    '           / Name of the detector in ext 4 (S-W)            
+DETSEC  = '[2049:4096,4096:2049]' / Mosaic area of the detector                 
+CHIPSIZE= '[1:4096,1:4096]'    / Detector imaging area sizes                    
+DATASEC = '[1:4096,1:4096]'    / Imaging area of the detector                   
+LIN1PCT =                -9999 / Level at 1% linearity departure (ADU)          
+LIN3PCT =                -9999 / Level at 3% linearity departure (ADU)          
+LIN5PCT =                -9999 / Level at 5% linearity departure (ADU)          
+MAXLIN  =                65535 / Maximum linearity value (ADU)                  
+SATURATE=                65535 / Saturation value (ADU)                         
+GAIN    =            -1.00E+04 / Amplifier gain (electrons/ADU)                 
+GAINERR =             -9999.00 / Converting gain uncertainty (e-/ADU)           
+RDNOISE =            -1.00E+04 / Read noise (electrons)                         
+RDNOISER=              -9999.0 / Read noise uncertainty (electrons)             
+DARKCUR =              -9999.0 / Dark current (e-/pixel/hour)                   
+QEPOINTS= 'J=-9999.9% K=-9999.9%' / QE%@wavelength in nm                        
+NIRFPA  = '2       '           / Number of IR focal plane arrays                
+MDCOORDS= '1       '           / Number of unique microdithering positions      
+MDREPEAT=                    1 / Number of iterations of microdithering pattern 
+MDCOORD1= 'Null    '           / Microdithering position 1 (X,Y pixels)         
+MDCOORD2= 'Null    '           / Microdithering position 2 (X,Y pixels)         
+MDCOORD3= 'Null    '           / Microdithering position 3 (X,Y pixels)         
+MDCOORD4= 'Null    '           / Microdithering position 4 (X,Y pixels)         
+CMPLTEXP=                -9999 / Cube depth of last successfully completed exp. 
+FIELDTYP= 'target  '           / Astronomical field type (target, sky, or other)
+CHIPBIAS=                 1000 / Science frame chip bias added to CDS value     
+CONSWV  = '...=0   '           / Controller software DSPID and SERNO versions   
+INHERIT =                    T / Inherit global keywords                        
+TIMESYS = 'UTC     '           / Time System for DATExxxx                       
+OBSTYPE = 'OBJECT  '           / Observation/ Exposure type                     
+EXPTYPE = 'OBJECT  '           / OBSTYPE is the new name for this               
+EXPNUM  =               786586 / CFHT odometer number                           
+OBSID   =               786586 / CFHT odometer number                           
+EXPREQ  =               1.0000 / Requested integration time (seconds)           
+EXPTIME =               1.0000 / Integration time (seconds)                     
+INTTIME =               6.0000 / EXPTIME + reset time                           
+RDTIME  =               5.0000 / read time                                      
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+CRPIX1  =               2048.0 / WCS Coordinate reference pixel                 
+CRPIX2  =               2048.0 / WCS Coordinate reference pixel                 
+CD1_1   =          8.33300E-05 / WCS Coordinate scale matrix                    
+CD1_2   =              0.00000 / WCS Coordinate scale matrix                    
+CD2_1   =              0.00000 / WCS Coordinate scale matrix                    
+CD2_2   =          8.33300E-05 / WCS Coordinate scale matrix                    
+INSTRUME= 'WIRCam  '           / Instrument Name                                
+FOCNEXPO=                    5 / Nexp in focus sequence                         
+FOCSTART=                  4.4 / First userfocus value                          
+FOCSTEP =                  0.2 / userfocus step size                            
+COMMENT                                                                         
+COMMENT Telescope                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'manual  '           / Telescope Control System status                
+DATE-OBS= '2005-03-25'         / Date at start of observation (UTC)             
+UTIME   = '0:26:37.57'         / Time at start of observation (UT)              
+UTC-OBS = '0:26:37.57'         / Time at start of observation (UTC)             
+MJDATE  =        53454.0184904 / Modified Julian Date at start of observation   
+MJD-OBS =        53454.0184904 / Modified Julian Date at start of obs.          
+SIDTIME = '2:15:02.44'         / Sidereal time at start of observation          
+LST-OBS = '2:15:02.44'         / Sidereal time at start of exposure             
+EPOCH   =               2000.0 / Equinox of coordinates                         
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+RA      = '2:14:43.40'         / Object right ascension                         
+DEC     = '19:59:58.4'         / Object declination                             
+RA_DEG  =            33.680833 / Object right ascension in degrees              
+DEC_DEG =            19.999556 / Object declination in degrees                  
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'WIRCam  '           / TCS guider name                                
+GUIEQUIN=              2005.23 / TCS guider equinox                             
+GUIRADEC= 'GAPPT   '           / TCS guider system for equinox                  
+GUIRA   = '0:00:00.00'         / TCS guider right ascension                     
+GUIDEC  = '0:00:00.0'          / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = '        '           / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =                0.000 / Telescope bonnette guide probe X position      
+YPROBE  =                0.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =                0.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.000 / Airmass at start of observation                
+TELALT  =             -9999.90 / Telescope altitude at start of observation, deg
+TELAZ   =             -9999.90 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                359.7 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=               174.50 / Angle from object to moon at start in degrees  
+MOONPHAS=                 1.00 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'False   '           / Moon up? True or False                         
+MOONALT =               -46.30 / Moon altitude at start in degrees              
+MOONAZ  =                60.70 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'WIRCam  '           / Telescope focus in use                         
+TELCONF = 'WIRCam  '           / Telescope focus in use                         
+FOCUSPOS=                    4 / Telescope focus encoder readout                
+TELFOCUS=                    4 / Telescope focus encoder readout                
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= 'Null    '           / TCS GPS read out in BCD                        
+TCSGPSTM=          -9999.90000 / TCS GPS clock time in decimal hours            
+TCSRBUSS= 'Null    '           / TCS RBUSS clock time                           
+TCSEPICS= 'Null    '           / TCS EPICS clock time                           
+TCSAMODE= 'U       '           / TCS acquisition mode - T/O/G/g for t/o/g coords
+TCSMJD  =        -9999.9000000 / TCS MJD                                        
+TCSLST  =          -9999.90000 / TCS LST in decimal hours                       
+TCSAPHA =           -9999.9000 / TCS apparent hour angle in degrees             
+TCSAPDEC=           -9999.9000 / TCS apparent declination in degrees            
+TCSOBHA =           -9999.9000 / TCS observed hour angle in degrees             
+TCSOBDEC=           -9999.9000 / TCS observed declination in degrees            
+TCSENHA =                -9999 / TCS hour angle encoder bits reading            
+TCSENDEC=                -9999 / TCS declination encoder bits reading           
+TCSEDHA =           -9999.9000 / TCS hour angle encoder in degrees              
+TCSEDDEC=           -9999.9000 / TCS declination encoder in degrees             
+TCSMVRA =           -9999.9000 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=           -9999.9000 / TCS declination acquisition move in arcsec     
+TCSMVX  =              -9999.9 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =              -9999.9 / TCS secondary guider acquisition y move in mm  
+FILTER  = 'H2      '           / description of filter                          
+WHEELAID=                    0 / 'wheel' A position                             
+WHEELADE= 'Open    '           / description of filter                          
+WHEELALB=               0.8300 / lower bound of filter A (units/%?)             
+WHEELAUB=                2.600 / upper bound of filter A (units/%?)             
+WHEELBID=                    4 / 'wheel' B position                             
+WHEELBDE= 'H2.WC8304'          / description of filter                          
+WHEELBLB=                2.106 / lower bound of filter B (units/%?)             
+WHEELBUB=                2.138 / upper bound of filter B (units/%?)             
+TESPMIRE=                 1.37 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 1.78 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 1.59 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 1.35 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=                 2.18 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 0.62 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=                 2.11 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 2.11 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 2.78 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 3.40 / 06 temp, air, top ring west deg C              
+TEANRLSB=                10.23 / 19 temp, air, north rail support beam deg C    
+TESHRSET=              9999.00 / 08 temp, surface, horseshoe east top deg C     
+TESTELTL=               269.84 / 49 temp, surface, telescope truss low deg C    
+TESTELTH=                12.54 / 52 temp, surface, telescope truss high deg C   
+TEALOWWS=                 2.60 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                 5.42 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=                 4.10 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 2.62 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 2.02 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 3.09 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                -1.99 / 61 temp, surface, floor above control room degC
+TESPIERN=                 2.58 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 3.25 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 4.28 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 4.35 / 86 temp, air, weather tower deg C              
+WINDSPED=                45.39 / 84 wind speed, weather tower knots             
+WINDDIR =               264.52 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                32.99 / 87 relative humidity, weather tower %          
+PRESSURE=               615.28 / 31 barometric pressure, control room mb        
+COMMENT                                                                         
+COMMENT Telescope                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             

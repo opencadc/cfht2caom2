@@ -2264,6 +2264,15 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
         cc.reset_position(chunk)
         return
 
+    wcgd_ra = header.get(f'WCGDRA{part.name}')
+    wcgd_dec = header.get(f'WCGDDEC{part.name}')
+    cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
+    if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
+        logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are close to '
+                      f'0. No position.')
+        cc.reset_position(chunk)
+        return
+
     naxis_1 = header.get('NAXIS1')
     if naxis_1 is None:
         naxis_1 = header.get('ZNAXIS1')
@@ -2271,9 +2280,6 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     if naxis_2 is None:
         naxis_2 = header.get('ZNAXIS2')
 
-    wcgd_ra = header.get(f'WCGDRA{part.name}')
-    wcgd_dec = header.get(f'WCGDDEC{part.name}')
-    cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
     if mc.to_float(obs_id) < 980000:
         cr_val2 *= 15.0
 
