@@ -32,13 +32,27 @@ energy_defaults:
   SITELLE.SN3:
     cw: null
     fwhm: null
-  WIRCam.None:
+  Wircam.Blank:
+    cw: null
+    fwhm: null
+  Wircam.FakeBlank:
+    cw: null
+    fwhm: null
+  Wircam.Open:
     cw: 17000.0
     fwhm: 14000.0
+  Wircam.None:
+    cw: 17000.0
+    fwhm: 14000.0
+  Wircam.COnar:
+    cw: 23265.0
+    fwhm: 337.0
 filter_repair_lookup:
   BrG: Brackett_gamma
-  CN.MP7803: CN
   CaHK.MP9303: CaHK
+  CH4Off: CH4_off
+  CH4On: CH4_on
+  CN.MP7803: CN
   Halpha.MP7604: Halpha_off
   HaOFF.MP7604: Halpha_off
   Halpha.MP7605: Halpha_on

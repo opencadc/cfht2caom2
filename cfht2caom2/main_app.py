@@ -461,10 +461,11 @@ def get_obs_intent(header):
     # CW
     # Determine Observation.intent = obs.intent = "science" or "calibration"
     # phot & astr std & acquisitions/align are calibration.
+    # from caom2IngestWircam.py, l731
     result = ObservationIntentType.CALIBRATION
     obs_type = _get_obstype(header)
     if obs_type == 'OBJECT':
-        run_id = header.get('RUNID')
+        run_id = header.get('RUNID').lower()
         if run_id is None or len(run_id) < 4:
             file_name = _get_filename(header)
             if file_name is not None:
@@ -552,30 +553,34 @@ def get_plane_data_release(header):
     # QSO data is indicated in the fits headers by the keyword REL_DATE."
 
     result = header.get('REL_DATE')
+    date_obs = None
+    run_id = None
     if result is None:
         date_obs = header.get('DATE-OBS')
         run_id = _get_run_id(header)
-        if run_id == 'SMEARING':
-            result = header.get('DATE')
-        elif (run_id[3] == 'E' or run_id[3] == 'Q') and date_obs is not None:
-            result = f'{date_obs}T00:00:00'
-        else:
-            obs_intent = get_obs_intent(header)
-            if obs_intent == ObservationIntentType.CALIBRATION:
-                # from caom2IngestMegacamdetrend.py, l445
+        if run_id is not None:
+            if run_id == 'SMEARING':
                 result = header.get('DATE')
+            elif ((run_id[3] == 'E' or run_id[3] == 'Q')
+                  and date_obs is not None):
+                result = f'{date_obs}T00:00:00'
+            else:
+                obs_intent = get_obs_intent(header)
+                if obs_intent == ObservationIntentType.CALIBRATION:
+                    # from caom2IngestMegacamdetrend.py, l445
+                    result = header.get('DATE')
+                    if result is None:
+                        result = header.get('TVSTART')
                 if result is None:
-                    result = header.get('TVSTART')
-            if result is None:
-                logging.warning(
-                    f'REL_DATE not in header. Derive from RUNID {run_id}.')
-                semester = mc.to_int(run_id[0:2])
-                rel_year = 2000 + semester + 1
-                if run_id[2] == 'A':
-                    result = f'{rel_year}-08-31T00:00:00'
-                else:
-                    rel_year += 1
-                    result = f'{rel_year}-02-28T00:00:00'
+                    logging.warning(
+                        f'REL_DATE not in header. Derive from RUNID {run_id}.')
+                    semester = mc.to_int(run_id[0:2])
+                    rel_year = 2000 + semester + 1
+                    if run_id[2] == 'A':
+                        result = f'{rel_year}-08-31T00:00:00'
+                    else:
+                        rel_year += 1
+                        result = f'{rel_year}-02-28T00:00:00'
     return result
 
 
@@ -849,16 +854,6 @@ def get_target_standard(header):
                     result = True
         else:
             result = False
-    return result
-
-
-def get_wircam_time_function_naxis(uri):
-    result = 1
-    suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
-    if suffix == 'g':
-        # stop the over-ride of the original header values by the
-        # action of the blueprint
-        result = None
     return result
 
 
@@ -1369,6 +1364,7 @@ def accumulate_espadons_bp(bp, cfht_name):
 
     bp.set('Chunk.time.axis.function.delta',
            'get_espadons_time_refcoord_delta(params)')
+    bp.set('Chunk.time.axis.function.naxis', 1)
     bp.set('Chunk.time.axis.function.refCoord.val',
            'get_espadons_time_refcoord_val(params)')
 
@@ -1399,6 +1395,7 @@ def accumulate_mega_bp(bp, uri, cfht_name):
     bp.set_default('Plane.provenance.name', 'ELIXIR')
     bp.set_default('Plane.provenance.reference',
                    'http://www.cfht.hawaii.edu/Instruments/Elixir/')
+    bp.set('Chunk.time.axis.function.naxis', 1)
 
     logging.debug('Done accumulate_mega_bp.')
 
@@ -1417,6 +1414,7 @@ def accumulate_sitelle_bp(bp, uri, cfht_name):
 
     bp.set('Chunk.time.axis.function.delta',
            'get_sitelle_time_refcoord_delta(params)')
+    bp.set('Chunk.time.axis.function.naxis', 1)
     bp.set('Chunk.time.axis.function.refCoord.val',
            '_get_mjd_start(header)')
 
@@ -1508,8 +1506,11 @@ def accumulate_wircam_bp(bp, uri, cfht_name):
 
     bp.set('Chunk.energy.bandpassName', 'get_wircam_bandpass_name(header)')
 
-    bp.set('Chunk.time.axis.function.naxis',
-           'get_wircam_time_function_naxis(uri)')
+    if cfht_name.suffix != 'g':
+        # SF - 07-05-20
+        # so NAXIS here (where 'here' is a 'g' file) is NAXIS=3: time sequence
+        # of images of the guiding camera
+        bp.set('Chunk.time.axis.function.naxis', 1)
 
     logging.debug('Done accumulate_wircam_bp.')
 
@@ -1762,9 +1763,9 @@ def update(observation, **kwargs):
                     elif instrument is md.Inst.WIRCAM:
                         if chunk.time is not None:
                             _update_wircam_time(
-                                chunk, headers, idx, cfht_name,
+                                part, chunk, headers, idx, cfht_name,
                                 observation.type,
-                                observation.observation_id, fqn)
+                                observation.observation_id)
 
                         if (cfht_name.suffix in ['f'] or
                                 observation.type in
@@ -2206,43 +2207,44 @@ def _update_sitelle_plane(observation, uri):
 
 
 def _update_wircam_position(part, chunk, headers, idx, obs_id):
+    """'g' file position handling, which is quite unique."""
     logging.debug(f'Begin _update_wircam_position for {obs_id}')
     header = headers[idx]
 
     obj_name = header.get('OBJNAME')
     if obj_name == 'zenith':
+        logging.warning(f'obj_name is zenith. No position for {obs_id}')
         cc.reset_position(chunk)
         return
 
-    # caom2IngestWircam.py, l870+
-    if headers[0].get('CRVAL2') is not None:
-        cd1_1 = mc.to_float(headers[0].get('PIXSCAL1')) / 3600.0
-        cd2_2 = mc.to_float(headers[0].get('PIXSCAL2')) / 3600.0
-    elif headers[1].get('CRVAL2') is not None:
-        cd1_1 = mc.to_float(headers[1].get('PIXSCAL1')) / 3600.0
-        cd2_2 = mc.to_float(headers[1].get('PIXSCAL2')) / 3600.0
+    part_index = mc.to_int(part.name)
+    header = headers[part_index]
+    cd1_1 = None
+    cd2_2 = None
+    if header.get('CRVAL2') is not None:
+        cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
+        cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
 
-    naxis_1 = headers[0].get('NAXIS1')
+    if cd1_1 is None or cd2_2 is None:
+        cc.reset_position(chunk)
+        return
+
+    naxis_1 = header.get('NAXIS1')
     if naxis_1 is None:
-        naxis_1 = headers[0].get('ZNAXIS1')
-        if naxis_1 is None:
-            naxis_1 = headers[1].get('NAXIS1')
-            if naxis_1 is None:
-                naxis_1 = headers[1].get('ZNAXIS1')
-    naxis_2 = headers[0].get('NAXIS2')
+        naxis_1 = header.get('ZNAXIS1')
+    naxis_2 = header.get('NAXIS2')
     if naxis_2 is None:
-        naxis_2 = headers[0].get('ZNAXIS2')
-        if naxis_2 is None:
-            naxis_2 = headers[1].get('NAXIS2')
-            if naxis_2 is None:
-                naxis_2 = headers[1].get('ZNAXIS2')
+        naxis_2 = header.get('ZNAXIS2')
 
+    # TODO - this is why the 1151210g file fails to ingest .... wtf? Did
+    # I put this in?
     if part.name == '5':
         cr_val1 = 0.0
         cr_val2 = 0.0
     else:
-        wcgd_ra = headers[0].get(f'WCGDRA{part.name}')
-        wcgd_dec = headers[0].get(f'WCGDDEC{part.name}')
+        # TODO - should I be using astropy for this?
+        wcgd_ra = header.get(f'WCGDRA{part.name}')
+        wcgd_dec = header.get(f'WCGDDEC{part.name}')
         ra_temp = wcgd_ra.split(':')
         dec_temp = wcgd_dec.split(':')
         cr_val1 = 15.0 * (mc.to_float(ra_temp[0]) +
@@ -2278,9 +2280,11 @@ def _update_wircam_position(part, chunk, headers, idx, obs_id):
     logging.debug(f'End _update_wircam_position for {obs_id}')
 
 
-def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
+def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
+                        obs_id):
     logging.debug(f'Begin _update_wircam_time for {obs_id}')
-    if cfht_name.suffix == 'g':
+    if (cfht_name.suffix == 'g' and chunk.time.axis is not None and
+            chunk.time.axis.function is not None):
         # CW
         # Define time samples for guidecube data
         # Guiding time doesn't seem to match up very well, so just say that
@@ -2290,23 +2294,30 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
         wcgdra1_0 = headers[0].get('WCGDRA1')
         wc_period_0 = headers[0].get('WCPERIOD')
         wc_period = None
-        if (chunk.time.axis is not None and
-                chunk.time.axis.function is not None):
-            if wcgdra1_0 is not None and wc_period_0 is not None:
-                wc_period = wc_period_0
-            else:
-                wcgdra1_1 = headers[1].get('WCGDRA1')
-                wc_period_1 = headers[1].get('WCPERIOD')
-                if wcgdra1_1 is not None and wc_period_1 is not None:
-                    wc_period = wc_period_1
+        if wcgdra1_0 is not None and wc_period_0 is not None:
+            wc_period = wc_period_0
+        else:
+            wcgdra1_1 = headers[1].get('WCGDRA1')
+            wc_period_1 = headers[1].get('WCPERIOD')
+            if wcgdra1_1 is not None and wc_period_1 is not None:
+                wc_period = wc_period_1
 
-            if wc_period is not None:
-                if wc_period < 0.0:
-                    wc_period = 100.0
-                # caom2IngestWircam.py, l375
-                chunk.time.exposure = wc_period / 1000.0
-                chunk.time.resolution = chunk.time.exposure
-                chunk.time.axis.function.delta = chunk.time.exposure / 86400.0
+        if wc_period is not None:
+            if wc_period < 0.0:
+                wc_period = 100.0
+            # caom2IngestWircam.py, l375
+            chunk.time.exposure = wc_period / 1000.0
+            chunk.time.resolution = chunk.time.exposure
+            chunk.time.axis.function.delta = chunk.time.exposure / 86400.0
+            part_index = mc.to_int(part.name)
+            part_header = headers[part_index]
+            time_index = chunk.naxis
+            naxis_key = f'ZNAXIS{time_index}'
+            temp = part_header.get(naxis_key)
+            if temp is None:
+                naxis_key = f'NAXIS{time_index}'
+                temp = part_header.get(naxis_key)
+            chunk.time.axis.function.naxis = temp
 
     # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
     # seem to prefer NAXIS, so odd as this placement seems, do not rely
@@ -2319,6 +2330,18 @@ def _update_wircam_time(chunk, headers, idx, cfht_name, obs_type, obs_id, fqn):
             chunk.time.axis.function.naxis = mc.to_int(n_exp)
 
     logging.debug(f'End _update_wircam_time for {obs_id}')
+
+
+# def get_wircam_time_function_naxis(uri):
+#     result = 1
+#     suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
+#     # TODO - which error does this fix? Because it breaks a bunch of
+#     # observations ..... sigh
+#     # if suffix == 'g':
+#     #     # stop the over-ride of the original header values by the
+#     #     # action of the blueprint
+#     #     result = None
+#     return result
 
 
 def _identify_instrument(uri):

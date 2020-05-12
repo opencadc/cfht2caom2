@@ -100,6 +100,18 @@ INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
 # e.g. 1007126g.fits.gz with filter name == 'FakeBlank', leave the
 # energy information empty
 
+# From SF - 07-05-20
+# On May 1, 2015, at 11:44 AM, Pascal Fouqué <fouque@cfht.hawaii.edu(opens
+# in new tab)
+# <mailto:fouque@cfht.hawaii.edu(opens in new tab)>> wrote:
+# Hi Chris,
+# Yes. COnar is the name for the “too narrow” CO filter. According to the
+# transmission curve I have, central wavelength is 2326.5nm at the center and
+# FWHM is 33.7nm for a maximum transmission of 89.4%. Greg will confirm these
+# values. Is it all you need?
+# Pascal
+
+
 # keys in the cache:
 FILTER_REPAIR_CACHE = 'filter_repair_lookup'
 ENERGY_DEFAULTS_CACHE = 'energy_defaults'

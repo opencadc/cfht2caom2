@@ -186,6 +186,7 @@ class CFHTPreview(mc.PreviewVisitor):
         fig = pylab.figure(figsize=(10.24, 10.24), dpi=100)
 
         label = f'{self._storage_name.product_id}: object'
+        pylab.clf()
         self._subplot(swa, sia, spa, 4300.0, 4600.0, label, 1, 4408.0, 4412.0,
                       'Stokes spectrum (x5)')
         self._subplot(swa, sia, spa, 6500.0, 6750.0, label, 2, 6589.0, 6593.0,
@@ -476,6 +477,7 @@ class CFHTPreview(mc.PreviewVisitor):
             if self._storage_name.suffix == 'p':
                 spa[i] = float(sp[i]) * pScale  # increase scale of polarization
         label = f'{self._storage_name.product_id}: object'
+        pylab.clf()
         self._subplot(swa, sia, spa, 15000.0, 15110.0, label, 1, 15030.0,
                       15030.0, 'Stokes spectrum')
         self._subplot(swa, sia, spa, 22940.0, 23130.0, label, 2, 22990.0,

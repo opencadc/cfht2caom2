@@ -1,0 +1,650 @@
+SIMPLE  =                    T / file does conform to FITS standard             
+BITPIX  =                   16 / number of bits per data pixel                  
+NAXIS   =                    0 / number of data axes                            
+EXTEND  =                    T / FITS dataset may contain extensions            
+COMMENT   FITS (Flexible Image Transport System) format is defined in 'Astronomy
+COMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H 
+END                                                                             
+XTENSION= 'BINTABLE'           / binary table extension                         
+BITPIX  =                    8 / 8-bit bytes                                    
+NAXIS   =                    2 / 2-dimensional binary table                     
+NAXIS1  =                    8 / width of table in bytes                        
+NAXIS2  =                20496 / number of rows in table                        
+PCOUNT  =              1045296 / size of special data area                      
+GCOUNT  =                    1 / one data group (required keyword)              
+TFIELDS =                    1 / number of fields in each row                   
+TTYPE1  = 'COMPRESSED_DATA'    / label for field   1                            
+TFORM1  = '1PB(51) '           / data format of field: variable length array    
+EXTNAME = 'COMPRESSED_IMAGE'   / name of this binary table extension            
+ZIMAGE  =                    T / extension contains compressed image            
+ZBITPIX =                   16 / data type of original image                    
+ZNAXIS  =                    3 / dimension of original image                    
+ZNAXIS1 =                   28 / length of original image axis                  
+ZNAXIS2 =                   28 / length of original image axis                  
+ZNAXIS3 =                  732 / length of original image axis                  
+ZTILE1  =                   28 / size of tiles to be compressed                 
+ZTILE2  =                    1 / size of tiles to be compressed                 
+ZTILE3  =                    1 / size of tiles to be compressed                 
+ZCMPTYPE= 'RICE_1  '           / compression algorithm                          
+ZNAME1  = 'BLOCKSIZE'          / compression block size                         
+ZVAL1   =                   32 / pixels per block                               
+NEXTEND =                    1 / Number of extensions                           
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+DATE    = '2006-03-18T03:53:37' / Local date and time                           
+WCDATEND= '2006-03-18T03:55:34' / Local date and time - end of cube             
+DETECTOR= 'WIRCam  '                                                            
+PIXSCAL1=               0.3000 / Pixel scale for axis 1 (arcsec/pixel)          
+PIXSCAL2=               0.3000 / Pixel scale for axis 2 (arcsec/pixel)          
+IRFPA1  = 'HAWAII-2RG-#77'     / Name of the detector in ext 1                  
+IRFPA2  = 'HAWAII-2RG-#52'     / Name of the detector in ext 2                  
+IRFPA3  = 'HAWAII-2RG-#54'     / Name of the detector in ext 3                  
+IRFPA4  = 'HAWAII-2RG-#60'     / Name of the detector in ext 4                  
+DETSEC  = '[1:1,28:28]'        / Mosaic area of the detector                    
+DATASEC = '[1:2048,1:2048]'    / Imaging area of the detector                   
+NIRFPA  = '4       '           / Number of IR focal plane arrays                
+DATE-OBS= '2006-03-18'         / Date at start of observation (UTC)             
+CTYPE1  = 'RA---TAN'           / WCS Coordinate type                            
+CTYPE2  = 'DEC--TAN'           / WCS Coordinate type                            
+INSTRUME= 'WIRCam  '           / Instrument Name                                
+COMMENT                                                                         
+COMMENT WIRCam Guider                                                           
+COMMENT -------------                                                           
+COMMENT                                                                         
+WCCHBIAS=                 3000 / Guider frame chip bias added to CDS value      
+WCPERIOD=            -9999.000 / Guider sampling period (in msec)               
+WCCOADD =                -9999 / Number of coadded guider frames per sample     
+WCFOWLER=                -9999 / Pairs of reads used in Fowler sampling a frame 
+WCERROR = 'Null    '           / Guider error during acquisition                
+WCALGO  = 'Null    '           / Algorithm used for combining star signals      
+WCONOFF1=                    0 / Guiding (1) or not guiding (0) on array 1      
+WCONOFF2=                    0 / Guiding (1) or not guiding (0) on array 2      
+WCONOFF3=                    0 / Guiding (1) or not guiding (0) on array 3      
+WCONOFF4=                    0 / Guiding (1) or not guiding (0) on array 4      
+WCCLOCK1=                    0 / Guider pixels being clocked on array 1         
+WCCLOCK2=                    0 / Guider pixels being clocked on array 2         
+WCCLOCK3=                    0 / Guider pixels being clocked on array 3         
+WCCLOCK4=                    0 / Guider pixels being clocked on array 4         
+WCPGAIN =            -9999.900 / Partial gain in PID loop                       
+WCIGAIN =            -9999.900 / Integral gain in PID loop                      
+WCDGAIN =            -9999.900 / Differential gain in PID loop                  
+WCPOSX1 =                 1548 / Guider lower left X position on array 1        
+WCPOSY1 =                  137 / Guider lower left Y position on array 1        
+WCPOSX2 =                   34 / Guider lower left X position on array 2        
+WCPOSY2 =                   34 / Guider lower left Y position on array 2        
+WCPOSX3 =                  399 / Guider lower left X position on array 3        
+WCPOSY3 =                 1172 / Guider lower left Y position on array 3        
+WCPOSX4 =                 1573 / Guider lower left X position on array 4        
+WCPOSY4 =                  524 / Guider lower left Y position on array 4        
+WCSIZEX =                   28 / Guider box size in X                           
+WCSIZEY =                   28 / Guider box size in Y                           
+WCNULLX1=             -9999.90 / Guider null position in X, arr 1               
+WCNULLY1=             -9999.90 / Guider null position in Y, arr 1               
+WCNULLX2=             -9999.90 / Guider null position in X, arr 2               
+WCNULLY2=             -9999.90 / Guider null position in Y, arr 2               
+WCNULLX3=             -9999.90 / Guider null position in X, arr 3               
+WCNULLY3=             -9999.90 / Guider null position in Y, arr 3               
+WCNULLX4=             -9999.90 / Guider null position in X, arr 4               
+WCNULLY4=             -9999.90 / Guider null position in Y, arr 4               
+WCDEVX1 =             -9999.90 / Avg X std dev off null position (pixel), arr 1 
+WCDEVY1 =             -9999.90 / Avg Y std dev off null position (pixel), arr 1 
+WCDEVX2 =             -9999.90 / Avg X std dev off null position (pixel), arr 2 
+WCDEVY2 =             -9999.90 / Avg Y std dev off null position (pixel), arr 2 
+WCDEVX3 =             -9999.90 / Avg X std dev off null position (pixel), arr 3 
+WCDEVY3 =             -9999.90 / Avg Y std dev off null position (pixel), arr 3 
+WCDEVX4 =             -9999.90 / Avg X std dev off null position (pixel), arr 4 
+WCDEVY4 =             -9999.90 / Avg Y std dev off null position (pixel), arr 4 
+WCFWHMX1=             -9999.90 / Avg FWHM in X of the star on array 1 (pixels)  
+WCFWHMY1=             -9999.90 / Avg FWHM in Y of the star on array 1 (pixels)  
+WCFWHMX2=             -9999.90 / Avg FWHM in X of the star on array 2 (pixels)  
+WCFWHMY2=             -9999.90 / Avg FWHM in Y of the star on array 2 (pixels)  
+WCFWHMX3=             -9999.90 / Avg FWHM in X of the star on array 3 (pixels)  
+WCFWHMY3=             -9999.90 / Avg FWHM in Y of the star on array 3 (pixels)  
+WCFWHMX4=             -9999.90 / Avg FWHM in X of the star on array 4 (pixels)  
+WCFWHMY4=             -9999.90 / Avg FWHM in Y of the star on array 4 (pixels)  
+WCFLUX1 =              -9999.9 / Avg flux in guide star on array 1 (ADU/sample) 
+WCFLUX2 =              -9999.9 / Avg flux in guide star on array 2 (ADU/sample) 
+WCFLUX3 =              -9999.9 / Avg flux in guide star on array 3 (ADU/sample) 
+WCFLUX4 =              -9999.9 / Avg flux in guide star on array 4 (ADU/sample) 
+WCNOISE1=              -9999.9 / Avg median dev from median, arr 1 (ADU/sample) 
+WCNOISE2=              -9999.9 / Avg median dev from median, arr 2 (ADU/sample) 
+WCNOISE3=              -9999.9 / Avg median dev from median, arr 3 (ADU/sample) 
+WCNOISE4=              -9999.9 / Avg median dev from median, arr 4 (ADU/sample) 
+WCSNR1  =              -9999.9 / Avg SNR of the star on array 1                 
+WCSNR2  =              -9999.9 / Avg SNR of the star on array 2                 
+WCSNR3  =              -9999.9 / Avg SNR of the star on array 3                 
+WCSNR4  =              -9999.9 / Avg SNR of the star on array 4                 
+CMMTOBS = 'N/A     '                                                            
+CMMTSEQ = 'DP10[1/10] - Ref + [0.000000 0.000000]'                              
+OBJECT  = 'D3-1    '                                                            
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Chris Willott'                                                       
+RUNID   = '06AC01  '                                                            
+DETSECA = '[15:28,15:28]'      / Guider Mosaic Area of IRFPA1                   
+DETSECB = '[15:28,1:14]'       / Guider Mosaic Area of IRFPA2                   
+DETSECC = '[1:14,1:14]'        / Guider Mosaic Area of IRFPA3                   
+DETSECD = '[1:14,15:28]'       / Guider Mosaic Area of IRFPA4                   
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'track   '           / Telescope Control System status                
+TIMESYS = 'UTC     '           / Time System for DATExxxx                       
+UTIME   = '13:53:36.97'        / Time at start of observation (UT)              
+UTC-OBS = '13:53:36.97'        / Time at start of observation (UTC)             
+MJDATE  =        53812.5789001 / Modified Julian Date at start of observation   
+MJD-OBS =        53812.5789001 / Modified Julian Date at start of obs.          
+SIDTIME = '15:15:41.23'        / Sidereal time at start of observation          
+LST-OBS = '15:15:41.23'        / Sidereal time at start of exposure             
+DATEEND = '2006-03-18'         / Date at end of observation (UTC)               
+UTCEND  = '13:55:35.16'        / Time at end of observation (UTC)               
+MJDEND  =        53812.5802681 / Modified Julian Date at end of obs.            
+LSTEND  = '15:17:39.74'        / Sidereal time at end of exposure               
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+RA      = '14:18:19.40'        / Object right ascension                         
+DEC     = '52:36:36.0'         / Object declination                             
+HA      = '0:57:21.83'         / Object hour angle at start of exposure         
+HAEND   = '0:59:20.34'         / Object hour angle at end of exposure           
+INSTZRA =                52.00 / Instrument zero for RA in arc seconds          
+INSTZDEC=               -52.00 / Instrument zero for Dec in arc seconds         
+RA_DEG  =           214.580833 / Object right ascension in degrees              
+DEC_DEG =            52.610000 / Object declination in degrees                  
+OBJNAME = 'D3-1    '           / Target name                                    
+OBJMAG  =                  0.0 / Target magnitude                               
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '14:18:19.40'        / Target right ascension                         
+OBJDEC  = '52:36:36.0'         / Target declination                             
+OBJRAPM =                 0.00 / Target right ascension proper motion in as/yr  
+OBJDECPM=                 0.00 / Target declination proper motion in as/yr      
+CRVAL1  =            214.58083 / WCS Ref value (RA in decimal degrees)          
+CRVAL2  =             52.61000 / WCS Ref value (DEC in decimal degrees)         
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'WIRCam  '           / TCS guider name                                
+GUIEQUIN=              2006.21 / TCS guider equinox                             
+GUIRADEC= 'GAPPT   '           / TCS guider system for equinox                  
+GUIRA   = '0:00:00.00'         / TCS guider right ascension                     
+GUIDEC  = '0:00:00.0'          / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = 'Null    '           / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =                0.000 / Telescope bonnette guide probe X position      
+YPROBE  =                0.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =                5.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.214 / Airmass at start of observation                
+TELALT  =                55.43 / Telescope altitude at start of observation, deg
+TELAZ   =               344.69 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                346.0 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=                69.20 / Angle from object to moon at start in degrees  
+MOONPHAS=                -0.82 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'True    '           / Moon up? True or False                         
+MOONALT =                50.10 / Moon altitude at start in degrees              
+MOONAZ  =               202.40 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'WIRCam  '           / Telescope focus in use                         
+TELCONF = 'WIRCam  '           / Telescope focus in use                         
+FOCUSPOS=                 4795 / Telescope focus encoder readout                
+TELFOCUS=                 4795 / Telescope focus encoder readout                
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= '0077 13:49:10.020659' / TCS GPS read out in BCD                      
+TCSGPSTM=             13.81945 / TCS GPS clock time in decimal hours            
+TCSRBUSS= '13:49:12.953'       / TCS RBUSS clock time                           
+TCSEPICS= '20060318 13:49:10.033' / TCS EPICS clock time                        
+TCSAMODE= 'T       '           / TCS acquisition mode - T/O/G/g for t/o/g coords
+TCSMJD  =        53812.5758100 / TCS MJD                                        
+TCSLST  =             15.18709 / TCS LST in decimal hours                       
+TCSAPHA =              13.1622 / TCS apparent hour angle in degrees             
+TCSAPDEC=              52.5762 / TCS apparent declination in degrees            
+TCSOBHA =              13.1577 / TCS observed hour angle in degrees             
+TCSOBDEC=              52.5698 / TCS observed declination in degrees            
+TCSENHA =                48199 / TCS hour angle encoder bits reading            
+TCSENDEC=               143905 / TCS declination encoder bits reading           
+TCSEDHA =              13.2979 / TCS hour angle encoder in degrees              
+TCSEDDEC=              52.5821 / TCS declination encoder in degrees             
+TCSINHA =                 0.03 / TCS hour angle incremental encoder in arcsec   
+TCSINDEC=                 0.04 / TCS declination incremental encoder in arcsec  
+TCSSEHA =                 0.00 / TCS hour angle servo error in arcsec           
+TCSSEDEC=                 0.00 / TCS declination servo error in arcsec          
+TCSGEHA =                 0.00 / TCS hour angle guider error in arcsec          
+TCSGEDEC=                 0.00 / TCS declination guider error in arcsec         
+TCSMVRA =               0.0000 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=               0.0000 / TCS declination acquisition move in arcsec     
+TCSMVX  =            -9999.900 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =            -9999.900 / TCS secondary guider acquisition y move in mm  
+FILTER  = 'Ks      '           / description of filter                          
+WHEELAID=                    0 / 'wheel' A position                             
+WHEELADE= 'Open    '           / description of filter                          
+WHEELALB=               0.8300 / lower bound of filter A (units/%?)             
+WHEELAUB=                2.600 / upper bound of filter A (units/%?)             
+WHEELAEN=                    0 / wheel encoder count of filter A                
+WHEELBID=                    3 / 'wheel' B position                             
+WHEELBDE= 'Ks.WC8302'          / description of filter                          
+WHEELBLB=                1.984 / lower bound of filter B (units/%?)             
+WHEELBUB=                2.308 / upper bound of filter B (units/%?)             
+WHEELBEN=              -192004 / wheel encoder count of filter B                
+WCGDSEC1= '[15:28,15:28]'      / Guider Mosaic Area of IRFPA1                   
+WCGDSEC2= '[15:28,1:14]'       / Guider Mosaic Area of IRFPA2                   
+WCGDSEC3= '[1:14,1:14]'        / Guider Mosaic Area of IRFPA3                   
+WCGDSEC4= '[1:14,15:28]'       / Guider Mosaic Area of IRFPA4                   
+WCAQGDST= 'ON      '           / Guiding state of acquisition system            
+WCAQPTST= 'ON      '           / Refine pointing state of acquisition system    
+WCPTRAO =                -0.15 / Pointing correction applied in RA (as)         
+WCPTDECO=                 0.43 / Pointing correction applied in Dec (as)        
+WCROTATE=              -0.2506 / Rotation in degrees of detector block          
+WCSCALE =              0.30674 / Scale factor in arcseconds per pixel           
+WCGDUSE1= 'TRUE    '           / Indicates whether array 1 is used for guiding  
+WCGDRA1 = '14:17:19.6'         / RA of guide star on array 1                    
+WCGDDEC1= '03:30:27.3'         / Dec of guide star on array 1                   
+WCGDMAG1=                11.04 / Catalog magnitude of guide star on array 1     
+WCGDUSE2= 'FALSE   '           / Indicates whether array 2 is used for guiding  
+WCGDRA2 = '00:00:00.0'         / RA of guide star on array 2                    
+WCGDDEC2= '00:00:00.0'         / Dec of guide star on array 2                   
+WCGDMAG2=                 0.00 / Catalog magnitude of guide star on array 2     
+WCGDUSE3= 'TRUE    '           / Indicates whether array 3 is used for guiding  
+WCGDRA3 = '14:19:10.9'         / RA of guide star on array 3                    
+WCGDDEC3= '03:30:03.5'         / Dec of guide star on array 3                   
+WCGDMAG3=                11.14 / Catalog magnitude of guide star on array 3     
+WCGDUSE4= 'TRUE    '           / Indicates whether array 4 is used for guiding  
+WCGDRA4 = '14:18:32.0'         / RA of guide star on array 4                    
+WCGDDEC4= '03:30:35.1'         / Dec of guide star on array 4                   
+WCGDMAG4=                11.49 / Catalog magnitude of guide star on array 4     
+WCFOCTMP=               79.999 / Focal Plane Temperature (K)                    
+WCDETTMP=               79.478 / Baseplate Temperature (K)                      
+WCGETTMP=               75.014 / Getter Temperature (K)                         
+WCCAMTMP=               76.878 / Camembert Temperature (K)                      
+WCVACUUM=             4.60E-06 / Cryovessel Vacuum (K)                          
+WCRLGTMP=                73.15 / Real Getter Temperature (K)                    
+WCSBWTMP=                81.05 / Shield Barrel Window Side Temperature (K)      
+WCSBDTMP=                77.95 / Shield Barrel Detector Side Temperature (K)    
+WCSSWTMP=                76.45 / Shield Saucer Window Side Temperature (K)      
+WCBDSTMP=                74.55 / Barrel Detector Side Temperature (K)           
+WCBWSTMP=                79.35 / Barrel Window Side Temperature (K)             
+WCLWCTMP=                81.55 / Lens Window Side Temperature (K)               
+WCLDSTMP=                76.55 / Lens Detector Side Temperature (K)             
+WCCRSTMP=               288.85 / Cryocooler Surface Temperature (K)             
+WCCGTTMP=                 14.7 / Cage Top Temperature (C)                       
+WCCGMTMP=                  8.1 / Cage Middle Temperature (C)                    
+WCCGBTMP=                  9.5 / Cage Under Floor Temperature (C)               
+WCCGATMP=                 10.9 / Cage Average Temperature (C)                   
+WCCGOTMP=                  3.6 / Cage Outside Temperature (C)                   
+WCCGHUM =                 28.7 / Cage Humidity (%)                              
+WCGLYTMP=                 -3.3 / Glycol Temperature (C)                         
+WCGLYPRS=                30.24 / Glycol Pressure (PSI)                          
+WCGLYFLW=                 0.91 / Glycol Flow                                    
+TESPMIRE=                 2.40 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 2.07 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 1.89 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 1.08 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=                 0.55 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 1.99 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=                 2.41 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 1.18 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                -0.92 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 0.45 / 06 temp, air, top ring west deg C              
+TEANRLSB=                11.13 / 19 temp, air, north rail support beam deg C    
+TESHRSET=              9999.00 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 0.82 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 0.79 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 0.91 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 0.96 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 1.32 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 1.52 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                -4.74 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                -1.75 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=                -2.42 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 1.23 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 0.87 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 2.86 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                 3.06 / 61 temp, surface, floor above control room degC
+TESPIERN=                 2.39 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 2.64 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 0.01 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 0.09 / 86 temp, air, weather tower deg C              
+WINDSPED=                -0.08 / 84 wind speed, weather tower knots             
+WINDDIR =                98.39 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                51.88 / 87 relative humidity, weather tower %          
+PRESSURE=               613.47 / 31 barometric pressure, control room mb        
+CRUNID  = '06Aw01  '           / Elixir camera run ID                           
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             
+XTENSION= 'TABLE   '           / IMAGE extension                                
+BITPIX  =                    8 / number of bits per data pixel                  
+NAXIS   =                    2 / number of data axes                            
+NAXIS1  =                  300 / length of data axis 1                          
+NAXIS2  =                  732 / length of data axis 2                          
+PCOUNT  =                    0 / required keyword; must = 0                     
+GCOUNT  =                    1 / required keyword; must = 1                     
+TFIELDS =                   30 / Number of columns                              
+EXTNAME = '0       '           / Table extension (object) number                
+TFORM1  = 'D10     '           / Double (floating point)                        
+TTYPE1  = 'CErr_x  '           / Double (floating point)                        
+TUNIT1  = 'Pixels  '           / Measurement Units                              
+TDISP1  = 'F9.3    '           / Display Format                                 
+TBCOL1  =                    1 / Start Column                                   
+TFORM2  = 'D10     '           / Double (floating point)                        
+TTYPE2  = 'CErr_y  '           / Double (floating point)                        
+TUNIT2  = 'Pixels  '           / Measurement Units                              
+TDISP2  = 'F9.3    '           / Display Format                                 
+TBCOL2  =                   11 / Start Column                                   
+TFORM3  = 'D10     '           / Double (floating point)                        
+TTYPE3  = 'Centroid_x'         / Double (floating point)                        
+TUNIT3  = 'Pixels  '           / Measurement Units                              
+TDISP3  = 'F9.3    '           / Display Format                                 
+TBCOL3  =                   21 / Start Column                                   
+TFORM4  = 'D10     '           / Double (floating point)                        
+TTYPE4  = 'Centroid_y'         / Double (floating point)                        
+TUNIT4  = 'Pixels  '           / Measurement Units                              
+TDISP4  = 'F9.3    '           / Display Format                                 
+TBCOL4  =                   31 / Start Column                                   
+TFORM5  = 'D10     '           / Double (floating point)                        
+TTYPE5  = 'Vx      '           / Double (floating point)                        
+TUNIT5  = 'Volts   '           / Measurement Units                              
+TDISP5  = 'F9.3    '           / Display Format                                 
+TBCOL5  =                   41 / Start Column                                   
+TFORM6  = 'D10     '           / Double (floating point)                        
+TTYPE6  = 'Vy      '           / Double (floating point)                        
+TUNIT6  = 'Volts   '           / Measurement Units                              
+TDISP6  = 'F9.3    '           / Display Format                                 
+TBCOL6  =                   51 / Start Column                                   
+TFORM7  = 'D10     '           / Double (floating point)                        
+TTYPE7  = 'TCS_x   '           / Double (floating point)                        
+TDISP7  = 'F9.3    '           / Display Format                                 
+TUNIT7  = 'Arc Seconds'        / Measurement Units                              
+TBCOL7  =                   61 / Start Column                                   
+TFORM8  = 'D10     '           / Double (floating point)                        
+TTYPE8  = 'TCS_y   '           / Double (floating point)                        
+TUNIT8  = 'Arc Seconds'        / Measurement Units                              
+TDISP8  = 'F9.3    '           / Display Format                                 
+TBCOL8  =                   71 / Start Column                                   
+TFORM9  = 'D10     '           / Double (floating point)                        
+TTYPE9  = 'Flux1   '           / Double (floating point)                        
+TUNIT9  = 'ADU     '           / Measurement Units                              
+TDISP9  = 'F9.3    '           / Display Format                                 
+TBCOL9  =                   81 / Start Column                                   
+TFORM10 = 'D10     '           / Double (floating point)                        
+TTYPE10 = 'Flux2   '           / Double (floating point)                        
+TUNIT10 = 'ADU     '           / Measurement Units                              
+TDISP10 = 'F9.3    '           / Display Format                                 
+TBCOL10 =                   91 / Start Column                                   
+TFORM11 = 'D10     '           / Double (floating point)                        
+TTYPE11 = 'Flux3   '           / Double (floating point)                        
+TUNIT11 = 'ADU     '           / Measurement Units                              
+TDISP11 = 'F9.3    '           / Display Format                                 
+TBCOL11 =                  101 / Start Column                                   
+TFORM12 = 'D10     '           / Double (floating point)                        
+TTYPE12 = 'Flux4   '           / Double (floating point)                        
+TUNIT12 = 'ADU     '           / Measurement Units                              
+TDISP12 = 'F9.3    '           / Display Format                                 
+TBCOL12 =                  111 / Start Column                                   
+TFORM13 = 'D10     '           / Double (floating point)                        
+TTYPE13 = 'Noise1  '           / Double (floating point)                        
+TUNIT13 = 'ADU     '           / Measurement Units                              
+TDISP13 = 'F9.3    '           / Display Format                                 
+TBCOL13 =                  121 / Start Column                                   
+TFORM14 = 'D10     '           / Double (floating point)                        
+TTYPE14 = 'Noise2  '           / Double (floating point)                        
+TDISP14 = 'F9.3    '           / Display Format                                 
+TUNIT14 = 'ADU     '           / Measurement Units                              
+TBCOL14 =                  131 / Start Column                                   
+TFORM15 = 'D10     '           / Double (floating point)                        
+TTYPE15 = 'Noise3  '           / Double (floating point)                        
+TUNIT15 = 'ADU     '           / Measurement Units                              
+TDISP15 = 'F9.3    '           / Display Format                                 
+TBCOL15 =                  141 / Start Column                                   
+TFORM16 = 'D10     '           / Double (floating point)                        
+TTYPE16 = 'Noise4  '           / Double (floating point)                        
+TUNIT16 = 'ADU     '           / Measurement Units                              
+TDISP16 = 'F9.3    '           / Display Format                                 
+TBCOL16 =                  151 / Start Column                                   
+TFORM17 = 'D10     '           / Double (floating point)                        
+TTYPE17 = 'SNR1    '           / Double (floating point)                        
+TUNIT17 = 'ADU     '           / Measurement Units                              
+TDISP17 = 'F9.3    '           / Display Format                                 
+TBCOL17 =                  161 / Start Column                                   
+TFORM18 = 'D10     '           / Double (floating point)                        
+TTYPE18 = 'SNR2    '           / Double (floating point)                        
+TUNIT18 = 'ADU     '           / Measurement Units                              
+TDISP18 = 'F9.3    '           / Display Format                                 
+TBCOL18 =                  171 / Start Column                                   
+TFORM19 = 'D10     '           / Double (floating point)                        
+TTYPE19 = 'SNR3    '           / Double (floating point)                        
+TUNIT19 = 'ADU     '           / Measurement Units                              
+TDISP19 = 'F9.3    '           / Display Format                                 
+TBCOL19 =                  181 / Start Column                                   
+TFORM20 = 'D10     '           / Double (floating point)                        
+TTYPE20 = 'SNR4    '           / Double (floating point)                        
+TUNIT20 = 'ADU     '           / Measurement Units                              
+TDISP20 = 'F9.3    '           / Display Format                                 
+TBCOL20 =                  191 / Start Column                                   
+TFORM21 = 'D10     '           / Double (floating point)                        
+TTYPE21 = 'FWHMX1  '           / Double (floating point)                        
+TUNIT21 = 'Pixels  '           / Measurement Units                              
+TDISP21 = 'F9.3    '           / Display Format                                 
+TBCOL21 =                  201 / Start Column                                   
+TFORM22 = 'D10     '           / Double (floating point)                        
+TTYPE22 = 'FWHMY1  '           / Double (floating point)                        
+TUNIT22 = 'Pixels  '           / Measurement Units                              
+TDISP22 = 'F9.3    '           / Display Format                                 
+TBCOL22 =                  211 / Start Column                                   
+TFORM23 = 'D10     '           / Double (floating point)                        
+TTYPE23 = 'FWHMX2  '           / Double (floating point)                        
+TUNIT23 = 'Pixels  '           / Measurement Units                              
+TDISP23 = 'F9.3    '           / Display Format                                 
+TBCOL23 =                  221 / Start Column                                   
+TFORM24 = 'D10     '           / Double (floating point)                        
+TTYPE24 = 'FWHMY2  '           / Double (floating point)                        
+TUNIT24 = 'Pixels  '           / Measurement Units                              
+TDISP24 = 'F9.3    '           / Display Format                                 
+TBCOL24 =                  231 / Start Column                                   
+TFORM25 = 'D10     '           / Double (floating point)                        
+TTYPE25 = 'FWHMX3  '           / Double (floating point)                        
+TUNIT25 = 'Pixels  '           / Measurement Units                              
+TDISP25 = 'F9.3    '           / Display Format                                 
+TBCOL25 =                  241 / Start Column                                   
+TFORM26 = 'D10     '           / Double (floating point)                        
+TTYPE26 = 'FWHMY3  '           / Double (floating point)                        
+TUNIT26 = 'Pixels  '           / Measurement Units                              
+TDISP26 = 'F9.3    '           / Display Format                                 
+TBCOL26 =                  251 / Start Column                                   
+TFORM27 = 'D10     '           / Double (floating point)                        
+TTYPE27 = 'FWHMX4  '           / Double (floating point)                        
+TUNIT27 = 'Pixels  '           / Measurement Units                              
+TDISP27 = 'F9.3    '           / Display Format                                 
+TBCOL27 =                  261 / Start Column                                   
+TFORM28 = 'D10     '           / Double (floating point)                        
+TTYPE28 = 'FWHMY4  '           / Double (floating point)                        
+TUNIT28 = 'Pixels  '           / Measurement Units                              
+TDISP28 = 'F9.3    '           / Display Format                                 
+TBCOL28 =                  271 / Start Column                                   
+TFORM29 = 'D10     '           / Double (floating point)                        
+TTYPE29 = 'Null_x  '           / Double (floating point)                        
+TUNIT29 = 'Pixels  '           / Measurement Units                              
+TDISP29 = 'F9.3    '           / Display Format                                 
+TBCOL29 =                  281 / Start Column                                   
+TFORM30 = 'D10     '           / Double (floating point)                        
+TTYPE30 = 'Null_y  '           / Double (floating point)                        
+TUNIT30 = 'Pixels  '           / Measurement Units                              
+TDISP30 = 'F9.3    '           / Display Format                                 
+TBCOL30 =                  291 / Start Column                                   
+END                                                                             
