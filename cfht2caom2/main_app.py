@@ -2266,6 +2266,13 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
 
     wcgd_ra = header.get(f'WCGDRA{part.name}')
     wcgd_dec = header.get(f'WCGDDEC{part.name}')
+    if wcgd_ra is None or wcgd_dec is None:
+        logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are '
+                      f'undefined. No position.')
+        cc.reset_position(chunk)
+        return
+
+    logging.error(f'ra {wcgd_ra} dec {wcgd_dec}')
     cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
     if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
         logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are close to '
