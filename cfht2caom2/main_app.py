@@ -208,962 +208,8 @@ class ProvenanceType(Enum):
     UNDEFINED = 'UNDEFINED'  # hdf5 file support
 
 
-def get_wircam_bandpass_name(header):
-    wheel_a = header.get('WHEELADE')
-    wheel_b = header.get('WHEELBDE')
-    result = None
-    if wheel_a == 'Open' and wheel_b != 'Open':
-        result = wheel_b
-    elif wheel_b == 'Open' and wheel_a != 'Open':
-        result = wheel_a
-    elif wheel_a == 'Open' and wheel_b == 'Open':
-        result = 'Open'
-    return result
-
-
-def get_calibration_level(params):
-    header, suffix, uri = _decompose_params(params)
-    instrument = _get_instrument(header)
-    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
-    result = CalibrationLevel.CALIBRATED
-    if (cfht_name.is_simple and not cfht_name.simple_by_suffix and not
-            cfht_name.is_master_cal):
-        result = CalibrationLevel.RAW_STANDARD
-    return result
-
-
-def get_dec_deg_from_0th_header(header):
-    return header.get('DEC_DEG')
-
-
-def get_energy_ctype(header):
-    result = None
-    if _has_energy(header):
-        result = header.get('CTYPE3')
-        if result is None:
-            result = 'WAVE'
-    return result
-
-
-def get_energy_cunit(header):
-    result = None
-    if _has_energy(header):
-        result = header.get('CUNIT3')
-        if result is None:
-            result = 'Angstrom'
-    return result
-
-
-def get_energy_function_delta(params):
-    result = None
-    header, suffix, uri = _decompose_params(params)
-    if _has_energy(header):
-        if _is_espadons_energy(header, uri):
-            # caom2IngestEspadons.py l639
-            result = 0.0031764
-        elif _is_sitelle_energy(header, uri):
-            result = header.get('CDELT3')
-            if result is None:
-                # units in file are nm, units in blueprint are Angstroms
-                result = 10.0 * mc.to_float(header.get('FILTERBW'))
-        else:
-            filter_name = header.get('FILTER')
-            instrument = _get_instrument(header)
-            temp = _get_filter_md(instrument, filter_name, uri)
-            result = ac.FilterMetadataCache.get_fwhm(temp)
-    return result
-
-
-def get_energy_function_naxis(params):
-    result = 1.0
-    header, suffix, uri = _decompose_params(params)
-    if _is_espadons_energy(header, uri):
-        # caom2IngestEspadons.py l636
-        result = 213542
-    elif _is_sitelle_energy(header, uri):
-        result = header.get('NAXIS3')
-        if result is None:
-            result = 1.0
-    return result
-
-
-def get_energy_function_pix(params):
-    result = None
-    header, suffix, uri = _decompose_params(params)
-    if _has_energy(header):
-        result = 1.0
-        if _is_espadons_energy(header, uri):
-            # caom2IngestEspadons.py l637
-            result = 0.5
-        elif _is_sitelle_energy(header, uri):
-            result = header.get('CRPIX3')
-            if result is None:
-                result = 0.5
-    return result
-
-
-def get_energy_function_val(params):
-    result = None
-    header, suffix, uri = _decompose_params(params)
-    if _has_energy(header):
-        if _is_espadons_energy(header, uri):
-            # caom2IngestEspadons.py l638
-            result = 370.0
-        elif _is_sitelle_energy(header, uri):
-            result = header.get('CRVAL3')
-            if result is None:
-                # units in file are nm, units in blueprint are Angstroms
-                result = 10.0 * mc.to_float(header.get('FILTERLB'))
-        else:
-            filter_name = header.get('FILTER')
-            instrument = _get_instrument(header)
-            temp = _get_filter_md(instrument, filter_name, uri)
-            result = ac.FilterMetadataCache.get_central_wavelength(temp)
-    return result
-
-
-def get_energy_resolving_power(params):
-    result = None
-    header, suffix, uri = _decompose_params(params)
-    if _has_energy(header):
-        delta = get_energy_function_delta(params)
-        val = get_energy_function_val(params)
-        result = None
-        if delta is not None and val is not None:
-            result = val/delta
-    return result
-
-
-def get_espadons_energy_resolving_power(params):
-    result = None
-    header, suffix, uri = _decompose_params(params)
-    if _has_energy(header):
-        instmode = header.get('INSTMODE')
-        if instmode is None or 'R=' not in instmode:
-            # CW - Default if resolving power value not in header
-            # caom2IngestEspadons.py, l377
-            result = 65000.0
-        else:
-            # CW - This string is already in instrument keywords but also
-            # need to extract resolving power from it:
-            # 'Spectroscopy, star only, R=80,000'
-            temp = instmode.split('R=')
-            values = temp[1].split(',')
-            if len(values) == 1:
-                result = values[0]
-            else:
-                result = f'{values[0]}{values[1]}'
-            result = mc.to_float(result)
-    return result
-
-
-def get_sitelle_energy_resolving_power(params):
-    result = None
-    header, suffix, uri = _decompose_params(params)
-    if _has_energy(header):
-        # from caom2IngestSitelle.py, l555+
-        sitresol = header.get('SITRESOL')
-        if sitresol is not None and sitresol > 0.0:
-            result = sitresol
-        if result is None:
-            result = 1.0
-            if suffix in ['a', 'c', 'f', 'o', 'x']:
-                # from caom2IngestSitelle.py, l596
-                crval3 = mc.to_float(header.get('FILTERLB'))
-                cdelt3 = mc.to_float(header.get('FILTERBW'))
-                if crval3 is not None and cdelt3 is not None:
-                    result = crval3 / cdelt3
-    return result
-
-
-def get_environment_elevation(header):
-    elevation = mc.to_float(header.get('TELALT'))
-    if elevation is not None and not (0.0 <= elevation <= 90.0):
-        logging.info(f'Setting elevation to None for {_get_filename(header)} '
-                     f'because the value is {elevation}.')
-        elevation = None
-    return elevation
-
-
-def get_exptime(params):
-    header, suffix, uri = _decompose_params(params)
-    exptime = mc.to_float(header.get('EXPTIME'))
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.SITELLE:
-        if suffix == 'p':
-            num_steps = header.get('STEPNB')
-            exptime = exptime * num_steps
-    # units are seconds
-    if exptime is None:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
-        if cfht_name.is_simple:
-            # caom2IngestMegacaomdetrend.py, l438
-            exptime = 0.0
-    return exptime
-
-
-def get_espadons_exptime(params):
-    header, suffix, uri = _decompose_params(params)
-    exptime = mc.to_float(header.get('EXPTIME'))
-    if suffix == 'p':
-        # caom2IngestEspadons.py, l406
-        exptime = 0.0
-        polar_seq = mc.to_int(header.get('POLARSEQ'))
-        for ii in range(1, polar_seq + 1):
-            exptime += mc.to_float(header.get(f'EXPTIME{ii}'))
-    # units are seconds
-    if exptime is None:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.ESPADONS)
-        if cfht_name.is_simple:
-            # caom2IngestMegacaomdetrend.py, l438
-            exptime = 0.0
-    return exptime
-
-
-def get_instrument_keywords(header):
-    inst_mode = header.get('INSTMODE')
-    if inst_mode is not None:
-        inst_mode = f'INSTMODE={inst_mode}'
-    temp = header.get('SITSTEP')
-    sit_step = None
-    if temp is not None:
-        sit_step = f'SITSTEP={temp}'
-    temp = header.get('SITSTEPS')
-    sit_steps = None
-    if temp is not None:
-        sit_steps = f'SITSTEPS={temp}'
-    result = ','.join(filter(None, (inst_mode, sit_step, sit_steps)))
-    if 'Unknown' in result:
-        result = 'Unknown'
-    return result
-
-
-def get_meta_release(header):
-    # order set from:
-    # caom2IngestWircam.py, l777
-    result = header.get('MET_DATE')
-    if result is None:
-        result = header.get('DATE-OBS')
-        if result is None:
-            # caom2IngestEspadons.py, l625
-            result = header.get('DATE-OB1')
-            if result is None:
-                result = header.get('DATE')
-                if result is None:
-                    result = header.get('REL_DATE')
-                if result is None:
-                    # caom2IngestMegadetrend.py, l445
-                    result = header.get('TVSTART')
-    return result
-
-
-def get_obs_environment_humidity(header):
-    result = header.get('RELHUMID')
-    if result is not None and result < 0.0:
-        logging.warning(f'RELHUMID invalid value {result}.')
-        result = None
-    return result
-
-
-def get_obs_intent(header):
-    # CW
-    # Determine Observation.intent = obs.intent = "science" or "calibration"
-    # phot & astr std & acquisitions/align are calibration.
-    # from caom2IngestWircam.py, l731
-    result = ObservationIntentType.CALIBRATION
-    obs_type = _get_obstype(header)
-    if obs_type == 'OBJECT':
-        run_id = _get_run_id(header)
-        if run_id[3].lower() != 'q':
-            result = ObservationIntentType.SCIENCE
-    return result
-
-
-def get_obs_type(header):
-    result = header.get('OBSTYPE')
-    if result is not None:
-        if result == 'FRPTS':
-            result = 'FRINGE'
-        elif result == 'scatter':
-            result = 'FLAT'
-    return result
-
-
-def get_obs_sequence_number(params):
-    header, suffix, uri = _decompose_params(params)
-    instrument = _get_instrument(header)
-    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
-    result = None
-    # SF 09-01-20
-    # *y files are produced from other files, I am guessing the sky
-    # subtraction software at CFHT copies the header from one of the exposure
-    # and does not update the EXPNUM.
-    #
-    # SGo - because of this, use the file name to find the sequence number,
-    # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
-    if ((cfht_name.is_simple and not cfht_name.is_master_cal) or (
-            instrument in [md.Inst.ESPADONS,
-                           md.Inst.SITELLE] and suffix == 'p')):
-        result = cfht_name.file_id[:-1]
-    return result
-
-
-def get_wircam_obs_type(params):
-    header, suffix, uri = _decompose_params(params)
-    result = header.get('OBSTYPE')
-    # caom2IngestWircamdetrend.py, l369
-    if 'weight' in uri:
-        result = 'WEIGHT'
-    elif 'badpix' in uri or 'hotpix' in uri or 'deadpix' in uri:
-        result = 'BPM'
-    elif suffix == 'g' and result is None:
-        result = 'GUIDE'
-    return result
-
-
-def get_plane_data_product_type(header):
-    instrument = _get_instrument(header)
-    result = DataProductType.IMAGE
-    # caom2spirou.default
-    if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
-        result = DataProductType.SPECTRUM
-    return result
-
-
-def get_sitelle_plane_data_product_type(uri):
-    cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.SITELLE)
-    result = DataProductType.IMAGE
-    if cfht_name.is_derived_sitelle:
-        result = DataProductType.CUBE
-    return result
-
-
-def get_plane_data_release(header):
-    # order set from:
-    # caom2IngestWircam.py, l756
-    #
-    # from http://www.cfht.hawaii.edu/en/science/QSO/
-    #
-    # "The proprietary period of QSO data extends by default to 1 year + 1
-    # month starting at the end of the QSO semester. For instance, data taken
-    # for the 2009B semester (August 1 - January 31) will have a default
-    # release date set to 02/28/2011. The extra month is allowed because of
-    # possible delays in the data reduction distribution of observations
-    # carried out near the end of a semester. If an extension is requested
-    # during the Phase 1 period and is approved by TAC, a new date will be
-    # set for this program through the QSO system. This release date for the
-    # QSO data is indicated in the fits headers by the keyword REL_DATE."
-
-    result = header.get('REL_DATE')
-    if result is None:
-        date_obs = header.get('DATE-OBS')
-        run_id = _get_run_id(header)
-        if run_id is not None:
-            if run_id == 'SMEARING':
-                result = header.get('DATE')
-            elif ((run_id[3].lower() == 'e' or run_id[3].lower() == 'q')
-                  and date_obs is not None):
-                result = f'{date_obs}T00:00:00'
-            else:
-                obs_intent = get_obs_intent(header)
-                if obs_intent == ObservationIntentType.CALIBRATION:
-                    # from caom2IngestMegacamdetrend.py, l445
-                    result = header.get('DATE')
-                    if result is None:
-                        result = header.get('TVSTART')
-                if result is None:
-                    logging.warning(
-                        f'REL_DATE not in header. Derive from RUNID {run_id}.')
-                    semester = mc.to_int(run_id[0:2])
-                    rel_year = 2000 + semester + 1
-                    if run_id[2] == 'A':
-                        result = f'{rel_year}-08-31T00:00:00'
-                    else:
-                        rel_year += 1
-                        result = f'{rel_year}-02-28T00:00:00'
-    return result
-
-
-def get_position_coordsys_from_0th_header(header):
-    return header.get('RADECSYS')
-
-
-def get_position_equinox_from_0th_header(header):
-    return header.get('EQUINOX')
-
-
-def get_polarization_function_val(header):
-    lookup = {'I': 1,
-              'Q': 2,
-              'U': 3,
-              'V': 4,
-              'W': 5}
-    result = 6
-    temp = header.get('CMMTSEQ')
-    if temp is not None:
-        result = lookup.get(temp[0], result)
-    return result
-
-
-def get_product_type(params):
-    header, suffix, ignore = _decompose_params(params)
-    result = ProductType.SCIENCE
-    obs_type = get_obs_intent(header)
-    if obs_type == ObservationIntentType.CALIBRATION:
-        result = ProductType.CALIBRATION
-    if suffix in ['g', 'm', 'w', 'y']:
-        result = ProductType.CALIBRATION
-
-    # The goal is to make all file types easily findable by archive users,
-    # which means having each file type show as a row in the search results.
-    # With the search results limitation, a single file must be owned by a
-    # plane, as that is how it gets displayed in the search results. The
-    # planes must also contain plane-level metadata for the search to find.
-    # Plane-level metadata is only calculated for science or calibration
-    # artifacts, so any file types that might conceivably be auxiliary
-    # product types are labeled as calibration, so that plane-level metadata
-    # is calculated.
-    #
-    # Confirm the goal is find-ability in conversation with CW, SF on
-    # 27-01-20.
-
-    return result
-
-
-def get_proposal_project(header):
-    # TODO - put in a configuration file, cause it changes by semester
-    lookup = {'NGVS': ['08BP03', '08BP04', '09AP03', '09AP04', '09BP03',
-                       '09BP04', '10AP03', '10AP04', '10BP03', '10BP04',
-                       '11AP03', '11AP04', '11BP03', '11BP04', '12AP03',
-                       '12AP04', '12BP03', '12BP04', '13AP03', '13AP04',
-                       '13AC02'],
-              'PANDAS': ['08BP01', '08BP02', '09AP01', '09AP02', '09BP01',
-                         '09BP02', '10AP01', '10AP02', '10BP01', '10BP02'],
-              'OSSOS': ['13AP05', '13AP06', '13BP05', '13BP06', '14AP05',
-                        '14AP06', '14BP05', '14BP06', '15AP05', '15AP06',
-                        '15BP05', '15BP06', '16AP05', '16AP06', '16BP05',
-                        '16BP06'],
-              'MATLAS': ['13AP07', '13AP08', '13BP07', '13BP08', '14AP07',
-                         '14AP08', '14BP07', '14BP08', '15AP07', '15AP08',
-                         '15BP07', '15BP08', '16AP07', '16AP08', '16BP07',
-                         '16BP08'],
-              'LUAU': ['15AP09', '15AP10', '15BP09', '15BP10', '16AP09',
-                       '16AP10', '16BP09', '16BP10'],
-              'CFIS': ['17AP30', '17AP99', '17AP98', '17BP30', '17BP97',
-                       '17BP98', '17BP99', '18AP30', '18AP97', '18AP98',
-                       '18AP99', '18BP30', '18BP97', '18BP98', '18BP99',
-                       '19AP30', '19AP97', '19AP98', '19AP99', '19BP30',
-                       '19BP97', '19BP98', '19BP99'],
-              'VESTIGE': ['17AP31', '17BP31', '18AP31', '18BP31', '19AP31',
-                          '19BP31'],
-              'SIGNALS': ['18BP41', '19AP41', '19BP41', '20AP41', '20BP41',
-                          '21AP41', '21BP41', '22AP41'],
-              'WIRDS': ['06AC01', '06AC99', '06BC31', '06BF97', '07AC20',
-                        '07AF34', '07BC99', '07BF98', '07BF97', '08AC98',
-                        '08AC99', '08AF97', '08BC99', '08BF99'],
-              'IPMOS': ['06AF01', '06BF23', '07AF22', '07AF99', '07BF99',
-                        '08AF98', '08BF98'],
-              'TETrEs': ['10BP21', '11BP21', '12AP21', '12BP21'],
-              'CFHQSIR': ['10BP22', '11AP22', '11BP22', '11BP23', '12AD95',
-                          '12AP22', '12AP23', '12BP22', '12BP23', '13AF20'
-                          '13AC14'],
-              'CIPP': ['17AP32', '17BP32', '18AP32', '18BP32', '19AP32',
-                       '19BP32'],
-              'MAPP': ['08BP11', '08BP12', '09AP11', '09AP12', '09BP11',
-                       '09BP12', '10AP11', '10AP12', '10BP11', '10BP12',
-                       '11AP11', '11AP12', '11BP11', '11BP12', '12AP11',
-                       '12AP12', '12BP11', '12BP12'],
-              'MIMES': ['08BP13', '08BP14', '09AP13', '09AP14', '09BP13',
-                        '09BP14', '10AP13', '10AP14', '10BP13', '10BP14',
-                        '11AP13', '11AP14', '11BP13', '11BP14', '12AP13',
-                        '12AP14', '12BP13', '12BP14'],
-              'BINAMICS': ['13AP15', '13AP16', '13BP15', '13BP16', '14AP15',
-                           '14AP16', '14BP15', '14BP16', '15AP15', '15AP16',
-                           '15BP15', '15BP16', '16AP15', '16AP16', '16BP15',
-                           '16BP16'],
-              'MATYSSE': ['13AP17', '13AP18', '13BP17', '13BP18', '14AP17',
-                          '14AP18', '14BP17', '14BP18', '15AP17', '15AP18',
-                          '15BP17', '15BP18', '16AP17', '16AP18', '16BP17',
-                          '16BP18'],
-              'HMS': ['15AP19', '15AP20', '15BP19', '15BP20', '16AP19',
-                      '16AP20', '16BP19', '16BP20']}
-    result = None
-    pi_name = header.get('PI_NAME')
-    if pi_name is not None and 'CFHTLS' in pi_name:
-        result = 'CFHTLS'
-    else:
-        run_id = header.get('RUNID')
-        if run_id is not None:
-            for key, value in lookup.items():
-                if run_id in value:
-                    result = key
-                    break
-    return result
-
-
-def get_proposal_title(header):
-    result = None
-    run_id = header.get('RUNID')
-    if run_id is not None:
-        result = md.cache.get_title(run_id)
-    return result
-
-
-def get_espadons_provenance_keywords(params):
-    header, suffix, ignore = _decompose_params(params)
-    result = None
-    if suffix in ['i', 'p']:
-        temp = header.get('REDUCTIO')
-        if temp is not None:
-            result = f'reduction={temp}'
-    return result
-
-
-def get_wircam_provenance_keywords(uri):
-    suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
-    result = None
-    if suffix in ['p', 's']:
-        # caom2IngestWircam.py, l1063
-        if suffix == 'p':
-            result = 'skysubtraction=yes'
-        else:
-            result = 'skysubtraction=no'
-    return result
-
-
-def get_provenance_last_executed(header):
-    result = header.get('PROCDATE')
-    if result is not None:
-        # format like 2018-06-05HST17:21:20, which default code doesn't
-        # understand
-        result = mc.make_time(result)
-    return result
-
-
-def get_mega_provenance_last_executed(header):
-    result = get_provenance_last_executed(header)
-    if result is None:
-        result = header.get('DATEPROC')
-        if result is not None:
-            result = mc.make_time(result)
-    return result
-
-
-def get_espadons_provenance_last_executed(header):
-    result = None
-    comments = header.get('COMMENT')
-    if comments is not None:
-        for comment in comments:
-            if 'Upena processing date:' in comment:
-                result = comment.split('Upena processing date: ')[1]
-                # format like Fri Mar 13 22:51:55 HST 2009, which default
-                # code doesn't understand
-                result = mc.make_time(result)
-                break
-            elif 'opera-' in comment:
-                result = comment.split('opera-')[1].split(' build date')[0]
-                break
-    return result
-
-
-def get_espadons_provenance_name(header):
-    result = 'TCS'  # ESPaDOnS
-    comments = header.get('COMMENT')
-    if comments is not None:
-        for comment in comments:
-            if 'Upena' in comment:
-                result = 'UPENA'
-                break
-            elif 'opera-' in comment:
-                result = 'OPERA'
-                break
-    return result
-
-
-def get_espadons_provenance_project(header):
-    result = 'STANDARD PIPELINE'
-    if get_espadons_provenance_name(header) == 'TCS':
-        result = None
-    return result
-
-
-def get_provenance_version(header):
-    result = header.get('IIWIVER')
-    if result is None:
-        result = header.get('ORBSVER')
-        if result is None:
-            result = header.get('EL_SYS')
-    return result
-
-
-def get_espadons_provenance_version(header):
-    result = None
-    comments = header.get('COMMENT')
-    if comments is not None:
-        for comment in comments:
-            if 'Upena version' in comment:
-                result = comment.split('Upena version')[1]
-                break
-            elif 'opera-' in comment and 'build date' in comment:
-                result = comment.split(' build date')[0]
-                break
-    return result
-
-
-def get_ra_deg_from_0th_header(header):
-    return header.get('RA_DEG')
-
-
-def get_target_position_cval1(header):
-    ra, ignore_dec = _get_ra_dec(header)
-    if ra is None:
-        instrument = _get_instrument(header)
-        if instrument is md.Inst.ESPADONS:
-            ra = header.get('RA_DEG')
-    return ra
-
-
-def get_target_position_cval2(header):
-    ignore_ra, dec = _get_ra_dec(header)
-    if dec is None:
-        instrument = _get_instrument(header)
-        if instrument is md.Inst.ESPADONS:
-            dec = header.get('DEC_DEG')
-    return dec
-
-
-def get_target_standard(header):
-    obs_type = _get_obstype(header)
-    run_id = _get_run_id(header)
-    result = None
-    if run_id is not None:
-        run_id_type = run_id[3].lower()
-        if run_id_type == 'q' and obs_type == 'OBJECT':
-            obj_name = header.get('OBJECT').lower()
-            instrument = _get_instrument(header)
-            if instrument is md.Inst.SITELLE:
-                if 'std' in obj_name:
-                    result = True
-                else:
-                    result = False
-            else:
-                if ('flat' in obj_name or 'focus' in obj_name or
-                        'zenith' in obj_name):
-                    result = False
-                else:
-                    result = True
-        else:
-            result = False
-    return result
-
-
-def get_time_refcoord_delta_derived(header):
-    mjd_obs = get_time_refcoord_val_derived(header)
-    tv_stop = header.get('TVSTOP')
-    if tv_stop is None:
-        # caom2IngestMegacamdetrend.py, l429
-        # caom2IngestWircamdetrend.py, l422
-        exp_time = 20.0
-    else:
-        mjd_end = ac.get_datetime(tv_stop)
-        exp_time = mjd_end - mjd_obs
-    return exp_time
-
-
-def get_espadons_time_refcoord_delta(params):
-    exptime = get_espadons_exptime(params)
-    return exptime / 86400.0  # units are d
-
-
-def get_sitelle_time_refcoord_delta(params):
-    header, suffix, uri = _decompose_params(params)
-    if suffix == 'p':
-        delta = None
-        mjd_start = _get_mjd_start(header)
-        mjd_end = mc.to_float(header.get('MJDEND'))
-        # caom2IngestSitelle.py, l704
-        if mjd_start is not None and mjd_end is not None:
-            delta = mjd_end - mjd_start
-        else:
-            exp_time = header.get('EXPTIME')
-            if exp_time is None:
-                delta = mjd_start
-    else:
-        exp_time = mc.to_float(header.get('EXPTIME'))
-        if exp_time is None:
-            exp_time = mc.to_float(header.get('DARKTIME'))
-        delta = exp_time / 86400.0
-    return delta
-
-
-def get_time_refcoord_delta_simple(params):
-    # caom2IngestMegacam.py
-    exp_time = get_exptime(params)
-    if exp_time is None:
-        header, suffix, uri = _decompose_params(params)
-        exp_time = mc.to_float(header.get('DARKTIME'))
-    if exp_time is not None:
-        # units are days for raw retrieval values
-        exp_time = exp_time / 86400.0
-    return exp_time
-
-
-def get_spirou_exptime(params):
-    # caom2IngestSpirou.py, l530+
-    header, suffix, uri = _decompose_params(params)
-    result = None
-    if suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
-        result = header.get('EXPTIME')
-    elif suffix == 'p':
-        result = header.get('TOTETIME')
-    else:
-        result = header.get('DARKTIME')
-    if result is None:
-        logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
-    return result
-
-
-def get_spirou_provenance_name(header):
-    result = None
-    temp = header.get('RAMPSWV')
-    if temp is not None:
-        result = temp.split(' v')[0]
-    return result
-
-
-def get_spirou_provenance_version(header):
-    result = None
-    temp = header.get('RAMPSWV')
-    if temp is not None:
-        result = temp.split(' v')[1]
-    return result
-
-
-def get_spirou_resolution(params):
-    # caom2IngestSpirou.py, l530+
-    header, suffix, uri = _decompose_params(params)
-    result = get_spirou_time_refcoord_delta(params)
-    if suffix == 'r':
-        result = result * (24.0 * 3600.0)
-    else:
-        result = get_spirou_exptime(params)
-    if result is None:
-        logging.warning(f'No Time WCS resolution value for {uri}.')
-    return result
-
-
-def get_spirou_time_refcoord_delta(params):
-    # caom2IngestSpirou.py, l530+
-    header, suffix, uri = _decompose_params(params)
-    result = None
-    if suffix == 'r':
-        temp = header.get('FRMTIME')
-    elif suffix == 'p':
-        temp = header.get('TOTETIME')
-    else:
-        temp = header.get('DARKTIME')
-    if temp is None:
-        logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
-    else:
-        result = temp / (24.0 * 3600.0)
-    return result
-
-
-def get_spirou_time_refcoord_naxis(params):
-    # caom2IngestSpirou.py, l557
-    header, suffix, uri = _decompose_params(params)
-    result = 1.0
-    if suffix == 'r':
-        result = header.get('NREADS')
-    if result is None:
-        logging.warning(f'No Time WCS refcoord.naxis value for {uri}.')
-    return result
-
-
-def get_time_refcoord_val_derived(header):
-    # CW
-    # caom2IngestWircamdetrend.py, l388
-    # Time - set exptime as time of one image, start and stop dates
-    # as one pixel so this means crval3 is not equal to exptime
-    # if TVSTART not defined, use release_date as mjdstart
-    dt_str = header.get('TVSTART')
-    if dt_str is None:
-        dt_str = header.get('REL_DATE')
-        if dt_str is None:
-            dt_str = header.get('DATE')
-    mjd_obs = ac.get_datetime(dt_str)
-    if mjd_obs is None:
-        logging.warning(f'Chunk.time.axis.function.refCoord.val is None for '
-                        f'{_get_filename(header)}')
-    return mjd_obs
-
-
-def get_time_refcoord_val_simple(header):
-    result = _get_mjd_obs(header)
-    if result is None:
-        temp = header.get('DATE-OBS')
-        if temp is None:
-            # from caom2IngestMegacam.py, l549
-            temp = header.get('DATE')
-        result = ac.get_datetime(temp)
-    return result
-
-
-def get_espadons_time_refcoord_val(params):
-    header, suffix, uri = _decompose_params(params)
-    if suffix == 'p':
-        mjd_start1 = header.get('MJDSTART1')
-        mjd_date1 = header.get('MJDATE1')
-        mjd_obs = None
-        if mjd_start1 is not None or mjd_date1 is not None:
-            # caom2IngestEspadons.py, l406
-            if mjd_start1 is not None:
-                mjd_obs = mjd_start1
-            else:
-                mjd_obs = mjd_date1
-    else:
-        mjd_obs = _get_mjd_obs(header)
-        if mjd_obs is None:
-            date_obs = header.get('DATE-OBS')
-            time_obs = header.get('TIME-OBS')
-            if (date_obs is None or time_obs is None or
-                    date_obs == '1970-01-01' or date_obs == '1970-00-01'):
-                hst_time = header.get('HSTTIME)')
-                # fmt 'Mon Nov 27 15:58:17 HST 2006'
-                mjd_obs = ac.get_datetime(hst_time)
-            else:
-                mjd_obs_str = f'{date_obs}T{time_obs}'
-                mjd_obs = ac.get_datetime(mjd_obs_str)
-    return mjd_obs
-
-
-def _decompose_params(params):
-    header = params.get('header')
-    uri = params.get('uri')
-    instrument = _get_instrument(header)
-    suffix = cn.CFHTName(ad_uri=uri, instrument=instrument)._suffix
-    return header, suffix, uri
-
-
-def _get_filename(header):
-    return header.get('FILENAME')
-
-
-def _get_instrument(header):
-    try:
-        result = md.Inst(header.get('INSTRUME'))
-    except ValueError:
-        # set the entry parameter to nothing, as it's only used to check
-        # for hdf5
-        result = cb.CFHTBuilder.get_instrument([header, {}], '')
-    return result
-
-
-def _get_mjd_obs(header):
-    return mc.to_float(header.get('MJD-OBS'))
-
-
-def _get_mjd_start(header):
-    mjd_obs = _get_mjd_obs(header)
-    if mjd_obs is None:
-        date_str = header.get('DATE-OBS')
-        if date_str is None:
-            dt_str = header.get('DATE')
-            mjd_obs = ac.get_datetime(dt_str)
-        else:
-            time_str = header.get('TIME-OBS')
-            date_obs = ac.get_datetime(date_str)
-            time_obs = ac.get_datetime(time_str)
-            mjd_obs = date_obs + time_obs
-    return mjd_obs
-
-
-def _get_obstype(header):
-    return header.get('OBSTYPE')
-
-
-def _get_ra_dec(header):
-    obj_ra = header.get('OBJRA')
-    obj_dec = header.get('OBJDEC')
-    obj_ra_dec = header.get('OBJRADEC')
-    if obj_ra_dec is not None:
-        obj_ra_dec = obj_ra_dec.lower()
-    ra = None
-    dec = None
-    if obj_ra is not None and obj_dec is not None and obj_ra_dec is not None:
-        if obj_ra_dec == 'gappt':
-            # SF 18-12-19
-            # seb 4:01 PM
-            # this is a flat. i have the impression in this case you can
-            # ignore the ra/dec stuff
-            logging.warning(f'OBSRADEC is GAPPT for {_get_filename(header)}')
-        else:
-            ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
-    return ra, dec
-
-
-def _get_run_id(header):
-    run_id = header.get('RUNID')
-    if run_id is None:
-        run_id = header.get('CRUNID')
-    if run_id is not None:
-        if len(run_id) < 3 or len(run_id) > 9 or run_id == 'CFHT':
-            # a well-known default value that indicates the past, as
-            # specified in
-            # caom2IngestMegacam.py, l392
-            # caom2IngestWircamdetrend.py, l314
-            # caom2IngestEspadons.py, l522
-            logging.warning(f'Setting RUNID to default 17BE for '
-                            f'{header.get("FILENAME")}.')
-            run_id = '17BE'
-        else:
-            run_id = run_id.strip()
-    return run_id
-
-
-def _get_types(params):
-    header, suffix, ignore = _decompose_params(params)
-    dp_result = DataProductType.IMAGE
-    pt_result = ProductType.SCIENCE
-    obs_type = get_obs_intent(header)
-    if obs_type == ObservationIntentType.CALIBRATION:
-        pt_result = ProductType.CALIBRATION
-    if suffix in ['m', 'w', 'y']:
-        dp_result = DataProductType.AUXILIARY
-        pt_result = ProductType.AUXILIARY
-    return dp_result, pt_result
-
-
-def _has_energy(header):
-    obs_type = _get_obstype(header)
-    # from conversation with CW, SF
-    # also from caom2IngestEspadons.py, l393, despite an existing example
-    # with energy information
-    return obs_type not in ['BIAS', 'DARK']
-
-
-def _is_espadons_energy(header, uri):
-    instrument = _get_instrument(header)
-    result = False
-    if instrument is md.Inst.ESPADONS:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
-        if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x']:
-            result = True
-    return result
-
-
-def _is_sitelle_energy(header, uri):
-    instrument = _get_instrument(header)
-    result = False
-    if instrument is md.Inst.SITELLE:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
-        if cfht_name.suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
-            result = True
-    return result
-
-
 def accumulate_bp(bp, uri, instrument):
-    """Configure the telescope-specific ObsBlueprint at the CAOM model 
+    """Configure the telescope-specific ObsBlueprint at the CAOM model
     Observation level.
 
     This code captures the portion of the TDM->CAOM model mapping, where
@@ -1309,24 +355,24 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
     if instrument is md.Inst.ESPADONS:
-        accumulate_espadons_bp(bp, cfht_name)
+        _accumulate_espadons_bp(bp, cfht_name)
     elif instrument is md.Inst.MEGACAM or instrument is md.Inst.MEGAPRIME:
-        accumulate_mega_bp(bp, uri, cfht_name)
+        _accumulate_mega_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.SITELLE:
-        accumulate_sitelle_bp(bp, uri, cfht_name)
+        _accumulate_sitelle_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.SPIROU:
-        accumulate_spirou_bp(bp, uri, cfht_name)
+        _accumulate_spirou_bp(bp, uri, cfht_name)
     elif instrument is md.Inst.WIRCAM:
-        accumulate_wircam_bp(bp, uri, cfht_name)
+        _accumulate_wircam_bp(bp, uri, cfht_name)
 
     logging.debug('Done accumulate_bp.')
 
 
-def accumulate_espadons_bp(bp, cfht_name):
-    """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
+def _accumulate_espadons_bp(bp, cfht_name):
+    """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    logging.debug('Begin accumulate_espadons_bp.')
+    logging.debug('Begin _accumulate_espadons_bp.')
 
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
@@ -1384,14 +430,14 @@ def accumulate_espadons_bp(bp, cfht_name):
         bp.set('Chunk.polarization.axis.function.refCoord.val',
                'get_polarization_function_val(header)')
 
-    logging.debug('Done accumulate_espadons_bp.')
+    logging.debug('Done _accumulate_espadons_bp.')
 
 
-def accumulate_mega_bp(bp, uri, cfht_name):
+def _accumulate_mega_bp(bp, uri, cfht_name):
     """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    logging.debug('Begin accumulate_mega_bp.')
+    logging.debug('Begin _accumulate_mega_bp.')
 
     bp.set('Plane.provenance.lastExecuted',
            'get_mega_provenance_last_executed(header)')
@@ -1399,14 +445,14 @@ def accumulate_mega_bp(bp, uri, cfht_name):
     bp.set_default('Plane.provenance.reference',
                    'http://www.cfht.hawaii.edu/Instruments/Elixir/')
 
-    logging.debug('Done accumulate_mega_bp.')
+    logging.debug('Done _accumulate_mega_bp.')
 
 
-def accumulate_sitelle_bp(bp, uri, cfht_name):
+def _accumulate_sitelle_bp(bp, uri, cfht_name):
     """Configure the Sitelle-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    logging.debug('Begin accumulate_sitelle_bp.')
+    logging.debug('Begin _accumulate_sitelle_bp.')
     bp.set('Plane.dataProductType', 'get_sitelle_plane_data_product_type(uri)')
     bp.set_default('Plane.provenance.name', 'ORBS')
     bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
@@ -1419,10 +465,10 @@ def accumulate_sitelle_bp(bp, uri, cfht_name):
     bp.set('Chunk.time.axis.function.refCoord.val',
            '_get_mjd_start(header)')
 
-    logging.debug('End accumulate_sitelle_bp.')
+    logging.debug('End _accumulate_sitelle_bp.')
 
 
-def accumulate_spirou_bp(bp, uri, cfht_name):
+def _accumulate_spirou_bp(bp, uri, cfht_name):
     """Configure the SPIRou-specific ObsBlueprint at the CAOM model
     Observation level.
     """
@@ -1493,11 +539,11 @@ def accumulate_spirou_bp(bp, uri, cfht_name):
     bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
 
 
-def accumulate_wircam_bp(bp, uri, cfht_name):
+def _accumulate_wircam_bp(bp, uri, cfht_name):
     """Configure the WIRCam-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    logging.debug('Begin accumulate_wircam_bp.')
+    logging.debug('Begin _accumulate_wircam_bp.')
     bp.set('Observation.type', 'get_wircam_obs_type(params)')
 
     bp.set('Plane.provenance.keywords', 'get_wircam_provenance_keywords(uri)')
@@ -1507,7 +553,7 @@ def accumulate_wircam_bp(bp, uri, cfht_name):
 
     bp.set('Chunk.energy.bandpassName', 'get_wircam_bandpass_name(header)')
 
-    logging.debug('Done accumulate_wircam_bp.')
+    logging.debug('Done _accumulate_wircam_bp.')
 
 
 def update(observation, **kwargs):
@@ -1770,8 +816,8 @@ def update(observation, **kwargs):
                             chunk.naxis = None
 
                         if cfht_name.suffix == 'g':
-                            _update_wircam_position(part, chunk, headers, idx,
-                                                    observation.observation_id)
+                            _update_wircam_position_g(part, chunk, headers, idx,
+                                                      observation.observation_id)
                             temp_bandpass_name = headers[idx].get('FILTER')
                             if temp_bandpass_name == 'FakeBlank':
                                 cc.reset_energy(chunk)
@@ -1845,6 +891,960 @@ def update(observation, **kwargs):
 
     logging.debug('Done update.')
     return observation
+
+
+def get_calibration_level(params):
+    header, suffix, uri = _decompose_params(params)
+    instrument = _get_instrument(header)
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+    result = CalibrationLevel.CALIBRATED
+    if (cfht_name.is_simple and not cfht_name.simple_by_suffix and not
+            cfht_name.is_master_cal):
+        result = CalibrationLevel.RAW_STANDARD
+    return result
+
+
+def get_dec_deg_from_0th_header(header):
+    return header.get('DEC_DEG')
+
+
+def get_energy_ctype(header):
+    result = None
+    if _has_energy(header):
+        result = header.get('CTYPE3')
+        if result is None:
+            result = 'WAVE'
+    return result
+
+
+def get_energy_cunit(header):
+    result = None
+    if _has_energy(header):
+        result = header.get('CUNIT3')
+        if result is None:
+            result = 'Angstrom'
+    return result
+
+
+def get_energy_function_delta(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        if _is_espadons_energy(header, uri):
+            # caom2IngestEspadons.py l639
+            result = 0.0031764
+        elif _is_sitelle_energy(header, uri):
+            result = header.get('CDELT3')
+            if result is None:
+                # units in file are nm, units in blueprint are Angstroms
+                result = 10.0 * mc.to_float(header.get('FILTERBW'))
+        else:
+            filter_name = header.get('FILTER')
+            instrument = _get_instrument(header)
+            temp = _get_filter_md(instrument, filter_name, uri)
+            result = ac.FilterMetadataCache.get_fwhm(temp)
+    return result
+
+
+def get_energy_function_naxis(params):
+    result = 1.0
+    header, suffix, uri = _decompose_params(params)
+    if _is_espadons_energy(header, uri):
+        # caom2IngestEspadons.py l636
+        result = 213542
+    elif _is_sitelle_energy(header, uri):
+        result = header.get('NAXIS3')
+        if result is None:
+            result = 1.0
+    return result
+
+
+def get_energy_function_pix(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        result = 1.0
+        if _is_espadons_energy(header, uri):
+            # caom2IngestEspadons.py l637
+            result = 0.5
+        elif _is_sitelle_energy(header, uri):
+            result = header.get('CRPIX3')
+            if result is None:
+                result = 0.5
+    return result
+
+
+def get_energy_function_val(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        if _is_espadons_energy(header, uri):
+            # caom2IngestEspadons.py l638
+            result = 370.0
+        elif _is_sitelle_energy(header, uri):
+            result = header.get('CRVAL3')
+            if result is None:
+                # units in file are nm, units in blueprint are Angstroms
+                result = 10.0 * mc.to_float(header.get('FILTERLB'))
+        else:
+            filter_name = header.get('FILTER')
+            instrument = _get_instrument(header)
+            temp = _get_filter_md(instrument, filter_name, uri)
+            result = ac.FilterMetadataCache.get_central_wavelength(temp)
+    return result
+
+
+def get_energy_resolving_power(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        delta = get_energy_function_delta(params)
+        val = get_energy_function_val(params)
+        result = None
+        if delta is not None and val is not None:
+            result = val/delta
+    return result
+
+
+def get_environment_elevation(header):
+    elevation = mc.to_float(header.get('TELALT'))
+    if elevation is not None and not (0.0 <= elevation <= 90.0):
+        logging.info(f'Setting elevation to None for {_get_filename(header)} '
+                     f'because the value is {elevation}.')
+        elevation = None
+    return elevation
+
+
+def get_exptime(params):
+    header, suffix, uri = _decompose_params(params)
+    exptime = mc.to_float(header.get('EXPTIME'))
+    instrument = _get_instrument(header)
+    if instrument is md.Inst.SITELLE:
+        if suffix == 'p':
+            num_steps = header.get('STEPNB')
+            exptime = exptime * num_steps
+    # units are seconds
+    if exptime is None:
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+        if cfht_name.is_simple:
+            # caom2IngestMegacaomdetrend.py, l438
+            exptime = 0.0
+    return exptime
+
+
+def get_espadons_energy_resolving_power(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        instmode = header.get('INSTMODE')
+        if instmode is None or 'R=' not in instmode:
+            # CW - Default if resolving power value not in header
+            # caom2IngestEspadons.py, l377
+            result = 65000.0
+        else:
+            # CW - This string is already in instrument keywords but also
+            # need to extract resolving power from it:
+            # 'Spectroscopy, star only, R=80,000'
+            temp = instmode.split('R=')
+            values = temp[1].split(',')
+            if len(values) == 1:
+                result = values[0]
+            else:
+                result = f'{values[0]}{values[1]}'
+            result = mc.to_float(result)
+    return result
+
+
+def get_espadons_exptime(params):
+    header, suffix, uri = _decompose_params(params)
+    exptime = mc.to_float(header.get('EXPTIME'))
+    if suffix == 'p':
+        # caom2IngestEspadons.py, l406
+        exptime = 0.0
+        polar_seq = mc.to_int(header.get('POLARSEQ'))
+        for ii in range(1, polar_seq + 1):
+            exptime += mc.to_float(header.get(f'EXPTIME{ii}'))
+    # units are seconds
+    if exptime is None:
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.ESPADONS)
+        if cfht_name.is_simple:
+            # caom2IngestMegacaomdetrend.py, l438
+            exptime = 0.0
+    return exptime
+
+
+def get_espadons_provenance_keywords(params):
+    header, suffix, ignore = _decompose_params(params)
+    result = None
+    if suffix in ['i', 'p']:
+        temp = header.get('REDUCTIO')
+        if temp is not None:
+            result = f'reduction={temp}'
+    return result
+
+
+def get_espadons_provenance_last_executed(header):
+    result = None
+    comments = header.get('COMMENT')
+    if comments is not None:
+        for comment in comments:
+            if 'Upena processing date:' in comment:
+                result = comment.split('Upena processing date: ')[1]
+                # format like Fri Mar 13 22:51:55 HST 2009, which default
+                # code doesn't understand
+                result = mc.make_time(result)
+                break
+            elif 'opera-' in comment:
+                result = comment.split('opera-')[1].split(' build date')[0]
+                break
+    return result
+
+
+def get_espadons_provenance_name(header):
+    result = 'TCS'  # ESPaDOnS
+    comments = header.get('COMMENT')
+    if comments is not None:
+        for comment in comments:
+            if 'Upena' in comment:
+                result = 'UPENA'
+                break
+            elif 'opera-' in comment:
+                result = 'OPERA'
+                break
+    return result
+
+
+def get_espadons_provenance_project(header):
+    result = 'STANDARD PIPELINE'
+    if get_espadons_provenance_name(header) == 'TCS':
+        result = None
+    return result
+
+
+def get_espadons_provenance_version(header):
+    result = None
+    comments = header.get('COMMENT')
+    if comments is not None:
+        for comment in comments:
+            if 'Upena version' in comment:
+                result = comment.split('Upena version')[1]
+                break
+            elif 'opera-' in comment and 'build date' in comment:
+                result = comment.split(' build date')[0]
+                break
+    return result
+
+
+def get_espadons_time_refcoord_delta(params):
+    exptime = get_espadons_exptime(params)
+    return exptime / 86400.0  # units are d
+
+
+def get_espadons_time_refcoord_val(params):
+    header, suffix, uri = _decompose_params(params)
+    if suffix == 'p':
+        mjd_start1 = header.get('MJDSTART1')
+        mjd_date1 = header.get('MJDATE1')
+        mjd_obs = None
+        if mjd_start1 is not None or mjd_date1 is not None:
+            # caom2IngestEspadons.py, l406
+            if mjd_start1 is not None:
+                mjd_obs = mjd_start1
+            else:
+                mjd_obs = mjd_date1
+    else:
+        mjd_obs = _get_mjd_obs(header)
+        if mjd_obs is None:
+            date_obs = header.get('DATE-OBS')
+            time_obs = header.get('TIME-OBS')
+            if (date_obs is None or time_obs is None or
+                    date_obs == '1970-01-01' or date_obs == '1970-00-01'):
+                hst_time = header.get('HSTTIME)')
+                # fmt 'Mon Nov 27 15:58:17 HST 2006'
+                mjd_obs = ac.get_datetime(hst_time)
+            else:
+                mjd_obs_str = f'{date_obs}T{time_obs}'
+                mjd_obs = ac.get_datetime(mjd_obs_str)
+    return mjd_obs
+
+
+def get_instrument_keywords(header):
+    inst_mode = header.get('INSTMODE')
+    if inst_mode is not None:
+        inst_mode = f'INSTMODE={inst_mode}'
+    temp = header.get('SITSTEP')
+    sit_step = None
+    if temp is not None:
+        sit_step = f'SITSTEP={temp}'
+    temp = header.get('SITSTEPS')
+    sit_steps = None
+    if temp is not None:
+        sit_steps = f'SITSTEPS={temp}'
+    result = ','.join(filter(None, (inst_mode, sit_step, sit_steps)))
+    if 'Unknown' in result:
+        result = 'Unknown'
+    return result
+
+
+def get_mega_provenance_last_executed(header):
+    result = get_provenance_last_executed(header)
+    if result is None:
+        result = header.get('DATEPROC')
+        if result is not None:
+            result = mc.make_time(result)
+    return result
+
+
+def get_meta_release(header):
+    # order set from:
+    # caom2IngestWircam.py, l777
+    result = header.get('MET_DATE')
+    if result is None:
+        result = header.get('DATE-OBS')
+        if result is None:
+            # caom2IngestEspadons.py, l625
+            result = header.get('DATE-OB1')
+            if result is None:
+                result = header.get('DATE')
+                if result is None:
+                    result = header.get('REL_DATE')
+                if result is None:
+                    # caom2IngestMegadetrend.py, l445
+                    result = header.get('TVSTART')
+    return result
+
+
+def get_obs_environment_humidity(header):
+    result = header.get('RELHUMID')
+    if result is not None and result < 0.0:
+        logging.warning(f'RELHUMID invalid value {result}.')
+        result = None
+    return result
+
+
+def get_obs_intent(header):
+    # CW
+    # Determine Observation.intent = obs.intent = "science" or "calibration"
+    # phot & astr std & acquisitions/align are calibration.
+    # from caom2IngestWircam.py, l731
+    result = ObservationIntentType.CALIBRATION
+    obs_type = _get_obstype(header)
+    if obs_type == 'OBJECT':
+        run_id = _get_run_id(header)
+        if run_id[3].lower() != 'q':
+            result = ObservationIntentType.SCIENCE
+    return result
+
+
+def get_obs_sequence_number(params):
+    header, suffix, uri = _decompose_params(params)
+    instrument = _get_instrument(header)
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+    result = None
+    # SF 09-01-20
+    # *y files are produced from other files, I am guessing the sky
+    # subtraction software at CFHT copies the header from one of the exposure
+    # and does not update the EXPNUM.
+    #
+    # SGo - because of this, use the file name to find the sequence number,
+    # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
+    if ((cfht_name.is_simple and not cfht_name.is_master_cal) or (
+            instrument in [md.Inst.ESPADONS,
+                           md.Inst.SITELLE] and suffix == 'p')):
+        result = cfht_name.file_id[:-1]
+    return result
+
+
+def get_obs_type(header):
+    result = header.get('OBSTYPE')
+    if result is not None:
+        if result == 'FRPTS':
+            result = 'FRINGE'
+        elif result == 'scatter':
+            result = 'FLAT'
+    return result
+
+
+def get_plane_data_product_type(header):
+    instrument = _get_instrument(header)
+    result = DataProductType.IMAGE
+    # caom2spirou.default
+    if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
+        result = DataProductType.SPECTRUM
+    return result
+
+
+def get_plane_data_release(header):
+    # order set from:
+    # caom2IngestWircam.py, l756
+    #
+    # from http://www.cfht.hawaii.edu/en/science/QSO/
+    #
+    # "The proprietary period of QSO data extends by default to 1 year + 1
+    # month starting at the end of the QSO semester. For instance, data taken
+    # for the 2009B semester (August 1 - January 31) will have a default
+    # release date set to 02/28/2011. The extra month is allowed because of
+    # possible delays in the data reduction distribution of observations
+    # carried out near the end of a semester. If an extension is requested
+    # during the Phase 1 period and is approved by TAC, a new date will be
+    # set for this program through the QSO system. This release date for the
+    # QSO data is indicated in the fits headers by the keyword REL_DATE."
+
+    result = header.get('REL_DATE')
+    if result is None:
+        date_obs = header.get('DATE-OBS')
+        run_id = _get_run_id(header)
+        if run_id is not None:
+            if run_id == 'SMEARING':
+                result = header.get('DATE')
+            elif ((run_id[3].lower() == 'e' or run_id[3].lower() == 'q')
+                  and date_obs is not None):
+                result = f'{date_obs}T00:00:00'
+            else:
+                obs_intent = get_obs_intent(header)
+                if obs_intent == ObservationIntentType.CALIBRATION:
+                    # from caom2IngestMegacamdetrend.py, l445
+                    result = header.get('DATE')
+                    if result is None:
+                        result = header.get('TVSTART')
+                if result is None:
+                    logging.warning(
+                        f'REL_DATE not in header. Derive from RUNID {run_id}.')
+                    semester = mc.to_int(run_id[0:2])
+                    rel_year = 2000 + semester + 1
+                    if run_id[2] == 'A':
+                        result = f'{rel_year}-08-31T00:00:00'
+                    else:
+                        rel_year += 1
+                        result = f'{rel_year}-02-28T00:00:00'
+    return result
+
+
+def get_polarization_function_val(header):
+    lookup = {'I': 1,
+              'Q': 2,
+              'U': 3,
+              'V': 4,
+              'W': 5}
+    result = 6
+    temp = header.get('CMMTSEQ')
+    if temp is not None:
+        result = lookup.get(temp[0], result)
+    return result
+
+
+def get_position_coordsys_from_0th_header(header):
+    return header.get('RADECSYS')
+
+
+def get_position_equinox_from_0th_header(header):
+    return header.get('EQUINOX')
+
+
+def get_product_type(params):
+    header, suffix, ignore = _decompose_params(params)
+    result = ProductType.SCIENCE
+    obs_type = get_obs_intent(header)
+    if obs_type == ObservationIntentType.CALIBRATION:
+        result = ProductType.CALIBRATION
+    if suffix in ['g', 'm', 'w', 'y']:
+        result = ProductType.CALIBRATION
+
+    # The goal is to make all file types easily findable by archive users,
+    # which means having each file type show as a row in the search results.
+    # With the search results limitation, a single file must be owned by a
+    # plane, as that is how it gets displayed in the search results. The
+    # planes must also contain plane-level metadata for the search to find.
+    # Plane-level metadata is only calculated for science or calibration
+    # artifacts, so any file types that might conceivably be auxiliary
+    # product types are labeled as calibration, so that plane-level metadata
+    # is calculated.
+    #
+    # Confirm the goal is find-ability in conversation with CW, SF on
+    # 27-01-20.
+
+    return result
+
+
+def get_proposal_project(header):
+    # TODO - put in a configuration file, cause it changes by semester
+    lookup = {'NGVS': ['08BP03', '08BP04', '09AP03', '09AP04', '09BP03',
+                       '09BP04', '10AP03', '10AP04', '10BP03', '10BP04',
+                       '11AP03', '11AP04', '11BP03', '11BP04', '12AP03',
+                       '12AP04', '12BP03', '12BP04', '13AP03', '13AP04',
+                       '13AC02'],
+              'PANDAS': ['08BP01', '08BP02', '09AP01', '09AP02', '09BP01',
+                         '09BP02', '10AP01', '10AP02', '10BP01', '10BP02'],
+              'OSSOS': ['13AP05', '13AP06', '13BP05', '13BP06', '14AP05',
+                        '14AP06', '14BP05', '14BP06', '15AP05', '15AP06',
+                        '15BP05', '15BP06', '16AP05', '16AP06', '16BP05',
+                        '16BP06'],
+              'MATLAS': ['13AP07', '13AP08', '13BP07', '13BP08', '14AP07',
+                         '14AP08', '14BP07', '14BP08', '15AP07', '15AP08',
+                         '15BP07', '15BP08', '16AP07', '16AP08', '16BP07',
+                         '16BP08'],
+              'LUAU': ['15AP09', '15AP10', '15BP09', '15BP10', '16AP09',
+                       '16AP10', '16BP09', '16BP10'],
+              'CFIS': ['17AP30', '17AP99', '17AP98', '17BP30', '17BP97',
+                       '17BP98', '17BP99', '18AP30', '18AP97', '18AP98',
+                       '18AP99', '18BP30', '18BP97', '18BP98', '18BP99',
+                       '19AP30', '19AP97', '19AP98', '19AP99', '19BP30',
+                       '19BP97', '19BP98', '19BP99'],
+              'VESTIGE': ['17AP31', '17BP31', '18AP31', '18BP31', '19AP31',
+                          '19BP31'],
+              'SIGNALS': ['18BP41', '19AP41', '19BP41', '20AP41', '20BP41',
+                          '21AP41', '21BP41', '22AP41'],
+              'WIRDS': ['06AC01', '06AC99', '06BC31', '06BF97', '07AC20',
+                        '07AF34', '07BC99', '07BF98', '07BF97', '08AC98',
+                        '08AC99', '08AF97', '08BC99', '08BF99'],
+              'IPMOS': ['06AF01', '06BF23', '07AF22', '07AF99', '07BF99',
+                        '08AF98', '08BF98'],
+              'TETrEs': ['10BP21', '11BP21', '12AP21', '12BP21'],
+              'CFHQSIR': ['10BP22', '11AP22', '11BP22', '11BP23', '12AD95',
+                          '12AP22', '12AP23', '12BP22', '12BP23', '13AF20'
+                                                                  '13AC14'],
+              'CIPP': ['17AP32', '17BP32', '18AP32', '18BP32', '19AP32',
+                       '19BP32'],
+              'MAPP': ['08BP11', '08BP12', '09AP11', '09AP12', '09BP11',
+                       '09BP12', '10AP11', '10AP12', '10BP11', '10BP12',
+                       '11AP11', '11AP12', '11BP11', '11BP12', '12AP11',
+                       '12AP12', '12BP11', '12BP12'],
+              'MIMES': ['08BP13', '08BP14', '09AP13', '09AP14', '09BP13',
+                        '09BP14', '10AP13', '10AP14', '10BP13', '10BP14',
+                        '11AP13', '11AP14', '11BP13', '11BP14', '12AP13',
+                        '12AP14', '12BP13', '12BP14'],
+              'BINAMICS': ['13AP15', '13AP16', '13BP15', '13BP16', '14AP15',
+                           '14AP16', '14BP15', '14BP16', '15AP15', '15AP16',
+                           '15BP15', '15BP16', '16AP15', '16AP16', '16BP15',
+                           '16BP16'],
+              'MATYSSE': ['13AP17', '13AP18', '13BP17', '13BP18', '14AP17',
+                          '14AP18', '14BP17', '14BP18', '15AP17', '15AP18',
+                          '15BP17', '15BP18', '16AP17', '16AP18', '16BP17',
+                          '16BP18'],
+              'HMS': ['15AP19', '15AP20', '15BP19', '15BP20', '16AP19',
+                      '16AP20', '16BP19', '16BP20']}
+    result = None
+    pi_name = header.get('PI_NAME')
+    if pi_name is not None and 'CFHTLS' in pi_name:
+        result = 'CFHTLS'
+    else:
+        run_id = header.get('RUNID')
+        if run_id is not None:
+            for key, value in lookup.items():
+                if run_id in value:
+                    result = key
+                    break
+    return result
+
+
+def get_proposal_title(header):
+    result = None
+    run_id = header.get('RUNID')
+    if run_id is not None:
+        result = md.cache.get_title(run_id)
+    return result
+
+
+def get_provenance_last_executed(header):
+    result = header.get('PROCDATE')
+    if result is not None:
+        # format like 2018-06-05HST17:21:20, which default code doesn't
+        # understand
+        result = mc.make_time(result)
+    return result
+
+
+def get_provenance_version(header):
+    result = header.get('IIWIVER')
+    if result is None:
+        result = header.get('ORBSVER')
+        if result is None:
+            result = header.get('EL_SYS')
+    return result
+
+
+def get_ra_deg_from_0th_header(header):
+    return header.get('RA_DEG')
+
+
+def get_sitelle_energy_resolving_power(params):
+    result = None
+    header, suffix, uri = _decompose_params(params)
+    if _has_energy(header):
+        # from caom2IngestSitelle.py, l555+
+        sitresol = header.get('SITRESOL')
+        if sitresol is not None and sitresol > 0.0:
+            result = sitresol
+        if result is None:
+            result = 1.0
+            if suffix in ['a', 'c', 'f', 'o', 'x']:
+                # from caom2IngestSitelle.py, l596
+                crval3 = mc.to_float(header.get('FILTERLB'))
+                cdelt3 = mc.to_float(header.get('FILTERBW'))
+                if crval3 is not None and cdelt3 is not None:
+                    result = crval3 / cdelt3
+    return result
+
+
+def get_sitelle_plane_data_product_type(uri):
+    cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.SITELLE)
+    result = DataProductType.IMAGE
+    if cfht_name.is_derived_sitelle:
+        result = DataProductType.CUBE
+    return result
+
+
+def get_sitelle_time_refcoord_delta(params):
+    header, suffix, uri = _decompose_params(params)
+    if suffix == 'p':
+        delta = None
+        mjd_start = _get_mjd_start(header)
+        mjd_end = mc.to_float(header.get('MJDEND'))
+        # caom2IngestSitelle.py, l704
+        if mjd_start is not None and mjd_end is not None:
+            delta = mjd_end - mjd_start
+        else:
+            exp_time = header.get('EXPTIME')
+            if exp_time is None:
+                delta = mjd_start
+    else:
+        exp_time = mc.to_float(header.get('EXPTIME'))
+        if exp_time is None:
+            exp_time = mc.to_float(header.get('DARKTIME'))
+        delta = exp_time / 86400.0
+    return delta
+
+
+def get_spirou_exptime(params):
+    # caom2IngestSpirou.py, l530+
+    header, suffix, uri = _decompose_params(params)
+    result = None
+    if suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
+        result = header.get('EXPTIME')
+    elif suffix == 'p':
+        result = header.get('TOTETIME')
+    else:
+        result = header.get('DARKTIME')
+    if result is None:
+        logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
+    return result
+
+
+def get_spirou_provenance_name(header):
+    result = None
+    temp = header.get('RAMPSWV')
+    if temp is not None:
+        result = temp.split(' v')[0]
+    return result
+
+
+def get_spirou_provenance_version(header):
+    result = None
+    temp = header.get('RAMPSWV')
+    if temp is not None:
+        result = temp.split(' v')[1]
+    return result
+
+
+def get_spirou_resolution(params):
+    # caom2IngestSpirou.py, l530+
+    header, suffix, uri = _decompose_params(params)
+    result = get_spirou_time_refcoord_delta(params)
+    if suffix == 'r':
+        result = result * (24.0 * 3600.0)
+    else:
+        result = get_spirou_exptime(params)
+    if result is None:
+        logging.warning(f'No Time WCS resolution value for {uri}.')
+    return result
+
+
+def get_spirou_time_refcoord_delta(params):
+    # caom2IngestSpirou.py, l530+
+    header, suffix, uri = _decompose_params(params)
+    result = None
+    if suffix == 'r':
+        temp = header.get('FRMTIME')
+    elif suffix == 'p':
+        temp = header.get('TOTETIME')
+    else:
+        temp = header.get('DARKTIME')
+    if temp is None:
+        logging.warning(f'No Time WCS refcoord.delta value for {uri}.')
+    else:
+        result = temp / (24.0 * 3600.0)
+    return result
+
+
+def get_spirou_time_refcoord_naxis(params):
+    # caom2IngestSpirou.py, l557
+    header, suffix, uri = _decompose_params(params)
+    result = 1.0
+    if suffix == 'r':
+        result = header.get('NREADS')
+    if result is None:
+        logging.warning(f'No Time WCS refcoord.naxis value for {uri}.')
+    return result
+
+
+def get_target_position_cval1(header):
+    ra, ignore_dec = _get_ra_dec(header)
+    if ra is None:
+        instrument = _get_instrument(header)
+        if instrument is md.Inst.ESPADONS:
+            ra = header.get('RA_DEG')
+    return ra
+
+
+def get_target_position_cval2(header):
+    ignore_ra, dec = _get_ra_dec(header)
+    if dec is None:
+        instrument = _get_instrument(header)
+        if instrument is md.Inst.ESPADONS:
+            dec = header.get('DEC_DEG')
+    return dec
+
+
+def get_target_standard(header):
+    obs_type = _get_obstype(header)
+    run_id = _get_run_id(header)
+    result = None
+    if run_id is not None:
+        run_id_type = run_id[3].lower()
+        if run_id_type == 'q' and obs_type == 'OBJECT':
+            obj_name = header.get('OBJECT').lower()
+            instrument = _get_instrument(header)
+            if instrument is md.Inst.SITELLE:
+                if 'std' in obj_name:
+                    result = True
+                else:
+                    result = False
+            else:
+                if ('flat' in obj_name or 'focus' in obj_name or
+                        'zenith' in obj_name):
+                    result = False
+                else:
+                    result = True
+        else:
+            result = False
+    return result
+
+
+def get_time_refcoord_delta_derived(header):
+    mjd_obs = get_time_refcoord_val_derived(header)
+    tv_stop = header.get('TVSTOP')
+    if tv_stop is None:
+        # caom2IngestMegacamdetrend.py, l429
+        # caom2IngestWircamdetrend.py, l422
+        exp_time = 20.0
+    else:
+        mjd_end = ac.get_datetime(tv_stop)
+        exp_time = mjd_end - mjd_obs
+    return exp_time
+
+
+def get_time_refcoord_delta_simple(params):
+    # caom2IngestMegacam.py
+    exp_time = get_exptime(params)
+    if exp_time is None:
+        header, suffix, uri = _decompose_params(params)
+        exp_time = mc.to_float(header.get('DARKTIME'))
+    if exp_time is not None:
+        # units are days for raw retrieval values
+        exp_time = exp_time / 86400.0
+    return exp_time
+
+
+def get_time_refcoord_val_derived(header):
+    # CW
+    # caom2IngestWircamdetrend.py, l388
+    # Time - set exptime as time of one image, start and stop dates
+    # as one pixel so this means crval3 is not equal to exptime
+    # if TVSTART not defined, use release_date as mjdstart
+    dt_str = header.get('TVSTART')
+    if dt_str is None:
+        dt_str = header.get('REL_DATE')
+        if dt_str is None:
+            dt_str = header.get('DATE')
+    mjd_obs = ac.get_datetime(dt_str)
+    if mjd_obs is None:
+        logging.warning(f'Chunk.time.axis.function.refCoord.val is None for '
+                        f'{_get_filename(header)}')
+    return mjd_obs
+
+
+def get_time_refcoord_val_simple(header):
+    result = _get_mjd_obs(header)
+    if result is None:
+        temp = header.get('DATE-OBS')
+        if temp is None:
+            # from caom2IngestMegacam.py, l549
+            temp = header.get('DATE')
+        result = ac.get_datetime(temp)
+    return result
+
+
+def get_wircam_bandpass_name(header):
+    wheel_a = header.get('WHEELADE')
+    wheel_b = header.get('WHEELBDE')
+    result = None
+    if wheel_a == 'Open' and wheel_b != 'Open':
+        result = wheel_b
+    elif wheel_b == 'Open' and wheel_a != 'Open':
+        result = wheel_a
+    elif wheel_a == 'Open' and wheel_b == 'Open':
+        result = 'Open'
+    return result
+
+
+def get_wircam_obs_type(params):
+    header, suffix, uri = _decompose_params(params)
+    result = header.get('OBSTYPE')
+    # caom2IngestWircamdetrend.py, l369
+    if 'weight' in uri:
+        result = 'WEIGHT'
+    elif 'badpix' in uri or 'hotpix' in uri or 'deadpix' in uri:
+        result = 'BPM'
+    elif suffix == 'g' and result is None:
+        result = 'GUIDE'
+    return result
+
+
+def get_wircam_provenance_keywords(uri):
+    suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
+    result = None
+    if suffix in ['p', 's']:
+        # caom2IngestWircam.py, l1063
+        if suffix == 'p':
+            result = 'skysubtraction=yes'
+        else:
+            result = 'skysubtraction=no'
+    return result
+
+
+def _decompose_params(params):
+    header = params.get('header')
+    uri = params.get('uri')
+    instrument = _get_instrument(header)
+    suffix = cn.CFHTName(ad_uri=uri, instrument=instrument)._suffix
+    return header, suffix, uri
+
+
+def _get_filename(header):
+    return header.get('FILENAME')
+
+
+def _get_instrument(header):
+    try:
+        result = md.Inst(header.get('INSTRUME'))
+    except ValueError:
+        # set the entry parameter to nothing, as it's only used to check
+        # for hdf5
+        result = cb.CFHTBuilder.get_instrument([header, {}], '')
+    return result
+
+
+def _get_mjd_obs(header):
+    return mc.to_float(header.get('MJD-OBS'))
+
+
+def _get_mjd_start(header):
+    mjd_obs = _get_mjd_obs(header)
+    if mjd_obs is None:
+        date_str = header.get('DATE-OBS')
+        if date_str is None:
+            dt_str = header.get('DATE')
+            mjd_obs = ac.get_datetime(dt_str)
+        else:
+            time_str = header.get('TIME-OBS')
+            date_obs = ac.get_datetime(date_str)
+            time_obs = ac.get_datetime(time_str)
+            mjd_obs = date_obs + time_obs
+    return mjd_obs
+
+
+def _get_obstype(header):
+    return header.get('OBSTYPE')
+
+
+def _get_ra_dec(header):
+    obj_ra = header.get('OBJRA')
+    obj_dec = header.get('OBJDEC')
+    obj_ra_dec = header.get('OBJRADEC')
+    if obj_ra_dec is not None:
+        obj_ra_dec = obj_ra_dec.lower()
+    ra = None
+    dec = None
+    if obj_ra is not None and obj_dec is not None and obj_ra_dec is not None:
+        if obj_ra_dec == 'gappt':
+            # SF 18-12-19
+            # seb 4:01 PM
+            # this is a flat. i have the impression in this case you can
+            # ignore the ra/dec stuff
+            logging.warning(f'OBSRADEC is GAPPT for {_get_filename(header)}')
+        else:
+            ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
+    return ra, dec
+
+
+def _get_run_id(header):
+    run_id = header.get('RUNID')
+    if run_id is None:
+        run_id = header.get('CRUNID')
+    if run_id is not None:
+        if len(run_id) < 3 or len(run_id) > 9 or run_id == 'CFHT':
+            # a well-known default value that indicates the past, as
+            # specified in
+            # caom2IngestMegacam.py, l392
+            # caom2IngestWircamdetrend.py, l314
+            # caom2IngestEspadons.py, l522
+            logging.warning(f'Setting RUNID to default 17BE for '
+                            f'{header.get("FILENAME")}.')
+            run_id = '17BE'
+        else:
+            run_id = run_id.strip()
+    return run_id
+
+
+def _get_types(params):
+    header, suffix, ignore = _decompose_params(params)
+    dp_result = DataProductType.IMAGE
+    pt_result = ProductType.SCIENCE
+    obs_type = get_obs_intent(header)
+    if obs_type == ObservationIntentType.CALIBRATION:
+        pt_result = ProductType.CALIBRATION
+    if suffix in ['m', 'w', 'y']:
+        dp_result = DataProductType.AUXILIARY
+        pt_result = ProductType.AUXILIARY
+    return dp_result, pt_result
+
+
+def _has_energy(header):
+    obs_type = _get_obstype(header)
+    # from conversation with CW, SF
+    # also from caom2IngestEspadons.py, l393, despite an existing example
+    # with energy information
+    return obs_type not in ['BIAS', 'DARK']
+
+
+def _is_espadons_energy(header, uri):
+    instrument = _get_instrument(header)
+    result = False
+    if instrument is md.Inst.ESPADONS:
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+        if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x']:
+            result = True
+    return result
+
+
+def _is_sitelle_energy(header, uri):
+    instrument = _get_instrument(header)
+    result = False
+    if instrument is md.Inst.SITELLE:
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+        if cfht_name.suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
+            result = True
+    return result
 
 
 def _get_filter_md(instrument, filter_name, entry):
@@ -2202,9 +2202,9 @@ def _update_sitelle_plane(observation, uri):
     logging.debug('End _update_sitelle_plane')
 
 
-def _update_wircam_position(part, chunk, headers, idx, obs_id):
+def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     """'g' file position handling, which is quite unique."""
-    logging.debug(f'Begin _update_wircam_position for {obs_id}')
+    logging.debug(f'Begin _update_wircam_position_g for {obs_id}')
     header = headers[idx]
 
     obj_name = header.get('OBJNAME')
@@ -2264,7 +2264,7 @@ def _update_wircam_position(part, chunk, headers, idx, obs_id):
     wcs_parser.augment_position(chunk)
     chunk.position_axis_1 = 1
     chunk.position_axis_2 = 2
-    logging.debug(f'End _update_wircam_position for {obs_id}')
+    logging.debug(f'End _update_wircam_position_g for {obs_id}')
 
 
 def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
