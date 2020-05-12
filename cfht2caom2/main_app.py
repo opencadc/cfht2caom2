@@ -1281,14 +1281,17 @@ def accumulate_bp(bp, uri, instrument):
     bp.clear('Chunk.position.coordsys')
     bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
 
-    bp.set('Chunk.time.exposure', 'get_exptime(params)')
-    bp.set('Chunk.time.resolution', 'get_exptime(params)')
-    bp.set('Chunk.time.timesys', 'UTC')
-    bp.set('Chunk.time.axis.axis.ctype', 'TIME')
-    bp.set('Chunk.time.axis.axis.cunit', 'd')
-    bp.set('Chunk.time.axis.error.rnder', 0.0000001)
-    bp.set('Chunk.time.axis.error.syser', 0.0000001)
-    bp.set('Chunk.time.axis.function.naxis', 1)
+    if cfht_name.suffix != 'g':
+        bp.set('Chunk.time.exposure', 'get_exptime(params)')
+        bp.set('Chunk.time.resolution', 'get_exptime(params)')
+        bp.set('Chunk.time.timesys', 'UTC')
+        bp.set('Chunk.time.axis.axis.ctype', 'TIME')
+        bp.set('Chunk.time.axis.axis.cunit', 'd')
+        bp.set('Chunk.time.axis.error.rnder', 0.0000001)
+        bp.set('Chunk.time.axis.error.syser', 0.0000001)
+        bp.set('Chunk.time.axis.function.naxis', 1)
+
+    # TODO - remove this declaration
     cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     # TODO - this is really really wrong that is_simple is not sufficient
     # to make the distinction between the appropriate implementations.
@@ -1506,11 +1509,11 @@ def accumulate_wircam_bp(bp, uri, cfht_name):
 
     bp.set('Chunk.energy.bandpassName', 'get_wircam_bandpass_name(header)')
 
-    if cfht_name.suffix != 'g':
-        # SF - 07-05-20
-        # so NAXIS here (where 'here' is a 'g' file) is NAXIS=3: time sequence
-        # of images of the guiding camera
-        bp.set('Chunk.time.axis.function.naxis', 1)
+    # if cfht_name.suffix != 'g':
+    #     # SF - 07-05-20
+    #     # so NAXIS here (where 'here' is a 'g' file) is NAXIS=3: time sequence
+    #     # of images of the guiding camera
+    #     bp.set('Chunk.time.axis.function.naxis', 1)
 
     logging.debug('Done accumulate_wircam_bp.')
 
@@ -1761,11 +1764,10 @@ def update(observation, **kwargs):
                             chunk.position_axis_2 = None
 
                     elif instrument is md.Inst.WIRCAM:
-                        if chunk.time is not None:
-                            _update_wircam_time(
-                                part, chunk, headers, idx, cfht_name,
-                                observation.type,
-                                observation.observation_id)
+                        _update_wircam_time(
+                            part, chunk, headers, idx, cfht_name,
+                            observation.type,
+                            observation.observation_id)
 
                         if (cfht_name.suffix in ['f'] or
                                 observation.type in
@@ -2283,41 +2285,80 @@ def _update_wircam_position(part, chunk, headers, idx, obs_id):
 def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
                         obs_id):
     logging.debug(f'Begin _update_wircam_time for {obs_id}')
-    if (cfht_name.suffix == 'g' and chunk.time.axis is not None and
-            chunk.time.axis.function is not None):
-        # CW
-        # Define time samples for guidecube data
-        # Guiding time doesn't seem to match up very well, so just say that
-        # use MJD-OBS gnaxis3 and WCPERIOD
-        #
-        # code from caom2IngestWircam.py, l876+
-        wcgdra1_0 = headers[0].get('WCGDRA1')
-        wc_period_0 = headers[0].get('WCPERIOD')
-        wc_period = None
-        if wcgdra1_0 is not None and wc_period_0 is not None:
-            wc_period = wc_period_0
-        else:
-            wcgdra1_1 = headers[1].get('WCGDRA1')
-            wc_period_1 = headers[1].get('WCPERIOD')
-            if wcgdra1_1 is not None and wc_period_1 is not None:
-                wc_period = wc_period_1
+    if cfht_name.suffix == 'g':
+        # construct TemporalWCS for 'g' files from the CAOM2 pieces
+        # because the structure of 'g' files is so varied, it's not possible
+        # to hand over even part of the construction to the blueprint.
+        ref_coord_val = headers[0].get('MJD-OBS')
+        if ref_coord_val is None:
+            ref_coord_val = headers[1].get('MJD-OBS')
+        part_index = mc.to_int(part.name)
+        part_header = headers[part_index]
 
-        if wc_period is not None:
-            if wc_period < 0.0:
-                wc_period = 100.0
-            # caom2IngestWircam.py, l375
-            chunk.time.exposure = wc_period / 1000.0
-            chunk.time.resolution = chunk.time.exposure
-            chunk.time.axis.function.delta = chunk.time.exposure / 86400.0
-            part_index = mc.to_int(part.name)
-            part_header = headers[part_index]
-            time_index = chunk.naxis
+        if chunk.time is None:
+            from caom2 import TemporalWCS
+            chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')),
+                                     timesys='UTC')
+
+        if chunk.time.axis is None:
+            chunk.time.axis = CoordAxis1D(axis=Axis('TIME', 'd'),
+                                          error=None,
+                                          range=None,
+                                          bounds=None,
+                                          function=None)
+
+        if chunk.time.axis.error is None:
+            from caom2 import CoordError
+            chunk.time.axis.error = CoordError(rnder=0.0000001,
+                                               syser=0.0000001)
+
+        if chunk.time.axis.function is None:
+            from caom2 import CoordFunction1D
+            ref_coord = RefCoord(pix=0.5,
+                                 val=mc.to_float(ref_coord_val))
+
+            time_index = part_header.get('ZNAXIS')
+            if time_index is None:
+                time_index = part_header.get('NAXIS')
             naxis_key = f'ZNAXIS{time_index}'
-            temp = part_header.get(naxis_key)
-            if temp is None:
+            time_naxis = part_header.get(naxis_key)
+            if time_naxis is None:
                 naxis_key = f'NAXIS{time_index}'
-                temp = part_header.get(naxis_key)
-            chunk.time.axis.function.naxis = temp
+                time_naxis = part_header.get(naxis_key)
+
+            if (time_naxis is not None and time_index is not None and
+                    time_index == 3):
+                # caom2.4 wcs validation conformance
+                chunk.time_axis = 3
+
+            # CW
+            # Define time samples for guidecube data
+            # Guiding time doesn't seem to match up very well, so just say that
+            # use MJD-OBS gnaxis3 and WCPERIOD
+            #
+            # code from caom2IngestWircam.py, l876+
+            wcgdra1_0 = headers[0].get('WCGDRA1')
+            wc_period_0 = headers[0].get('WCPERIOD')
+            wc_period = None
+            if wcgdra1_0 is not None and wc_period_0 is not None:
+                wc_period = wc_period_0
+            else:
+                wcgdra1_1 = headers[1].get('WCGDRA1')
+                wc_period_1 = headers[1].get('WCPERIOD')
+                if wcgdra1_1 is not None and wc_period_1 is not None:
+                    wc_period = wc_period_1
+
+            time_delta = None
+            if wc_period is not None:
+                if wc_period < 0.0:
+                    wc_period = 100.0
+                # caom2IngestWircam.py, l375
+                chunk.time.exposure = wc_period / 1000.0
+                chunk.time.resolution = chunk.time.exposure
+                time_delta = chunk.time.exposure / 86400.0
+            chunk.time.axis.function = CoordFunction1D(naxis=time_naxis,
+                                                       delta=time_delta,
+                                                       ref_coord=ref_coord)
 
     # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
     # seem to prefer NAXIS, so odd as this placement seems, do not rely
