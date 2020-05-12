@@ -205,7 +205,7 @@
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>-24.19444444444444</caom2:val>
+                            <caom2:val>-25.80555555555556</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-8.3333333e-05</caom2:cd11>
@@ -308,7 +308,7 @@
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>-24.18825</caom2:val>
+                            <caom2:val>-25.81175</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-8.3333333e-05</caom2:cd11>

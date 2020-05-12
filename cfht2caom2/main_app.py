@@ -2237,20 +2237,9 @@ def _update_wircam_position(part, chunk, headers, idx, obs_id):
     if naxis_2 is None:
         naxis_2 = header.get('ZNAXIS2')
 
-    # TODO - should I be using astropy for this?
     wcgd_ra = header.get(f'WCGDRA{part.name}')
     wcgd_dec = header.get(f'WCGDDEC{part.name}')
-    ra_temp = wcgd_ra.split(':')
-    dec_temp = wcgd_dec.split(':')
-    cr_val1 = 15.0 * (mc.to_float(ra_temp[0]) +
-                      mc.to_float(ra_temp[1]) / 60.0 +
-                      mc.to_float(ra_temp[2]) / 3600.0)
-    cr_val2 = (mc.to_float(dec_temp[0]) +
-               mc.to_float(dec_temp[1]) / 60.0 +
-               mc.to_float(dec_temp[2]) / 3600.0)
-    if wcgd_dec[0] == '-':
-        cr_val2 = -1.0 * abs(cr_val2)
-
+    cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
     if mc.to_float(obs_id) < 980000:
         cr_val2 *= 15.0
 
