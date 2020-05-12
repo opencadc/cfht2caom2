@@ -1367,7 +1367,6 @@ def accumulate_espadons_bp(bp, cfht_name):
 
     bp.set('Chunk.time.axis.function.delta',
            'get_espadons_time_refcoord_delta(params)')
-    bp.set('Chunk.time.axis.function.naxis', 1)
     bp.set('Chunk.time.axis.function.refCoord.val',
            'get_espadons_time_refcoord_val(params)')
 
@@ -1398,7 +1397,6 @@ def accumulate_mega_bp(bp, uri, cfht_name):
     bp.set_default('Plane.provenance.name', 'ELIXIR')
     bp.set_default('Plane.provenance.reference',
                    'http://www.cfht.hawaii.edu/Instruments/Elixir/')
-    bp.set('Chunk.time.axis.function.naxis', 1)
 
     logging.debug('Done accumulate_mega_bp.')
 
@@ -1417,7 +1415,6 @@ def accumulate_sitelle_bp(bp, uri, cfht_name):
 
     bp.set('Chunk.time.axis.function.delta',
            'get_sitelle_time_refcoord_delta(params)')
-    bp.set('Chunk.time.axis.function.naxis', 1)
     bp.set('Chunk.time.axis.function.refCoord.val',
            '_get_mjd_start(header)')
 
@@ -1508,12 +1505,6 @@ def accumulate_wircam_bp(bp, uri, cfht_name):
                    'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam')
 
     bp.set('Chunk.energy.bandpassName', 'get_wircam_bandpass_name(header)')
-
-    # if cfht_name.suffix != 'g':
-    #     # SF - 07-05-20
-    #     # so NAXIS here (where 'here' is a 'g' file) is NAXIS=3: time sequence
-    #     # of images of the guiding camera
-    #     bp.set('Chunk.time.axis.function.naxis', 1)
 
     logging.debug('Done accumulate_wircam_bp.')
 
@@ -2214,8 +2205,16 @@ def _update_wircam_position(part, chunk, headers, idx, obs_id):
     header = headers[idx]
 
     obj_name = header.get('OBJNAME')
-    if obj_name == 'zenith':
-        logging.warning(f'obj_name is zenith. No position for {obs_id}')
+    part_num = mc.to_int(part.name)
+    if obj_name == 'zenith' or part_num >= 5:
+        # SGo - the second clause is here, because there are only four sets
+        # of position information in headers (RA/DEC of guide start on
+        # arrays 1 2 3 4), and that's the only thing that is calculated
+        # in the original code. Values for HDU 5+ are not written as part of
+        # the override file, and thus default to 0, which fails ingestion
+        # to the service.
+        logging.warning(f'obj_name is {obj_name}. part_num is {part_num} No '
+                        f'position for {obs_id}')
         cc.reset_position(chunk)
         return
 
@@ -2238,25 +2237,19 @@ def _update_wircam_position(part, chunk, headers, idx, obs_id):
     if naxis_2 is None:
         naxis_2 = header.get('ZNAXIS2')
 
-    # TODO - this is why the 1151210g file fails to ingest .... wtf? Did
-    # I put this in?
-    if part.name == '5':
-        cr_val1 = 0.0
-        cr_val2 = 0.0
-    else:
-        # TODO - should I be using astropy for this?
-        wcgd_ra = header.get(f'WCGDRA{part.name}')
-        wcgd_dec = header.get(f'WCGDDEC{part.name}')
-        ra_temp = wcgd_ra.split(':')
-        dec_temp = wcgd_dec.split(':')
-        cr_val1 = 15.0 * (mc.to_float(ra_temp[0]) +
-                          mc.to_float(ra_temp[1]) / 60.0 +
-                          mc.to_float(ra_temp[2]) / 3600.0)
-        cr_val2 = (mc.to_float(dec_temp[0]) +
-                   mc.to_float(dec_temp[1]) / 60.0 +
-                   mc.to_float(dec_temp[2]) / 3600.0)
-        if wcgd_dec[0] == '-':
-            cr_val2 = -1.0 * abs(cr_val2)
+    # TODO - should I be using astropy for this?
+    wcgd_ra = header.get(f'WCGDRA{part.name}')
+    wcgd_dec = header.get(f'WCGDDEC{part.name}')
+    ra_temp = wcgd_ra.split(':')
+    dec_temp = wcgd_dec.split(':')
+    cr_val1 = 15.0 * (mc.to_float(ra_temp[0]) +
+                      mc.to_float(ra_temp[1]) / 60.0 +
+                      mc.to_float(ra_temp[2]) / 3600.0)
+    cr_val2 = (mc.to_float(dec_temp[0]) +
+               mc.to_float(dec_temp[1]) / 60.0 +
+               mc.to_float(dec_temp[2]) / 3600.0)
+    if wcgd_dec[0] == '-':
+        cr_val2 = -1.0 * abs(cr_val2)
 
     if mc.to_float(obs_id) < 980000:
         cr_val2 *= 15.0
@@ -2289,6 +2282,12 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
         # construct TemporalWCS for 'g' files from the CAOM2 pieces
         # because the structure of 'g' files is so varied, it's not possible
         # to hand over even part of the construction to the blueprint.
+
+        # SF - 07-05-20
+        # so NAXIS here (where 'here' is a 'g' file) is ZNAXIS=3: time sequence
+        # of images of the guiding camera => this means try ZNAXIS* keyword
+        # values before trying NAXIS*, hence the header lookup code
+
         ref_coord_val = headers[0].get('MJD-OBS')
         if ref_coord_val is None:
             ref_coord_val = headers[1].get('MJD-OBS')
@@ -2371,18 +2370,6 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
             chunk.time.axis.function.naxis = mc.to_int(n_exp)
 
     logging.debug(f'End _update_wircam_time for {obs_id}')
-
-
-# def get_wircam_time_function_naxis(uri):
-#     result = 1
-#     suffix = cn.CFHTName(ad_uri=uri, instrument=md.Inst.WIRCAM)._suffix
-#     # TODO - which error does this fix? Because it breaks a bunch of
-#     # observations ..... sigh
-#     # if suffix == 'g':
-#     #     # stop the over-ride of the original header values by the
-#     #     # action of the blueprint
-#     #     result = None
-#     return result
 
 
 def _identify_instrument(uri):
