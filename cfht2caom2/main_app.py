@@ -816,11 +816,17 @@ def update(observation, **kwargs):
                             chunk.naxis = None
 
                         if cfht_name.suffix == 'g':
-                            _update_wircam_position_g(part, chunk, headers, idx,
-                                                      observation.observation_id)
+                            _update_wircam_position_g(
+                                part, chunk, headers, idx,
+                                observation.observation_id)
                             temp_bandpass_name = headers[idx].get('FILTER')
                             if temp_bandpass_name == 'FakeBlank':
                                 cc.reset_energy(chunk)
+
+                        if cfht_name.suffix == 'o':
+                            _update_wircam_position_o(
+                                part, chunk, headers, idx,
+                                observation.observation_id)
 
                         # position axis check is to determine if naxis should
                         # be set
@@ -852,6 +858,8 @@ def update(observation, **kwargs):
                             instrument, filter_name, uri)
                         _update_energy_range(chunk, filter_name, filter_md)
 
+                        if chunk.naxis == 2:
+                            chunk.time_axis = None
         if isinstance(observation, DerivedObservation):
             if derived_type is ProvenanceType.IMCMB:
                 cc.update_plane_provenance(plane, headers[1:],
@@ -2200,6 +2208,29 @@ def _update_sitelle_plane(observation, uri):
             z_plane.meta_release = p_plane.meta_release
 
     logging.debug('End _update_sitelle_plane')
+
+
+def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
+    logging.debug(f'Begin _update_wircam_position_o for {obs_id}')
+    part_index = mc.to_int(part.name)
+    header = headers[part_index]
+    ra_deg = header.get('RA_DEG')
+    dec_deg = header.get('DEC_DEG')
+    if chunk.position is None and ra_deg is not None and dec_deg is not None:
+        logging.error(f'Adding position information for {obs_id}')
+        header['CTYPE1'] = 'RA---TAN'
+        header['CTYPE2'] = 'DEC--TAN'
+        header['CUNIT1'] = 'deg'
+        header['CUNIT2'] = 'deg'
+        header['CRVAL1'] = ra_deg
+        header['CRVAL2'] = dec_deg
+        wcs_parser = WcsParser(header, obs_id, idx)
+        if chunk is None:
+            chunk = Chunk()
+        wcs_parser.augment_position(chunk)
+        chunk.position_axis_1 = 1
+        chunk.position_axis_2 = 2
+    logging.debug(f'End _update_wircam_position_o')
 
 
 def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
