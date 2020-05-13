@@ -860,6 +860,14 @@ def update(observation, **kwargs):
 
                         if chunk.naxis == 2:
                             chunk.time_axis = None
+
+                        if (chunk.position is not None and
+                                chunk.position.coordsys.lower() == 'null'):
+                            cc.reset_position(chunk)
+                            chunk.naxis = None
+                            chunk.energy_axis = None
+                            chunk.time_axis = None
+
         if isinstance(observation, DerivedObservation):
             if derived_type is ProvenanceType.IMCMB:
                 cc.update_plane_provenance(plane, headers[1:],
@@ -1784,13 +1792,14 @@ def _get_ra_dec(header):
     ra = None
     dec = None
     if obj_ra is not None and obj_dec is not None and obj_ra_dec is not None:
-        if obj_ra_dec == 'gappt':
+        if obj_ra_dec == 'gappt' or obj_ra_dec == 'null':
             # SF 18-12-19
             # seb 4:01 PM
             # this is a flat. i have the impression in this case you can
             # ignore the ra/dec stuff
             logging.warning(f'OBSRADEC is GAPPT for {_get_filename(header)}')
         else:
+            logging.error(f'{obj_ra_dec} {type(obj_ra_dec)}')
             ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
     return ra, dec
 
@@ -2271,8 +2280,6 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
                       f'undefined. No position.')
         cc.reset_position(chunk)
         return
-
-    logging.error(f'ra {wcgd_ra} dec {wcgd_dec}')
     cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
     if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
         logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are close to '
