@@ -384,8 +384,7 @@ class CFHTPreview(mc.PreviewVisitor):
         CFHTPreview._gen_image(self._science_fqn, geometry, self._thumb_fqn,
                                scope_param, rotate_param,
                                mosaic_param=mosaic_param,
-                               scale_param=scale_param, height='256',
-                               width='521')
+                               scale_param=scale_param)
         geometry = '1024x1024'
         if self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
             CFHTPreview._gen_image(self._science_fqn, geometry,
@@ -496,8 +495,7 @@ class CFHTPreview(mc.PreviewVisitor):
                    rotate_param,
                    zoom_param='to fit',
                    pan_param='', mosaic_param='',
-                   mode_param='-mode none', scale_param='', height='1024',
-                   width='1024'):
+                   mode_param='-mode none', scale_param=''):
         # 20-03-20 - seb - always use iraf - do not trust wcs coming from the
         # data acquisition. A proper one needs processing which is often not
         # done on observations.
@@ -519,12 +517,20 @@ class CFHTPreview(mc.PreviewVisitor):
 
     @staticmethod
     def _gen_square(f_name):
-        Image.open(f_name).resize((1024, 1024)).save(f_name)
+        im = Image.open(f_name)
+        min_size = 1024
+        extent = max(min_size, im.size[0], im.size[1])
+        # fill color is white
+        new_im = Image.new('RGB', (extent, extent), (255, 255, 255, 0))
+        new_im.paste(im, (int((extent - im.size[0]) / 2),
+                          int((extent - im.size[1]) / 2)))
+        new_im.save(f_name)
 
     def _gen_thumbnail(self):
         self._logger.debug(f'Generating thumbnail for file '
                            f'{self._science_fqn}.')
-        Image.open(self._preview_fqn).resize((256, 256)).save(self._thumb_fqn)
+        Image.open(self._preview_fqn).thumbnail((256, 256)).save(
+            self._thumb_fqn)
 
     def _sitelle_calibrated_cube(self):
         self._logger.debug(f'Do sitelle calibrated cube preview augmentation with '
