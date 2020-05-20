@@ -85,7 +85,7 @@
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>Ks</caom2:bandpassName>
+                    <caom2:bandpassName>Ks.WC8302</caom2:bandpassName>
                     <caom2:resolvingPower>6.574109293970033</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -142,7 +142,7 @@
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>Ks</caom2:bandpassName>
+                    <caom2:bandpassName>Ks.WC8302</caom2:bandpassName>
                     <caom2:resolvingPower>6.574109293970033</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -199,7 +199,7 @@
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>Ks</caom2:bandpassName>
+                    <caom2:bandpassName>Ks.WC8302</caom2:bandpassName>
                     <caom2:resolvingPower>6.574109293970033</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
@@ -256,7 +256,7 @@
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>Ks</caom2:bandpassName>
+                    <caom2:bandpassName>Ks.WC8302</caom2:bandpassName>
                     <caom2:resolvingPower>6.574109293970033</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>

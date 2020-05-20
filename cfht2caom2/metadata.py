@@ -202,6 +202,13 @@ class CFHTCache(mc.Cache):
         return run_id[:3]
 
 
+def reverse_lookup(value_to_find):
+    result = next(key for key, value in
+                  cache.get_from(FILTER_REPAIR_CACHE).items()
+                  if value == value_to_find)
+    return result
+
+
 cache = CFHTCache()
 
 filter_cache = ac.FilterMetadataCache(cache.get_from(FILTER_REPAIR_CACHE),

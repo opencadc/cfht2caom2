@@ -1,5 +1,4 @@
 FROM opencadc/matplotlib:3.8-slim
-# ADD docker-apt-install /usr/local/bin
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y && apt-get dist-upgrade -y
@@ -26,8 +25,7 @@ RUN pip install  --no-cache-dir \
         spherical-geometry \
         vos
 
-RUN apt-get install -y imagemagick \
-    saods9
+RUN apt-get install -y saods9
 
 RUN rm -rf /var/lib/apt/lists/ /tmp/* /var/tmp/*
 

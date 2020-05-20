@@ -744,7 +744,7 @@ def update(observation, **kwargs):
                         # match
                         #
                         # SGo - use range for energy with filter information
-                        filter_md = _get_filter_md(
+                        filter_md, updated_filter_name = _get_filter_md(
                             instrument, filter_name, uri)
                         if (filter_name is None or
                                 filter_name in ['Open', 'NONE'] or
@@ -754,7 +754,8 @@ def update(observation, **kwargs):
                                 observation.type in ['DARK']):
                             cc.reset_energy(chunk)
                         else:
-                            _update_energy_range(chunk, filter_name, filter_md)
+                            _update_energy_range(chunk, updated_filter_name,
+                                                 filter_md)
 
                         # PD - in general, do not assign, unless the wcs
                         # metadata is in the FITS header
@@ -854,9 +855,10 @@ def update(observation, **kwargs):
                             chunk.energy_axis = None
                             chunk.time_axis = None
 
-                        filter_md = _get_filter_md(
+                        filter_md, updated_filter_name = _get_filter_md(
                             instrument, filter_name, uri)
-                        _update_energy_range(chunk, filter_name, filter_md)
+                        _update_energy_range(
+                            chunk, updated_filter_name, filter_md)
 
                         if chunk.naxis == 2:
                             chunk.time_axis = None
@@ -957,7 +959,7 @@ def get_energy_function_delta(params):
         else:
             filter_name = header.get('FILTER')
             instrument = _get_instrument(header)
-            temp = _get_filter_md(instrument, filter_name, uri)
+            temp, ignore = _get_filter_md(instrument, filter_name, uri)
             result = ac.FilterMetadataCache.get_fwhm(temp)
     return result
 
@@ -1005,7 +1007,7 @@ def get_energy_function_val(params):
         else:
             filter_name = header.get('FILTER')
             instrument = _get_instrument(header)
-            temp = _get_filter_md(instrument, filter_name, uri)
+            temp, ignore = _get_filter_md(instrument, filter_name, uri)
             result = ac.FilterMetadataCache.get_central_wavelength(temp)
     return result
 
@@ -1799,7 +1801,6 @@ def _get_ra_dec(header):
             # ignore the ra/dec stuff
             logging.warning(f'OBSRADEC is GAPPT for {_get_filename(header)}')
         else:
-            logging.error(f'{obj_ra_dec} {type(obj_ra_dec)}')
             ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
     return ra, dec
 
@@ -1865,12 +1866,24 @@ def _is_sitelle_energy(header, uri):
 
 
 def _get_filter_md(instrument, filter_name, entry):
-    temp = md.filter_cache.get_svo_filter(instrument, filter_name)
+    filter_md = md.filter_cache.get_svo_filter(instrument, filter_name)
     if not md.filter_cache.is_cached(instrument, filter_name):
         # want to stop ingestion if the filter name is not expected
         raise mc.CadcException(f'Could not find filter metadata for '
                                f'{filter_name} in {entry}.')
-    return temp
+    # CW - 15-05-20
+    # some flats like this have filter names like ‘i’, instead of ‘i.MP9701’.
+    # Even though there may only be a few of these, we want zero so they don’t
+    # appear in the filters picklist and confuse users. If the header doesn’t
+    # have the full filter name maybe you can hack it based on your knowledge
+    # of which i filter was used during this era.
+    #
+    # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
+    updated_filter_name = mc.reverse_lookup(
+        filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE))
+    if updated_filter_name is None:
+        updated_filter_name = filter_name
+    return filter_md, updated_filter_name
 
 
 def _is_derived(headers, cfht_name, obs_id):

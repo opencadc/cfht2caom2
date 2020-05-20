@@ -74,6 +74,7 @@ import os
 from astropy.io import fits
 from matplotlib import pylab
 from numpy import *
+from PIL import Image
 
 from caom2 import ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
@@ -118,8 +119,8 @@ class CFHTPreview(mc.PreviewVisitor):
         else:
             count = self._do_ds9_prev(obs_id)
 
-        self.add_preview(self._storage_name.thumb_uri, self._storage_name.thumb,
-                         ProductType.THUMBNAIL)
+        self.add_preview(self._storage_name.thumb_uri,
+                         self._storage_name.thumb, ProductType.THUMBNAIL)
         self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
                          ProductType.PREVIEW)
         self.add_to_delete(self._thumb_fqn)
@@ -128,8 +129,8 @@ class CFHTPreview(mc.PreviewVisitor):
                  self._storage_name.suffix in ['i', 'p']) or
                 (self._instrument is md.Inst.SPIROU and
                  self._storage_name.suffix in ['e', 'p', 's', 't'])):
-            self.add_preview(self._storage_name.zoom_uri, self._storage_name.zoom,
-                             ProductType.PREVIEW)
+            self.add_preview(self._storage_name.zoom_uri,
+                             self._storage_name.zoom, ProductType.PREVIEW)
             self.add_to_delete(self._zoom_fqn)
         return count
 
@@ -185,41 +186,34 @@ class CFHTPreview(mc.PreviewVisitor):
 
         fig = pylab.figure(figsize=(10.24, 10.24), dpi=100)
 
-        label = f'{self._storage_name.product_id}: object'
         pylab.clf()
-        self._subplot(swa, sia, spa, 4300.0, 4600.0, label, 1, 4408.0, 4412.0,
+        self._subplot(swa, sia, spa, 4300.0, 4600.0, 1, 4408.0, 4412.0,
                       'Stokes spectrum (x5)')
-        self._subplot(swa, sia, spa, 6500.0, 6750.0, label, 2, 6589.0, 6593.0,
+        self._subplot(swa, sia, spa, 6500.0, 6750.0, 2, 6589.0, 6593.0,
                       'Stokes spectrum (x5)')
-        self._logger.debug(f'Saving preview for file {self._science_fqn}.')
         pylab.savefig(self._preview_fqn, format='jpg')
-
-        # Make 256^2 version using ImageMagick convert
-        self._logger.debug(f'Generating thumbnail for file '
-                           f'{self._science_fqn}.')
-        convert_cmd = f'convert {self._preview_fqn} -resize 256x256 ' \
-                      f'{self._thumb_fqn}'
-        mc.exec_cmd(convert_cmd)
+        self._gen_thumbnail()
         return 2
 
-    def _subplot(self, swa, sia, spa, wlLow, wlHigh, label, subplot_index,
+    def _subplot(self, swa, sia, spa, wl_low, wl_high, subplot_index,
                  text_1, text_2, text_3):
-        wl = swa[(swa > wlLow) & (swa < wlHigh)]
-        flux = sia[(swa > wlLow) & (swa < wlHigh)]
-        wlSort = wl[wl.argsort()]
-        fluxSort = flux[wl.argsort()]
+        label = f'{self._storage_name.product_id}: object'
+        wl = swa[(swa > wl_low) & (swa < wl_high)]
+        flux = sia[(swa > wl_low) & (swa < wl_high)]
+        wl_sort = wl[wl.argsort()]
+        flux_sort = flux[wl.argsort()]
         if self._storage_name.suffix == 'p':
-            pflux = spa[(swa > wlLow) & (swa < wlHigh)]
-            pfluxSort = pflux[wl.argsort()]
+            pflux = spa[(swa > wl_low) & (swa < wl_high)]
+            pflux_sort = pflux[wl.argsort()]
             flux = append(flux, pflux)
         ymax = 1.1 * max(flux)
         ymin = min([0.0, min(flux) - (ymax - max(flux))])
 
         pylab.subplot(2, 1, subplot_index)
         pylab.grid(True)
-        pylab.plot(wlSort, fluxSort, color='k')
+        pylab.plot(wl_sort, flux_sort, color='k')
         if self._storage_name.suffix == 'p':
-            pylab.plot(wlSort, pfluxSort, color='b')
+            pylab.plot(wl_sort, pflux_sort, color='b')
             pylab.text(text_1, (ymin + 0.02 * (ymax - ymin)), text_3, size=16,
                        color='b')
         pylab.xlabel(r'Wavelength ($\AA$)', color='k')
@@ -390,7 +384,8 @@ class CFHTPreview(mc.PreviewVisitor):
         CFHTPreview._gen_image(self._science_fqn, geometry, self._thumb_fqn,
                                scope_param, rotate_param,
                                mosaic_param=mosaic_param,
-                               scale_param=scale_param)
+                               scale_param=scale_param, height='256',
+                               width='521')
         geometry = '1024x1024'
         if self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
             CFHTPreview._gen_image(self._science_fqn, geometry,
@@ -436,12 +431,13 @@ class CFHTPreview(mc.PreviewVisitor):
                                scope_param, rotate_param, zoom_param,
                                pan_param, mosaic_param=mosaic_param,
                                scale_param=scale_param)
+        CFHTPreview._gen_square(self._zoom_fqn)
         return 3
 
     def _do_spirou_intensity_spectrum(self):
 
         spirou = fits.open(self._science_fqn)
-        #Polarization scale factor
+        # Polarization scale factor
 
         if self._storage_name.suffix in ['e', 't']:
             sw2d = spirou['WaveAB'].data  # wavelength array (nm)
@@ -467,27 +463,22 @@ class CFHTPreview(mc.PreviewVisitor):
         npix = sw.shape[0]
 
         swa = 10.0 * sw
-        sia = arange(0.,npix,1.0)
+        sia = arange(0., npix, 1.0)
         spa = None
         if self._storage_name.suffix == 'p':
             spa = arange(0., npix, 1.0)
-        # determine upper/lower y limits for two planels from intensity values
+        # determine upper/lower y limits for two planes from intensity values
         for i in range(sia.shape[0]):
             sia[i] = float(si[i])
             if self._storage_name.suffix == 'p':
-                spa[i] = float(sp[i]) * pScale  # increase scale of polarization
-        label = f'{self._storage_name.product_id}: object'
+                spa[i] = float(sp[i]) * pScale  # increase polarization scale
         pylab.clf()
-        self._subplot(swa, sia, spa, 15000.0, 15110.0, label, 1, 15030.0,
-                      15030.0, 'Stokes spectrum')
-        self._subplot(swa, sia, spa, 22940.0, 23130.0, label, 2, 22990.0,
-                      22990.0, 'Stokes spectrum')
+        self._subplot(swa, sia, spa, 15000.0, 15110.0, 1, 15030.0, 15030.0,
+                      'Stokes spectrum')
+        self._subplot(swa, sia, spa, 22940.0, 23130.0, 2, 22990.0, 22990.0,
+                      'Stokes spectrum')
         pylab.savefig(self._preview_fqn, format='jpg')
-
-        # Make 256^2 version using ImageMagick convert
-        convert_cmd = f'convert {self._preview_fqn} -resize 256x256 ' \
-                      f'{self._thumb_fqn}'
-        mc.exec_cmd(convert_cmd)
+        self._gen_thumbnail()
         return 2
 
     def _exec_cmd_chdir(self, temp_file, cmd):
@@ -505,7 +496,8 @@ class CFHTPreview(mc.PreviewVisitor):
                    rotate_param,
                    zoom_param='to fit',
                    pan_param='', mosaic_param='',
-                   mode_param='-mode none', scale_param=''):
+                   mode_param='-mode none', scale_param='', height='1024',
+                   width='1024'):
         # 20-03-20 - seb - always use iraf - do not trust wcs coming from the
         # data acquisition. A proper one needs processing which is often not
         # done on observations.
@@ -524,6 +516,15 @@ class CFHTPreview(mc.PreviewVisitor):
               f'-saveimage jpeg {save_fqn} ' \
               f'-quit'
         mc.exec_cmd(cmd, timeout=900)  # wait 15 minutes till killing
+
+    @staticmethod
+    def _gen_square(f_name):
+        Image.open(f_name).resize((1024, 1024)).save(f_name)
+
+    def _gen_thumbnail(self):
+        self._logger.debug(f'Generating thumbnail for file '
+                           f'{self._science_fqn}.')
+        Image.open(self._preview_fqn).resize((256, 256)).save(self._thumb_fqn)
 
     def _sitelle_calibrated_cube(self):
         self._logger.debug(f'Do sitelle calibrated cube preview augmentation with '

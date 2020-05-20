@@ -59,9 +59,12 @@ filter_repair_lookup:
   Halpha.MP9603: Halpha
   Halpha.MP9604: Halpha_Off_2
   Ks.WC8302: Ks
+  N393.MP1111: N393.MP1111
   NB920.MP7902: NB920
+  OIII.MP7504: OIII.MP7504
   OIII.MP9501: OIII
   OIII.MP9502: OIII_off
+  PHG.MP9999: PHG.MP9999
   TiO.MP7701: TiO
   g.MP9401: g
   g.MP9402: g_sdss

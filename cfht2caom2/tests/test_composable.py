@@ -69,7 +69,6 @@
 
 import os
 import shutil
-import sys
 
 from astropy.table import Table
 from hashlib import md5
@@ -98,7 +97,6 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
     os.getcwd = Mock(return_value=TEST_DIR)
     try:
         # execution
-        sys.argv = ['test command']
         test_result = composable._run_by_builder()
         assert test_result == 0, 'wrong result'
     finally:
@@ -128,15 +126,11 @@ def test_run_state(run_mock, tap_mock, data_client_mock,
     test_f_name = f'{test_obs_id}p.fits.fz'
     try:
         # execution
-        sys.argv = ['test command']
         test_result = composable._run_state()
         assert test_result == 0, 'mocking correct execution'
     finally:
         os.getcwd = getcwd_orig
 
-    # assert query_mock.called, 'service query not created'
-    # assert builder_data_mock.return_value.get_file.called, \
-    #     'get_file not called'
     assert run_mock.called, 'should have been called'
     args, kwargs = run_mock.call_args
     test_storage = args[0]
