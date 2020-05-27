@@ -11,6 +11,9 @@ energy_defaults:
   SITELLE.C4:
     cw: null
     fwhm: null
+  MegaPrime.filter_name:
+    cw: null
+    fwhm: null
   Wircam.FakeBlank:
     cw: null
     fwhm: null

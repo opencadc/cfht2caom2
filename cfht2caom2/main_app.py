@@ -569,15 +569,9 @@ def update(observation, **kwargs):
     logging.debug('Begin update.')
     mc.check_param(observation, Observation)
 
-    headers = None
-    if 'headers' in kwargs:
-        headers = kwargs['headers']
-    fqn = None
-    if 'fqn' in kwargs:
-        fqn = kwargs['fqn']
-    uri = None
-    if 'uri' in kwargs:
-        uri = kwargs['uri']
+    headers = kwargs.get('headers')
+    fqn = kwargs.get('fqn')
+    uri = kwargs.get('uri')
 
     ingesting_hdf5 = False
 
