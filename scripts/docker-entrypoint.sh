@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# always over-write the operational cache.yml file, since there's no
-# other way to make sure version-controlled additions are made operational
-cp /cache.yml ${PWD}
+if [[ ! -e ${PWD}/cache.yml ]]
+then
+  cp /cache.yml ${PWD}
+fi
 
 if [[ ! -e ${PWD}/config.yml ]]
 then
