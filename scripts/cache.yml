@@ -78,7 +78,7 @@ filter_repair_lookup:
   OIIIOFF.MP9502: OIII_off
   PHG.MP9999: PHG.MP9999
   TiO.MP7701: TiO
-  tiO.MP7701: TiO
+  tio.MP7701: TiO
   g.MP9401: g
   g.MP9402: g_sdss
   gri.MP9605: gri

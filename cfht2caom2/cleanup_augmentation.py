@@ -69,7 +69,7 @@
 
 import logging
 
-from caom2 import Observation, TypedOrderedDict, Plane
+from caom2 import Observation
 from caom2pipe import manage_composable as mc
 
 

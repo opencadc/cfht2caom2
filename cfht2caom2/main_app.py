@@ -779,6 +779,17 @@ def update(observation, **kwargs):
                                     observation.observation_id, idx)
                             _update_sitelle_plane(observation, uri)
 
+                        # because SITELLE has the information from two
+                        # detectors amalgamated into one set of HDUs
+                        if chunk.naxis is not None and chunk.naxis <= 2:
+                            if chunk.position_axis_1 is None:
+                                chunk.naxis = None
+                                chunk.time_axis = None
+                                chunk.energy_axis = None
+                            else:
+                                chunk.time_axis = 3
+                                chunk.energy_axis = 4
+
                     elif instrument is md.Inst.SPIROU:
                         _update_position_spirou(
                             chunk, headers[idx], observation.observation_id)
@@ -2176,7 +2187,7 @@ def _update_sitelle_plane(observation, uri):
     # if the 'p' plane exists, the observation id is the same as the plane id,
     # so copy the metadata to the 'z' plane
     z_plane_key = observation.observation_id.replace('p', 'z')
-    temp_z_uri = uri.replace('p', 'z')
+    temp_z_uri = uri.replace('p', 'z', 1)
     z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
 
     # fix the plane-level information for the z plane
@@ -2192,10 +2203,15 @@ def _update_sitelle_plane(observation, uri):
             # replicate the plane-level information from the p plane to the
             # z plane
             p_plane = observation.planes[observation.observation_id]
-            p_artifact_key = uri.replace('z', 'p', 1).replace('.hdf5', '.fits.fz')
+            temp = uri.replace('.hdf5', '.fits.fz')
+            if temp.count('z') == 1:
+                # uri looks like: ad:CFHT/2384125p.fits.fz
+                p_artifact_key = temp
+            else:
+                p_artifact_key = temp.replace('z', 'p', 1)
             if p_artifact_key not in p_plane.artifacts.keys():
                 p_artifact_key = uri.replace(
-                    'z', 'p').replace('.hdf5', '.fits')
+                    'z', 'p', 1).replace('.hdf5', '.fits')
                 if p_artifact_key not in p_plane.artifacts.keys():
                     p_artifact_key = uri.replace('z', 'p', 1).replace(
                         '.hdf5', '.fits.gz')

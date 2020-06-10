@@ -195,7 +195,7 @@ def _identify_inst_mock(uri):
                                   '675258o', '2003A.frpts.z.36.00',
                                   '02Bm05.scatter.g.36.00', '1257365o',
                                   '1257365p', '02AE10.bias.0.36.00'],
-              md.Inst.SITELLE: ['2384125'],
+              md.Inst.SITELLE: ['2384125', '2480033'],
               md.Inst.ESPADONS: ['2460606', '769448b'],
               md.Inst.SPIROU: ['2401727a', '2401712f', '2401728c', '2401734',
                                '2401710d'],

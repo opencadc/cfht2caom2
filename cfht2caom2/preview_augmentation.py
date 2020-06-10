@@ -106,7 +106,6 @@ class CFHTPreview(mc.PreviewVisitor):
         self._logger = logging.getLogger(__name__)
 
     def generate_plots(self, obs_id):
-
         if (self._instrument is md.Inst.SITELLE and
                 self._storage_name.suffix == 'p'):
             count = self._sitelle_calibrated_cube()
@@ -118,20 +117,6 @@ class CFHTPreview(mc.PreviewVisitor):
             count = self._do_spirou_intensity_spectrum()
         else:
             count = self._do_ds9_prev(obs_id)
-
-        self.add_preview(self._storage_name.thumb_uri,
-                         self._storage_name.thumb, ProductType.THUMBNAIL)
-        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW)
-        self.add_to_delete(self._thumb_fqn)
-        self.add_to_delete(self._preview_fqn)
-        if not ((self._instrument is md.Inst.ESPADONS and
-                 self._storage_name.suffix in ['i', 'p']) or
-                (self._instrument is md.Inst.SPIROU and
-                 self._storage_name.suffix in ['e', 'p', 's', 't'])):
-            self.add_preview(self._storage_name.zoom_uri,
-                             self._storage_name.zoom, ProductType.PREVIEW)
-            self.add_to_delete(self._zoom_fqn)
         return count
 
     def _do_espadons_science(self):
@@ -168,7 +153,7 @@ class CFHTPreview(mc.PreviewVisitor):
                 sp = espadons[ext].data[2]  # Stokes array
 
         espadons.close(self._science_fqn)
-        self._logger.debug(espadons[ext].shape, sw, si)
+        self._logger.debug(f'{espadons[ext].shape}, {sw}, {si}')
 
         npix = sw.shape[0]
 
@@ -192,8 +177,16 @@ class CFHTPreview(mc.PreviewVisitor):
         self._subplot(swa, sia, spa, 6500.0, 6750.0, 2, 6589.0, 6593.0,
                       'Stokes spectrum (x5)')
         pylab.savefig(self._preview_fqn, format='jpg')
-        self._gen_thumbnail()
-        return 2
+        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+                         ProductType.PREVIEW)
+        self.add_to_delete(self._preview_fqn)
+        count = 1
+        count += self._gen_thumbnail()
+        if count == 2:
+            self.add_preview(self._storage_name.thumb_uri,
+                             self._storage_name.thumb, ProductType.THUMBNAIL)
+            self.add_to_delete(self._thumb_fqn)
+        return count
 
     def _subplot(self, swa, sia, spa, wl_low, wl_high, subplot_index,
                  text_1, text_2, text_3):
@@ -297,6 +290,7 @@ class CFHTPreview(mc.PreviewVisitor):
         """
         self._logger.debug(f'Do ds9 preview augmentation with '
                            f'{self._science_fqn}')
+        count = 0
         delete_list = []
         headers = ac.read_fits_headers(self._science_fqn)
         num_extensions = headers[0].get('NEXTEND')
@@ -381,24 +375,34 @@ class CFHTPreview(mc.PreviewVisitor):
 
         geometry = '256x521'
 
-        CFHTPreview._gen_image(self._science_fqn, geometry, self._thumb_fqn,
-                               scope_param, rotate_param,
-                               mosaic_param=mosaic_param,
-                               scale_param=scale_param)
+        count += CFHTPreview._gen_image(self._science_fqn, geometry,
+                                        self._thumb_fqn, scope_param,
+                                        rotate_param,
+                                        mosaic_param=mosaic_param,
+                                        scale_param=scale_param)
+        if count == 1:
+            self.add_preview(self._storage_name.thumb_uri,
+                             self._storage_name.thumb, ProductType.THUMBNAIL)
+            self.add_to_delete(self._thumb_fqn)
+
         geometry = '1024x1024'
         if self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
-            CFHTPreview._gen_image(self._science_fqn, geometry,
-                                   self._preview_fqn,
-                                   scope_param, rotate_param,
-                                   mosaic_param=mosaic_param,
-                                   mode_param=mode_param,
-                                   scale_param=scale_param)
+            count += CFHTPreview._gen_image(self._science_fqn, geometry,
+                                            self._preview_fqn,
+                                            scope_param, rotate_param,
+                                            mosaic_param=mosaic_param,
+                                            mode_param=mode_param,
+                                            scale_param=scale_param)
         else:
-            CFHTPreview._gen_image(self._science_fqn, geometry,
-                                   self._preview_fqn,
-                                   scope_param, rotate_param,
-                                   mosaic_param=mosaic_param,
-                                   scale_param=scale_param)
+            count += CFHTPreview._gen_image(self._science_fqn, geometry,
+                                            self._preview_fqn,
+                                            scope_param, rotate_param,
+                                            mosaic_param=mosaic_param,
+                                            scale_param=scale_param)
+        if count == 2:
+            self.add_preview(self._storage_name.prev_uri,
+                             self._storage_name.prev, ProductType.PREVIEW)
+            self.add_to_delete(self._preview_fqn)
 
         mosaic_param = '-fits'
         zoom_param = '1'
@@ -426,12 +430,17 @@ class CFHTPreview(mc.PreviewVisitor):
                 zoom_science_fqn = ''
         elif self._instrument is md.Inst.SITELLE:
             pan_param = '-pan -512 1544'
-        CFHTPreview._gen_image(zoom_science_fqn, geometry, self._zoom_fqn,
-                               scope_param, rotate_param, zoom_param,
-                               pan_param, mosaic_param=mosaic_param,
-                               scale_param=scale_param)
+        count += CFHTPreview._gen_image(zoom_science_fqn, geometry,
+                                        self._zoom_fqn, scope_param,
+                                        rotate_param, zoom_param,
+                                        pan_param, mosaic_param=mosaic_param,
+                                        scale_param=scale_param)
         CFHTPreview._gen_square(self._zoom_fqn)
-        return 3
+        if count == 3:
+            self.add_preview(self._storage_name.zoom_uri,
+                             self._storage_name.zoom, ProductType.PREVIEW)
+            self.add_to_delete(self._zoom_fqn)
+        return count
 
     def _do_spirou_intensity_spectrum(self):
 
@@ -477,8 +486,17 @@ class CFHTPreview(mc.PreviewVisitor):
         self._subplot(swa, sia, spa, 22940.0, 23130.0, 2, 22990.0, 22990.0,
                       'Stokes spectrum')
         pylab.savefig(self._preview_fqn, format='jpg')
-        self._gen_thumbnail()
-        return 2
+        count = 1
+        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+                         ProductType.PREVIEW)
+        self.add_to_delete(self._preview_fqn)
+        count += self._gen_thumbnail()
+        if count == 2:
+            self.add_preview(self._storage_name.thumb_uri,
+                             self._storage_name.thumb, ProductType.THUMBNAIL)
+            self.add_to_delete(self._thumb_fqn)
+
+        return count
 
     def _exec_cmd_chdir(self, temp_file, cmd):
         orig_dir = os.getcwd()
@@ -514,6 +532,10 @@ class CFHTPreview(mc.PreviewVisitor):
               f'-saveimage jpeg {save_fqn} ' \
               f'-quit'
         mc.exec_cmd(cmd, timeout=900)  # wait 15 minutes till killing
+        count = 0
+        if os.path.exists(save_fqn):
+            count = 1
+        return count
 
     @staticmethod
     def _gen_square(f_name):
@@ -529,8 +551,17 @@ class CFHTPreview(mc.PreviewVisitor):
     def _gen_thumbnail(self):
         self._logger.debug(f'Generating thumbnail for file '
                            f'{self._science_fqn}.')
-        Image.open(self._preview_fqn).thumbnail((256, 256)).save(
-            self._thumb_fqn)
+        count = 0
+        if os.path.exists(self._preview_fqn):
+            img = Image.open(self._preview_fqn).thumbnail((256, 256))
+            if img is not None:
+                # check if thumbnail request was larger than the preview
+                img.save(self._thumb_fqn)
+                count = 1
+        else:
+            self._logger.warning(f'Could not find {self._preview_fqn} for '
+                                 f'thumbnail generation.')
+        return count
 
     def _sitelle_calibrated_cube(self):
         self._logger.debug(f'Do sitelle calibrated cube preview augmentation with '
@@ -651,6 +682,15 @@ class CFHTPreview(mc.PreviewVisitor):
         self.add_to_delete('./imagecontsize1024.fits')
         self.add_to_delete('./imagecontsize256.fits')
         self.add_to_delete('./imagecontzoom1024.fits')
+        self.add_preview(self._storage_name.thumb_uri,
+                         self._storage_name.thumb, ProductType.THUMBNAIL)
+        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+                         ProductType.PREVIEW)
+        self.add_to_delete(self._thumb_fqn)
+        self.add_to_delete(self._preview_fqn)
+        self.add_preview(self._storage_name.zoom_uri,
+                         self._storage_name.zoom, ProductType.PREVIEW)
+        self.add_to_delete(self._zoom_fqn)
         return 3
 
     def _create_rgb_inputs(self, input_data, head, head256, preview_f_name,
@@ -660,9 +700,9 @@ class CFHTPreview(mc.PreviewVisitor):
         zoom1024 = input_data[512:1536, 512:1536]
         self._logger.debug(f'{size1024.shape}, {size256.shape}, '
                            f'{zoom1024.shape}')
-        fits.writeto(preview_f_name, size1024, head, clobber=True)
-        fits.writeto(thumb_f_name, size256, head256, clobber=True)
-        fits.writeto(zoom_f_name, zoom1024, head, clobber=True)
+        fits.writeto(preview_f_name, size1024, head, overwrite=True)
+        fits.writeto(thumb_f_name, size256, head256, overwrite=True)
+        fits.writeto(zoom_f_name, zoom1024, head, overwrite=True)
 
     @staticmethod
     def _create_rgb(line1_f_name, line2_f_name, cont_f_name, fqn):

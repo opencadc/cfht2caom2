@@ -1,2 +1,3 @@
 working_dir: /usr/src/app/cfht2caom2/cfht2caom2/tests
 cache_file_name: cache.yml
+logging_level: INFO
