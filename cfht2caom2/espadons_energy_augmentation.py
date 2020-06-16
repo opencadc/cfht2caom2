@@ -95,8 +95,8 @@ def visit(observation, **kwargs):
                 logging.error(artifact.uri)
                 if cfht_name.file_uri == artifact.uri:
                     count += _do_energy(artifact, science_file, working_dir)
-    logging.info('Completed ESPaDOnS energy augmentation for {}.'.format(
-        observation.observation_id))
+        logging.info(f'Completed ESPaDOnS energy augmentation for '
+                     f'{observation.observation_id}.')
     return {'chunks': count}
 
 

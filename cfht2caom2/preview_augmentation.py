@@ -486,14 +486,25 @@ class CFHTPreview(mc.PreviewVisitor):
         self._subplot(swa, sia, spa, 22940.0, 23130.0, 2, 22990.0, 22990.0,
                       'Stokes spectrum')
         pylab.savefig(self._preview_fqn, format='jpg')
-        count = 1
-        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW)
         self.add_to_delete(self._preview_fqn)
+
+        self._preview_fqn = self._preview_fqn.replace('jpg', 'png')
+        pylab.savefig(self._preview_fqn, format='png')
+        self.add_to_delete(self._preview_fqn)
+
+        count = 1
+        # self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+        #                  ProductType.PREVIEW)
+        temp = self._storage_name.prev.replace('jpg', 'png')
+        self.add_preview(f'ad:CFHT/{temp}', temp, ProductType.PREVIEW,
+                         'image/png')
         count += self._gen_thumbnail()
         if count == 2:
-            self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL)
+            # self.add_preview(self._storage_name.thumb_uri,
+            #                  self._storage_name.thumb, ProductType.THUMBNAIL)
+            temp = self._storage_name.thumb.replace('jpg', 'png')
+            self.add_preview(f'ad:CFHT/{temp}', temp, ProductType.THUMBNAIL,
+                             'image/png')
             self.add_to_delete(self._thumb_fqn)
 
         return count
