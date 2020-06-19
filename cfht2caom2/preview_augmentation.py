@@ -71,9 +71,11 @@ import aplpy
 import logging
 import os
 
+import matplotlib.image as image
+import matplotlib.pyplot as plt
+import numpy as np
+
 from astropy.io import fits
-from matplotlib import pylab
-from numpy import *
 from PIL import Image
 
 from caom2 import ProductType, ReleaseType, ObservationIntentType
@@ -87,12 +89,13 @@ __all__ = ['visit']
 
 class CFHTPreview(mc.PreviewVisitor):
 
-    def __init__(self, instrument, intent, obs_type, **kwargs):
+    def __init__(self, instrument, intent, obs_type, target_name, **kwargs):
         super(CFHTPreview, self).__init__(
             cn.ARCHIVE, ReleaseType.DATA, **kwargs)
         self._instrument = md.Inst(instrument)
         self._intent = intent
         self._obs_type = obs_type
+        self._target_name = target_name
         self._storage_name = cn.CFHTName(instrument=self._instrument,
                                          file_name=self._science_file)
         self._science_fqn = os.path.join(self._working_dir,
@@ -158,10 +161,10 @@ class CFHTPreview(mc.PreviewVisitor):
         npix = sw.shape[0]
 
         swa = 10.0 * sw
-        sia = arange(0., npix, 1.0)
+        sia = np.arange(0., npix, 1.0)
         spa = None
         if self._storage_name.suffix == 'p':
-            spa = arange(0., npix, 1.0)
+            spa = np.arange(0., npix, 1.0)
 
         # determine upper/lower y limits for two planes from intensity values
         for i in range(sia.shape[0]):
@@ -169,14 +172,12 @@ class CFHTPreview(mc.PreviewVisitor):
             if self._storage_name.suffix == 'p':
                 spa[i] = float(sp[i]) * pScale  # increase scale of polarization
 
-        fig = pylab.figure(figsize=(10.24, 10.24), dpi=100)
-
-        pylab.clf()
-        self._subplot(swa, sia, spa, 4300.0, 4600.0, 1, 4408.0, 4412.0,
+        fig = plt.figure(figsize=(10.24, 10.24), dpi=100)
+        self._subplot(fig, swa, sia, spa, 4300.0, 4600.0, 1, 4408.0, 4412.0,
                       'Stokes spectrum (x5)')
-        self._subplot(swa, sia, spa, 6500.0, 6750.0, 2, 6589.0, 6593.0,
+        self._subplot(fig, swa, sia, spa, 6500.0, 6750.0, 2, 6589.0, 6593.0,
                       'Stokes spectrum (x5)')
-        pylab.savefig(self._preview_fqn, format='jpg')
+        plt.savefig(self._preview_fqn, format='jpg')
         self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
                          ProductType.PREVIEW)
         self.add_to_delete(self._preview_fqn)
@@ -188,9 +189,9 @@ class CFHTPreview(mc.PreviewVisitor):
             self.add_to_delete(self._thumb_fqn)
         return count
 
-    def _subplot(self, swa, sia, spa, wl_low, wl_high, subplot_index,
+    def _subplot(self, fig, swa, sia, spa, wl_low, wl_high, subplot_index,
                  text_1, text_2, text_3):
-        label = f'{self._storage_name.product_id}: object'
+        label = f'{self._storage_name.product_id}: {self._target_name}'
         wl = swa[(swa > wl_low) & (swa < wl_high)]
         flux = sia[(swa > wl_low) & (swa < wl_high)]
         wl_sort = wl[wl.argsort()]
@@ -198,23 +199,30 @@ class CFHTPreview(mc.PreviewVisitor):
         if self._storage_name.suffix == 'p':
             pflux = spa[(swa > wl_low) & (swa < wl_high)]
             pflux_sort = pflux[wl.argsort()]
-            flux = append(flux, pflux)
-        ymax = 1.1 * max(flux)
-        ymin = min([0.0, min(flux) - (ymax - max(flux))])
+            flux = np.append(flux, pflux)
+        ymax = 1.1 * np.max(flux)
+        if np.isnan(ymax):
+            ymax = 1.0
+        ymin = np.min([0.0, np.min(flux) - (ymax - np.max(flux))])
+        if np.isnan(ymin):
+            ymin = 0.0
 
-        pylab.subplot(2, 1, subplot_index)
-        pylab.grid(True)
-        pylab.plot(wl_sort, flux_sort, color='k')
+        # pylab.subplot(2, 1, subplot_index)
+        axis = fig.add_subplot(2, 1, subplot_index)
+        axis.grid(True)
+        axis.plot(wl_sort, flux_sort, color='k')
         if self._storage_name.suffix == 'p':
-            pylab.plot(wl_sort, pflux_sort, color='b')
-            pylab.text(text_1, (ymin + 0.02 * (ymax - ymin)), text_3, size=16,
-                       color='b')
-        pylab.xlabel(r'Wavelength ($\AA$)', color='k')
-        pylab.ylabel(r'Relative Intensity', color='k')
-        pylab.title(label, color='m', fontweight='bold')
-        pylab.text(text_2, (ymin + 0.935 * (ymax - ymin)),
-                   'Intensity spectrum', size=16)
-        pylab.ylim(ymin, ymax)
+            axis.plot(wl_sort, pflux_sort, color='b')
+            axis.text(text_1, (ymin + 0.02 * (ymax - ymin)), text_3, size=16,
+                      color='b')
+        axis.set(title=label,
+                 xlabel=r'Wavelength ($\AA$)',
+                 ylabel='Relative Intensity')
+        axis.title.set_weight('bold')
+        axis.title.set_color('m')
+        axis.text(text_2, (ymin + 0.935 * (ymax - ymin)),
+                  'Intensity spectrum', size=16)
+        axis.set_ylim(ymin, ymax)
 
     def _do_ds9_prev(self, obs_id):
         """
@@ -450,16 +458,16 @@ class CFHTPreview(mc.PreviewVisitor):
         if self._storage_name.suffix in ['e', 't']:
             sw2d = spirou['WaveAB'].data  # wavelength array (nm)
             si2d = spirou['FluxAB'].data  # intensity array (normalized)
-            sw = ravel(sw2d)
-            si = ravel(si2d)
+            sw = np.ravel(sw2d)
+            si = np.ravel(si2d)
 
         if self._storage_name.suffix == 'p':
             sw2d = spirou['WaveAB'].data  # wavelength array (nm)
             si2d = spirou['StokesI'].data  # intensity array (normalized)
             sp2d = spirou['Pol'].data  # Pol Stokes array
-            sw = ravel(sw2d)
-            si = ravel(si2d)
-            sp = ravel(sp2d)
+            sw = np.ravel(sw2d)
+            si = np.ravel(si2d)
+            sp = np.ravel(sp2d)
             pScale = 5.0 * max(si)
 
         if self._storage_name.suffix == 's':
@@ -471,40 +479,30 @@ class CFHTPreview(mc.PreviewVisitor):
         npix = sw.shape[0]
 
         swa = 10.0 * sw
-        sia = arange(0., npix, 1.0)
+        sia = np.arange(0., npix, 1.0)
         spa = None
         if self._storage_name.suffix == 'p':
-            spa = arange(0., npix, 1.0)
+            spa = np.arange(0., npix, 1.0)
         # determine upper/lower y limits for two planes from intensity values
         for i in range(sia.shape[0]):
             sia[i] = float(si[i])
             if self._storage_name.suffix == 'p':
                 spa[i] = float(sp[i]) * pScale  # increase polarization scale
-        pylab.clf()
-        self._subplot(swa, sia, spa, 15000.0, 15110.0, 1, 15030.0, 15030.0,
-                      'Stokes spectrum')
-        self._subplot(swa, sia, spa, 22940.0, 23130.0, 2, 22990.0, 22990.0,
-                      'Stokes spectrum')
-        pylab.savefig(self._preview_fqn, format='jpg')
+        fig = plt.figure(figsize=(10.24, 10.24), dpi=100)
+        self._subplot(fig, swa, sia, spa, 15000.0, 15110.0, 1, 15030.0,
+                      15030.0, 'Stokes spectrum')
+        self._subplot(fig, swa, sia, spa, 22940.0, 23130.0, 2, 22990.0,
+                      22990.0, 'Stokes spectrum')
+        plt.tight_layout()
+        plt.savefig(self._preview_fqn, format='jpg')
         self.add_to_delete(self._preview_fqn)
-
-        self._preview_fqn = self._preview_fqn.replace('jpg', 'png')
-        pylab.savefig(self._preview_fqn, format='png')
-        self.add_to_delete(self._preview_fqn)
-
         count = 1
-        # self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-        #                  ProductType.PREVIEW)
-        temp = self._storage_name.prev.replace('jpg', 'png')
-        self.add_preview(f'ad:CFHT/{temp}', temp, ProductType.PREVIEW,
-                         'image/png')
+        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+                         ProductType.PREVIEW)
         count += self._gen_thumbnail()
         if count == 2:
-            # self.add_preview(self._storage_name.thumb_uri,
-            #                  self._storage_name.thumb, ProductType.THUMBNAIL)
-            temp = self._storage_name.thumb.replace('jpg', 'png')
-            self.add_preview(f'ad:CFHT/{temp}', temp, ProductType.THUMBNAIL,
-                             'image/png')
+            self.add_preview(self._storage_name.thumb_uri,
+                             self._storage_name.thumb, ProductType.THUMBNAIL)
             self.add_to_delete(self._thumb_fqn)
 
         return count
@@ -564,10 +562,9 @@ class CFHTPreview(mc.PreviewVisitor):
                            f'{self._science_fqn}.')
         count = 0
         if os.path.exists(self._preview_fqn):
-            img = Image.open(self._preview_fqn).thumbnail((256, 256))
-            if img is not None:
-                # check if thumbnail request was larger than the preview
-                img.save(self._thumb_fqn)
+            thumb = image.thumbnail(self._preview_fqn, self._thumb_fqn,
+                                    scale=0.25)
+            if thumb is not None:
                 count = 1
         else:
             self._logger.warning(f'Could not find {self._preview_fqn} for '
@@ -598,23 +595,23 @@ class CFHTPreview(mc.PreviewVisitor):
         nspecaxis = data.shape[0]
         nspataxis = data.shape[1] * data.shape[2]
         self._logger.debug(f'{nspecaxis}, {nspataxis}, {data.size}, {data.shape}')
-        data2d = reshape(data, (nspecaxis, -1))
+        data2d = np.reshape(data, (nspecaxis, -1))
         self._logger.debug(f'{data2d.shape}')
 
         for k in range(nspecaxis):
-            medianvswavenumber = median(data2d[k, :])
+            medianvswavenumber = np.median(data2d[k, :])
             data2d[k, :] = data2d[k, :] - medianvswavenumber
-        meanbgsubvswavenumber = mean(data2d, axis=1)
+        meanbgsubvswavenumber = np.mean(data2d, axis=1)
 
         self._logger.debug(f'{meanbgsubvswavenumber}, {meanbgsubvswavenumber.shape}')
-        indexmax1 = nanargmax(meanbgsubvswavenumber)
+        indexmax1 = np.nanargmax(meanbgsubvswavenumber)
         self._logger.debug(f'{indexmax1}, {meanbgsubvswavenumber[indexmax1]}')
 
         # remove 7 channels around strongest line
         indexmax1lo = indexmax1 - 3
         indexmax1hi = indexmax1 + 3
         meanbgsubvswavenumber[indexmax1lo:indexmax1hi] = 0.0
-        indexmax2 = nanargmax(meanbgsubvswavenumber)
+        indexmax2 = np.nanargmax(meanbgsubvswavenumber)
         self._logger.debug(f'{indexmax2}, {meanbgsubvswavenumber[indexmax2]}')
 
         # remove 7 channels around second strongest line
@@ -629,7 +626,7 @@ class CFHTPreview(mc.PreviewVisitor):
                            f'{indexmax2hiline}')
         self._logger.debug(f'{meanbgsubvswavenumber}')
 
-        w = where(meanbgsubvswavenumber > 0.0)
+        w = np.where(meanbgsubvswavenumber > 0.0)
         self._logger.debug(f'{w[0]}')
 
         head = sitelle[0].header
@@ -643,22 +640,24 @@ class CFHTPreview(mc.PreviewVisitor):
 
         # Make two line images in 3 different sizes
         dataline1 = data[indexmax1loline:indexmax1hiline, :, :]
-        data2dline1 = mean(dataline1, axis=0)
+        data2dline1 = np.mean(dataline1, axis=0)
         self._logger.debug(f'{data2dline1.shape}')
 
         dataline2 = data[indexmax2loline:indexmax2hiline, :, :]
-        data2dline2 = mean(dataline2, axis=0)
+        data2dline2 = np.mean(dataline2, axis=0)
         self._logger.debug(f'{data2dline2.shape}')
 
         # Make "continuum" image with two strongest lines removed in 3
         # different sizes and add this to line image so whole image not green
         datanolines = data[w[0], :, :]
-        data2dcont = mean(datanolines, axis=0)
+        data2dcont = np.mean(datanolines, axis=0)
 
         data2dline1pluscont = data2dline1 + data2dcont
         data2dline2pluscont = data2dline2 + data2dcont
-        self._logger.debug(f'{mean(data2dline1)}, {mean(data2dline1pluscont)}, '
-                           f'{mean(data2dline2pluscont)}, {mean(data2dcont)}')
+        self._logger.debug(f'{np.mean(data2dline1)}, '
+                           f'{np.mean(data2dline1pluscont)}, '
+                           f'{np.mean(data2dline2pluscont)}, '
+                           f'{np.mean(data2dcont)}')
 
         self._create_rgb_inputs(data2dline1pluscont, head, head256,
                                 'imageline1size1024.fits',
@@ -730,7 +729,7 @@ class CFHTPreview(mc.PreviewVisitor):
         :param new_shape must be a factor of a.shape.
         """
         assert len(a.shape) == len(new_shape)
-        assert not sometrue(mod(a.shape, new_shape))
+        assert not np.sometrue(np.mod(a.shape, new_shape))
 
         slices = [slice(None, None, mc.to_int(old / new)) for old, new in
                   zip(a.shape, new_shape)]
@@ -740,7 +739,8 @@ class CFHTPreview(mc.PreviewVisitor):
 
 def visit(observation, **kwargs):
     previewer = CFHTPreview(observation.instrument.name,
-                            observation.intent, observation.type, **kwargs)
+                            observation.intent, observation.type,
+                            observation.target.name, **kwargs)
     cfht_name = cn.CFHTName(instrument=md.Inst(observation.instrument.name),
                             file_name=previewer.science_file)
     previewer.storage_name = cfht_name

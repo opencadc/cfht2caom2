@@ -769,8 +769,14 @@ def update(observation, **kwargs):
 
                         if (cfht_name.suffix in ['a', 'o', 'x'] and
                                 chunk.position is None):
-                            _update_position_sitelle(chunk, headers[idx],
-                                                     observation.observation_id)
+                            _update_position_sitelle(
+                                chunk, headers[idx],
+                                observation.observation_id)
+                            if (chunk.naxis is not None and
+                                    chunk.naxis == 3 and
+                                    chunk.energy is not None):
+                                chunk.time_axis = None
+                                chunk.energy_axis = 3
 
                         if cfht_name.suffix == 'p':
                             if chunk.position.axis.function is None:
@@ -784,11 +790,11 @@ def update(observation, **kwargs):
                         if chunk.naxis is not None and chunk.naxis <= 2:
                             if chunk.position_axis_1 is None:
                                 chunk.naxis = None
-                                chunk.time_axis = None
-                                chunk.energy_axis = None
-                            else:
-                                chunk.time_axis = 3
-                                chunk.energy_axis = 4
+                            chunk.time_axis = None
+                            chunk.energy_axis = None
+                        else:
+                            chunk.time_axis = 4
+                            chunk.energy_axis = 3
 
                     elif instrument is md.Inst.SPIROU:
                         _update_position_spirou(
@@ -2145,6 +2151,8 @@ def _update_position_sitelle(chunk, header, obs_id):
     position.coordsys = 'FK5'
     position.equinox = 2000.0
     chunk.position = position
+    chunk.position_axis_1 = 1
+    chunk.position_axis_2 = 2
     logging.debug(f'End _update_position_sitelle for {obs_id}')
 
 
