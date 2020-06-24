@@ -127,7 +127,6 @@
                       </caom2:range>
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssysobs>TOPOCENT</caom2:ssysobs>
                     <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
                     <caom2:resolvingPower>65000.0</caom2:resolvingPower>
                   </caom2:energy>

@@ -88,8 +88,6 @@ SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
 PLUGIN = os.path.join(os.path.dirname(THIS_DIR), 'main_app.py')
 TEST_FILES_DIR = '/test_files'
 
-LOOKUP = {'key': ['fileid1', 'fileid2']}
-
 WIRCAM_TEST_EXPANSE = {
     'a': '2462928a',
     'd': '787355d',
@@ -196,7 +194,7 @@ def _identify_inst_mock(uri):
                                   '02Bm05.scatter.g.36.00', '1257365o',
                                   '1257365p', '02AE10.bias.0.36.00'],
               md.Inst.SITELLE: ['2384125', '2480033'],
-              md.Inst.ESPADONS: ['2460606', '769448b'],
+              md.Inst.ESPADONS: ['2460606', '769448b', '1605366x'],
               md.Inst.SPIROU: ['2401727a', '2401712f', '2401728c', '2401734',
                                '2401710d'],
               md.Inst.WIRCAM: ['840066', '1019191', '786586', '1694261']}

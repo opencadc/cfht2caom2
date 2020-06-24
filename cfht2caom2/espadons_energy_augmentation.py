@@ -91,8 +91,6 @@ def visit(observation, **kwargs):
             cfht_name.suffix in ['i', 'p']):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
-                logging.error(cfht_name.file_uri)
-                logging.error(artifact.uri)
                 if cfht_name.file_uri == artifact.uri:
                     count += _do_energy(artifact, science_file, working_dir)
         logging.info(f'Completed ESPaDOnS energy augmentation for '
@@ -141,7 +139,6 @@ def _do_energy(artifact, science_file, working_dir):
     artifact.parts['0'].chunks[0].energy = SpectralWCS(
         coord_axis,
         specsys='TOPOCENT',
-        ssysobs='TOPOCENT',
         ssyssrc='TOPOCENT',
         resolving_power=resolving_power)
     hdus.close()

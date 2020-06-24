@@ -144,6 +144,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             inst = md.Inst.SITELLE
         else:
             nextend = None
+            detector = None
             instrument = headers[0].get('INSTRUME')
             if instrument is None:
                 instrument = headers[1].get('INSTRUME')
@@ -157,17 +158,40 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                                 raise mc.CadcException(f'Could not identify '
                                                        f'instrument for '
                                                        f'{entry}.')
+            elif instrument == 'Unknown':
+                detector = headers[0].get('DETECTOR')
             if instrument is None and nextend is not None and nextend > 30:
                 inst = md.Inst.MEGAPRIME
             else:
+                msg = f'Unknown value for instrument {instrument}, detector ' \
+                      f'{detector} and nextend {nextend} for {entry}.'
+
                 try:
                     inst = md.Inst(instrument)
                 except ValueError:
                     if (instrument == 'CFHT MegaPrime' or
                             instrument == 'megacam'):
                         inst = md.Inst.MEGAPRIME
+                    elif instrument == 'Unknown' and detector is not None:
+                        if detector == 'OLAPA':
+                            # SF 24-06-20
+                            # ok to hack ESPADONS name for OLAPA
+                            inst = md.Inst.ESPADONS
+                        else:
+                            try:
+                                inst = md.Inst(detector)
+                            except ValueError:
+                                # SF 24-06-20
+                                # nasty hacks: all the 48 failed espadons
+                                # files have a PATHNAME with espadon in it
+                                #
+                                # so you may add PATHNAME check if everything
+                                # else fails
+                                pathname = headers[0].get('PATHNAME')
+                                if 'espadons' in pathname:
+                                    inst = md.Inst.ESPADONS
+                                else:
+                                    raise mc.CadcException(msg)
                     else:
-                        raise mc.CadcException(f'Unknown value for instrument '
-                                               f'{instrument} and {nextend} for '
-                                               f'{entry}.')
+                        raise mc.CadcException(msg)
         return inst

@@ -690,12 +690,8 @@ def update(observation, **kwargs):
                                 chunk.energy.axis.axis.cunit = 'm**-1'
 
                     if instrument is md.Inst.ESPADONS:
-                        # if chunk.time is not None:
-                        #     # consistent with caom2IngestEspadons.py
-                        #     chunk.time_axis = 5
-                        # TODO - use cfht_name as a parameter here
                         _update_energy_espadons(
-                            chunk, plane.product_id[-1], headers, idx,
+                            chunk, cfht_name.suffix, headers, idx,
                             artifact.uri, fqn, observation.observation_id)
 
                         if chunk.position is not None:
@@ -717,10 +713,12 @@ def update(observation, **kwargs):
                             _update_observable(part, chunk, cfht_name.suffix,
                                                observation.observation_id)
 
-                        if chunk.energy is not None:
-                            chunk.energy_axis = None
-                        if chunk.time is not None:
-                            chunk.time_axis = None
+                        if not (chunk.naxis is not None and
+                                chunk.position is None):
+                            if chunk.energy is not None:
+                                chunk.energy_axis = None
+                            if chunk.time is not None:
+                                chunk.time_axis = None
                     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1939,6 +1937,7 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
         resolving_power = get_espadons_energy_resolving_power(params)
         coord_axis = None
         if suffix in ['a', 'c', 'f', 'o', 'x']:
+            # caom2IngestEspadons.py, l818
             naxis1 = get_energy_function_naxis(params)
             cdelt1 = get_energy_function_delta(params)
             crval1 = get_energy_function_val(params)
@@ -1946,9 +1945,6 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
             ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1)*cdelt1)
             coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
             coord_axis = CoordAxis1D(axis=axis, range=coord_range)
-            ssysobs = 'TOPOCENT'
-            if suffix == 'o':
-                ssysobs = None
         elif suffix in ['b', 'd', 'i', 'p']:
             # i, p, are done in the espadons energy data visitor, and b, d are
             # not done at all
@@ -1957,7 +1953,6 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
             return
         chunk.energy = SpectralWCS(coord_axis,
                                    specsys='TOPOCENT',
-                                   ssysobs=ssysobs,
                                    ssyssrc='TOPOCENT',
                                    resolving_power=resolving_power)
         chunk.energy_axis = 1
