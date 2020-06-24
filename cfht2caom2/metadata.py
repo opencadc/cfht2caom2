@@ -191,7 +191,7 @@ class CFHTCache(mc.Cache):
             self._logger.warning(
                 f'Could not find project information for run id {run_id}.')
             if (not self._semester_cached(run_id) and
-                    run_id not in ['SMEARING', '00']):
+                    run_id not in ['SMEARING', '00', 'CFHT', 'setup']):
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
                 result = self._project_titles.get(run_id)

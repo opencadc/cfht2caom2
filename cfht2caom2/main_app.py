@@ -704,7 +704,8 @@ def update(observation, **kwargs):
                             # 'b', 'd', 'c', 'f', 'x'
                             # with missing spatial indicator keywords
                             if not (cfht_name.suffix in ['a', 'i', 'o', 'p']
-                                    and radecsys.lower() != 'null' and
+                                    and (radecsys is None or
+                                         radecsys.lower() != 'null') and
                                     headers[idx].get('RA_DEG') is not None and
                                     headers[idx].get('DEC_DEG') is not None):
                                 cc.reset_position(chunk)
