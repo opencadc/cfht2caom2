@@ -1,4 +1,22 @@
 energy_defaults:
+  MegaCam.PHG.MP9999:
+    cw: 6200.0
+    fwhm: 6000.0
+  MegaPrime.CaHK:
+    cw: 3954.0053600514
+    fwhm: 97.098901625222
+  MegaPrime.None:
+    cw: 6200.0
+    fwhm: 6000.0
+  MegaPrime.filter_name:
+    cw: null
+    fwhm: null
+  MegaPrime.u:
+    cw: 3743.057128425
+    fwhm: 758.44440642646
+  MegaPrime.z:
+    cw: 10134.051008786
+    fwhm: 3731.8979824276
   SITELLE.C1:
     cw: null
     fwhm: null
@@ -11,18 +29,6 @@ energy_defaults:
   SITELLE.C4:
     cw: null
     fwhm: null
-  MegaPrime.filter_name:
-    cw: null
-    fwhm: null
-  Wircam.FakeBlank:
-    cw: null
-    fwhm: null
-  MegaPrime.None:
-    cw: 6200.0
-    fwhm: 6000.0
-  MegaCam.PHG.MP9999:
-    cw: 6200.0
-    fwhm: 6000.0
   SITELLE.SN1:
     cw: null
     fwhm: null
@@ -32,9 +38,30 @@ energy_defaults:
   SITELLE.SN3:
     cw: null
     fwhm: null
+  Wircam.Brackett_gamma:
+    cw: 21720.8514077
+    fwhm: 297.792347914
+  Wircam.FakeBlank:
+    cw: null
+    fwhm: null
+  Wircam.H2:
+    cw: 21301.6814833
+    fwhm: 294.535926397
+  Wircam.J:
+    cw: 12540.5396521
+    fwhm: 1587.5275506
+  Wircam.Ks:
+    cw: 21500.3675632
+    fwhm: 3270.46092509
+  Wircam.LowOH2:
+    cw: 11892.6829653
+    fwhm: 113.365930599
   Wircam.None:
     cw: 17000.0
     fwhm: 14000.0
+  Wircam.Y:
+    cw: 10253.5056354
+    fwhm: 1105.32902776
 filter_repair_lookup:
   BrG: Brackett_gamma
   CN.MP7803: CN
@@ -620,6 +647,113 @@ project_titles:
   12AT11: WIRCAM H-band Survey in the Extended GOODS-N Field
   12AT12: Optical Identification of GRB Host galaxies
   12AT99: WIRCAM H-band Survey in the Extended GOODS-N Field
+  12BB01: 'Unveiling the low mass content of Cygnus associations: Cygnus OB2 embedded
+    clusters'
+  12BB03: Completing the WIRCAM SDSS Equatorial Region Survey
+  12BB05: Confirming New Milky Way Satellite Candidates in the BOSS footprint
+  12BB06: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12BB99: Confirming New Milky Way Satellite Candidates in the BOSS footprint
+  12BC01: Zeeman circular and linear polarisation in line profiles of cool, active
+    stars
+  12BC02: Search for Small Kreutz-family Members
+  12BC03: Massive star formation in isolated low mass cloud?
+  12BC04: Studying Cloud Patterns of the T2.5 Brown Dwarf SIMP0136+0933
+  12BC05: 'Lensing Magnification: A novel method to calibrate the mass-richness relation
+    of galaxy clusters at high redshift'
+  12BC07: 'Deep Optical Imaging of Gas-Rich Interacting Groups: NGC 871/7'
+  12BC08: Completing the WIRCAM SDSS Equatorial Region Survey
+  12BC09: A K-band survey of the XXL-N field
+  12BC10: Characterization of KBO Atmospheres by Stellar Occultation; a Search for
+    Events.
+  12BC12: 'Coolest of the cool: Magnetic fields and activity of the M-type supergiant
+    Betelgeuse'
+  12BC13: Magnetic fields and activity cycles of red giants
+  12BC18: 'Followup: Trojans and Plutinos as probes of planet building'
+  12BC19: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12BC20: NIR WIRCAM photometry of a planetary-mass companion to a young M star.
+  12BC23: A Panchromatic Survey of the Andromeda Galaxy
+  12BC24: Age-Dating of Low-Mass Candidate members of Nearby Young Kinematic Groups
+  12BC25: Tracing Interaction Histories in Compact Galaxy Groups
+  12BC26: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  12BC31: Monitoring Quasar Colour Variability in Stripe 82
+  12BC99: One mass to rule them all? -- GC systems in spiral galaxies with precise
+    central black hole masses
+  12BF02: 'Copy of Seeing the invisible: ultra-faint galaxies around M31'
+  12BF03: By how much can intracluster light account for the missing baryons in groups
+    of galaxies?
+  12BF04: 'From optical scattering to coreshine : revealing the grain size distribution
+    in Taurus region dark clouds'
+  12BF05: 'A study of the magnetic fields in the progenitors of Herbig Ae/Be stars:
+    the Intermediate Mass T Tauri stars'
+  12BF09: Identification and characterization of Planck high-redshift sources
+  12BF11: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12BF12: 'CFBDSIR2149-0403: a 2-6 Jupiter-mass free-floating planet in the field?'
+  12BF13: 'Strongly lopsided galaxies at z~2: Victims of their environment?'
+  12BF14: Revealing the density structure and dust properties in interstellar filaments
+  12BF15: A K-band survey of the XXL-N field
+  12BF16: Surface magnetic field of a lower-giant-branch star with seismic evidence
+    for a fast rotating core
+  12BF20: The first complete sample of z < 1 GRB hosts
+  12BF21: 'Followup: Trojans and Plutinos as probes of planet building'
+  12BF22: 'Follow-up of the exoplanet program of the CoRoT satellite : confirmation
+    of planetary transits  and identification of false positives.'
+  12BF24: Properties of newly discovered Kepler exoplanetary systems - II
+  12BF29: Wide-field Near-Infrared Imaging for the Herschel Lensing Survey
+  12BF96: 'Followup: Trojans and Plutinos as probes of planet building'
+  12BF97: 'From optical scattering to coreshine : revealing the grain size distribution
+    in Taurus region dark clouds'
+  12BF98: Identification and characterization of Planck high-redshift sources
+  12BF99: 'A study of the magnetic fields in the progenitors of Herbig Ae/Be stars:
+    the Intermediate Mass T Tauri stars'
+  12BH01: The nature of the Kepler Planet-Hosting Stars in the Late K-type Desert
+  12BH04: Completing the M31 Disk WIRCAM/MEGACAM Survey
+  12BH06: Deriving M dwarf Properties from Keplers Multi-planet System
+  12BH07: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
+    clusters'
+  12BH13: Connections between NEOs and meteoroid streams
+  12BH23: Surfaces of Trans-Neptunian Misfits
+  12BH31: Observation of Near-Earth Objects
+  12BH38: Completing the sensus of the Youngest Moving Groups.
+  12BH40: A Near-Infrared Study of S-ray Sources in the CDFS and XMM-LH fields
+  12BH43: Characterization of the Nuclei and Active Behavior of Main-Belt Comets
+  12BH45: Rapid followup of important solar system discoveries from Pan-STARRS/A search
+    for large undiscovered NEOs at low solar elongation.
+  12BH98: Infrared parallaxes for Late-T and Y Dwarfws.
+  12BH99: Infrared parallaxes for Late-T and Y Dwarfws.
+  12BK01: Post-merger Signatures of Galaxies in Rich Abell Clusters at z ~ 0.1
+  12BO22: ' Probing the Spin-Orbit Alig...'
+  12BP03: NGVS
+  12BP11: MaPP
+  12BP12: MaPP
+  12BP13: MiMeS
+  12BP14: MiMeS
+  12BP21: TETrEs
+  12BP22: CFHQSIR
+  12BS01: Kinematic membership estimation and the multiband photometic study of NGC7380
+    -- Observation on bright stars
+  12BS02: CFHT/WIRCAM deep Y-band imaging of a two square degree field in VVDS-F22
+  12BS04: A systematic study of NLTE abundance of nearby dwarfs
+  12BS06: Near infrared photometric study of Kepler-20c -- a Neptune-mass planet orbiting
+    between two Earth-sized planets
+  12BS08: Optical observation of the companion to the millisecond pulsar PSR J2317+1439
+  12BS09: Search for high-z Gamma-ray Bursts by deep near infrared observations
+  12BS10: A deep near infrared survey in the Cep OB3 molecuar cloud
+  12BS11: u-band mapping of faint Galactic dSphs
+  12BS13: Probing Jupiters Magnetosphere through Detecting Polarization from Sodium
+    Lines of Io
+  12BS98: CFHT/WIRCAM deep Y-band imaging of a two square degree field in VVDS-F22
+  12BS99: u-band mapping of faint Galactic dSphs
+  12BT01: Monitoring Long-Term Variability of Active T Tauri Stars (III)
+  12BT02: Completing the WIRCAM SDSS Equatorial Region Survey
+  12BT03: Searching for T-dwarf candidates in the Taurus dark clouds
+  12BT04: 'Deep u*-band imaging for the HyperSuprimeCam Ultra-Deep Survey:  SXDS field'
+  12BT05: IR Monitoring of Ultra-Luminous Supernova
+  12BT06: Spectropolarimetric Determination of the Dust Kinematics in Two Proto-Planetary
+    Nebulae, HD 56126 and V510 Pup
   13BB01: Unveiling the nature of the TeV gamma-ray binary LS I +61 303
   13BB02: Completing the kinematic characterisation of the UKIDSS LT dwarf sample
   13BB03: 'CFHT-CODEX: weak lensing calibration to Constrain Dark Energy with X-ray
