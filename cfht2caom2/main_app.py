@@ -572,6 +572,7 @@ def update(observation, **kwargs):
     headers = kwargs.get('headers')
     fqn = kwargs.get('fqn')
     uri = kwargs.get('uri')
+    subject = kwargs.get('subject')
 
     ingesting_hdf5 = False
 
@@ -632,7 +633,7 @@ def update(observation, **kwargs):
             observation, algorithm_name, cn.COLLECTION)
 
     idx = _update_observation_metadata(observation, headers, cfht_name,
-                                       fqn, uri)
+                                       fqn, uri, subject)
     ccdbin = headers[idx].get('CCBIN1')
     radecsys = headers[idx].get('RADECSYS')
     ctype1 = headers[idx].get('CTYPE1')
@@ -2001,7 +2002,7 @@ def _update_observable(part, chunk, suffix, obs_id):
     logging.debug(f'End _update_observable for {obs_id}')
 
 
-def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
+def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
     """
     Why this method exists:
 
@@ -2061,11 +2062,12 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri):
                                                                  extension))
                 # this is the fits2caom2 implementation, which returns
                 # a list structure
-                unmodified_headers = get_cadc_headers(f'file://{fqn}')
+                unmodified_headers = get_cadc_headers(f'file://{fqn}',
+                                                      subject=subject)
             elif uri is not None:
                 # this is the fits2caom2 implementation, which returns
                 # a list structure
-                unmodified_headers = get_cadc_headers(uri)
+                unmodified_headers = get_cadc_headers(uri, subject=subject)
             else:
                 raise mc.CadcException(f'Cannot retrieve un-modified headers '
                                        f'for {uri}')
