@@ -1366,7 +1366,6 @@ def get_sitelle_v_plane_data_release(header):
     result = None
     rel_date = header.get('REL_DATE', header.get('DATE-OBS'))
     if rel_date is not None:
-        logging.error(f'well {rel_date}')
         rel_date_dt = mc.make_time(rel_date)
         # add approximately 13 months
         result = rel_date_dt + timedelta(days=13*30)
@@ -1420,62 +1419,6 @@ def get_product_type(params):
 
 
 def get_proposal_project(header):
-    # TODO - put in a configuration file, cause it changes by semester
-    lookup = {'NGVS': ['08BP03', '08BP04', '09AP03', '09AP04', '09BP03',
-                       '09BP04', '10AP03', '10AP04', '10BP03', '10BP04',
-                       '11AP03', '11AP04', '11BP03', '11BP04', '12AP03',
-                       '12AP04', '12BP03', '12BP04', '13AP03', '13AP04',
-                       '13AC02'],
-              'PANDAS': ['08BP01', '08BP02', '09AP01', '09AP02', '09BP01',
-                         '09BP02', '10AP01', '10AP02', '10BP01', '10BP02'],
-              'OSSOS': ['13AP05', '13AP06', '13BP05', '13BP06', '14AP05',
-                        '14AP06', '14BP05', '14BP06', '15AP05', '15AP06',
-                        '15BP05', '15BP06', '16AP05', '16AP06', '16BP05',
-                        '16BP06'],
-              'MATLAS': ['13AP07', '13AP08', '13BP07', '13BP08', '14AP07',
-                         '14AP08', '14BP07', '14BP08', '15AP07', '15AP08',
-                         '15BP07', '15BP08', '16AP07', '16AP08', '16BP07',
-                         '16BP08'],
-              'LUAU': ['15AP09', '15AP10', '15BP09', '15BP10', '16AP09',
-                       '16AP10', '16BP09', '16BP10'],
-              'CFIS': ['17AP30', '17AP99', '17AP98', '17BP30', '17BP97',
-                       '17BP98', '17BP99', '18AP30', '18AP97', '18AP98',
-                       '18AP99', '18BP30', '18BP97', '18BP98', '18BP99',
-                       '19AP30', '19AP97', '19AP98', '19AP99', '19BP30',
-                       '19BP97', '19BP98', '19BP99'],
-              'VESTIGE': ['17AP31', '17BP31', '18AP31', '18BP31', '19AP31',
-                          '19BP31'],
-              'SIGNALS': ['18BP41', '19AP41', '19BP41', '20AP41', '20BP41',
-                          '21AP41', '21BP41', '22AP41'],
-              'WIRDS': ['06AC01', '06AC99', '06BC31', '06BF97', '07AC20',
-                        '07AF34', '07BC99', '07BF98', '07BF97', '08AC98',
-                        '08AC99', '08AF97', '08BC99', '08BF99'],
-              'IPMOS': ['06AF01', '06BF23', '07AF22', '07AF99', '07BF99',
-                        '08AF98', '08BF98'],
-              'TETrEs': ['10BP21', '11BP21', '12AP21', '12BP21'],
-              'CFHQSIR': ['10BP22', '11AP22', '11BP22', '11BP23', '12AD95',
-                          '12AP22', '12AP23', '12BP22', '12BP23', '13AF20'
-                                                                  '13AC14'],
-              'CIPP': ['17AP32', '17BP32', '18AP32', '18BP32', '19AP32',
-                       '19BP32'],
-              'MAPP': ['08BP11', '08BP12', '09AP11', '09AP12', '09BP11',
-                       '09BP12', '10AP11', '10AP12', '10BP11', '10BP12',
-                       '11AP11', '11AP12', '11BP11', '11BP12', '12AP11',
-                       '12AP12', '12BP11', '12BP12'],
-              'MIMES': ['08BP13', '08BP14', '09AP13', '09AP14', '09BP13',
-                        '09BP14', '10AP13', '10AP14', '10BP13', '10BP14',
-                        '11AP13', '11AP14', '11BP13', '11BP14', '12AP13',
-                        '12AP14', '12BP13', '12BP14'],
-              'BINAMICS': ['13AP15', '13AP16', '13BP15', '13BP16', '14AP15',
-                           '14AP16', '14BP15', '14BP16', '15AP15', '15AP16',
-                           '15BP15', '15BP16', '16AP15', '16AP16', '16BP15',
-                           '16BP16'],
-              'MATYSSE': ['13AP17', '13AP18', '13BP17', '13BP18', '14AP17',
-                          '14AP18', '14BP17', '14BP18', '15AP17', '15AP18',
-                          '15BP17', '15BP18', '16AP17', '16AP18', '16BP17',
-                          '16BP18'],
-              'HMS': ['15AP19', '15AP20', '15BP19', '15BP20', '16AP19',
-                      '16AP20', '16BP19', '16BP20']}
     result = None
     pi_name = header.get('PI_NAME')
     if pi_name is not None and 'CFHTLS' in pi_name:
@@ -1483,10 +1426,7 @@ def get_proposal_project(header):
     else:
         run_id = header.get('RUNID')
         if run_id is not None:
-            for key, value in lookup.items():
-                if run_id in value:
-                    result = key
-                    break
+            result = md.cache.get_program(run_id)
     return result
 
 

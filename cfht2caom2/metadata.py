@@ -116,12 +116,15 @@ INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
 FILTER_REPAIR_CACHE = 'filter_repair_lookup'
 ENERGY_DEFAULTS_CACHE = 'energy_defaults'
 PROJECT_TITLES_CACHE = 'project_titles'
+# a record of PROGRAM names by PROJECT NAME - useful for A&A
+PROGRAM_TITLES_CACHE = 'program_titles'
 
 
 class CFHTCache(mc.Cache):
     def __init__(self):
         super(CFHTCache, self).__init__()
         self._project_titles = self.get_from(PROJECT_TITLES_CACHE)
+        self._program_titles = self.get_from(PROGRAM_TITLES_CACHE)
         self._cached_semesters = self._fill_cached_semesters()
         self._logger = logging.getLogger(__name__)
 
@@ -195,6 +198,14 @@ class CFHTCache(mc.Cache):
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
                 result = self._project_titles.get(run_id)
+        return result
+
+    def get_program(self, run_id):
+        result = None
+        for key, value in self._program_titles.items():
+            if run_id in value:
+                result = key
+                break
         return result
 
     @staticmethod
