@@ -1,0 +1,61 @@
+SIMPLE  =                    T / conforms to FITS standard                      
+BITPIX  =                  -32 / array data type                                
+NAXIS   =                    2 / number of array dimensions                     
+NAXIS1  =                 2048                                                  
+NAXIS2  =                 2064                                                  
+EXTEND  =                    T                                                  
+PROGRAM = 'ORB v3.1.2'         / Thomas Martin: thomas.martin.1@ulaval.ca       
+DATE    = '2020-03-05'         / Creation date                                  
+MASK    = 'False   '                                                            
+COMMENT                                                                         
+COMMENT General                                                                 
+COMMENT -------                                                                 
+COMMENT                                                                         
+FILETYPE= 'Deep Frame'         / Type of file                                   
+OBSERVAT= 'CFHT    '           / Observatory name                               
+TELESCOP= 'CFHT    '           / Telescope name                                 
+INSTRUME= 'SITELLE '           / Instrument name                                
+COMMENT                                                                         
+COMMENT ORBS                                                                    
+COMMENT ----                                                                    
+COMMENT                                                                         
+ORBSVER = '' / ORBS version                                                     
+OPTNAME = 'NGC4449_SN2_20AP41' / Name of the option file                        
+COMMENT                                                                         
+COMMENT Observation parameters                                                  
+COMMENT ----------------------                                                  
+COMMENT                                                                         
+OBJECT  = 'NGC4449 '           / Object Name                                    
+EXPTIME =                 45.5 / Exposure time                                  
+FILTER  = 'SN2     '           / Name of filter used during the observation     
+DATE-OBS= '2020-02-24'         / Date of the observation                        
+ORDER   =                  6.0 / Order of spectral folding                      
+STEP    =          1679.956544 / Step size in nm                                
+STEPNB  =                  219 / Number of steps                                
+TARGETR = '12:28:9.78'         / Target Right Ascension                         
+TARGETD = '+44:5:51.20'        / Target Declination                             
+TARGETX =               1023.5 / Target estimated X coordinate                  
+TARGETY =               1031.5 / Target estimated Y coordinate                  
+COMMENT                                                                         
+COMMENT Image Description                                                       
+COMMENT -----------------                                                       
+COMMENT                                                                         
+CAMERA  = 'MERGED_DATA'        / Merged data from CAM1 and CAM2                 
+BINNING =                    1 / Binning of the camera                          
+COMMENT                                                                         
+COMMENT Frame WCS                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+CTYPE1  = 'DEC--TAN'           / Gnomonic projection                            
+CRVAL1  =                  0.0 / DEC at reference point                         
+CUNIT1  = 'deg     '                                                            
+CRPIX1  =                    0 / Pixel coordinate of reference point            
+CDELT1  = 8.74837239583333E-05 / Degrees per pixel                              
+CROTA1  =                  0.0                                                  
+CTYPE2  = 'RA---TAN'           / Gnomonic projection                            
+CRVAL2  =                  0.0 / RA at reference point                          
+CUNIT2  = 'deg     '                                                            
+CRPIX2  =                    0 / Pixel coordinate of reference point            
+CDELT2  = 8.68055555555555E-05 / Degrees per pixel                              
+CROTA2  =                  0.0                                                  
+END                                                                             

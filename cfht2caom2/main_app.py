@@ -168,6 +168,7 @@ import os
 import sys
 import traceback
 
+from datetime import timedelta
 from enum import Enum
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
@@ -453,6 +454,14 @@ def _accumulate_sitelle_bp(bp, uri, cfht_name):
     Observation level.
     """
     logging.debug('Begin _accumulate_sitelle_bp.')
+
+    if cfht_name.suffix == 'v':
+        bp.set('Observation.intent', ObservationIntentType.SCIENCE)
+        bp.set('Observation.sequenceNumber', cfht_name.product_id[:-1])
+        bp.set('Plane.dataRelease', 'get_sitelle_v_plane_data_release(header)')
+        bp.clear('Plane.provenance.version')
+        bp.add_fits_attribute('Plane.provenance.version', 'PROGRAM')
+        bp.set('Artifact.productType', ProductType.SCIENCE)
     bp.set('Plane.dataProductType', 'get_sitelle_plane_data_product_type(uri)')
     bp.set_default('Plane.provenance.name', 'ORBS')
     bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
@@ -632,8 +641,11 @@ def update(observation, **kwargs):
         observation = cc.change_to_composite(
             observation, algorithm_name, cn.COLLECTION)
 
-    idx = _update_observation_metadata(observation, headers, cfht_name,
-                                       fqn, uri, subject)
+    if instrument is md.Inst.SITELLE and cfht_name.suffix == 'v':
+        idx = 0
+    else:
+        idx = _update_observation_metadata(observation, headers, cfht_name,
+                                           fqn, uri, subject)
     ccdbin = headers[idx].get('CCBIN1')
     radecsys = headers[idx].get('RADECSYS')
     ctype1 = headers[idx].get('CTYPE1')
@@ -1349,6 +1361,18 @@ def get_plane_data_release(header):
     return result
 
 
+def get_sitelle_v_plane_data_release(header):
+    # REL_DATE not in header, RUN_ID not in header, derive from DATE-OBS
+    result = None
+    rel_date = header.get('REL_DATE', header.get('DATE-OBS'))
+    if rel_date is not None:
+        logging.error(f'well {rel_date}')
+        rel_date_dt = mc.make_time(rel_date)
+        # add approximately 13 months
+        result = rel_date_dt + timedelta(days=13*30)
+    return result
+
+
 def get_polarization_function_val(header):
     lookup = {'I': 1,
               'Q': 2,
@@ -1788,7 +1812,10 @@ def _get_mjd_start(header):
             time_str = header.get('TIME-OBS')
             date_obs = ac.get_datetime(date_str)
             time_obs = ac.get_datetime(time_str)
-            mjd_obs = date_obs + time_obs
+            if time_obs is None:
+                mjd_obs = date_obs
+            else:
+                mjd_obs = date_obs + time_obs
     return mjd_obs
 
 
