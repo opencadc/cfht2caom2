@@ -111,6 +111,9 @@ INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
 # values. Is it all you need?
 # Pascal
 
+# From SF - 02-7-20
+# Use these values for SITELLE filters:
+# http://www.cfht.hawaii.edu/Instruments/Sitelle/SITELLE_filters.php
 
 # keys in the cache:
 FILTER_REPAIR_CACHE = 'filter_repair_lookup'

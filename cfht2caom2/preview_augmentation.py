@@ -572,8 +572,8 @@ class CFHTPreview(mc.PreviewVisitor):
         return count
 
     def _sitelle_calibrated_cube(self):
-        self._logger.debug(f'Do sitelle calibrated cube preview augmentation with '
-                           f'{self._science_fqn}')
+        self._logger.debug(f'Do sitelle calibrated cube preview augmentation '
+                           f'with {self._science_fqn}')
         # from genSiteprevperplane.py
         sitelle = fits.open(self._science_fqn)
 
@@ -594,7 +594,8 @@ class CFHTPreview(mc.PreviewVisitor):
         data[(-1 * numedgechannels):, :, :] = 0.0
         nspecaxis = data.shape[0]
         nspataxis = data.shape[1] * data.shape[2]
-        self._logger.debug(f'{nspecaxis}, {nspataxis}, {data.size}, {data.shape}')
+        self._logger.debug(f'{nspecaxis}, {nspataxis}, {data.size}, '
+                           f'{data.shape}')
         data2d = np.reshape(data, (nspecaxis, -1))
         self._logger.debug(f'{data2d.shape}')
 
@@ -603,7 +604,8 @@ class CFHTPreview(mc.PreviewVisitor):
             data2d[k, :] = data2d[k, :] - medianvswavenumber
         meanbgsubvswavenumber = np.mean(data2d, axis=1)
 
-        self._logger.debug(f'{meanbgsubvswavenumber}, {meanbgsubvswavenumber.shape}')
+        self._logger.debug(f'{meanbgsubvswavenumber}, '
+                           f'{meanbgsubvswavenumber.shape}')
         indexmax1 = np.nanargmax(meanbgsubvswavenumber)
         self._logger.debug(f'{indexmax1}, {meanbgsubvswavenumber[indexmax1]}')
 
@@ -622,8 +624,8 @@ class CFHTPreview(mc.PreviewVisitor):
         indexmax1hiline = indexmax1 + 1
         indexmax2loline = indexmax2 - 1
         indexmax2hiline = indexmax2 + 1
-        self._logger.debug(f'{indexmax1loline}, {indexmax1hiline}, {indexmax2loline}, '
-                           f'{indexmax2hiline}')
+        self._logger.debug(f'{indexmax1loline}, {indexmax1hiline}, '
+                           f'{indexmax2loline}, {indexmax2hiline}')
         self._logger.debug(f'{meanbgsubvswavenumber}')
 
         w = np.where(meanbgsubvswavenumber > 0.0)

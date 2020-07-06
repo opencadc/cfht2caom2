@@ -18,26 +18,26 @@ energy_defaults:
     cw: 10134.051008786
     fwhm: 3731.8979824276
   SITELLE.C1:
-    cw: null
-    fwhm: null
+    cw: 437.5
+    fwhm: 105
   SITELLE.C2:
-    cw: null
-    fwhm: null
+    cw: 593.5
+    fwhm: 63
   SITELLE.C3:
-    cw: null
-    fwhm: null
+    cw: 533.5
+    fwhm: 45
   SITELLE.C4:
     cw: null
     fwhm: null
   SITELLE.SN1:
-    cw: null
-    fwhm: null
+    cw: 375
+    fwhm: 20
   SITELLE.SN2:
-    cw: null
-    fwhm: null
+    cw: 500
+    fwhm: 40
   SITELLE.SN3:
-    cw: null
-    fwhm: null
+    cw: 668
+    fwhm: 34
   Wircam.Brackett_gamma:
     cw: 21720.8514077
     fwhm: 297.792347914

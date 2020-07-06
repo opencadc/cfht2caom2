@@ -158,6 +158,14 @@ CFHT WCS:
   no contiguous wcs describing the raw data and in any case nobody wants to
   cut out of it.
 
+SITELLE 'v' files:
+- SF - 02-07-20
+- the v files are not raw, they were derived from others, and the data
+  reduction pipeline - based on orbs - probably did not do proper header
+  copy/paste
+- so ok to assume sequence number (RUN_ID, which is not in 'v' headers)
+  == observationID minus suffix
+
 """
 
 import copy
@@ -796,6 +804,8 @@ def update(observation, **kwargs):
                                     chunk, headers[idx],
                                     observation.observation_id, idx)
                             _update_sitelle_plane(observation, uri)
+                        if cfht_name.suffix == 'v':
+                            cc.reset_energy(chunk)
 
                         # because SITELLE has the information from two
                         # detectors amalgamated into one set of HDUs

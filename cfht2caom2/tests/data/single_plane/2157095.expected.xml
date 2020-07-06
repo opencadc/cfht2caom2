@@ -120,7 +120,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>A</caom2:cunit>
+                        <caom2:cunit>Angstrom</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -223,7 +223,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>A</caom2:cunit>
+                        <caom2:cunit>Angstrom</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -326,7 +326,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>A</caom2:cunit>
+                        <caom2:cunit>Angstrom</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -429,7 +429,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>A</caom2:cunit>
+                        <caom2:cunit>Angstrom</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
