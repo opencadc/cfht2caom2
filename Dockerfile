@@ -50,6 +50,7 @@ ARG OMC_REPO=opencadc-metadata-curation
 
 RUN git clone https://github.com/${OPENCADC_REPO}/caom2tools.git --branch ${OPENCADC_BRANCH} --single-branch && \
     pip install ./caom2tools/caom2 && \
+    pip install ./caom2tools/caom2repo && \
     pip install ./caom2tools/caom2utils
 
 RUN git clone https://github.com/${OMC_REPO}/caom2pipe.git && \
