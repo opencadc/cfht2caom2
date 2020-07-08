@@ -78,8 +78,7 @@ from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 
 
 meta_visitors = [cleanup_augmentation]
-# data_visitors = [espadons_energy_augmentation, preview_augmentation]
-data_visitors = [espadons_energy_augmentation]
+data_visitors = [espadons_energy_augmentation, preview_augmentation]
 
 CFHT_BOOKMARK = 'cfht_timestamp'
 
