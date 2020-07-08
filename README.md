@@ -1,5 +1,5 @@
 # cfht2caom2
-Starting point to build an application to generate CAOM2 Observations from FITS files.
+An application to generate CAOM2 Observations from CFHT FITS files for the instruments MegaPrime, WIRCam, SPIRou, SITELLE, and ESPaDOnS.
 
 # How to Run CFHT
 
