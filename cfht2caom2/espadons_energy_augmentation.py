@@ -136,10 +136,12 @@ def _do_energy(artifact, science_file, working_dir):
     params = {'header': hdus[0].header,
               'uri': artifact.uri}
     resolving_power = main_app.get_espadons_energy_resolving_power(params)
-    artifact.parts['0'].chunks[0].energy = SpectralWCS(
-        coord_axis,
-        specsys='TOPOCENT',
-        ssyssrc='TOPOCENT',
-        resolving_power=resolving_power)
+    chunk = artifact.parts['0'].chunks[0]
+    chunk.energy = SpectralWCS(coord_axis,
+                               specsys='TOPOCENT',
+                               ssyssrc='TOPOCENT',
+                               resolving_power=resolving_power)
+    chunk.energy_axis = 1
+    chunk.naxis = hdus[0].header.get('NAXIS')
     hdus.close()
     return 1

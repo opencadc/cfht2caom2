@@ -56,7 +56,7 @@
         <caom2:version>1.0</caom2:version>
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
-        <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/</caom2:reference>
+        <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Upena/</caom2:reference>
         <caom2:lastExecuted>2009-03-14T08:51:55.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>reduction=Intensity</caom2:keyword>

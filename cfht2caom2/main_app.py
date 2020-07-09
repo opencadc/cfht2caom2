@@ -392,9 +392,8 @@ def _accumulate_espadons_bp(bp, cfht_name):
     bp.set('Plane.provenance.name', 'get_espadons_provenance_name(header)')
     bp.set('Plane.provenance.project',
            'get_espadons_provenance_project(header)')
-    bp.set_default('Plane.provenance.reference',
-                   'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/'
-                   'Espadons/')
+    bp.set('Plane.provenance.reference',
+           'get_espadons_provenance_reference(header)')
     bp.set('Plane.provenance.version',
            'get_espadons_provenance_version(header)')
 
@@ -1169,6 +1168,15 @@ def get_espadons_provenance_project(header):
     result = 'STANDARD PIPELINE'
     if get_espadons_provenance_name(header) == 'TCS':
         result = None
+    return result
+
+
+def get_espadons_provenance_reference(header):
+    result = 'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/'
+    temp = get_espadons_provenance_name(header)
+    logging.error(temp)
+    if temp == 'UPENA':
+        result = 'http://www.cfht.hawaii.edu/Instruments/Upena/'
     return result
 
 
