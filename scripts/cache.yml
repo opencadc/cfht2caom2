@@ -944,6 +944,14 @@ program_titles:
   - 19BP97
   - 19BP98
   - 19BP99
+  - 20AP30
+  - 20AP97
+  - 20AP98
+  - 20AP99
+  - 20BP30
+  - 20BP97
+  - 20BP98
+  - 20BP99
   CIPP:
   - 17AP32
   - 17BP32
@@ -1120,6 +1128,8 @@ program_titles:
   - 18BP31
   - 19AP31
   - 19BP31
+  - 20AP31
+  - 20BP31
   WIRDS:
   - 06AC01
   - 06AC99
