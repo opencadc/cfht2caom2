@@ -90,8 +90,7 @@ __all__ = ['visit']
 class CFHTPreview(mc.PreviewVisitor):
 
     def __init__(self, instrument, intent, obs_type, target_name, **kwargs):
-        super(CFHTPreview, self).__init__(
-            cn.ARCHIVE, ReleaseType.DATA, **kwargs)
+        super(CFHTPreview, self).__init__(cn.ARCHIVE, **kwargs)
         self._instrument = md.Inst(instrument)
         self._intent = intent
         self._obs_type = obs_type
