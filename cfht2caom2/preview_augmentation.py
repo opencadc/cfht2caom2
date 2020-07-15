@@ -179,13 +179,14 @@ class CFHTPreview(mc.PreviewVisitor):
                       'Stokes spectrum (x5)')
         plt.savefig(self._preview_fqn, format='jpg')
         self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW)
+                         ProductType.PREVIEW, ReleaseType.DATA)
         self.add_to_delete(self._preview_fqn)
         count = 1
         count += self._gen_thumbnail()
         if count == 2:
             self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL)
+                             self._storage_name.thumb, ProductType.THUMBNAIL,
+                             ReleaseType.META)
             self.add_to_delete(self._thumb_fqn)
         return count
 
@@ -390,7 +391,8 @@ class CFHTPreview(mc.PreviewVisitor):
                                         scale_param=scale_param)
         if count == 1:
             self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL)
+                             self._storage_name.thumb, ProductType.THUMBNAIL,
+                             ReleaseType.META)
             self.add_to_delete(self._thumb_fqn)
 
         geometry = '1024x1024'
@@ -409,7 +411,8 @@ class CFHTPreview(mc.PreviewVisitor):
                                             scale_param=scale_param)
         if count == 2:
             self.add_preview(self._storage_name.prev_uri,
-                             self._storage_name.prev, ProductType.PREVIEW)
+                             self._storage_name.prev, ProductType.PREVIEW,
+                             ReleaseType.DATA)
             self.add_to_delete(self._preview_fqn)
 
         mosaic_param = '-fits'
@@ -446,7 +449,8 @@ class CFHTPreview(mc.PreviewVisitor):
         CFHTPreview._gen_square(self._zoom_fqn)
         if count == 3:
             self.add_preview(self._storage_name.zoom_uri,
-                             self._storage_name.zoom, ProductType.PREVIEW)
+                             self._storage_name.zoom, ProductType.PREVIEW,
+                             ReleaseType.DATA)
             self.add_to_delete(self._zoom_fqn)
         return count
 
@@ -498,11 +502,12 @@ class CFHTPreview(mc.PreviewVisitor):
         self.add_to_delete(self._preview_fqn)
         count = 1
         self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW)
+                         ProductType.PREVIEW, ReleaseType.DATA)
         count += self._gen_thumbnail()
         if count == 2:
             self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL)
+                             self._storage_name.thumb, ProductType.THUMBNAIL,
+                             ReleaseType.META)
             self.add_to_delete(self._thumb_fqn)
 
         return count
@@ -695,13 +700,15 @@ class CFHTPreview(mc.PreviewVisitor):
         self.add_to_delete('./imagecontsize256.fits')
         self.add_to_delete('./imagecontzoom1024.fits')
         self.add_preview(self._storage_name.thumb_uri,
-                         self._storage_name.thumb, ProductType.THUMBNAIL)
+                         self._storage_name.thumb, ProductType.THUMBNAIL,
+                         ReleaseType.META)
         self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW)
+                         ProductType.PREVIEW, ReleaseType.DATA)
         self.add_to_delete(self._thumb_fqn)
         self.add_to_delete(self._preview_fqn)
         self.add_preview(self._storage_name.zoom_uri,
-                         self._storage_name.zoom, ProductType.PREVIEW)
+                         self._storage_name.zoom, ProductType.PREVIEW,
+                         ReleaseType.DATA)
         self.add_to_delete(self._zoom_fqn)
         return 3
 
