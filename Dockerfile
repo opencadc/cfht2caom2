@@ -37,7 +37,8 @@ RUN git clone https://github.com/HEASARC/cfitsio && \
   make install && \
   make fitscopy && \
   cp fitscopy /usr/local/bin && \
-  make clean
+  make clean && \
+  cd /usr/src/app
 
 WORKDIR /usr/src/app
 
@@ -49,8 +50,6 @@ ARG OPENCADC_REPO=opencadc
 ARG OMC_REPO=opencadc-metadata-curation
 
 RUN git clone https://github.com/${OPENCADC_REPO}/caom2tools.git --branch ${OPENCADC_BRANCH} --single-branch && \
-    pip install ./caom2tools/caom2 && \
-    pip install ./caom2tools/caom2repo && \
     pip install ./caom2tools/caom2utils
 
 RUN git clone https://github.com/${OMC_REPO}/caom2pipe.git && \

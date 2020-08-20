@@ -244,6 +244,8 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
     bp.set('Observation.type', 'get_obs_type(header)')
 
+    bp.set_default('Observation.algorithm.name', None)
+
     bp.set('Observation.environment.elevation',
            'get_environment_elevation(header)')
     bp.set('Observation.environment.humidity',

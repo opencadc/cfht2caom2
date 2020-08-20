@@ -91,33 +91,44 @@ class CFHTName(mc.StorageName):
 
     CFHT_NAME_PATTERN = '*'
 
-    def __init__(self, obs_id=None, fname_on_disk=None, file_name=None,
+    def __init__(self, obs_id=None, file_name=None,
                  instrument=None, ad_uri=None):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
         # including the .fz | .gz | '' to indicate compression type
-        super(CFHTName, self).__init__(
-            None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
-            compression='')
-        self._instrument = md.Inst(instrument)
-        if ad_uri is not None and file_name is None:
-            file_name = mc.CaomName(ad_uri).file_name
-        self._file_name = file_name
-        self._file_id = CFHTName.remove_extensions(file_name)
-        self._suffix = self._file_id[-1]
-        if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
-            self._obs_id = self._file_id
-            if self._suffix in ['o', 'p']:
-                self._obs_id = self._file_id[:-1]
-        else:
-            if self.is_simple and not self.is_master_cal:
-                self.obs_id = self._file_id[:-1]
+        if obs_id is None:
+            super(CFHTName, self).__init__(
+                None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
+                compression='')
+            self._instrument = md.Inst(instrument)
+            if ad_uri is not None and file_name is None:
+                file_name = mc.CaomName(ad_uri).file_name
+            self._file_name = file_name
+            self._file_id = CFHTName.remove_extensions(file_name)
+            self._suffix = self._file_id[-1]
+            if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
+                self._obs_id = self._file_id
+                if self._suffix in ['o', 'p']:
+                    self._obs_id = self._file_id[:-1]
             else:
-                self.obs_id = self._file_id
-                if self.is_derived_sitelle:
-                    self.obs_id = self.obs_id.replace(self._suffix, 'p')
-        self._logger = logging.getLogger(__name__)
-        self._logger.debug(self)
+                if self.is_simple and not self.is_master_cal:
+                    self.obs_id = self._file_id[:-1]
+                else:
+                    self.obs_id = self._file_id
+                    if self.is_derived_sitelle:
+                        self.obs_id = self.obs_id.replace(self._suffix, 'p')
+        else:
+            super(CFHTName, self).__init__(
+                obs_id, COLLECTION, CFHTName.CFHT_NAME_PATTERN,
+                compression='')
+            self.obs_id = obs_id
+            self._instrument = None
+            self._file_id = None
+            self._file_name = None
+            self._file_id = None
+            self._suffix = None
+        # self._logger = logging.getLogger(__name__)
+        # self._logger.debug(self)
 
     def __str__(self):
         return f'instrument {self.instrument}, ' \
