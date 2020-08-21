@@ -80,8 +80,6 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="3da3bc70-d9e9-463c-b4de-9f0208b4b47d" caom2:lastModified="2019-11-22T18:58:41.100" caom2:maxLastModified="2019-11-22T18:58:41.100" caom2:metaChecksum="md5:ca33baa7908cd2fa09d4f12fb157e2ad" caom2:accMetaChecksum="md5:4a18d6afcd210618831e5022e9dad067" caom2:metaProducer="cfht2caom2/0.1.0">
-                  <caom2:observableAxis>2</caom2:observableAxis>
-                  <caom2:polarizationAxis>6</caom2:polarizationAxis>
                   <caom2:observable>
                     <caom2:dependent>
                       <caom2:axis>
@@ -181,12 +179,8 @@
                 </caom2:chunk>
                 <caom2:chunk caom2:id="00000000-0000-0000-87fe-c820039c2652" caom2:lastModified="2019-11-22T18:58:41.100" caom2:maxLastModified="2019-11-22T18:58:41.100" caom2:metaChecksum="md5:cd60828642341bd3701c2501ec6b99c1" caom2:accMetaChecksum="md5:c1a5183b40034cde5afb4583e587e3c2" caom2:metaProducer="cfht2caom2/0.1.0">
                   <caom2:naxis>2</caom2:naxis>
-                  <caom2:observableAxis>2</caom2:observableAxis>
                   <caom2:positionAxis1>3</caom2:positionAxis1>
                   <caom2:positionAxis2>4</caom2:positionAxis2>
-                  <caom2:energyAxis>1</caom2:energyAxis>
-                  <caom2:timeAxis>5</caom2:timeAxis>
-                  <caom2:polarizationAxis>6</caom2:polarizationAxis>
                   <caom2:observable>
                     <caom2:dependent>
                       <caom2:axis>
