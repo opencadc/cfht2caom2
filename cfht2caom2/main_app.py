@@ -742,6 +742,11 @@ def update(observation, **kwargs):
                                 chunk.energy_axis = None
                             if chunk.time is not None:
                                 chunk.time_axis = None
+                        if chunk.naxis is None:
+                            if chunk.observable_axis is not None:
+                                chunk.observable_axis = None
+                            if chunk.polarization_axis is not None:
+                                chunk.polarization_axis = None
                     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1176,7 +1181,6 @@ def get_espadons_provenance_project(header):
 def get_espadons_provenance_reference(header):
     result = 'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/'
     temp = get_espadons_provenance_name(header)
-    logging.error(temp)
     if temp == 'UPENA':
         result = 'http://www.cfht.hawaii.edu/Instruments/Upena/'
     return result
@@ -1971,7 +1975,6 @@ def _update_observable(part, chunk, suffix, obs_id):
     # chunk, and blind updating generally causes both chunks to have the
     # same metadata values.
     if chunk.observable is None:
-        chunk.observable_axis = 2
         independent_axis = Axis('WAVE', 'nm')
         independent = Slice(independent_axis, 1)
         dependent_axis = Axis('flux', 'counts')
