@@ -73,7 +73,6 @@ from astropy.io.votable import parse_single_table
 
 from mock import patch
 
-from caom2.obs_reader_writer import CAOM24_NAMESPACE
 from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
 from cfht2caom2 import metadata as md
@@ -139,11 +138,9 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, test_name):
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
     # as well
     sys.argv = \
-        (f'{APPLICATION} --no_validate --caom_namespace {CAOM24_NAMESPACE} '
-         f'--local {local} --observation {COLLECTION} {cfht_name.obs_id} -o '
-         f'{output_file} --plugin {PLUGIN} --module {PLUGIN} --lineage '
-         f'{_get_lineage(cfht_name)}'
-         ).split()
+        (f'{APPLICATION} --no_validate --local {local} --observation '
+         f'{COLLECTION} {cfht_name.obs_id} -o {output_file} --plugin {PLUGIN} '
+         f'--module {PLUGIN} --lineage {_get_lineage(cfht_name)}').split()
     print(sys.argv)
     try:
         main_app.to_caom2()

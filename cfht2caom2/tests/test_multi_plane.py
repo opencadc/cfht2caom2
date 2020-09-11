@@ -70,7 +70,6 @@
 import os
 import sys
 
-from caom2.obs_reader_writer import CAOM24_NAMESPACE
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name, main_app, metadata
 
@@ -131,10 +130,10 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, test_name):
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
     # as well
     sys.argv = \
-        (f'{main_app.APPLICATION} --quiet --no_validate --caom_namespace '
-         f'{CAOM24_NAMESPACE} --observation {cfht_name.COLLECTION} {test_name} '
-         f'--local {local} --plugin {plugin} --module {plugin} --out '
-         f'{actual_fqn} --lineage {lineage}').split()
+        (f'{main_app.APPLICATION} --quiet --no_validate --observation '
+         f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
+         f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
+         f'{lineage}').split();
     print(sys.argv)
     main_app.to_caom2()
     expected_fqn = '{}/{}/{}.expected.xml'.format(

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-706d-01408b320c8b" caom2:lastModified="2017-12-13T15:42:28.927" caom2:maxLastModified="2019-11-05T23:23:31.588" caom2:metaChecksum="md5:0a04b5967b3c960de1f1a7e90f34708f" caom2:accMetaChecksum="md5:1574c800c6a8061197d24dd55ff07b74" caom2:metaProducer="cfht2caom2/0.1.0">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-706d-01408b320c8b" caom2:lastModified="2017-12-13T15:42:28.927" caom2:maxLastModified="2019-11-05T23:23:31.588" caom2:metaChecksum="md5:0a04b5967b3c960de1f1a7e90f34708f" caom2:accMetaChecksum="md5:1574c800c6a8061197d24dd55ff07b74" caom2:metaProducer="cfht2caom2/0.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1003681</caom2:observationID>
   <caom2:metaRelease>2008-06-25T00:00:00.000</caom2:metaRelease>
@@ -44,7 +44,7 @@
     <caom2:ambientTemp>3.95</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="00000000-0000-0000-706d-01408b320f20" caom2:lastModified="2013-08-17T07:34:09.640" caom2:maxLastModified="2019-11-05T23:23:31.588" caom2:metaChecksum="md5:9fd0ac2814506a54481081bbba0c899b" caom2:accMetaChecksum="md5:41f1dfbd2110089ac3104aea781b0e8e" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="00000000-0000-0000-706d-01408b320f20" caom2:lastModified="2013-08-17T07:34:09.640" caom2:maxLastModified="2019-11-05T23:23:31.588" caom2:metaChecksum="md5:9fd0ac2814506a54481081bbba0c899b" caom2:accMetaChecksum="md5:41f1dfbd2110089ac3104aea781b0e8e" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>1003681o</caom2:productID>
       <caom2:metaRelease>2008-06-25T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2009-08-31T00:00:00.000</caom2:dataRelease>
@@ -56,7 +56,7 @@
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-706d-01408b320f25" caom2:lastModified="2017-12-13T15:42:28.927" caom2:maxLastModified="2017-12-13T15:42:28.927" caom2:metaChecksum="md5:077c662089cc51737696e9c3482a0eb9" caom2:accMetaChecksum="md5:d1ff1e7d73fa05e6d536e06d5cb5a329" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="00000000-0000-0000-706d-01408b320f25" caom2:lastModified="2017-12-13T15:42:28.927" caom2:maxLastModified="2017-12-13T15:42:28.927" caom2:metaChecksum="md5:077c662089cc51737696e9c3482a0eb9" caom2:accMetaChecksum="md5:d1ff1e7d73fa05e6d536e06d5cb5a329" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/1003681o.fits.gz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -66,7 +66,7 @@
             <caom2:part caom2:id="00000000-0000-0000-706d-01408b320f27" caom2:lastModified="2013-08-17T07:34:09.640" caom2:maxLastModified="2013-08-17T07:34:09.640" caom2:metaChecksum="md5:01a0c5ad690481a3e3dabf1a9e759a7d" caom2:accMetaChecksum="md5:4c79efebff107540de2e0dcc41432d06">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-706d-01408b320f29" caom2:lastModified="2013-08-17T07:34:14.723" caom2:maxLastModified="2013-08-17T07:34:14.723" caom2:metaChecksum="md5:6a34620c2c043525a464df96973b63e6" caom2:accMetaChecksum="md5:794c510f50a5dab3c54c4b5b595e963a" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-706d-01408b320f29" caom2:lastModified="2013-08-17T07:34:14.723" caom2:maxLastModified="2013-08-17T07:34:14.723" caom2:metaChecksum="md5:6a34620c2c043525a464df96973b63e6" caom2:accMetaChecksum="md5:794c510f50a5dab3c54c4b5b595e963a" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>

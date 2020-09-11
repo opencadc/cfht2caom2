@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-7aef-013d159abda8" caom2:lastModified="2017-06-21T07:46:45.657" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:8afe9a33190ca79d615f1658dc141f92" caom2:accMetaChecksum="md5:3ce37fdb7c17087f18263faefd2c8beb" caom2:metaProducer="cfht2caom2/0.1.0">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-7aef-013d159abda8" caom2:lastModified="2017-06-21T07:46:45.657" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:8afe9a33190ca79d615f1658dc141f92" caom2:accMetaChecksum="md5:3ce37fdb7c17087f18263faefd2c8beb" caom2:metaProducer="cfht2caom2/0.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1151210</caom2:observationID>
   <caom2:metaRelease>2009-12-22T00:00:00.000</caom2:metaRelease>
@@ -41,7 +41,7 @@
     <caom2:ambientTemp>-1.67</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="8ae894a9-5900-4dbb-a8b0-f93b8ce1d1c6" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="8ae894a9-5900-4dbb-a8b0-f93b8ce1d1c6" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>1151210g</caom2:productID>
       <caom2:metaRelease>2009-12-22T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2011-02-28T00:00:00.000</caom2:dataRelease>
@@ -55,7 +55,7 @@
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="c5051284-e073-4efe-b2ca-a9a0b5314d79" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="c5051284-e073-4efe-b2ca-a9a0b5314d79" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/1151210g.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -68,7 +68,7 @@
             <caom2:part caom2:id="876c27f7-de8e-4c8b-92bd-2a143dece026">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="f1f1797b-9497-4b3d-9314-43890435a28b" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="f1f1797b-9497-4b3d-9314-43890435a28b" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -171,7 +171,7 @@
             <caom2:part caom2:id="b88289cb-fb65-4b5d-8a1e-5af83037d5bd">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="c56f36dc-c844-45fe-8435-ba9de2452aae" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="c56f36dc-c844-45fe-8435-ba9de2452aae" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -274,7 +274,7 @@
             <caom2:part caom2:id="45048613-4b5a-4f36-b256-9c0cd701795c">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="a1938780-477e-4eb7-add7-7834dc8c651d" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="a1938780-477e-4eb7-add7-7834dc8c651d" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -377,7 +377,7 @@
             <caom2:part caom2:id="3beefd18-46d7-4ec3-8262-e03c10aade25">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="8080a286-bc01-4599-95c3-506576cb70ba" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="8080a286-bc01-4599-95c3-506576cb70ba" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -480,7 +480,7 @@
             <caom2:part caom2:id="a5644918-b576-4b2a-b60f-5bfa2a909919">
               <caom2:name>5</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="b7db81d2-521b-4812-98f4-da951c91b436" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="b7db81d2-521b-4812-98f4-da951c91b436" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -538,7 +538,7 @@
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>
-    <caom2:plane caom2:id="00000000-0000-0000-5522-013d41d79af3" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:241b69dc96382f692315794d11806ae8" caom2:accMetaChecksum="md5:40335d0380496b81febb10135cb12756" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="00000000-0000-0000-5522-013d41d79af3" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:241b69dc96382f692315794d11806ae8" caom2:accMetaChecksum="md5:40335d0380496b81febb10135cb12756" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>1151210m</caom2:productID>
       <caom2:metaRelease>2009-12-22T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2011-02-28T00:00:00.000</caom2:dataRelease>
@@ -554,7 +554,7 @@
         <caom2:lastExecuted>2011-04-15T16:22:00.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-5522-013d41d79af8" caom2:lastModified="2017-12-10T05:44:48.373" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:f4ba573d1598a6d5dfc9b1e769d3271b" caom2:accMetaChecksum="md5:9fa5ac4a8bd9af53c20e37b7b655c60a" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="00000000-0000-0000-5522-013d41d79af8" caom2:lastModified="2017-12-10T05:44:48.373" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:f4ba573d1598a6d5dfc9b1e769d3271b" caom2:accMetaChecksum="md5:9fa5ac4a8bd9af53c20e37b7b655c60a" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/1151210m.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -568,7 +568,7 @@
             <caom2:part caom2:id="00000000-0000-0000-5522-013d41d79afb" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:c927aa22ac6ea4e1f2307ee5b28d683a" caom2:accMetaChecksum="md5:9af7d174cb291894e4b34cf6d88f2a2f">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b29" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:427074641939779ecc872558e7702304" caom2:accMetaChecksum="md5:06d282e3e687b260ba3826256783326d" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b29" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:427074641939779ecc872558e7702304" caom2:accMetaChecksum="md5:06d282e3e687b260ba3826256783326d" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -670,7 +670,7 @@
             <caom2:part caom2:id="00000000-0000-0000-5522-013d41d79b32" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:5cc682c5d56471cd4c335816adad7dfa" caom2:accMetaChecksum="md5:1b61d6d4a31b1af4c39b1c5ebf52e011">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b34" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:5076dd7d06638f4aed1c8aba6c4e8df5" caom2:accMetaChecksum="md5:f8e97b01ca66a314b31d94aa0f24abac" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b34" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:5076dd7d06638f4aed1c8aba6c4e8df5" caom2:accMetaChecksum="md5:f8e97b01ca66a314b31d94aa0f24abac" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -772,7 +772,7 @@
             <caom2:part caom2:id="00000000-0000-0000-5522-013d41d79b38" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:d3148366939ec95a839b46821a94df12" caom2:accMetaChecksum="md5:06e1a021b72b8c934e3b26f3a110b8a4">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b39" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:e53b00efeefcbc68f8c318c3dcd65e57" caom2:accMetaChecksum="md5:5157f1ed46c7d482ca3cff3d5a7d6183" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b39" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:e53b00efeefcbc68f8c318c3dcd65e57" caom2:accMetaChecksum="md5:5157f1ed46c7d482ca3cff3d5a7d6183" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -874,7 +874,7 @@
             <caom2:part caom2:id="00000000-0000-0000-5522-013d41d79b3d" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:76b894da4d42e367fb9ca225c5219ce0" caom2:accMetaChecksum="md5:4f60b6ccb0ad4a8d337f2719cf9af2b6">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b3e" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:c450d5c02cb5d0006a625742746881e3" caom2:accMetaChecksum="md5:1fe21c901404ce94dda88514fa4081d3" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-5522-013d41d79b3e" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:c450d5c02cb5d0006a625742746881e3" caom2:accMetaChecksum="md5:1fe21c901404ce94dda88514fa4081d3" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -977,7 +977,7 @@
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>
-    <caom2:plane caom2:id="00000000-0000-0000-4d27-013d159bde12" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:eb73c3daea06ec6a472517dc150d6c30" caom2:accMetaChecksum="md5:2469c416ad2e09dbb35609a7e81e7780" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="00000000-0000-0000-4d27-013d159bde12" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:eb73c3daea06ec6a472517dc150d6c30" caom2:accMetaChecksum="md5:2469c416ad2e09dbb35609a7e81e7780" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>1151210w</caom2:productID>
       <caom2:metaRelease>2009-12-22T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2011-02-28T00:00:00.000</caom2:dataRelease>
@@ -993,7 +993,7 @@
         <caom2:lastExecuted>2011-04-15T16:21:13.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-4d27-013d159bde19" caom2:lastModified="2017-12-10T05:44:48.373" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:e1a460b84ee0651c0d93c1dc1e819113" caom2:accMetaChecksum="md5:1869e2a50a6dd1a9984ba42ac37a96e8" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="00000000-0000-0000-4d27-013d159bde19" caom2:lastModified="2017-12-10T05:44:48.373" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:e1a460b84ee0651c0d93c1dc1e819113" caom2:accMetaChecksum="md5:1869e2a50a6dd1a9984ba42ac37a96e8" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/1151210w.fits.gz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -1007,7 +1007,7 @@
             <caom2:part caom2:id="00000000-0000-0000-4d27-013d159bde1d" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:e63026b0cd675380f7f1d14156e05354" caom2:accMetaChecksum="md5:076bf47d02452ef78fdb36f594cfb91a">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde1e" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:309815038c874f00063821ea08ed0ac4" caom2:accMetaChecksum="md5:e7a1aba1089da445a95dd2dc05ea1092" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde1e" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:309815038c874f00063821ea08ed0ac4" caom2:accMetaChecksum="md5:e7a1aba1089da445a95dd2dc05ea1092" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -1109,7 +1109,7 @@
             <caom2:part caom2:id="00000000-0000-0000-4d27-013d159bde2c" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:9494864bb6e10523b899a85d196c76f9" caom2:accMetaChecksum="md5:1b0698bf07f3546a01e6848ce5d6f397">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde2d" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:5d1addf14bf84ac57cca959ef4ba16a0" caom2:accMetaChecksum="md5:1c115f6d6be7041d5bb3bdf897ae2c1a" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde2d" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:5d1addf14bf84ac57cca959ef4ba16a0" caom2:accMetaChecksum="md5:1c115f6d6be7041d5bb3bdf897ae2c1a" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -1211,7 +1211,7 @@
             <caom2:part caom2:id="00000000-0000-0000-4d27-013d159bde36" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:b31ebca688ff005ddb0221a2193bc2b7" caom2:accMetaChecksum="md5:fa90104abf296321e2bf7b53bd4b060d">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde37" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:082d394c63e7ae70f5cd3798e9885780" caom2:accMetaChecksum="md5:7c6577645f5e7e1bb5d7ad4c20be42dc" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde37" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:082d394c63e7ae70f5cd3798e9885780" caom2:accMetaChecksum="md5:7c6577645f5e7e1bb5d7ad4c20be42dc" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -1313,7 +1313,7 @@
             <caom2:part caom2:id="00000000-0000-0000-4d27-013d159bde3d" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:f200c60b79560268cc35077f03e6b08f" caom2:accMetaChecksum="md5:2625551390b2c30e7c9718e22d2bc956">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde3f" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:db32632dd53baaac932649d2bfc5041c" caom2:accMetaChecksum="md5:35f3886ff72e8b36ef9ca960e868028b" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-4d27-013d159bde3f" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:db32632dd53baaac932649d2bfc5041c" caom2:accMetaChecksum="md5:35f3886ff72e8b36ef9ca960e868028b" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>

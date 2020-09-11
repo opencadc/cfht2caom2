@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="6c7057fa-ad6a-49df-b0a3-f3416e7c13e9" caom2:metaProducer="cfht2caom2/0.1.0">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="6c7057fa-ad6a-49df-b0a3-f3416e7c13e9" caom2:metaProducer="cfht2caom2/0.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>07Bm06.flat.z.36.02</caom2:observationID>
   <caom2:metaRelease>2008-01-03T00:00:00.000</caom2:metaRelease>
@@ -34,7 +34,7 @@
     <caom2:ambientTemp>-0.16</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="f8147946-cf7e-48f0-8347-0b8b8178cd9f" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="f8147946-cf7e-48f0-8347-0b8b8178cd9f" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>07Bm06.flat.z.36.02</caom2:productID>
       <caom2:metaRelease>2008-01-03T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2008-01-16T23:45:54.000</caom2:dataRelease>
@@ -48,49 +48,49 @@
         <caom2:runID>07Bm06</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Elixir/</caom2:reference>
         <caom2:inputs>
-          <caom2:planeURI>caom:CFHT/963730/963730f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963732/963732f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963733/963733f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963214/963214f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963399/963399f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963402/963402f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964942/964942f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963734/963734f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/962841/962841f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963413/963413f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963215/963215f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963407/963407f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963401/963401f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/962837/962837f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964221/964221f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/964222/964222f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964227/964227f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963400/963400f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963402/963402f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/963397/963397f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964945/964945f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963732/963732f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963214/963214f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964944/964944f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964225/964225f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963405/963405f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963735/963735f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964942/964942f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964941/964941f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963215/963215f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/963404/963404f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/962837/962837f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964224/964224f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963733/963733f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/962840/962840f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963403/963403f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963406/963406f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/962839/962839f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963401/963401f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/963736/963736f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/963414/963414f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/962840/962840f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963398/963398f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964941/964941f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964943/964943f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/962841/962841f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963730/963730f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/963731/963731f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964944/964944f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963413/963413f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963734/963734f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963398/963398f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963407/963407f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/963399/963399f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/964223/964223f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964225/964225f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963400/963400f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964227/964227f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964224/964224f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/962839/962839f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963406/963406f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963403/963403f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/964945/964945f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/964226/964226f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963405/963405f</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/962838/962838f</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/963735/963735f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964221/964221f</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/964943/964943f</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="974bf6db-f1c6-47ea-a6d1-a8fb72670dc1" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="974bf6db-f1c6-47ea-a6d1-a8fb72670dc1" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/07Bm06.flat.z.36.02.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -103,7 +103,7 @@
             <caom2:part caom2:id="39b6f8ee-71ac-494e-a47f-9838552fece4">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="3e41d872-b2b6-4c30-a478-4349e31b596a" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="3e41d872-b2b6-4c30-a478-4349e31b596a" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -160,7 +160,7 @@
             <caom2:part caom2:id="99d3e4d6-12a2-4677-85f4-2d43bedd6406">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="6e10be3a-c875-43c9-9008-30dcc3d29541" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="6e10be3a-c875-43c9-9008-30dcc3d29541" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -217,7 +217,7 @@
             <caom2:part caom2:id="71b38389-7422-4d5b-b92c-174b9b4b0574">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="d5b5cbb2-b1e7-43c5-a3f2-d4149dcdb2c4" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="d5b5cbb2-b1e7-43c5-a3f2-d4149dcdb2c4" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -274,7 +274,7 @@
             <caom2:part caom2:id="303ec61c-7753-415d-ae0d-14669162a4be">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="07e68a7d-6afb-4c45-b55f-d42c4e2a9bfb" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="07e68a7d-6afb-4c45-b55f-d42c4e2a9bfb" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -331,7 +331,7 @@
             <caom2:part caom2:id="b6121ba6-fbb8-49aa-a4d0-af9a9d8923f3">
               <caom2:name>5</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="932d9e59-61da-40d9-a657-4b072135dd79" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="932d9e59-61da-40d9-a657-4b072135dd79" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -388,7 +388,7 @@
             <caom2:part caom2:id="985079e4-1c9e-4569-8b29-2b9e0937cf87">
               <caom2:name>6</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="c62a0d02-da51-4b1d-bed9-9cba11bf0462" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="c62a0d02-da51-4b1d-bed9-9cba11bf0462" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -445,7 +445,7 @@
             <caom2:part caom2:id="df5e6966-a0a8-4b6a-9cce-9854339a475f">
               <caom2:name>7</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="b15d7a1f-078a-41b3-8d9d-c4af14258603" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="b15d7a1f-078a-41b3-8d9d-c4af14258603" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -502,7 +502,7 @@
             <caom2:part caom2:id="d731dfd3-8dbb-48bf-b734-b08f18ee25d9">
               <caom2:name>8</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="a9586a1c-31d9-446f-8447-6186708830ef" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="a9586a1c-31d9-446f-8447-6186708830ef" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -559,7 +559,7 @@
             <caom2:part caom2:id="cb372d81-2e67-4155-bae0-552548777b7b">
               <caom2:name>9</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="124d66cb-ac92-4739-a39a-05e27b99fc25" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="124d66cb-ac92-4739-a39a-05e27b99fc25" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -616,7 +616,7 @@
             <caom2:part caom2:id="d25cd700-a594-48cc-8dcd-ed254163e6f8">
               <caom2:name>10</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="8caba0e4-2f64-4c76-8b62-cce7d86bf0d9" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="8caba0e4-2f64-4c76-8b62-cce7d86bf0d9" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -673,7 +673,7 @@
             <caom2:part caom2:id="6a95864d-be4c-454e-9c07-8c8bd42f6d30">
               <caom2:name>11</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="54ef53c9-0bd2-493c-bdb9-9c394328feec" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="54ef53c9-0bd2-493c-bdb9-9c394328feec" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -730,7 +730,7 @@
             <caom2:part caom2:id="8ba68cd1-e0c4-43b3-8e5c-0b4a13d234eb">
               <caom2:name>12</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="dc821037-f117-4e9b-81c3-88fc63a6e101" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="dc821037-f117-4e9b-81c3-88fc63a6e101" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -787,7 +787,7 @@
             <caom2:part caom2:id="46994d61-5c7e-4938-9e80-2102c49d614d">
               <caom2:name>13</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="05fc7632-e0ec-419f-b43b-ac5896007f39" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="05fc7632-e0ec-419f-b43b-ac5896007f39" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -844,7 +844,7 @@
             <caom2:part caom2:id="ddba8cce-902e-4aa0-a1a8-09e061bc5cdb">
               <caom2:name>14</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="fd797995-82e7-4120-ae33-20f46fd17527" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="fd797995-82e7-4120-ae33-20f46fd17527" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -901,7 +901,7 @@
             <caom2:part caom2:id="cfe16cb9-d184-428d-b3a4-899670cf489d">
               <caom2:name>15</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="4eebb7ff-3a04-4d8f-9e19-1640edb9f08f" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="4eebb7ff-3a04-4d8f-9e19-1640edb9f08f" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -958,7 +958,7 @@
             <caom2:part caom2:id="42a694d0-a658-49eb-93d9-c8d175b73aa6">
               <caom2:name>16</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="d59b79b8-3093-4167-95cb-b5c7aac12669" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="d59b79b8-3093-4167-95cb-b5c7aac12669" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1015,7 +1015,7 @@
             <caom2:part caom2:id="1fd73e66-db6f-4442-be3c-bb49b2cabd67">
               <caom2:name>17</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="71b50067-f898-4986-951c-4b35a6994b3b" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="71b50067-f898-4986-951c-4b35a6994b3b" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1072,7 +1072,7 @@
             <caom2:part caom2:id="d68846fb-36da-4cbf-85d7-a64eb6a84c06">
               <caom2:name>18</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="8d9753ad-0d08-4130-832d-6163c87b20db" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="8d9753ad-0d08-4130-832d-6163c87b20db" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1129,7 +1129,7 @@
             <caom2:part caom2:id="a4cab17c-f069-4212-ac1f-77c21e06c554">
               <caom2:name>19</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="db9a652e-e015-4df9-9d58-018c720331ae" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="db9a652e-e015-4df9-9d58-018c720331ae" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1186,7 +1186,7 @@
             <caom2:part caom2:id="2ba6189d-f73f-45de-a0c0-669a056a8518">
               <caom2:name>20</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="43c46405-8289-4250-bebc-f95391fb94fe" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="43c46405-8289-4250-bebc-f95391fb94fe" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1243,7 +1243,7 @@
             <caom2:part caom2:id="e5fd35a4-3a4a-42d1-8cf5-c363c49eb592">
               <caom2:name>21</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="4dad8fa7-ece1-430a-8491-74f50cffc1ae" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="4dad8fa7-ece1-430a-8491-74f50cffc1ae" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1300,7 +1300,7 @@
             <caom2:part caom2:id="f62e01c2-069d-4a94-b3c7-50c6eae1763b">
               <caom2:name>22</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="f63e0add-e815-47fa-bcbe-d925c76eeb06" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="f63e0add-e815-47fa-bcbe-d925c76eeb06" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1357,7 +1357,7 @@
             <caom2:part caom2:id="f31e9dca-9f90-4a3e-be64-5358f1d6e7d3">
               <caom2:name>23</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="2c5144e9-c691-47d0-8ab4-f98dc63582a9" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="2c5144e9-c691-47d0-8ab4-f98dc63582a9" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1414,7 +1414,7 @@
             <caom2:part caom2:id="a5bc5e3e-80ac-4381-9d39-e15ece6fd7d2">
               <caom2:name>24</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="37c50ca2-603d-48fa-a759-e099c798b06e" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="37c50ca2-603d-48fa-a759-e099c798b06e" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1471,7 +1471,7 @@
             <caom2:part caom2:id="f15d4a08-11f5-4e67-8da5-3f8820583a6f">
               <caom2:name>25</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="a226e2bf-a730-485f-b2fb-0bc442a99905" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="a226e2bf-a730-485f-b2fb-0bc442a99905" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1528,7 +1528,7 @@
             <caom2:part caom2:id="156cbd98-89ff-4a77-9d5f-0e9d6f43c8e0">
               <caom2:name>26</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="f2c1b351-8339-46f1-bce7-38444f56ad38" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="f2c1b351-8339-46f1-bce7-38444f56ad38" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1585,7 +1585,7 @@
             <caom2:part caom2:id="f4612138-5c24-4048-b966-ab8158c687d9">
               <caom2:name>27</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="5df57c7a-7d87-41da-8b71-e47a313eec21" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="5df57c7a-7d87-41da-8b71-e47a313eec21" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1642,7 +1642,7 @@
             <caom2:part caom2:id="9a640ae7-4c23-4f98-bad1-ba8c087c4adf">
               <caom2:name>28</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="64b6e5db-a596-4e42-bc11-4cc6a88291ae" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="64b6e5db-a596-4e42-bc11-4cc6a88291ae" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1699,7 +1699,7 @@
             <caom2:part caom2:id="07b69caa-a0d9-4685-b25d-b9a3ac45604f">
               <caom2:name>29</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="94f66ff7-a152-40f2-b630-f7dde8657f90" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="94f66ff7-a152-40f2-b630-f7dde8657f90" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1756,7 +1756,7 @@
             <caom2:part caom2:id="a67468a7-1ee4-4eb1-ba82-d82d1d6d9dc1">
               <caom2:name>30</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="42a0f77d-dc48-4a0a-b72a-ecede6db261b" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="42a0f77d-dc48-4a0a-b72a-ecede6db261b" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1813,7 +1813,7 @@
             <caom2:part caom2:id="0cf138ae-a4b8-4e14-a034-62f7c255beb4">
               <caom2:name>31</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="3fb437dd-07ec-4b92-ab71-8789e1242b1a" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="3fb437dd-07ec-4b92-ab71-8789e1242b1a" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1870,7 +1870,7 @@
             <caom2:part caom2:id="04d8f3cf-569d-419f-9ecb-db954b2391e4">
               <caom2:name>32</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="a62649fc-fe2e-43ab-a79e-5ba374448e6e" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="a62649fc-fe2e-43ab-a79e-5ba374448e6e" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1927,7 +1927,7 @@
             <caom2:part caom2:id="d35905f9-a73e-47fe-8ea8-168fe1f47ace">
               <caom2:name>33</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="37edb9a7-dbda-471d-8d52-e9ceeb6b1c45" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="37edb9a7-dbda-471d-8d52-e9ceeb6b1c45" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -1984,7 +1984,7 @@
             <caom2:part caom2:id="8371b354-d9d7-4774-aa83-7d7c98ce2ce3">
               <caom2:name>34</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="14c967e9-3ffb-4355-9f3c-912618b888c7" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="14c967e9-3ffb-4355-9f3c-912618b888c7" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -2041,7 +2041,7 @@
             <caom2:part caom2:id="2e6cc862-28b1-4505-8e38-db26f5e6f9e7">
               <caom2:name>35</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="4d290919-27c0-4a11-bf4d-a17a69023507" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="4d290919-27c0-4a11-bf4d-a17a69023507" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -2098,7 +2098,7 @@
             <caom2:part caom2:id="f1cbe1dc-9c3b-400a-acea-f984558774f9">
               <caom2:name>36</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="fc9a1623-47d0-42be-8f13-8fc8f466ff99" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="fc9a1623-47d0-42be-8f13-8fc8f466ff99" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -2158,44 +2158,44 @@
     </caom2:plane>
   </caom2:planes>
   <caom2:members>
-    <caom2:observationURI>caom:CFHT/963403</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964226</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/963736</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964941</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964224</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963731</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/963735</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963413</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963215</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963214</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964223</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963401</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963399</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963732</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964224</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963404</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/964225</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964942</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963734</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963733</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/962837</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963730</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963401</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/962839</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/964945</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/963398</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964221</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/962840</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/963414</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/962838</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963397</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964943</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/964227</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963400</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963402</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964944</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963407</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963406</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964222</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/962841</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/963404</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963214</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963397</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/963405</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/964226</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963402</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/962837</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/962838</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964223</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963733</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963730</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963399</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963400</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964222</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964942</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964221</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963215</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963403</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/962841</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963734</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963407</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964943</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963732</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963413</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964941</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963406</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/963731</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/964944</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/962840</caom2:observationURI>
   </caom2:members>
 </caom2:Observation>
