@@ -1230,6 +1230,7 @@ def get_espadons_time_refcoord_val(params):
             else:
                 mjd_obs_str = f'{date_obs}T{time_obs}'
                 mjd_obs = ac.get_datetime(mjd_obs_str)
+            mjd_obs = mjd_obs.value
     return mjd_obs
 
 
@@ -1321,7 +1322,7 @@ def get_obs_sequence_number(params):
 
 
 def get_obs_type(header):
-    result = header.get('OBSTYPE')
+    result = _get_obstype(header)
     if result is not None:
         if result == 'FRPTS':
             result = 'FRINGE'
@@ -1656,6 +1657,7 @@ def get_time_refcoord_delta_derived(header):
         exp_time = 20.0
     else:
         mjd_end = ac.get_datetime(tv_stop)
+        mjd_end = mjd_end.value
         exp_time = mjd_end - mjd_obs
     return exp_time
 
@@ -1687,6 +1689,8 @@ def get_time_refcoord_val_derived(header):
     if mjd_obs is None:
         logging.warning(f'Chunk.time.axis.function.refCoord.val is None for '
                         f'{_get_filename(header)}')
+    else:
+        mjd_obs = mjd_obs.value
     return mjd_obs
 
 
@@ -1698,6 +1702,7 @@ def get_time_refcoord_val_simple(header):
             # from caom2IngestMegacam.py, l549
             temp = header.get('DATE')
         result = ac.get_datetime(temp)
+        result = result.value
     return result
 
 
@@ -1780,6 +1785,7 @@ def _get_mjd_start(header):
                 mjd_obs = date_obs
             else:
                 mjd_obs = date_obs + time_obs
+        mjd_obs = mjd_obs.value
     return mjd_obs
 
 
