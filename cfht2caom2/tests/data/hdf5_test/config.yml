@@ -19,7 +19,7 @@ todo_file_name: todo.txt
 # done.
 use_local_files: True
 # values DEBUG INFO WARNING ERROR
-logging_level: DEBUG
+logging_level: INFO
 # values True False
 log_to_file: True
 # fully qualified name for a directory to write log files

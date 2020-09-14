@@ -1,28 +1,29 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-510a-01408b10bd0f" caom2:lastModified="2017-12-13T18:20:08.693" caom2:maxLastModified="2019-11-05T23:41:03.651" caom2:metaChecksum="md5:5ff529c7c5204065f33e49b0d89c4ae1" caom2:accMetaChecksum="md5:034f09dbdee5d01334b7754fa4cc8045" caom2:metaProducer="cfht2caom2/0.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="a6c2d802-9767-486a-a6c8-e4257be1bfcd" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2020-01-25T17:22:43.303" caom2:metaChecksum="md5:8a9d5d8854c08189cd7f999d2ebde2e9" caom2:accMetaChecksum="md5:dcf4ceb9cc9820d9dee4bce3cc9fb498" caom2:metaProducer="cfht2caom2/0.2">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>979339</caom2:observationID>
-  <caom2:metaRelease>2008-03-28T00:00:00.000</caom2:metaRelease>
-  <caom2:sequenceNumber>979339</caom2:sequenceNumber>
+  <caom2:observationID>2460606</caom2:observationID>
+  <caom2:metaRelease>2019-11-22T00:00:00.000</caom2:metaRelease>
+  <caom2:sequenceNumber>2460606</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>
   <caom2:proposal>
-    <caom2:id>08AC20</caom2:id>
-    <caom2:pi>Jon Fulbright</caom2:pi>
+    <caom2:id>19BC98</caom2:id>
+    <caom2:pi>John Landstreet</caom2:pi>
+    <caom2:title>Searching for and studying the rare super-weak magnetic fields in white dwarf stars</caom2:title>
   </caom2:proposal>
   <caom2:target>
-    <caom2:name>J150751.1-105113</caom2:name>
+    <caom2:name>WD1953-011</caom2:name>
     <caom2:standard>false</caom2:standard>
   </caom2:target>
   <caom2:targetPosition>
     <caom2:coordsys>FK5</caom2:coordsys>
     <caom2:equinox>2000.0</caom2:equinox>
     <caom2:coordinates>
-      <caom2:cval1>226.96291666666664</caom2:cval1>
-      <caom2:cval2>-10.853694444444445</caom2:cval2>
+      <caom2:cval1>299.11933333333326</caom2:cval1>
+      <caom2:cval2>-1.0463055555555556</caom2:cval2>
     </caom2:coordinates>
   </caom2:targetPosition>
   <caom2:telescope>
@@ -34,50 +35,52 @@
   <caom2:instrument>
     <caom2:name>ESPaDOnS</caom2:name>
     <caom2:keywords>
+      <caom2:keyword>INSTMODE=Polarimetry,</caom2:keyword>
       <caom2:keyword>R=65,000</caom2:keyword>
-      <caom2:keyword>star+sky,</caom2:keyword>
-      <caom2:keyword>INSTMODE=Spectroscopy,</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>
   <caom2:environment>
-    <caom2:humidity>51.61</caom2:humidity>
-    <caom2:elevation>44.37</caom2:elevation>
-    <caom2:ambientTemp>-1.25</caom2:ambientTemp>
+    <caom2:humidity>48.77</caom2:humidity>
+    <caom2:elevation>47.5906</caom2:elevation>
+    <caom2:ambientTemp>-0.75</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="00000000-0000-0000-9d43-01408b10d43b" caom2:lastModified="2017-06-19T21:49:09.833" caom2:maxLastModified="2017-12-13T18:20:08.693" caom2:metaChecksum="md5:3feb3afa8117e796f74ca9b7507f89aa" caom2:accMetaChecksum="md5:881917119f1354cfab4ff608443c236e" caom2:metaProducer="cfht2caom2/0.2">
-      <caom2:productID>979339i</caom2:productID>
-      <caom2:metaRelease>2008-03-28T00:00:00.000</caom2:metaRelease>
-      <caom2:dataRelease>2009-08-31T00:00:00.000</caom2:dataRelease>
+    <caom2:plane caom2:id="e724540f-795d-4234-a7bc-ebe76c6e3e75" caom2:lastModified="2019-11-22T18:59:12.972" caom2:maxLastModified="2020-01-25T15:05:48.657" caom2:metaChecksum="md5:562037212cd92cc291385b259ef8909f" caom2:accMetaChecksum="md5:f92960381e720e77751e555347f064ad" caom2:metaProducer="cfht2caom2/0.2">
+      <caom2:productID>2460606i</caom2:productID>
+      <caom2:metaRelease>2019-11-22T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2021-02-28T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>spectrum</caom2:dataProductType>
       <caom2:calibrationLevel>2</caom2:calibrationLevel>
       <caom2:provenance>
         <caom2:name>UPENA</caom2:name>
-        <caom2:version>1.0</caom2:version>
+        <caom2:version>1.1 January 2016</caom2:version>
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Upena/</caom2:reference>
-        <caom2:lastExecuted>2009-03-14T08:51:55.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2019-11-22T05:39:42.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>reduction=Intensity</caom2:keyword>
         </caom2:keywords>
         <caom2:inputs>
-          <caom2:planeURI>caom:CFHT/979339/979339o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/2460606/2460606o</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-9d43-01408b10d441" caom2:lastModified="2017-12-13T18:20:08.693" caom2:maxLastModified="2017-12-13T18:20:08.693" caom2:metaChecksum="md5:ff03cefbf533b79fa269e0164174fec1" caom2:accMetaChecksum="md5:d1a904bed89ac661778fa0ab14545c23" caom2:metaProducer="cfht2caom2/0.2">
-          <caom2:uri>ad:CFHT/979339i.fits.gz</caom2:uri>
+        <caom2:artifact caom2:id="025aa883-d589-45b9-9eb5-46c47f7d2bb5" caom2:lastModified="2019-11-22T18:59:12.972" caom2:maxLastModified="2019-11-22T18:59:12.972" caom2:metaChecksum="md5:a97d19011d8cb51fc1c7f361c406ea9d" caom2:accMetaChecksum="md5:1d9d4410d7ff1ca9ee2550df452ef119" caom2:metaProducer="cfht2caom2/0.2">
+          <caom2:uri>ad:CFHT/2460606i.fits.gz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentLength>23964480</caom2:contentLength>
-          <caom2:contentChecksum>md5:3aab2c7c76bf60a552033fbf4208969a</caom2:contentChecksum>
+          <caom2:contentChecksum>md5:a3129bd6c64659e07a26e10ba82c54f6</caom2:contentChecksum>
           <caom2:parts>
-            <caom2:part caom2:id="00000000-0000-0000-9d43-01408b10d442" caom2:lastModified="2013-08-17T06:57:51.687" caom2:maxLastModified="2013-08-17T06:57:51.687" caom2:metaChecksum="md5:87025674ff5f5bc1a932dd630d6d5b03" caom2:accMetaChecksum="md5:e7ce475d884642fc8f7b4354e8e3272f">
+            <caom2:part caom2:id="03217517-4cbc-47fc-a2c8-14f6bb4bf1ab" caom2:lastModified="2019-11-22T18:59:12.972" caom2:maxLastModified="2019-11-22T18:59:12.972" caom2:metaChecksum="md5:b730bc0da4a26bfa22fd4cad3ca57f31" caom2:accMetaChecksum="md5:6422a4450bb0342298ee5e03720c953e">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-9d43-01408b10d444" caom2:lastModified="2013-08-17T06:57:51.687" caom2:maxLastModified="2013-08-17T06:57:51.687" caom2:metaChecksum="md5:3abbe250e71b1272fc60971db25c653a" caom2:accMetaChecksum="md5:cdaf8a61ec9ad06668f51c0f5fdd02f2" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="2e608841-dc38-4768-818e-08e8417e820d" caom2:lastModified="2019-11-22T18:59:12.972" caom2:maxLastModified="2019-11-22T18:59:12.972" caom2:metaChecksum="md5:8ebb51d16554c24377727b28ca42cd15" caom2:accMetaChecksum="md5:aa5d6ac741539cb1e24ac06d9899ae68" caom2:metaProducer="cfht2caom2/0.2">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:observableAxis>2</caom2:observableAxis>
+                  <caom2:positionAxis1>3</caom2:positionAxis1>
+                  <caom2:positionAxis2>4</caom2:positionAxis2>
                   <caom2:observable>
                     <caom2:dependent>
                       <caom2:axis>
@@ -120,11 +123,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>226.962917</caom2:val>
+                            <caom2:val>299.119333</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>-10.853694</caom2:val>
+                            <caom2:val>-1.046306</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-0.000444</caom2:cd11>
@@ -148,16 +151,16 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>0.0131944444444</caom2:delta>
+                        <caom2:delta>0.0100347222222</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>54553.6400758</caom2:val>
+                          <caom2:val>58809.1990172</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>1140.0</caom2:exposure>
-                    <caom2:resolution>1140.0</caom2:resolution>
+                    <caom2:exposure>867.0</caom2:exposure>
+                    <caom2:resolution>867.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -166,10 +169,10 @@
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>
-    <caom2:plane caom2:id="00000000-0000-0000-510a-01408b10bef4" caom2:lastModified="2013-08-17T06:57:45.880" caom2:maxLastModified="2019-11-05T23:41:03.651" caom2:metaChecksum="md5:1cbf7af4d0f14af16da6b03f3bf899d8" caom2:accMetaChecksum="md5:11fe93b49287429293350d7cd6b1a88b" caom2:metaProducer="cfht2caom2/0.2">
-      <caom2:productID>979339o</caom2:productID>
-      <caom2:metaRelease>2008-03-28T00:00:00.000</caom2:metaRelease>
-      <caom2:dataRelease>2009-08-31T00:00:00.000</caom2:dataRelease>
+    <caom2:plane caom2:id="7747fef2-79d5-4a5b-b883-d1f833b3f099" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2020-01-25T17:22:43.303" caom2:metaChecksum="md5:3d39dae03e9032956db5d436935821df" caom2:accMetaChecksum="md5:8df1ac05c5702fe22a3e488f411f3882" caom2:metaProducer="cfht2caom2/0.2">
+      <caom2:productID>2460606o</caom2:productID>
+      <caom2:metaRelease>2019-11-22T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2021-02-28T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>spectrum</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>
@@ -178,17 +181,20 @@
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-510a-01408b10befa" caom2:lastModified="2017-12-13T18:20:08.693" caom2:maxLastModified="2017-12-13T18:20:08.693" caom2:metaChecksum="md5:a32e6de492b049f7a0198bc9de7788a1" caom2:accMetaChecksum="md5:0091881d3f4cd1b7eacbc5adf7c047c4" caom2:metaProducer="cfht2caom2/0.2">
-          <caom2:uri>ad:CFHT/979339o.fits.gz</caom2:uri>
+        <caom2:artifact caom2:id="aa0ac45e-ed91-4e89-b843-748757a299f5" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2019-11-22T05:24:14.414" caom2:metaChecksum="md5:cbdf46806ca89fa1463c98cbbde0785f" caom2:accMetaChecksum="md5:29cbd2f8e64c4ed2889f1cf7e1415862" caom2:metaProducer="cfht2caom2/0.2">
+          <caom2:uri>ad:CFHT/2460606o.fits.gz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentChecksum>md5:8a59508c32ae0b454d352bf7d2dcc099</caom2:contentChecksum>
+          <caom2:contentChecksum>md5:3d29f0edd984065a044d1376a11c6f08</caom2:contentChecksum>
           <caom2:parts>
-            <caom2:part caom2:id="00000000-0000-0000-510a-01408b10befc" caom2:lastModified="2013-08-17T06:57:45.880" caom2:maxLastModified="2013-08-17T06:57:45.880" caom2:metaChecksum="md5:2681420ba482568e83f55db70e6eb0c5" caom2:accMetaChecksum="md5:3972fcc7207b4f3c4a13af305affdebf">
+            <caom2:part caom2:id="d0eb8bd7-250e-47ab-9e37-31cbdc815e08" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2019-11-22T05:24:14.414" caom2:metaChecksum="md5:8f0e9e17fbbfba7f1268c2ea2b072dbc" caom2:accMetaChecksum="md5:64ec06d057f793936f4b7125c4664915">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-510a-01408b10befd" caom2:lastModified="2013-08-17T06:57:51.687" caom2:maxLastModified="2013-08-17T06:57:51.687" caom2:metaChecksum="md5:44d831a1866b852e9b22f25382825afa" caom2:accMetaChecksum="md5:eb5ea10df10028843f14fa617bb492fd" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="fc6ad26b-4dff-4bca-ad60-12546e5b2d7d" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2019-11-22T05:24:14.414" caom2:metaChecksum="md5:eba456d6fec76bdbe4edc2e1b69a0d99" caom2:accMetaChecksum="md5:5d077022b52a8b8d7da2d4b46e4bd377" caom2:metaProducer="cfht2caom2/0.2">
+                  <caom2:naxis>2</caom2:naxis>
+                  <caom2:positionAxis1>3</caom2:positionAxis1>
+                  <caom2:positionAxis2>4</caom2:positionAxis2>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -215,11 +221,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>226.962917</caom2:val>
+                            <caom2:val>299.119333</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>-10.853694</caom2:val>
+                            <caom2:val>-1.046306</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-0.000444</caom2:cd11>
@@ -244,7 +250,7 @@
                         </caom2:start>
                         <caom2:end>
                           <caom2:pix>1.5</caom2:pix>
-                          <caom2:val>1048.2948088</caom2:val>
+                          <caom2:val>1048.2948087999998</caom2:val>
                         </caom2:end>
                       </caom2:range>
                     </caom2:axis>
@@ -264,16 +270,16 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>0.0131944444444</caom2:delta>
+                        <caom2:delta>0.0100347222222</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>54553.6400758</caom2:val>
+                          <caom2:val>58809.1990172</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>1140.0</caom2:exposure>
-                    <caom2:resolution>1140.0</caom2:resolution>
+                    <caom2:exposure>867.0</caom2:exposure>
+                    <caom2:resolution>867.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>

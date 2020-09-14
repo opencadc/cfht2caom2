@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="177db37e-2e6b-496e-a201-f14684425214" caom2:metaProducer="cfht2caom2/0.1.0">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="177db37e-2e6b-496e-a201-f14684425214" caom2:metaProducer="cfht2caom2/0.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2384125p</caom2:observationID>
   <caom2:metaRelease>2019-04-05T00:00:00.000</caom2:metaRelease>
@@ -39,7 +39,7 @@
     </caom2:keywords>
   </caom2:instrument>
   <caom2:planes>
-    <caom2:plane caom2:id="d1d900ec-7c8b-474d-a455-e56ad998b6f7" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="d1d900ec-7c8b-474d-a455-e56ad998b6f7" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>2384125z</caom2:productID>
       <caom2:metaRelease>2019-04-05T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2020-08-31T00:00:00.000</caom2:dataRelease>
@@ -561,7 +561,7 @@
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="c08f15cb-9669-45cf-ba81-f579c1c99c4c" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="c08f15cb-9669-45cf-ba81-f579c1c99c4c" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/2384125z.hdf5</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -572,7 +572,7 @@
             <caom2:part caom2:id="8ede77f3-45c3-4fa8-a4cc-31964821b62a">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="6fde7903-6961-4be3-b688-2e621a70f745" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="6fde7903-6961-4be3-b688-2e621a70f745" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -675,7 +675,7 @@
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>
-    <caom2:plane caom2:id="cda3efe5-9211-4163-acc4-7d72a7bb31b8" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="cda3efe5-9211-4163-acc4-7d72a7bb31b8" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>2384125p</caom2:productID>
       <caom2:metaRelease>2019-04-05T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2020-08-31T00:00:00.000</caom2:dataRelease>
@@ -1197,7 +1197,7 @@
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="aaa15f91-8198-457f-af77-5c634ef131c4" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="aaa15f91-8198-457f-af77-5c634ef131c4" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/2384125p.fits.header</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -1207,7 +1207,7 @@
             <caom2:part caom2:id="8ede77f3-45c3-4fa8-a4cc-31964821b62a">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="6fde7903-6961-4be3-b688-2e621a70f745" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="6fde7903-6961-4be3-b688-2e621a70f745" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>

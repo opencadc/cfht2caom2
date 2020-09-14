@@ -1,4 +1,5 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-6513-0160b7abfaf7" caom2:lastModified="2018-01-02T20:35:42.430" caom2:maxLastModified="2019-11-06T07:20:21.120" caom2:metaChecksum="md5:b342e11b2ccb703b18b0b2ea4bc456f8" caom2:accMetaChecksum="md5:f3fea2d750850e5fa13cb06d80e596c1" caom2:metaProducer="cfht2caom2/0.1.0">
+<?xml version='1.0' encoding='UTF-8'?>
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-6513-0160b7abfaf7" caom2:lastModified="2018-01-02T20:35:42.430" caom2:maxLastModified="2019-11-06T07:20:21.120" caom2:metaChecksum="md5:b342e11b2ccb703b18b0b2ea4bc456f8" caom2:accMetaChecksum="md5:f3fea2d750850e5fa13cb06d80e596c1" caom2:metaProducer="cfht2caom2/0.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2238502</caom2:observationID>
   <caom2:metaRelease>2018-01-02T00:00:00.000</caom2:metaRelease>
@@ -34,8 +35,8 @@
   <caom2:instrument>
     <caom2:name>ESPaDOnS</caom2:name>
     <caom2:keywords>
-      <caom2:keyword>INSTMODE=Polarimetry,</caom2:keyword>
       <caom2:keyword>R=65,000</caom2:keyword>
+      <caom2:keyword>INSTMODE=Polarimetry,</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>
   <caom2:environment>
@@ -44,7 +45,7 @@
     <caom2:ambientTemp>2.12</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="00000000-0000-0000-53c9-0160b8963472" caom2:lastModified="2019-01-11T19:49:09.843" caom2:maxLastModified="2019-11-06T07:20:21.120" caom2:metaChecksum="md5:5d5aa32f2ffa55474532b55697765f39" caom2:accMetaChecksum="md5:2fffbf9d0760a73a8131739fb6a366f2" caom2:metaProducer="cfht2caom2/0.1.0">
+    <caom2:plane caom2:id="00000000-0000-0000-53c9-0160b8963472" caom2:lastModified="2019-01-11T19:49:09.843" caom2:maxLastModified="2019-11-06T07:20:21.120" caom2:metaChecksum="md5:5d5aa32f2ffa55474532b55697765f39" caom2:accMetaChecksum="md5:2fffbf9d0760a73a8131739fb6a366f2" caom2:metaProducer="cfht2caom2/0.2">
       <caom2:productID>2238502i</caom2:productID>
       <caom2:metaRelease>2018-01-02T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2019-02-28T00:00:00.000</caom2:dataRelease>
@@ -65,7 +66,7 @@
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-53c9-0160b8963478" caom2:lastModified="2018-03-01T05:53:44.903" caom2:maxLastModified="2018-03-01T05:53:44.903" caom2:metaChecksum="md5:56c00ea571ea27f881014a6e1c6cbe38" caom2:accMetaChecksum="md5:1ba1ef0607139ef222f83f67b3eb7b9f" caom2:metaProducer="cfht2caom2/0.1.0">
+        <caom2:artifact caom2:id="00000000-0000-0000-53c9-0160b8963478" caom2:lastModified="2018-03-01T05:53:44.903" caom2:maxLastModified="2018-03-01T05:53:44.903" caom2:metaChecksum="md5:56c00ea571ea27f881014a6e1c6cbe38" caom2:accMetaChecksum="md5:1ba1ef0607139ef222f83f67b3eb7b9f" caom2:metaProducer="cfht2caom2/0.2">
           <caom2:uri>ad:CFHT/2238502i.fits.gz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -75,7 +76,7 @@
             <caom2:part caom2:id="00000000-0000-0000-53c9-0160b8963479" caom2:lastModified="2018-01-02T20:35:42.430" caom2:maxLastModified="2018-01-02T22:29:18.727" caom2:metaChecksum="md5:d4caeaa3035034c85feee81a860e5070" caom2:accMetaChecksum="md5:4faf8f49545d915b06f4738dd662f3b2">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-53c9-0160b896347b" caom2:lastModified="2018-01-02T22:29:18.727" caom2:maxLastModified="2018-01-02T22:29:18.727" caom2:metaChecksum="md5:00f19de4d7501ab004140748cd32d01a" caom2:accMetaChecksum="md5:aed6f68ba0c0f512b7aa598796a92e8d" caom2:metaProducer="cfht2caom2/0.1.0">
+                <caom2:chunk caom2:id="00000000-0000-0000-53c9-0160b896347b" caom2:lastModified="2018-01-02T22:29:18.727" caom2:maxLastModified="2018-01-02T22:29:18.727" caom2:metaChecksum="md5:00f19de4d7501ab004140748cd32d01a" caom2:accMetaChecksum="md5:aed6f68ba0c0f512b7aa598796a92e8d" caom2:metaProducer="cfht2caom2/0.2">
                   <caom2:observable>
                     <caom2:dependent>
                       <caom2:axis>
