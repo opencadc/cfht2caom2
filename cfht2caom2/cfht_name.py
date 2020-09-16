@@ -92,14 +92,14 @@ class CFHTName(mc.StorageName):
     CFHT_NAME_PATTERN = '*'
 
     def __init__(self, obs_id=None, file_name=None,
-                 instrument=None, ad_uri=None):
+                 instrument=None, ad_uri=None, entry=None):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
         # including the .fz | .gz | '' to indicate compression type
         if obs_id is None:
             super(CFHTName, self).__init__(
                 None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
-                compression='')
+                compression='', entry=entry)
             self._instrument = md.Inst(instrument)
             if ad_uri is not None and file_name is None:
                 file_name = mc.CaomName(ad_uri).file_name
