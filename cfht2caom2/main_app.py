@@ -2251,7 +2251,7 @@ def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
     ra_deg = header.get('RA_DEG')
     dec_deg = header.get('DEC_DEG')
     if chunk.position is None and ra_deg is not None and dec_deg is not None:
-        logging.error(f'Adding position information for {obs_id}')
+        logging.info(f'Adding position information for {obs_id}')
         header['CTYPE1'] = 'RA---TAN'
         header['CTYPE2'] = 'DEC--TAN'
         header['CUNIT1'] = 'deg'
@@ -2586,5 +2586,5 @@ def cfht_main_app():
     except Exception as e:
         logging.error(f'Failed {APPLICATION} execution for {args}.')
         tb = traceback.format_exc()
-        logging.error(tb)
+        logging.debug(tb)
         sys.exit(-1)
