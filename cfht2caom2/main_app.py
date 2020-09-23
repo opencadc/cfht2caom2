@@ -184,7 +184,7 @@ from caom2 import ProductType, DerivedObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
 from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
 from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
-from caom2 import ObservableAxis, CoordError
+from caom2 import ObservableAxis, CoordError, TemporalWCS, CoordFunction1D
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
@@ -549,12 +549,13 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     bp.set('Chunk.position.equinox',
            'get_position_equinox_from_0th_header(header)')
 
-    bp.set('Chunk.time.axis.function.delta',
-           'get_spirou_time_refcoord_delta(params)')
-    bp.set('Chunk.time.axis.function.naxis',
-           'get_spirou_time_refcoord_naxis(params)')
-    bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
-    bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
+    if cfht_name.suffix != 'g':
+        bp.set('Chunk.time.axis.function.delta',
+               'get_spirou_time_refcoord_delta(params)')
+        bp.set('Chunk.time.axis.function.naxis',
+               'get_spirou_time_refcoord_naxis(params)')
+        bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
+        bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
 
 
 def _accumulate_wircam_bp(bp, uri, cfht_name):
@@ -827,9 +828,13 @@ def update(observation, **kwargs):
                     elif instrument is md.Inst.SPIROU:
                         _update_position_spirou(
                             chunk, headers[idx], observation.observation_id)
+                        _update_spirou_time_g(chunk, headers, cfht_name,
+                                              observation.observation_id)
 
                         if cfht_name.suffix == 's':
                             part.chunks = TypedList(Chunk,)
+                        elif cfht_name.suffix == 'g':
+                            plane.data_product_type = DataProductType.IMAGE
                         # stricter WCS validation
                         chunk.naxis = None
                         if chunk.energy is not None:
@@ -1536,7 +1541,6 @@ def get_sitelle_time_refcoord_delta(params):
 def get_spirou_exptime(params):
     # caom2IngestSpirou.py, l530+
     header, suffix, uri = _decompose_params(params)
-    result = None
     if suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
         result = header.get('EXPTIME')
     elif suffix == 'p':
@@ -2041,7 +2045,8 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
     run_id = headers[0].get('RUNID')
     if run_id is None:
         run_id = headers[0].get('CRUNID')
-        if run_id is None:
+        if (run_id is None and (cfht_name.instrument is not md.Inst.SPIROU and
+                cfht_name.suffix != 'g')):
             idx = 1
 
             logging.warning(f'Resetting the header/blueprint relationship for '
@@ -2244,6 +2249,58 @@ def _update_sitelle_plane(observation, uri):
     logging.debug('End _update_sitelle_plane')
 
 
+def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
+    logging.debug(f'Begin _update_spirou_time_g for {obs_id}')
+    if cfht_name.suffix == 'g':
+        # construct TemporalWCS for 'g' files from the CAOM2 pieces
+        # because the structure of 'g' files is so varied, it's not possible
+        # to hand over even part of the construction to the blueprint.
+        # SF - 22-09-20 - use ETIME
+
+        ref_coord_val = _get_keyword('DATE', headers)
+        ref_coord_mjd = ac.get_datetime(ref_coord_val).value
+
+        if chunk.time is None:
+            chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')),
+                                     timesys='UTC')
+
+        if chunk.time.axis is None:
+            chunk.time.axis = CoordAxis1D(axis=Axis('TIME', 'd'),
+                                          error=None,
+                                          range=None,
+                                          bounds=None,
+                                          function=None)
+
+        ref_coord = RefCoord(pix=0.5,
+                             val=mc.to_float(ref_coord_mjd))
+
+        time_index = headers[0].get('ZNAXIS')
+        if time_index is None or time_index == 0:
+            time_index = headers[1].get('ZNAXIS')
+            if time_index is None or time_index == 0:
+                time_index = headers[0].get('NAXIS')
+                if time_index is None or time_index == 0:
+                    time_index = headers[1].get('NAXIS')
+        naxis_key = f'ZNAXIS{time_index}'
+        time_naxis = _get_keyword(naxis_key, headers)
+        if time_naxis is None:
+            naxis_key = f'NAXIS{time_index}'
+            time_naxis = _get_keyword(naxis_key, headers)
+
+        e_time = _get_keyword('ETIME', headers)
+        if e_time is None:
+            logging.warning(f'No exposure found for '
+                            f'{cfht_name.file_name}. No Temporal WCS.')
+        else:
+            chunk.time.exposure = e_time / 1000.0
+            chunk.time.resolution = chunk.time.exposure
+            time_delta = chunk.time.exposure / 86400.0
+            chunk.time.axis.function = CoordFunction1D(
+                naxis=time_naxis, delta=time_delta, ref_coord=ref_coord)
+
+    logging.debug(f'End _update_spirou_time_g for {obs_id}')
+
+
 def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
     logging.debug(f'Begin _update_wircam_position_o for {obs_id}')
     part_index = mc.to_int(part.name)
@@ -2251,7 +2308,7 @@ def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
     ra_deg = header.get('RA_DEG')
     dec_deg = header.get('DEC_DEG')
     if chunk.position is None and ra_deg is not None and dec_deg is not None:
-        logging.error(f'Adding position information for {obs_id}')
+        logging.info(f'Adding position information for {obs_id}')
         header['CTYPE1'] = 'RA---TAN'
         header['CTYPE2'] = 'DEC--TAN'
         header['CUNIT1'] = 'deg'
@@ -2487,6 +2544,13 @@ def _get_uris(args):
     else:
         raise mc.CadcException(
             f'Could not define uri from these args {args}')
+    return result
+
+
+def _get_keyword(lookup, headers):
+    result = headers[0].get(lookup)
+    if result is None:
+        result = headers[1].get(lookup)
     return result
 
 
