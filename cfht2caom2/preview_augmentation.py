@@ -89,12 +89,11 @@ __all__ = ['visit']
 
 class CFHTPreview(mc.PreviewVisitor):
 
-    def __init__(self, instrument, intent, obs_type, target_name, **kwargs):
+    def __init__(self, instrument, intent, obs_type, target, **kwargs):
         super(CFHTPreview, self).__init__(cn.ARCHIVE, **kwargs)
         self._instrument = md.Inst(instrument)
         self._intent = intent
         self._obs_type = obs_type
-        self._target_name = target_name
         self._storage_name = cn.CFHTName(instrument=self._instrument,
                                          file_name=self._science_file)
         self._science_fqn = os.path.join(self._working_dir,
@@ -105,6 +104,8 @@ class CFHTPreview(mc.PreviewVisitor):
             self._working_dir, self._storage_name.thumb)
         self._zoom_fqn = os.path.join(
             self._working_dir, self._storage_name.zoom)
+        self._target_name = (target.name if target is not None else
+                             self._storage_name.file_id)
         self._logger = logging.getLogger(__name__)
 
     def generate_plots(self, obs_id):
@@ -748,7 +749,7 @@ class CFHTPreview(mc.PreviewVisitor):
 def visit(observation, **kwargs):
     previewer = CFHTPreview(observation.instrument.name,
                             observation.intent, observation.type,
-                            observation.target.name, **kwargs)
+                            observation.target, **kwargs)
     cfht_name = cn.CFHTName(instrument=md.Inst(observation.instrument.name),
                             file_name=previewer.science_file)
     previewer.storage_name = cfht_name

@@ -23,3 +23,4 @@ chmod +x cfht_run_state.sh
 ./cfht_run_state.sh
 ```
 
+Note that the e-transfer application cfhtFileIngest script knows whether or not to compress a file before it is stored at CADC.

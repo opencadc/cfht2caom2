@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="ac848d72-4c0d-48c1-bad0-1c1715875b83" caom2:metaProducer="cfht2caom2/0.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="ac848d72-4c0d-48c1-bad0-1c1715875b83" caom2:metaProducer="cfht2caom2/0.3">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>979412b</caom2:observationID>
   <caom2:metaRelease>2008-03-30T00:00:00.000</caom2:metaRelease>
@@ -43,7 +43,7 @@
     <caom2:ambientTemp>1.56</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="88435d0a-8dd1-49a0-bdaa-01d4fdcc42b9" caom2:metaProducer="cfht2caom2/0.2">
+    <caom2:plane caom2:id="88435d0a-8dd1-49a0-bdaa-01d4fdcc42b9" caom2:metaProducer="cfht2caom2/0.3">
       <caom2:productID>979412b</caom2:productID>
       <caom2:metaRelease>2008-03-30T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2008-03-30T00:00:00.000</caom2:dataRelease>
@@ -57,7 +57,7 @@
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Elixir/</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="75df2d99-49d2-481e-ad7a-cee1c9ce023e" caom2:metaProducer="cfht2caom2/0.2">
+        <caom2:artifact caom2:id="75df2d99-49d2-481e-ad7a-cee1c9ce023e" caom2:metaProducer="cfht2caom2/0.3">
           <caom2:uri>ad:CFHT/979412b.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -70,7 +70,7 @@
             <caom2:part caom2:id="e3999f62-ce1c-4b16-b5d9-e36be95173f0">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="bb6e5217-a7fd-4486-8cfb-c244253e07e8" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="bb6e5217-a7fd-4486-8cfb-c244253e07e8" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -100,7 +100,7 @@
             <caom2:part caom2:id="000af833-a53f-4b9f-a6c4-8a3dd7c3e9bd">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="5a1b7e25-9c1a-43d3-85c4-47a9f17493a9" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="5a1b7e25-9c1a-43d3-85c4-47a9f17493a9" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -130,7 +130,7 @@
             <caom2:part caom2:id="6640c100-c208-46ee-9127-17380e1a6cb9">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="e9e8c766-acb8-42c3-a0c1-e2c62f51fcea" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="e9e8c766-acb8-42c3-a0c1-e2c62f51fcea" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -160,7 +160,7 @@
             <caom2:part caom2:id="2f198623-fcbc-489b-b31a-cdbc8801476a">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="e5f413ce-eb2d-4c1e-96f6-c5d507eff3c8" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="e5f413ce-eb2d-4c1e-96f6-c5d507eff3c8" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -190,7 +190,7 @@
             <caom2:part caom2:id="1ff820cb-6492-421e-8526-50f251c5d01e">
               <caom2:name>5</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="822f1951-d786-408f-a15c-5319c8290999" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="822f1951-d786-408f-a15c-5319c8290999" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -220,7 +220,7 @@
             <caom2:part caom2:id="7b6265bd-b0bf-4e49-84fe-55465c6d89bb">
               <caom2:name>6</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="96a7ae21-df2f-465b-9101-519bb6a30fb5" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="96a7ae21-df2f-465b-9101-519bb6a30fb5" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -250,7 +250,7 @@
             <caom2:part caom2:id="37a1f205-2fd9-4dd8-b4e9-02f69febbb75">
               <caom2:name>7</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="6cfe4f71-7be6-438c-a4b4-0caadcc1512e" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="6cfe4f71-7be6-438c-a4b4-0caadcc1512e" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -280,7 +280,7 @@
             <caom2:part caom2:id="3426ed53-af47-41ff-a278-79d7bbffc132">
               <caom2:name>8</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="f217d0ca-cd74-45af-8bae-7f29de0edac6" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="f217d0ca-cd74-45af-8bae-7f29de0edac6" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -310,7 +310,7 @@
             <caom2:part caom2:id="459398bc-7494-42c0-b648-b695ce250a71">
               <caom2:name>9</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="dc728b37-0844-4b84-8fbc-3a9c0152d3fb" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="dc728b37-0844-4b84-8fbc-3a9c0152d3fb" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -340,7 +340,7 @@
             <caom2:part caom2:id="f132aa52-48c6-4891-aba0-399196f75a52">
               <caom2:name>10</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="51ce3dc5-5d4e-450d-9f73-6749bde35586" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="51ce3dc5-5d4e-450d-9f73-6749bde35586" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -370,7 +370,7 @@
             <caom2:part caom2:id="bde20b42-b371-4b43-98dc-34d37400004a">
               <caom2:name>11</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="b05dc8b5-3921-483d-87c6-6ae08f027cdd" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="b05dc8b5-3921-483d-87c6-6ae08f027cdd" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -400,7 +400,7 @@
             <caom2:part caom2:id="66f39552-3f3a-44e0-8260-fe1896bf304e">
               <caom2:name>12</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="689237bd-b39b-4bbe-8d4a-127381ac2880" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="689237bd-b39b-4bbe-8d4a-127381ac2880" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -430,7 +430,7 @@
             <caom2:part caom2:id="0fae98f0-b01f-459f-85cd-e675b4cdf33c">
               <caom2:name>13</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="3309a340-0d01-4851-9cdf-6dedc0969eea" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="3309a340-0d01-4851-9cdf-6dedc0969eea" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -460,7 +460,7 @@
             <caom2:part caom2:id="37f5f143-4b93-4122-83eb-e9b94b08aad1">
               <caom2:name>14</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="9e6cf906-2abf-4fa5-9468-3def63d70d09" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="9e6cf906-2abf-4fa5-9468-3def63d70d09" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -490,7 +490,7 @@
             <caom2:part caom2:id="3473e917-f5bd-4625-8169-ede3eb25de34">
               <caom2:name>15</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="fa7c85ed-dd2d-4710-b68e-83d2b9ba595d" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="fa7c85ed-dd2d-4710-b68e-83d2b9ba595d" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -520,7 +520,7 @@
             <caom2:part caom2:id="3f1efd7c-870f-476f-9c8e-bdc562c48215">
               <caom2:name>16</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="2dd3fe3f-f91e-4be7-bfa8-02228c5888a3" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="2dd3fe3f-f91e-4be7-bfa8-02228c5888a3" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -550,7 +550,7 @@
             <caom2:part caom2:id="61305bb2-45a8-4452-a119-b88acf1a1d1f">
               <caom2:name>17</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="b2eab1f0-9545-4875-9619-ce65947d2073" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="b2eab1f0-9545-4875-9619-ce65947d2073" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -580,7 +580,7 @@
             <caom2:part caom2:id="aa1bd30c-640e-475e-bc1e-15af87636152">
               <caom2:name>18</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="2875959a-b9af-47c9-9261-02b30f7c2848" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="2875959a-b9af-47c9-9261-02b30f7c2848" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -610,7 +610,7 @@
             <caom2:part caom2:id="08f0d80d-42ad-4b8d-92ee-14956975de34">
               <caom2:name>19</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="749b6655-9873-4d5c-8519-76ea5d0d2482" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="749b6655-9873-4d5c-8519-76ea5d0d2482" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -640,7 +640,7 @@
             <caom2:part caom2:id="aef73188-31b2-4e5c-beca-1b83f6c40083">
               <caom2:name>20</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="9d9d8ced-cecc-4792-adbe-999998cc3693" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="9d9d8ced-cecc-4792-adbe-999998cc3693" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -670,7 +670,7 @@
             <caom2:part caom2:id="c10adc29-4a5b-4879-8ee6-1b9c7daa9866">
               <caom2:name>21</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="d94ff1da-1fd0-43d6-b303-05690c2213e2" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="d94ff1da-1fd0-43d6-b303-05690c2213e2" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -700,7 +700,7 @@
             <caom2:part caom2:id="1e728f00-5e39-400b-9748-6166b03e386c">
               <caom2:name>22</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="8390fcdd-14d5-40d0-85c6-8a9bbbe32408" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="8390fcdd-14d5-40d0-85c6-8a9bbbe32408" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -730,7 +730,7 @@
             <caom2:part caom2:id="93412927-e927-4d96-b5fe-b4eb5f733e3c">
               <caom2:name>23</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="0bca723e-b7c3-41c8-823f-7c26322b060c" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="0bca723e-b7c3-41c8-823f-7c26322b060c" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -760,7 +760,7 @@
             <caom2:part caom2:id="31b7e3dd-2c27-4860-bd6e-3463839a7b13">
               <caom2:name>24</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="e25117cd-7cc0-4e2e-8c0c-14b4110ac311" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="e25117cd-7cc0-4e2e-8c0c-14b4110ac311" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -790,7 +790,7 @@
             <caom2:part caom2:id="aec5ab51-ebf4-4652-9499-48b4f6033d68">
               <caom2:name>25</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="2b4ceacf-8a5a-4bc0-92eb-d8df76c450ab" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="2b4ceacf-8a5a-4bc0-92eb-d8df76c450ab" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -820,7 +820,7 @@
             <caom2:part caom2:id="9ba39e36-f3ef-4261-8980-f9ef335b7a0d">
               <caom2:name>26</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="e6ce06ee-6f99-4a3d-abd9-cfcddb77471b" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="e6ce06ee-6f99-4a3d-abd9-cfcddb77471b" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -850,7 +850,7 @@
             <caom2:part caom2:id="aaed99cf-aa64-4725-95be-342084190d08">
               <caom2:name>27</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="61e310dc-5616-45af-b32c-e32f2be4c4e9" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="61e310dc-5616-45af-b32c-e32f2be4c4e9" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -880,7 +880,7 @@
             <caom2:part caom2:id="131b2810-71ce-44d7-95c7-3229f41ce460">
               <caom2:name>28</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="e251ffc5-12f5-40ed-94c1-4750c95957e9" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="e251ffc5-12f5-40ed-94c1-4750c95957e9" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -910,7 +910,7 @@
             <caom2:part caom2:id="925c6e54-eff9-4e34-9fbb-db9549023745">
               <caom2:name>29</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="12eecff4-4b05-4331-bbe6-75672883382e" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="12eecff4-4b05-4331-bbe6-75672883382e" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -940,7 +940,7 @@
             <caom2:part caom2:id="22e23d3f-df47-429d-8dcb-1e118427ab33">
               <caom2:name>30</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="04a72e6b-a080-457b-a73c-3f1726a8df03" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="04a72e6b-a080-457b-a73c-3f1726a8df03" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -970,7 +970,7 @@
             <caom2:part caom2:id="46b18944-cea1-4cdd-b7e1-90f8e561b62e">
               <caom2:name>31</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="0351bb9a-08bb-4e08-9e16-f409e6bb2e9c" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="0351bb9a-08bb-4e08-9e16-f409e6bb2e9c" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1000,7 +1000,7 @@
             <caom2:part caom2:id="da884cf8-cf2e-4ed3-814d-1bf9be60254c">
               <caom2:name>32</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="f9582f80-e008-41f1-9c28-c15f18bdb973" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="f9582f80-e008-41f1-9c28-c15f18bdb973" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1030,7 +1030,7 @@
             <caom2:part caom2:id="33e87993-5e9e-4a14-a50f-89b848dce1e1">
               <caom2:name>33</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="df40224f-14ca-4b2a-9ddf-0f8a15136447" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="df40224f-14ca-4b2a-9ddf-0f8a15136447" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1060,7 +1060,7 @@
             <caom2:part caom2:id="6d0d0f0d-e386-49e3-ad00-3d513de44011">
               <caom2:name>34</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="aee847c9-13b6-4aac-9f44-55f5f2732c83" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="aee847c9-13b6-4aac-9f44-55f5f2732c83" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1090,7 +1090,7 @@
             <caom2:part caom2:id="5cf3688e-cdfe-4677-902f-c8c8d72a019e">
               <caom2:name>35</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="30a207fd-8a51-4296-baf4-314e5c991ad2" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="30a207fd-8a51-4296-baf4-314e5c991ad2" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -1120,7 +1120,7 @@
             <caom2:part caom2:id="86edd7dd-8f1d-4ca7-8d29-1a41ac5fc59c">
               <caom2:name>36</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="c4368a1e-a72a-4738-bfeb-2ae50c4edc50" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="c4368a1e-a72a-4738-bfeb-2ae50c4edc50" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>

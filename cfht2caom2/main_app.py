@@ -184,7 +184,7 @@ from caom2 import ProductType, DerivedObservation, TypedList, Chunk
 from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
 from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
 from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
-from caom2 import ObservableAxis, CoordError
+from caom2 import ObservableAxis, CoordError, TemporalWCS, CoordFunction1D
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
@@ -251,7 +251,8 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Observation.environment.humidity',
            'get_obs_environment_humidity(header)')
 
-    # TODO title is select title from runid_title where proposal_id = 'runid'
+    # title is select title from runid_title where proposal_id = 'runid'
+    # this obtained from cache.yml now
     bp.clear('Observation.proposal.id')
     bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
     bp.clear('Observation.proposal.pi')
@@ -549,12 +550,13 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     bp.set('Chunk.position.equinox',
            'get_position_equinox_from_0th_header(header)')
 
-    bp.set('Chunk.time.axis.function.delta',
-           'get_spirou_time_refcoord_delta(params)')
-    bp.set('Chunk.time.axis.function.naxis',
-           'get_spirou_time_refcoord_naxis(params)')
-    bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
-    bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
+    if cfht_name.suffix != 'g':
+        bp.set('Chunk.time.axis.function.delta',
+               'get_spirou_time_refcoord_delta(params)')
+        bp.set('Chunk.time.axis.function.naxis',
+               'get_spirou_time_refcoord_naxis(params)')
+        bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
+        bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
 
 
 def _accumulate_wircam_bp(bp, uri, cfht_name):
@@ -615,7 +617,7 @@ def update(observation, **kwargs):
         observation.instrument = cc.copy_instrument(observation.instrument,
                                                     md.Inst.MEGAPRIME.value)
 
-    # fqn is not always defined, ffs
+    # fqn is not always defined
     if uri is not None:
         ignore_scheme, ignore_archive, f_name = mc.decompose_uri(uri)
         cfht_name = cn.CFHTName(
@@ -827,9 +829,13 @@ def update(observation, **kwargs):
                     elif instrument is md.Inst.SPIROU:
                         _update_position_spirou(
                             chunk, headers[idx], observation.observation_id)
+                        _update_spirou_time_g(chunk, headers, cfht_name,
+                                              observation.observation_id)
 
                         if cfht_name.suffix == 's':
                             part.chunks = TypedList(Chunk,)
+                        elif cfht_name.suffix == 'g':
+                            plane.data_product_type = DataProductType.IMAGE
                         # stricter WCS validation
                         chunk.naxis = None
                         if chunk.energy is not None:
@@ -1323,6 +1329,7 @@ def get_obs_sequence_number(params):
 
 def get_obs_type(header):
     result = _get_obstype(header)
+    logging.error(f'result is {result}')
     if result is not None:
         if result == 'FRPTS':
             result = 'FRINGE'
@@ -1536,7 +1543,6 @@ def get_sitelle_time_refcoord_delta(params):
 def get_spirou_exptime(params):
     # caom2IngestSpirou.py, l530+
     header, suffix, uri = _decompose_params(params)
-    result = None
     if suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
         result = header.get('EXPTIME')
     elif suffix == 'p':
@@ -2041,7 +2047,11 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
     run_id = headers[0].get('RUNID')
     if run_id is None:
         run_id = headers[0].get('CRUNID')
-        if run_id is None:
+        # xor
+        if ((run_id is None and not (cfht_name.instrument is md.Inst.SPIROU and
+                                     cfht_name.suffix == 'g')) or
+            (run_id is not None and (cfht_name.instrument is md.Inst.SPIROU and
+                                     cfht_name.suffix == 'g'))):
             idx = 1
 
             logging.warning(f'Resetting the header/blueprint relationship for '
@@ -2244,6 +2254,57 @@ def _update_sitelle_plane(observation, uri):
     logging.debug('End _update_sitelle_plane')
 
 
+def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
+    logging.debug(f'Begin _update_spirou_time_g for {obs_id}')
+    if cfht_name.suffix == 'g':
+        # construct TemporalWCS for 'g' files from the CAOM2 pieces
+        # because the structure of 'g' files is so varied, it's not possible
+        # to hand over even part of the construction to the blueprint.
+        # SF - 22-09-20 - use ETIME
+
+        ref_coord_val = _get_keyword('DATE', headers)
+        ref_coord_mjd = ac.get_datetime(ref_coord_val).value
+
+        if chunk.time is None:
+            chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')),
+                                     timesys='UTC')
+        if chunk.time.axis is None:
+            chunk.time.axis = CoordAxis1D(axis=Axis('TIME', 'd'),
+                                          error=None,
+                                          range=None,
+                                          bounds=None,
+                                          function=None)
+
+        time_index = headers[0].get('ZNAXIS')
+        if time_index is None or time_index == 0:
+            time_index = headers[1].get('ZNAXIS')
+            if time_index is None or time_index == 0:
+                time_index = headers[0].get('NAXIS')
+                if time_index is None or time_index == 0:
+                    time_index = headers[1].get('NAXIS')
+        naxis_key = f'ZNAXIS{time_index}'
+        time_naxis = _get_keyword(naxis_key, headers)
+        if time_naxis is None:
+            naxis_key = f'NAXIS{time_index}'
+            time_naxis = _get_keyword(naxis_key, headers)
+
+        ref_coord = RefCoord(pix=0.5,
+                             val=mc.to_float(ref_coord_mjd))
+
+        e_time = _get_keyword('ETIME', headers)
+        if e_time is None:
+            logging.warning(f'No exposure found for '
+                            f'{cfht_name.file_name}. No Temporal WCS.')
+        else:
+            chunk.time.exposure = e_time / 1000.0
+            chunk.time.resolution = chunk.time.exposure
+            time_delta = chunk.time.exposure / 86400.0
+            chunk.time.axis.function = CoordFunction1D(
+                naxis=time_naxis, delta=time_delta, ref_coord=ref_coord)
+
+    logging.debug(f'End _update_spirou_time_g for {obs_id}')
+
+
 def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
     logging.debug(f'Begin _update_wircam_position_o for {obs_id}')
     part_index = mc.to_int(part.name)
@@ -2363,7 +2424,6 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
         part_header = headers[part_index]
 
         if chunk.time is None:
-            from caom2 import TemporalWCS
             chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')),
                                      timesys='UTC')
 
@@ -2375,12 +2435,10 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
                                           function=None)
 
         if chunk.time.axis.error is None:
-            from caom2 import CoordError
             chunk.time.axis.error = CoordError(rnder=0.0000001,
                                                syser=0.0000001)
 
         if chunk.time.axis.function is None:
-            from caom2 import CoordFunction1D
             ref_coord = RefCoord(pix=0.5,
                                  val=mc.to_float(ref_coord_val))
 
@@ -2487,6 +2545,13 @@ def _get_uris(args):
     else:
         raise mc.CadcException(
             f'Could not define uri from these args {args}')
+    return result
+
+
+def _get_keyword(lookup, headers):
+    result = headers[0].get(lookup)
+    if result is None:
+        result = headers[1].get(lookup)
     return result
 
 

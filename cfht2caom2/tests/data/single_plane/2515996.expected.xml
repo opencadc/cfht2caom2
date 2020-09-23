@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="b6724efa-cfcb-4ca3-9e98-2b0dda375562" caom2:lastModified="2020-09-10T16:10:41.055" caom2:maxLastModified="2020-09-10T16:11:09.791" caom2:metaChecksum="md5:8c9a55cdb8b5dcf783041b73abbf11f9" caom2:accMetaChecksum="md5:db3c8afb11764c07a7afe5ff5b077da5" caom2:metaProducer="cfht2caom2/0.3">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="a23779b1-7cf1-4bd9-aabf-e5fa812ca953" caom2:lastModified="2020-09-22T00:06:19.571" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:370ab58175721947e8526fa1b006fdbc" caom2:accMetaChecksum="md5:dc8e70bbc88d8e910b9218e431a5197c" caom2:metaProducer="cfht2caom2/0.3">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2513728</caom2:observationID>
-  <caom2:metaRelease>2020-09-10T15:38:31.000</caom2:metaRelease>
-  <caom2:sequenceNumber>2513728</caom2:sequenceNumber>
+  <caom2:observationID>2515996</caom2:observationID>
+  <caom2:metaRelease>2020-09-21T15:25:20.000</caom2:metaRelease>
+  <caom2:sequenceNumber>2515996</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
@@ -18,9 +18,9 @@
     <caom2:name>SPIRou</caom2:name>
   </caom2:instrument>
   <caom2:planes>
-    <caom2:plane caom2:id="e23d9dd2-f98e-436f-81ef-107fb75b5192" caom2:metaProducer="cfht2caom2/0.3">
-      <caom2:productID>2513728g</caom2:productID>
-      <caom2:metaRelease>2020-09-10T15:38:31.000</caom2:metaRelease>
+    <caom2:plane caom2:id="3c573557-8511-45dd-b009-c943cdc67117" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:59189f795cd6a99c9189981f5af38bb5" caom2:accMetaChecksum="md5:0c228833eed3c42a2b8500bee0a3dafc" caom2:metaProducer="cfht2caom2/0.3">
+      <caom2:productID>2515996g</caom2:productID>
+      <caom2:metaRelease>2020-09-21T15:25:20.000</caom2:metaRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>
@@ -30,20 +30,21 @@
         <caom2:reference>https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_pipeline.php</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="9052c38f-66a9-4fb1-82df-2b4ab6bf8ed5" caom2:metaProducer="cfht2caom2/0.3">
-          <caom2:uri>ad:CFHT/2513728g.fits</caom2:uri>
+        <caom2:artifact caom2:id="091a2da0-04e0-423e-a679-0a0358e46561" caom2:lastModified="2020-09-21T16:10:12.259" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:96c2aeeaa17a02b89771328645ae9168" caom2:accMetaChecksum="md5:e3e1de65156918d9eb14092edc470423" caom2:metaProducer="cfht2caom2/0.3">
+          <caom2:uri>ad:CFHT/2515996g.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentChecksum>md5:5d50af847c43a86b1086b619cbc93b7b</caom2:contentChecksum>
           <caom2:parts>
-            <caom2:part caom2:id="8a5df0fe-bd4b-449c-b9f5-469fc5da2eeb">
+            <caom2:part caom2:id="c8baf647-b6eb-450c-bab1-f1453c5ddecc" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:848565d894c1b99fbcca64277bebc94d" caom2:accMetaChecksum="md5:1201e11b93ada8e0a7c9312e0317855a">
               <caom2:name>0</caom2:name>
               <caom2:chunks/>
             </caom2:part>
-            <caom2:part caom2:id="7c1e0a35-6454-4935-9083-21d7dced4f8d">
+            <caom2:part caom2:id="92315344-15a5-4de5-bf4b-84ec2210c9c1" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:34d3097a04963ea0fe03c0a95013bcf0" caom2:accMetaChecksum="md5:b52ded1a2d8d9ee7b132623fbb52253f">
               <caom2:name>IMAGE DATA</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="6a78710c-6694-4c73-b6d9-0ec83aaca4f4" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="1e06ecfe-81e8-4669-99f0-152de1d4bf91" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:1c822f2bda104fec7acabcc3e4bf617e" caom2:accMetaChecksum="md5:8c712db8ddfe259a75b6a05580882b5d" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -75,25 +76,25 @@
                         <caom2:cunit>d</caom2:cunit>
                       </caom2:axis>
                       <caom2:function>
-                        <caom2:naxis>493</caom2:naxis>
-                        <caom2:delta>6.944444444444444e-07</caom2:delta>
+                        <caom2:naxis>26049</caom2:naxis>
+                        <caom2:delta>1.1574074074074074e-07</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>59102.65174768519</caom2:val>
+                          <caom2:val>59113.642592592594</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.06</caom2:exposure>
-                    <caom2:resolution>0.06</caom2:resolution>
+                    <caom2:exposure>0.01</caom2:exposure>
+                    <caom2:resolution>0.01</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="566e0d3d-9182-46d0-afa3-f1e20517efd5">
+            <caom2:part caom2:id="912f030a-c125-4eb3-9d02-4cbc8acf122f" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:fa8a947a16d9b28d237b79f3516fab69" caom2:accMetaChecksum="md5:5002cee731aaa8c1e282545691b53707">
               <caom2:name>METADATA</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="81f1be50-0219-4415-9899-28cde537591f" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="f3b1f8dc-1b5a-4bc1-b35c-20331bc1d65f" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:d41d6813d9464b05c8cd2d063263cd0a" caom2:accMetaChecksum="md5:bea09589b518bd8921bd560a4fc84a5b" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -125,17 +126,17 @@
                         <caom2:cunit>d</caom2:cunit>
                       </caom2:axis>
                       <caom2:function>
-                        <caom2:naxis>493</caom2:naxis>
-                        <caom2:delta>6.944444444444444e-07</caom2:delta>
+                        <caom2:naxis>26049</caom2:naxis>
+                        <caom2:delta>1.1574074074074074e-07</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>59102.65174768519</caom2:val>
+                          <caom2:val>59113.642592592594</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.06</caom2:exposure>
-                    <caom2:resolution>0.06</caom2:resolution>
+                    <caom2:exposure>0.01</caom2:exposure>
+                    <caom2:resolution>0.01</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>

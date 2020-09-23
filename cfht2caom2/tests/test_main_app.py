@@ -194,7 +194,7 @@ def _identify_inst_mock(uri):
               md.Inst.ESPADONS: ['2460606', '769448b', '1605366x', '881395a',
                                  '2238502i'],
               md.Inst.SPIROU: ['2401727a', '2401712f', '2401728c', '2401734',
-                               '2401710d', '2513728g'],
+                               '2401710d', '2513728g', '2515996g'],
               md.Inst.WIRCAM: ['840066', '1019191', '786586', '1694261']}
     result = None
     for key, value in lookup.items():

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="f18cb495-3abe-49c9-a289-be4c58588592" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-09T02:35:59.622" caom2:metaChecksum="md5:136737af388a87bbb710828d2c67e884" caom2:accMetaChecksum="md5:129603571e269baa55f455aa269b054f" caom2:metaProducer="cfht2caom2/0.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="f18cb495-3abe-49c9-a289-be4c58588592" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-09T02:35:59.622" caom2:metaChecksum="md5:136737af388a87bbb710828d2c67e884" caom2:accMetaChecksum="md5:129603571e269baa55f455aa269b054f" caom2:metaProducer="cfht2caom2/0.3">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2477185p</caom2:observationID>
   <caom2:metaRelease>2020-02-24T00:00:00.000</caom2:metaRelease>
@@ -21,7 +21,7 @@
     <caom2:name>SITELLE</caom2:name>
   </caom2:instrument>
   <caom2:planes>
-    <caom2:plane caom2:id="3930428c-ea51-436c-b7d8-821dd31a4002" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-09T02:35:59.622" caom2:metaChecksum="md5:2a1eecc1d9196c69e6f3b47aedb942ea" caom2:accMetaChecksum="md5:5caad5f6c52416df302953ae5ab4293c" caom2:metaProducer="cfht2caom2/0.2">
+    <caom2:plane caom2:id="3930428c-ea51-436c-b7d8-821dd31a4002" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-09T02:35:59.622" caom2:metaChecksum="md5:2a1eecc1d9196c69e6f3b47aedb942ea" caom2:accMetaChecksum="md5:5caad5f6c52416df302953ae5ab4293c" caom2:metaProducer="cfht2caom2/0.3">
       <caom2:productID>2477185v</caom2:productID>
       <caom2:metaRelease>2020-02-24T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2021-03-20T00:00:00.000</caom2:dataRelease>
@@ -36,7 +36,7 @@
         <caom2:lastExecuted>2020-03-05T00:00:00.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="85ab007b-1415-4c09-959a-ebb591b17000" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-07T17:57:00.767" caom2:metaChecksum="md5:b2c23edc85b45ea1d0ff51459873fe41" caom2:accMetaChecksum="md5:cc28fb9e05027e8835c68cd687f162b7" caom2:metaProducer="cfht2caom2/0.2">
+        <caom2:artifact caom2:id="85ab007b-1415-4c09-959a-ebb591b17000" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-07T17:57:00.767" caom2:metaChecksum="md5:b2c23edc85b45ea1d0ff51459873fe41" caom2:accMetaChecksum="md5:cc28fb9e05027e8835c68cd687f162b7" caom2:metaProducer="cfht2caom2/0.3">
           <caom2:uri>ad:CFHT/2477185v.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -46,7 +46,7 @@
             <caom2:part caom2:id="92843ac1-ca2f-4ff4-a9c3-84915df2662c" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-07T17:57:00.767" caom2:metaChecksum="md5:fcf8793011ebd9baaf7e1b49a044c3fe" caom2:accMetaChecksum="md5:bbece3dc42ba792b89fead0dd610ab30">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="21b7b5cb-4889-4262-bcf2-84c305b78a25" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-07T17:57:00.767" caom2:metaChecksum="md5:edfe14671dbc6a59ff14dfb889091e11" caom2:accMetaChecksum="md5:2bcd3201a6007982b12bc79652941114" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="21b7b5cb-4889-4262-bcf2-84c305b78a25" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-07T17:57:00.767" caom2:metaChecksum="md5:edfe14671dbc6a59ff14dfb889091e11" caom2:accMetaChecksum="md5:2bcd3201a6007982b12bc79652941114" caom2:metaProducer="cfht2caom2/0.3">
                   <caom2:naxis>2</caom2:naxis>
                   <caom2:positionAxis1>2</caom2:positionAxis1>
                   <caom2:positionAxis2>1</caom2:positionAxis2>
