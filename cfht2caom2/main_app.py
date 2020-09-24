@@ -1329,7 +1329,6 @@ def get_obs_sequence_number(params):
 
 def get_obs_type(header):
     result = _get_obstype(header)
-    logging.error(f'result is {result}')
     if result is not None:
         if result == 'FRPTS':
             result = 'FRINGE'
