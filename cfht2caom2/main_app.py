@@ -251,7 +251,8 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Observation.environment.humidity',
            'get_obs_environment_humidity(header)')
 
-    # TODO title is select title from runid_title where proposal_id = 'runid'
+    # title is select title from runid_title where proposal_id = 'runid'
+    # this obtained from cache.yml now
     bp.clear('Observation.proposal.id')
     bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
     bp.clear('Observation.proposal.pi')
@@ -616,7 +617,7 @@ def update(observation, **kwargs):
         observation.instrument = cc.copy_instrument(observation.instrument,
                                                     md.Inst.MEGAPRIME.value)
 
-    # fqn is not always defined, ffs
+    # fqn is not always defined
     if uri is not None:
         ignore_scheme, ignore_archive, f_name = mc.decompose_uri(uri)
         cfht_name = cn.CFHTName(
@@ -2045,8 +2046,11 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
     run_id = headers[0].get('RUNID')
     if run_id is None:
         run_id = headers[0].get('CRUNID')
-        if (run_id is None and (cfht_name.instrument is not md.Inst.SPIROU and
-                cfht_name.suffix != 'g')):
+        # xor
+        if ((run_id is None and not (cfht_name.instrument is md.Inst.SPIROU and
+                                     cfht_name.suffix == 'g')) or
+            (run_id is not None and (cfht_name.instrument is md.Inst.SPIROU and
+                                     cfht_name.suffix == 'g'))):
             idx = 1
 
             logging.warning(f'Resetting the header/blueprint relationship for '
@@ -2263,16 +2267,12 @@ def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
         if chunk.time is None:
             chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')),
                                      timesys='UTC')
-
         if chunk.time.axis is None:
             chunk.time.axis = CoordAxis1D(axis=Axis('TIME', 'd'),
                                           error=None,
                                           range=None,
                                           bounds=None,
                                           function=None)
-
-        ref_coord = RefCoord(pix=0.5,
-                             val=mc.to_float(ref_coord_mjd))
 
         time_index = headers[0].get('ZNAXIS')
         if time_index is None or time_index == 0:
@@ -2286,6 +2286,9 @@ def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
         if time_naxis is None:
             naxis_key = f'NAXIS{time_index}'
             time_naxis = _get_keyword(naxis_key, headers)
+
+        ref_coord = RefCoord(pix=0.5,
+                             val=mc.to_float(ref_coord_mjd))
 
         e_time = _get_keyword('ETIME', headers)
         if e_time is None:
@@ -2420,7 +2423,6 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
         part_header = headers[part_index]
 
         if chunk.time is None:
-            from caom2 import TemporalWCS
             chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')),
                                      timesys='UTC')
 
@@ -2432,12 +2434,10 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
                                           function=None)
 
         if chunk.time.axis.error is None:
-            from caom2 import CoordError
             chunk.time.axis.error = CoordError(rnder=0.0000001,
                                                syser=0.0000001)
 
         if chunk.time.axis.function is None:
-            from caom2 import CoordFunction1D
             ref_coord = RefCoord(pix=0.5,
                                  val=mc.to_float(ref_coord_val))
 
@@ -2650,5 +2650,5 @@ def cfht_main_app():
     except Exception as e:
         logging.error(f'Failed {APPLICATION} execution for {args}.')
         tb = traceback.format_exc()
-        logging.error(tb)
+        logging.debug(tb)
         sys.exit(-1)

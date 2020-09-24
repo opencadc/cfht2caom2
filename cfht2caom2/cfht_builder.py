@@ -119,14 +119,16 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             else:
                 if self._config.use_local_files:
                     cwd = os.getcwd()
-                    headers = fits2caom2.get_cadc_headers(f'file://{cwd}/{entry}')
+                    headers = fits2caom2.get_cadc_headers(
+                        f'file://{cwd}/{entry}')
                 else:
                     headers_str = mc.get_cadc_headers_client(
                         self._config.archive, entry, self._data_client)
                     headers = ac.make_headers_from_string(headers_str)
 
             instrument = CFHTBuilder.get_instrument(headers, entry)
-            result = cn.CFHTName(file_name=entry, instrument=instrument)
+            result = cn.CFHTName(file_name=entry, instrument=instrument,
+                                 entry=entry)
         return result
 
     @staticmethod
