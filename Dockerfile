@@ -46,12 +46,11 @@ RUN pip install aplpy \
 
 ARG OPENCADC_BRANCH=master
 ARG OPENCADC_REPO=opencadc
-ARG OMC_REPO=opencadc-metadata-curation
 
-RUN git clone https://github.com/${OMC_REPO}/caom2pipe.git && \
+RUN git clone https://github.com/${OPENCADC_REPO}/caom2pipe.git && \
     pip install ./caom2pipe
 
-RUN git clone https://github.com/${OMC_REPO}/cfht2caom2.git && \
+RUN git clone https://github.com/${OPENCADC_REPO}/cfht2caom2.git && \
     cp ./cfht2caom2/scripts/config.yml / && \
     cp ./cfht2caom2/scripts/cache.yml / && \
     cp ./cfht2caom2/scripts/docker-entrypoint.sh / && \
