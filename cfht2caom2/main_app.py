@@ -350,8 +350,6 @@ def accumulate_bp(bp, uri, instrument):
         bp.set('Chunk.time.axis.error.syser', 0.0000001)
         bp.set('Chunk.time.axis.function.naxis', 1)
 
-    # TODO - remove this declaration
-    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     # TODO - this is really really wrong that is_simple is not sufficient
     # to make the distinction between the appropriate implementations.
     if cfht_name.is_simple and not cfht_name.is_master_cal:
