@@ -99,6 +99,13 @@ def test_project_titles_cache(query_mock):
     assert test_result == 'Revealing the origin of rprocess elements from ' \
                           'the renhanced stars', 'wrong result'
 
+    test_run_id = '19BS10'
+    test_result = test_subject.get_title(test_run_id)
+    assert test_result is not None, f'expect a result {test_run_id}'
+    assert test_result == 'RVxTESS: Photometric and Spectropolarimetric ' \
+                          'studies of M dwarfs with simultaneous TESS and ' \
+                          'CFHT/SPIRou Observations', 'wrong result'
+
 
 def _mock_query(url):
     class Object(object):

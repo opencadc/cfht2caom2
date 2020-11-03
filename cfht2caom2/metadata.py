@@ -115,6 +115,9 @@ INSTRUMENT_REPAIR_LOOKUP = {'WIRCam': 'Wircam'}
 # Use these values for SITELLE filters:
 # http://www.cfht.hawaii.edu/Instruments/Sitelle/SITELLE_filters.php
 
+# SGw - 13-12-19
+# It's fine to use SVO values for CFHT filters.
+
 # keys in the cache:
 FILTER_REPAIR_CACHE = 'filter_repair_lookup'
 ENERGY_DEFAULTS_CACHE = 'energy_defaults'
@@ -184,7 +187,8 @@ class CFHTCache(mc.Cache):
                     if count == 5:
                         title = td.text
                         updated_content = True
-                        self._project_titles[program_id] = title
+                        self._project_titles[program_id] = \
+                            CFHTCache.clean(title)
                         break
                     count += 1
         if updated_content:
@@ -201,7 +205,10 @@ class CFHTCache(mc.Cache):
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
                 result = self._project_titles.get(run_id)
-        return result
+        temp = None
+        if result is not None:
+            temp = CFHTCache.clean(result)
+        return temp
 
     def get_program(self, run_id):
         result = None
@@ -214,6 +221,12 @@ class CFHTCache(mc.Cache):
     @staticmethod
     def semester(run_id):
         return run_id[:3]
+
+    @staticmethod
+    def clean(value):
+        """Remove web page formatting artefacts."""
+        return re.sub('\s+', ' ', value.replace('\r\n\t', ' ').replace(
+            '\r\n', ' ').replace('\\ ', ''))
 
 
 def reverse_lookup(value_to_find):
