@@ -459,23 +459,16 @@ class CFHTPreview(mc.PreviewVisitor):
         return count
 
     def _do_spirou_bintable(self):
+        label = f'{self._storage_name.product_id}: {self._target_name}'
+
         df = Table.read(self._science_fqn)
         plt.figure(figsize=(10.24, 10.24), dpi=100)
         plt.plot(df['Velocity'], df['Combined'])
-        plt.xlabel('km/s')
-        plt.ylabel('Combined order')
+        plt.title(label, weight='bold', color='m')
+        plt.xlabel('Radial Velocity (km/s)')
+        plt.ylabel('Weighted mean echelle order')
         plt.savefig(self._preview_fqn, format='jpg')
-        self.add_to_delete(self._preview_fqn)
-        count = 1
-        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW, ReleaseType.DATA)
-        count += self._gen_thumbnail()
-        if count == 2:
-            self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL,
-                             ReleaseType.META)
-            self.add_to_delete(self._thumb_fqn)
-        return count
+        return self._save_figure()
 
     def _do_spirou_intensity_spectrum(self):
 
@@ -522,18 +515,7 @@ class CFHTPreview(mc.PreviewVisitor):
                       22990.0, 'Stokes spectrum')
         plt.tight_layout()
         plt.savefig(self._preview_fqn, format='jpg')
-        self.add_to_delete(self._preview_fqn)
-        count = 1
-        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW, ReleaseType.DATA)
-        count += self._gen_thumbnail()
-        if count == 2:
-            self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL,
-                             ReleaseType.META)
-            self.add_to_delete(self._thumb_fqn)
-
-        return count
+        return self._save_figure()
 
     def _exec_cmd_chdir(self, temp_file, cmd):
         orig_dir = os.getcwd()
@@ -767,6 +749,19 @@ class CFHTPreview(mc.PreviewVisitor):
                   zip(a.shape, new_shape)]
         self._logger.debug(slices)
         return a[slices]
+
+    def _save_figure(self):
+        self.add_to_delete(self._preview_fqn)
+        count = 1
+        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+                         ProductType.PREVIEW, ReleaseType.DATA)
+        count += self._gen_thumbnail()
+        if count == 2:
+            self.add_preview(self._storage_name.thumb_uri,
+                             self._storage_name.thumb, ProductType.THUMBNAIL,
+                             ReleaseType.META)
+            self.add_to_delete(self._thumb_fqn)
+        return count
 
 
 def visit(observation, **kwargs):

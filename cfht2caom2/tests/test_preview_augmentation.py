@@ -110,8 +110,7 @@ def test_preview_augment():
             ['1001063b.fits.gz'],
         'visit_obs_start_spirou.xml': ['2401734o.fits', '2401734e.fits',
                                        '2401734r.fits', '2401734s.fits',
-                                       '2401734t.fits']
-                                       # '2401734t.fits', '2401734v.fits']
+                                       '2401734t.fits', '2401734v.fits']
     }
 
     test_checksums = {
