@@ -76,6 +76,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from astropy.io import fits
+from astropy.table import Table
 from PIL import Image
 
 from caom2 import ProductType, ReleaseType, ObservationIntentType
@@ -116,8 +117,11 @@ class CFHTPreview(mc.PreviewVisitor):
               self._storage_name.suffix in ['i', 'p']):
             count = self._do_espadons_science()
         elif (self._instrument is md.Inst.SPIROU and
-              self._storage_name.suffix in ['e', 'p', 's', 't']):
-            count = self._do_spirou_intensity_spectrum()
+              self._storage_name.suffix in ['e', 'p', 's', 't', 'v']):
+            if self._storage_name.suffix == 'v':
+                count = self._do_spirou_bintable()
+            else:
+                count = self._do_spirou_intensity_spectrum()
         else:
             count = self._do_ds9_prev(obs_id)
         return count
@@ -454,6 +458,18 @@ class CFHTPreview(mc.PreviewVisitor):
             self.add_to_delete(self._zoom_fqn)
         return count
 
+    def _do_spirou_bintable(self):
+        label = f'{self._storage_name.product_id}: {self._target_name}'
+
+        df = Table.read(self._science_fqn)
+        plt.figure(figsize=(10.24, 10.24), dpi=100)
+        plt.plot(df['Velocity'], df['Combined'])
+        plt.title(label, weight='bold', color='m')
+        plt.xlabel('Radial Velocity (km/s)')
+        plt.ylabel('Weighted mean echelle order')
+        plt.savefig(self._preview_fqn, format='jpg')
+        return self._save_figure()
+
     def _do_spirou_intensity_spectrum(self):
 
         spirou = fits.open(self._science_fqn)
@@ -499,18 +515,7 @@ class CFHTPreview(mc.PreviewVisitor):
                       22990.0, 'Stokes spectrum')
         plt.tight_layout()
         plt.savefig(self._preview_fqn, format='jpg')
-        self.add_to_delete(self._preview_fqn)
-        count = 1
-        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
-                         ProductType.PREVIEW, ReleaseType.DATA)
-        count += self._gen_thumbnail()
-        if count == 2:
-            self.add_preview(self._storage_name.thumb_uri,
-                             self._storage_name.thumb, ProductType.THUMBNAIL,
-                             ReleaseType.META)
-            self.add_to_delete(self._thumb_fqn)
-
-        return count
+        return self._save_figure()
 
     def _exec_cmd_chdir(self, temp_file, cmd):
         orig_dir = os.getcwd()
@@ -744,6 +749,19 @@ class CFHTPreview(mc.PreviewVisitor):
                   zip(a.shape, new_shape)]
         self._logger.debug(slices)
         return a[slices]
+
+    def _save_figure(self):
+        self.add_to_delete(self._preview_fqn)
+        count = 1
+        self.add_preview(self._storage_name.prev_uri, self._storage_name.prev,
+                         ProductType.PREVIEW, ReleaseType.DATA)
+        count += self._gen_thumbnail()
+        if count == 2:
+            self.add_preview(self._storage_name.thumb_uri,
+                             self._storage_name.thumb, ProductType.THUMBNAIL,
+                             ReleaseType.META)
+            self.add_to_delete(self._thumb_fqn)
+        return count
 
 
 def visit(observation, **kwargs):
