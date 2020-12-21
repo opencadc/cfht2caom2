@@ -106,6 +106,13 @@ def test_project_titles_cache(query_mock):
                           'studies of M dwarfs with simultaneous TESS and ' \
                           'CFHT/SPIRou Observations', 'wrong result'
 
+    test_run_id = '14BC11'
+    test_result = test_subject.get_title(test_run_id)
+    assert test_result is not None, f'expect a result {test_run_id}'
+    assert test_result == 'Characterizing the magnetic fields of two ' \
+                          'recently discovered rare Sigma Ori E type ' \
+                          'stars', 'wrong result'
+
 
 def _mock_query(url):
     class Object(object):

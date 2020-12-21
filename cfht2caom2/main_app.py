@@ -384,6 +384,7 @@ def _accumulate_espadons_bp(bp, cfht_name):
     """
     logging.debug('Begin _accumulate_espadons_bp.')
 
+    bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     bp.set('Plane.provenance.keywords',
@@ -489,6 +490,8 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     """Configure the SPIRou-specific ObsBlueprint at the CAOM model
     Observation level.
     """
+    bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+
     if cfht_name.suffix == 'r':
         pass
     elif cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
@@ -504,6 +507,9 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
                'SPIRou_pipeline.php')
         bp.clear('Plane.provenance.version')
         bp.add_fits_attribute('Plane.provenance.version', 'VERSION')
+
+    bp.clear('Plane.provenance.lastExecuted')
+    bp.add_fits_attribute('Plane.provenance.lastExecuted', 'DRSPDATE')
 
     # from caom2IngestSpirou.py, l654
     # CW - Do energy stuff for raw and calibrated data
@@ -1895,6 +1901,17 @@ def _get_filter_md(instrument, filter_name, entry):
     if updated_filter_name is None:
         updated_filter_name = filter_name
     return filter_md, updated_filter_name
+
+
+def _get_gaia_target_id(header):
+    data_release = header.get('GAIADR')
+    catalog_id = header.get('GAIAID')
+    result = None
+    if data_release is not None and catalog_id is not None:
+        result = mc.build_uri(scheme='gaia',
+                              archive=data_release,
+                              file_name=catalog_id)
+    return result
 
 
 def _is_derived(headers, cfht_name, obs_id):

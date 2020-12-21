@@ -302,18 +302,18 @@ def test_preview_augment():
                            test_name.zoom_uri]
             if ((instrument is md.Inst.ESPADONS and test_name.suffix == 'i') or
                     (instrument is md.Inst.SPIROU and
-                     test_name.suffix in ['e', 'p', 's', 't'])):
+                     test_name.suffix in ['e', 'p', 's', 't', 'v'])):
                 check_number = 2
                 end_artifact_count = 3
                 f_name_list = [test_name.prev_uri, test_name.thumb_uri]
 
-            # assert test_result['artifacts'] == check_number, \
-            #     f'artifacts should be added {f_name}'
-            #
-            # if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
-            #     end_artifact_count = 6
-            # assert len(obs.planes[test_name.product_id].artifacts) == \
-            #     end_artifact_count, f'new artifacts {f_name}'
+            assert test_result['artifacts'] == check_number, \
+                f'artifacts should be added {f_name}'
+
+            if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
+                end_artifact_count = 6
+            assert len(obs.planes[test_name.product_id].artifacts) == \
+                end_artifact_count, f'new artifacts {f_name}'
 
             for p in f_name_list:
                 # assert p in \
