@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-7f22-01624056572d" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2019-11-06T03:28:24.652" caom2:metaChecksum="md5:0c7faccdba373979e54a8c69fd33dd7b" caom2:accMetaChecksum="md5:17c9e93d9120602daac590fed232892b" caom2:metaProducer="cfht2caom2/0.3.1">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-7f22-01624056572d" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2019-11-06T03:28:24.652" caom2:metaChecksum="md5:0c7faccdba373979e54a8c69fd33dd7b" caom2:accMetaChecksum="md5:17c9e93d9120602daac590fed232892b" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2115407</caom2:observationID>
   <caom2:metaRelease>2017-06-23T00:00:00.000</caom2:metaRelease>
@@ -43,7 +43,7 @@
     <caom2:ambientTemp>10.81</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="00000000-0000-0000-7f22-016240565e2e" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2019-11-06T03:28:24.652" caom2:metaChecksum="md5:1b82d17994440f77127f6bcd021c738e" caom2:accMetaChecksum="md5:c60b2b56d2dbb61672638c1f632f2c1f" caom2:metaProducer="cfht2caom2/0.3.1">
+    <caom2:plane caom2:id="00000000-0000-0000-7f22-016240565e2e" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2019-11-06T03:28:24.652" caom2:metaChecksum="md5:1b82d17994440f77127f6bcd021c738e" caom2:accMetaChecksum="md5:c60b2b56d2dbb61672638c1f632f2c1f" caom2:metaProducer="cfht2caom2/0.3.2">
       <caom2:productID>2115407c</caom2:productID>
       <caom2:metaRelease>2017-06-23T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2017-06-23T00:00:00.000</caom2:dataRelease>
@@ -57,7 +57,7 @@
         <caom2:reference>http://ascl.net/1409.007</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-7f22-016240565e39" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2018-03-19T22:17:06.433" caom2:metaChecksum="md5:6a527849286ee080c3d9e967d54b5065" caom2:accMetaChecksum="md5:795bca6c4ae0fde4d550f47cb7c9ea2d" caom2:metaProducer="cfht2caom2/0.3.1">
+        <caom2:artifact caom2:id="00000000-0000-0000-7f22-016240565e39" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2018-03-19T22:17:06.433" caom2:metaChecksum="md5:6a527849286ee080c3d9e967d54b5065" caom2:accMetaChecksum="md5:795bca6c4ae0fde4d550f47cb7c9ea2d" caom2:metaProducer="cfht2caom2/0.3.2">
           <caom2:uri>ad:CFHT/2115407c.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -71,7 +71,7 @@
             <caom2:part caom2:id="00000000-0000-0000-7f22-016240565e3d" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2018-03-19T22:17:06.433" caom2:metaChecksum="md5:b0e9e4ee55748923ede65c5fce2c4dc1" caom2:accMetaChecksum="md5:937a31422a7a3ecedcadb230af1312cf">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-7f22-016240565e3f" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2018-03-19T22:17:06.433" caom2:metaChecksum="md5:ec5aa798c34445cb5b8cd99b8fed4226" caom2:accMetaChecksum="md5:6caa67d915722b13e3a54b95e3fbc628" caom2:metaProducer="cfht2caom2/0.3.1">
+                <caom2:chunk caom2:id="00000000-0000-0000-7f22-016240565e3f" caom2:lastModified="2018-03-19T22:17:06.433" caom2:maxLastModified="2018-03-19T22:17:06.433" caom2:metaChecksum="md5:ec5aa798c34445cb5b8cd99b8fed4226" caom2:accMetaChecksum="md5:6caa67d915722b13e3a54b95e3fbc628" caom2:metaProducer="cfht2caom2/0.3.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>

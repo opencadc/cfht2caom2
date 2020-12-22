@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-1c93-015247fad8e0" caom2:lastModified="2017-11-30T03:37:30.060" caom2:maxLastModified="2017-11-30T03:37:30.060" caom2:metaChecksum="md5:a507a56b329ff1b37a782ba6bca0b5c6" caom2:accMetaChecksum="md5:c68df0be538c0df85992ce8a6895a047" caom2:metaProducer="cfht2caom2/0.3.1">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-1c93-015247fad8e0" caom2:lastModified="2017-11-30T03:37:30.060" caom2:maxLastModified="2017-11-30T03:37:30.060" caom2:metaChecksum="md5:a507a56b329ff1b37a782ba6bca0b5c6" caom2:accMetaChecksum="md5:c68df0be538c0df85992ce8a6895a047" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1883829</caom2:observationID>
   <caom2:metaRelease>2016-01-16T00:00:00.000</caom2:metaRelease>
@@ -34,9 +34,9 @@
   <caom2:instrument>
     <caom2:name>ESPaDOnS</caom2:name>
     <caom2:keywords>
-      <caom2:keyword>star+sky,</caom2:keyword>
       <caom2:keyword>R=65,000</caom2:keyword>
       <caom2:keyword>INSTMODE=Spectroscopy,</caom2:keyword>
+      <caom2:keyword>star+sky,</caom2:keyword>
     </caom2:keywords>
   </caom2:instrument>
   <caom2:environment>
@@ -45,7 +45,7 @@
     <caom2:ambientTemp>6.78</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="00000000-0000-0000-1c93-015247faddaa" caom2:lastModified="2016-01-16T01:09:30.220" caom2:maxLastModified="2017-11-30T03:37:30.060" caom2:metaChecksum="md5:58a31656243ef5ad2a52d4b2e0284b5f" caom2:accMetaChecksum="md5:d5b876e6022a97dc04c4f1fd31b8f82c" caom2:metaProducer="cfht2caom2/0.3.1">
+    <caom2:plane caom2:id="00000000-0000-0000-1c93-015247faddaa" caom2:lastModified="2016-01-16T01:09:30.220" caom2:maxLastModified="2017-11-30T03:37:30.060" caom2:metaChecksum="md5:58a31656243ef5ad2a52d4b2e0284b5f" caom2:accMetaChecksum="md5:d5b876e6022a97dc04c4f1fd31b8f82c" caom2:metaProducer="cfht2caom2/0.3.2">
       <caom2:productID>1883829c</caom2:productID>
       <caom2:metaRelease>2016-01-16T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2016-01-15T00:00:00.000</caom2:dataRelease>
@@ -57,7 +57,7 @@
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-1c93-015247faddb0" caom2:lastModified="2017-11-30T03:37:30.060" caom2:maxLastModified="2017-11-30T03:37:30.060" caom2:metaChecksum="md5:efa6a27ca26f930d3b26da6eaca3996b" caom2:accMetaChecksum="md5:7b7575511b7fbfe128568a27a4135ff0" caom2:metaProducer="cfht2caom2/0.3.1">
+        <caom2:artifact caom2:id="00000000-0000-0000-1c93-015247faddb0" caom2:lastModified="2017-11-30T03:37:30.060" caom2:maxLastModified="2017-11-30T03:37:30.060" caom2:metaChecksum="md5:efa6a27ca26f930d3b26da6eaca3996b" caom2:accMetaChecksum="md5:7b7575511b7fbfe128568a27a4135ff0" caom2:metaProducer="cfht2caom2/0.3.2">
           <caom2:uri>ad:CFHT/1883829c.fits.gz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -67,7 +67,7 @@
             <caom2:part caom2:id="00000000-0000-0000-1c93-015247faddb3" caom2:lastModified="2016-01-16T01:09:30.220" caom2:maxLastModified="2016-01-16T01:09:30.220" caom2:metaChecksum="md5:e519d936640c7849248334f6d3672a77" caom2:accMetaChecksum="md5:aacc2c25f94e1ef57614b078889d1e69">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-1c93-015247faddb5" caom2:lastModified="2016-01-16T01:09:30.220" caom2:maxLastModified="2016-01-16T01:09:30.220" caom2:metaChecksum="md5:ddf7fbceedfdf7d5d2859ac9ce435e2b" caom2:accMetaChecksum="md5:4629a1d13807f45851ee2238f708dd0a" caom2:metaProducer="cfht2caom2/0.3.1">
+                <caom2:chunk caom2:id="00000000-0000-0000-1c93-015247faddb5" caom2:lastModified="2016-01-16T01:09:30.220" caom2:maxLastModified="2016-01-16T01:09:30.220" caom2:metaChecksum="md5:ddf7fbceedfdf7d5d2859ac9ce435e2b" caom2:accMetaChecksum="md5:4629a1d13807f45851ee2238f708dd0a" caom2:metaProducer="cfht2caom2/0.3.2">
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
