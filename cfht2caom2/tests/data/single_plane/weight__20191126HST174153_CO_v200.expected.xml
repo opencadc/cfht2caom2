@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="bdd87869-c64f-44f0-80e1-1f9f56989338" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:8f9f5f352090cea5e85d1526789b6106" caom2:accMetaChecksum="md5:e404d91fe3897f7e96f2f09a6fb29d40" caom2:metaProducer="cfht2caom2/0.3">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="bdd87869-c64f-44f0-80e1-1f9f56989338" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:8f9f5f352090cea5e85d1526789b6106" caom2:accMetaChecksum="md5:e404d91fe3897f7e96f2f09a6fb29d40" caom2:metaProducer="cfht2caom2/0.3.1">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>weight__20191126HST174153_CO_v200</caom2:observationID>
   <caom2:metaRelease>2019-11-27T00:00:00.000</caom2:metaRelease>
@@ -31,7 +31,7 @@
     <caom2:ambientTemp>4.07</caom2:ambientTemp>
   </caom2:environment>
   <caom2:planes>
-    <caom2:plane caom2:id="07581d48-1fe3-48a8-ba61-5be6b678737b" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:c62eeab73116425e02ac379acae21e4c" caom2:accMetaChecksum="md5:d25ddb0d4783231e3584a553079ae162" caom2:metaProducer="cfht2caom2/0.3">
+    <caom2:plane caom2:id="07581d48-1fe3-48a8-ba61-5be6b678737b" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:c62eeab73116425e02ac379acae21e4c" caom2:accMetaChecksum="md5:d25ddb0d4783231e3584a553079ae162" caom2:metaProducer="cfht2caom2/0.3.1">
       <caom2:productID>weight__20191126HST174153_CO_v200</caom2:productID>
       <caom2:metaRelease>2019-11-27T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2019-11-27T00:00:00.000</caom2:dataRelease>
@@ -45,7 +45,7 @@
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="7507cf82-c159-4aae-b36b-1d8f6c471e90" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:ad50772673247cecca39a1b9087fb3ef" caom2:accMetaChecksum="md5:e481f7bda53db980b94b06fbf23a660c" caom2:metaProducer="cfht2caom2/0.3">
+        <caom2:artifact caom2:id="7507cf82-c159-4aae-b36b-1d8f6c471e90" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:ad50772673247cecca39a1b9087fb3ef" caom2:accMetaChecksum="md5:e481f7bda53db980b94b06fbf23a660c" caom2:metaProducer="cfht2caom2/0.3.1">
           <caom2:uri>ad:CFHT/weight__20191126HST174153_CO_v200.fits.fz</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -59,7 +59,7 @@
             <caom2:part caom2:id="23a7b714-0937-44f0-b089-1b85b0622ebb" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:b751328c4f8000a5a57136438c4a6b1d" caom2:accMetaChecksum="md5:5599b70f6af813f566330ad9701fcfdf">
               <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="13ea65b1-5145-4a04-b4fc-857e098bb15b" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:1e40867056cfe6ca748b8cf412022035" caom2:accMetaChecksum="md5:c96a1826d18d8254d80feb2fe203752b" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="13ea65b1-5145-4a04-b4fc-857e098bb15b" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:1e40867056cfe6ca748b8cf412022035" caom2:accMetaChecksum="md5:c96a1826d18d8254d80feb2fe203752b" caom2:metaProducer="cfht2caom2/0.3.1">
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
@@ -117,7 +117,7 @@
             <caom2:part caom2:id="7fcd8859-398a-46b5-92c1-1201d4397b3d" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:d23bc813997b371ff26afbc47a0ac62f" caom2:accMetaChecksum="md5:ecc2cdcc17c92fe80413e02710b630e6">
               <caom2:name>2</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="bef90330-7e0b-4738-ba6a-73a2425e9e5a" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:c36571655fadc5492c1c3276e299a14e" caom2:accMetaChecksum="md5:1286ce635f856c0cac34aaa418a54727" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="bef90330-7e0b-4738-ba6a-73a2425e9e5a" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:c36571655fadc5492c1c3276e299a14e" caom2:accMetaChecksum="md5:1286ce635f856c0cac34aaa418a54727" caom2:metaProducer="cfht2caom2/0.3.1">
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
@@ -175,7 +175,7 @@
             <caom2:part caom2:id="d5e25a2b-cbbd-4bac-a78a-af8e91f25986" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:06a4419aa2c7f0f0733c4bb3bf3e4693" caom2:accMetaChecksum="md5:d4fb8878ace384f3f1d56f814634f2bf">
               <caom2:name>3</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="1747f8aa-95de-48fb-9693-54af98ff031f" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:29352361a5cd6131f1e26b85eae7c18a" caom2:accMetaChecksum="md5:3e3e52927d8e64ba489a6a692716c1cc" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="1747f8aa-95de-48fb-9693-54af98ff031f" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:29352361a5cd6131f1e26b85eae7c18a" caom2:accMetaChecksum="md5:3e3e52927d8e64ba489a6a692716c1cc" caom2:metaProducer="cfht2caom2/0.3.1">
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>
@@ -233,7 +233,7 @@
             <caom2:part caom2:id="b63e5a2a-40f4-45e6-8cdd-3516b42c86c7" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:182cb72bac702fad33b13f5200295831" caom2:accMetaChecksum="md5:1a7979f8e1c718f36139dca314888bb5">
               <caom2:name>4</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="88206ad6-15c2-4bab-b5ee-e2ea7904d915" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:4fa285bc113dc7019a3b4b47166b1fb6" caom2:accMetaChecksum="md5:fbc0fa597e1e331a12aea7a9945e62c8" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="88206ad6-15c2-4bab-b5ee-e2ea7904d915" caom2:lastModified="2019-11-27T18:54:36.945" caom2:maxLastModified="2019-11-27T18:54:36.945" caom2:metaChecksum="md5:4fa285bc113dc7019a3b4b47166b1fb6" caom2:accMetaChecksum="md5:fbc0fa597e1e331a12aea7a9945e62c8" caom2:metaProducer="cfht2caom2/0.3.1">
                   <caom2:timeAxis>3</caom2:timeAxis>
                   <caom2:energy>
                     <caom2:axis>

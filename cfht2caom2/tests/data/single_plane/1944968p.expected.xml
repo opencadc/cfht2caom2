@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-d2fe-015f7e11b93a" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T22:26:44.607" caom2:metaChecksum="md5:6044b67c169c760d154fb78160140e0f" caom2:accMetaChecksum="md5:8dd8a7a35b8fe6603fc6e17c34527020" caom2:metaProducer="cfht2caom2/0.3">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-d2fe-015f7e11b93a" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T22:26:44.607" caom2:metaChecksum="md5:6044b67c169c760d154fb78160140e0f" caom2:accMetaChecksum="md5:8dd8a7a35b8fe6603fc6e17c34527020" caom2:metaProducer="cfht2caom2/0.3.1">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1944968p</caom2:observationID>
   <caom2:metaRelease>2016-07-09T00:00:00.000</caom2:metaRelease>
@@ -39,7 +39,7 @@
     </caom2:keywords>
   </caom2:instrument>
   <caom2:planes>
-    <caom2:plane caom2:id="00000000-0000-0000-d2fe-015f7e11c54d" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T22:26:44.607" caom2:metaChecksum="md5:1cc6155d137fac234cbb355958ffb420" caom2:accMetaChecksum="md5:ec9fca9023577df462041385444ede93" caom2:metaProducer="cfht2caom2/0.3">
+    <caom2:plane caom2:id="00000000-0000-0000-d2fe-015f7e11c54d" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T22:26:44.607" caom2:metaChecksum="md5:1cc6155d137fac234cbb355958ffb420" caom2:accMetaChecksum="md5:ec9fca9023577df462041385444ede93" caom2:metaProducer="cfht2caom2/0.3.1">
       <caom2:productID>1944968p</caom2:productID>
       <caom2:metaRelease>2016-07-09T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2017-08-31T00:00:00.000</caom2:dataRelease>
@@ -54,79 +54,79 @@
         <caom2:reference>http://ascl.net/1409.007</caom2:reference>
         <caom2:lastExecuted>2016-08-09T00:00:00.000</caom2:lastExecuted>
         <caom2:inputs>
-          <caom2:planeURI>caom:CFHT/1944986/1944986o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945005/1945005o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945015/1945015o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945034/1945034o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945007/1945007o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945022/1945022o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944994/1944994o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944992/1944992o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945032/1945032o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944987/1944987o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945001/1945001o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945010/1945010o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945002/1945002o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944993/1944993o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945024/1945024o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945008/1945008o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944974/1944974o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945030/1945030o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945012/1945012o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945028/1945028o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945020/1945020o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944990/1944990o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944989/1944989o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944997/1944997o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945029/1945029o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944971/1944971o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944999/1944999o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945006/1945006o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944981/1944981o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944996/1944996o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945009/1945009o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944983/1944983o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944970/1944970o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944969/1944969o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945003/1945003o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945036/1945036o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944978/1944978o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944976/1944976o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944985/1944985o</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/1944980/1944980o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945004/1945004o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945016/1945016o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945034/1945034o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945005/1945005o</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/1944977/1944977o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945019/1945019o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945026/1945026o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944974/1944974o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944971/1944971o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944979/1944979o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945016/1945016o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945029/1945029o</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/1945023/1945023o</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/1945025/1945025o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945035/1945035o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945026/1945026o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944982/1944982o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944984/1944984o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944973/1944973o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944998/1944998o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945019/1945019o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944972/1944972o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945000/1945000o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944975/1944975o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945031/1945031o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944988/1944988o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945027/1945027o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944991/1944991o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944979/1944979o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944968/1944968o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945011/1945011o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945021/1945021o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944995/1944995o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1944985/1944985o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945018/1945018o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945013/1945013o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945033/1945033o</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/1945017/1945017o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944969/1944969o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945007/1945007o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945028/1945028o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945009/1945009o</caom2:planeURI>
           <caom2:planeURI>caom:CFHT/1945014/1945014o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944999/1944999o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945000/1945000o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945027/1945027o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945032/1945032o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944975/1944975o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944984/1944984o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945001/1945001o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945030/1945030o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945017/1945017o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945015/1945015o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945010/1945010o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945022/1945022o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944983/1944983o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945033/1945033o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944992/1944992o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944990/1944990o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944997/1944997o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945036/1945036o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945020/1945020o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944982/1944982o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945024/1945024o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944994/1944994o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944987/1944987o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945011/1945011o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944970/1944970o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945008/1945008o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944986/1944986o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945012/1945012o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944981/1944981o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944978/1944978o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944973/1944973o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945021/1945021o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945013/1945013o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945002/1945002o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944996/1944996o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945004/1945004o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944995/1944995o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945031/1945031o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944972/1944972o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944988/1944988o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944998/1944998o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944968/1944968o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944976/1944976o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944993/1944993o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944989/1944989o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945006/1945006o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945035/1945035o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945003/1945003o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1944991/1944991o</caom2:planeURI>
+          <caom2:planeURI>caom:CFHT/1945018/1945018o</caom2:planeURI>
         </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="00000000-0000-0000-d2fe-015f7e11c557" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T18:50:17.740" caom2:metaChecksum="md5:48778acf9ac560ec97ee75770c54770d" caom2:accMetaChecksum="md5:833769b18da0ba6aa1127a0ef12149a2" caom2:metaProducer="cfht2caom2/0.3">
+        <caom2:artifact caom2:id="00000000-0000-0000-d2fe-015f7e11c557" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T18:50:17.740" caom2:metaChecksum="md5:48778acf9ac560ec97ee75770c54770d" caom2:accMetaChecksum="md5:833769b18da0ba6aa1127a0ef12149a2" caom2:metaProducer="cfht2caom2/0.3.1">
           <caom2:uri>ad:CFHT/1944968p.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
@@ -136,7 +136,7 @@
             <caom2:part caom2:id="00000000-0000-0000-d2fe-015f7e11c559" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T18:50:17.740" caom2:metaChecksum="md5:6598ab2690d11af8c1f8643343fe2497" caom2:accMetaChecksum="md5:be90bd7b24c301201803cf2bb0e67e64">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="00000000-0000-0000-d2fe-015f7e11c55c" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T18:50:17.740" caom2:metaChecksum="md5:6bcadf4889c5c25864deaa2e393fbd83" caom2:accMetaChecksum="md5:fc4c895c29142e171225f3bdd4348148" caom2:metaProducer="cfht2caom2/0.3">
+                <caom2:chunk caom2:id="00000000-0000-0000-d2fe-015f7e11c55c" caom2:lastModified="2017-11-02T18:50:17.740" caom2:maxLastModified="2017-11-02T18:50:17.740" caom2:metaChecksum="md5:6bcadf4889c5c25864deaa2e393fbd83" caom2:accMetaChecksum="md5:fc4c895c29142e171225f3bdd4348148" caom2:metaProducer="cfht2caom2/0.3.1">
                   <caom2:naxis>3</caom2:naxis>
                   <caom2:positionAxis1>1</caom2:positionAxis1>
                   <caom2:positionAxis2>2</caom2:positionAxis2>
@@ -241,74 +241,74 @@
     </caom2:plane>
   </caom2:planes>
   <caom2:members>
-    <caom2:observationURI>caom:CFHT/1945013</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944996</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944972</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945021</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945027</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944990</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944971</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945031</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945033</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945029</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945009</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944994</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944975</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944986</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944968</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945012</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945024</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945005</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945019</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944970</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945022</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944985</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945020</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944969</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945004</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944991</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944984</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945015</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945026</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945003</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945014</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945032</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944987</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1945034</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945035</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945021</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1945016</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944980</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944997</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945036</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944983</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945028</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945010</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944999</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945025</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944982</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944988</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945011</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944995</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945018</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944973</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944993</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944976</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944977</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1945007</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944989</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944979</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945023</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944970</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944985</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945027</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944987</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944977</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945013</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1944978</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1944992</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945017</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945001</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945002</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945000</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1945006</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1945030</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1944981</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944989</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945025</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1944998</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945011</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945006</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945031</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944983</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944972</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945018</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945024</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944993</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945001</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944986</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945022</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945035</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945029</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944999</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944996</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944988</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944982</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945002</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1944974</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944975</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944969</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944994</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944968</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944990</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945000</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944984</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944980</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944992</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944995</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945012</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944997</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945020</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945014</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945028</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945005</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945003</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945017</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944976</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/1945008</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945036</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944991</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945026</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945010</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944973</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944979</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945033</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1944971</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945009</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945023</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945032</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945015</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945019</caom2:observationURI>
+    <caom2:observationURI>caom:CFHT/1945004</caom2:observationURI>
   </caom2:members>
 </caom2:Observation>
