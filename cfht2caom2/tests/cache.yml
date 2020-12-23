@@ -2607,3 +2607,16 @@ program_titles:
   - 08AF97
   - 08BC99
   - 08BF99
+value_repair:
+  Observation.target_position.coordsys:
+    - FKS
+    - FK5
+  Chunk.position.coordsys:
+    - FKS
+    - FK5
+  Observation.target_position.equinox:
+    - 200.0
+    - 2000.0
+  Chunk.position.equinox:
+    - 200.0
+    - 2000.0

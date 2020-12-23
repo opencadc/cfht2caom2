@@ -124,6 +124,7 @@ ENERGY_DEFAULTS_CACHE = 'energy_defaults'
 PROJECT_TITLES_CACHE = 'project_titles'
 # a record of PROGRAM names by PROJECT NAME - useful for A&A
 PROGRAM_TITLES_CACHE = 'program_titles'
+VALUE_REPAIR_CACHE = 'value_repair'
 
 
 class CFHTCache(mc.Cache):
@@ -131,6 +132,7 @@ class CFHTCache(mc.Cache):
         super(CFHTCache, self).__init__()
         self._project_titles = self.get_from(PROJECT_TITLES_CACHE)
         self._program_titles = self.get_from(PROGRAM_TITLES_CACHE)
+        self._value_repair = self.get_from(VALUE_REPAIR_CACHE)
         self._cached_semesters = self._fill_cached_semesters()
         self._logger = logging.getLogger(__name__)
 
@@ -217,6 +219,18 @@ class CFHTCache(mc.Cache):
                 result = key
                 break
         return result
+
+    def get_repair(self, key, value):
+        """Because sometimes keyword values are the result of fat-fingering,
+        fix values that are known to be wrong.
+
+        SF - 22-12-20 - fix the CAOM values, leave the headers be
+        """
+        result = self._value_repair.get(key)
+        repaired = value
+        if result is not None and value == result[0]:
+            repaired = result[1]
+        return repaired
 
     @staticmethod
     def semester(run_id):

@@ -166,6 +166,9 @@ SITELLE 'v' files:
 - so ok to assume sequence number (RUN_ID, which is not in 'v' headers)
   == observationID minus suffix
 
+SF 22-12-20
+- as a general rule, fix typos from header metadata in CAOM2 records
+
 """
 
 import copy
@@ -422,6 +425,8 @@ def _accumulate_espadons_bp(bp, cfht_name):
     bp.set('Chunk.position.axis.function.cd21', 0.0)
     bp.set('Chunk.position.axis.function.cd22', 0.000444)
 
+    bp.add_fits_attribute('Chunk.position.equinox', 'EQUINOX')
+
     bp.set('Chunk.time.axis.function.delta',
            'get_espadons_time_refcoord_delta(params)')
     bp.set('Chunk.time.axis.function.refCoord.val',
@@ -491,6 +496,7 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     Observation level.
     """
     bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+    bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     if cfht_name.suffix == 'r':
         pass
@@ -661,6 +667,17 @@ def update(observation, **kwargs):
     else:
         idx = _update_observation_metadata(observation, headers, cfht_name,
                                            fqn, uri, subject)
+    if (instrument is md.Inst.ESPADONS and
+            observation.target_position is not None):
+        if observation.target_position.equinox is not None:
+            observation.target_position.equinox = md.cache.get_repair(
+                'Observation.target_position.equinox',
+                observation.target_position.equinox)
+        if observation.target_position.coordsys is not None:
+            observation.target_position.coordsys = md.cache.get_repair(
+                'Observation.target_position.coordsys',
+                observation.target_position.coordsys)
+
     ccdbin = headers[idx].get('CCBIN1')
     radecsys = headers[idx].get('RADECSYS')
     ctype1 = headers[idx].get('CTYPE1')
@@ -753,6 +770,17 @@ def update(observation, **kwargs):
                                 chunk.observable_axis = None
                             if chunk.polarization_axis is not None:
                                 chunk.polarization_axis = None
+
+                        if chunk.position is not None:
+                            if chunk.position.equinox is not None:
+                                chunk.position.equinox = md.cache.get_repair(
+                                    'Chunk.position.equinox',
+                                    chunk.position.equinox)
+                            if chunk.position.coordsys is not None:
+                                chunk.position.coordsys = md.cache.get_repair(
+                                    'Chunk.position.coordsys',
+                                    chunk.position.coordsys)
+
                     elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
                         # CW
                         # Ignore position wcs if a calibration file (except 'x'
@@ -1908,6 +1936,8 @@ def _get_gaia_target_id(header):
     catalog_id = header.get('GAIAID')
     result = None
     if data_release is not None and catalog_id is not None:
+        # SF - 17-12-20
+        # format is targetID = gaia:${GAIADR}/${GAIAID}
         result = mc.build_uri(scheme='gaia',
                               archive=data_release,
                               file_name=catalog_id)
@@ -2006,6 +2036,7 @@ def _update_observable(part, chunk, suffix, obs_id):
         dependent_axis = Axis('flux', 'counts')
         dependent = Slice(dependent_axis, 2)
         chunk.observable = ObservableAxis(dependent, independent)
+        chunk.observable_axis = 2
 
         if suffix == 'p' and len(part.chunks) == 1:
             # caom2IngestEspadons.py, l863
