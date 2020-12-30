@@ -114,6 +114,35 @@ def test_project_titles_cache(query_mock):
                           'stars', 'wrong result'
 
 
+def test_get_repair():
+    test_subject = md.cache
+    assert test_subject is not None, 'expect a cache'
+    # successful repair test case
+    test_key = 'Observation.target_position.coordsys'
+    test_value = 'FKS'
+    test_result = test_subject.get_repair(test_key, test_value)
+    assert test_result is not None, 'expect a result'
+    assert test_result == 'FK5', 'wrong result'
+    test_key = 'Chunk.position.equinox'
+    test_value = 200.0
+    test_result = test_subject.get_repair(test_key, test_value)
+    assert test_result is not None, 'expect a result'
+    assert test_result == 2000.0, 'wrong result'
+
+    # no need for repair test case
+    test_key = 'Chunk.position.equinox'
+    test_value = 201.0
+    test_result = test_subject.get_repair(test_key, test_value)
+    assert test_result is not None, 'expect a result'
+    assert test_result == 201.0, 'wrong result'
+
+    # not found test case
+    test_key = 'Not.Found'
+    test_result = test_subject.get_repair(test_key, test_value)
+    assert test_result is not None, 'expect a result'
+    assert test_result == 201.0, 'wrong result'
+
+
 def _mock_query(url):
     class Object(object):
         def __init__(self):
