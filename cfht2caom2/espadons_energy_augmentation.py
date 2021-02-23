@@ -92,13 +92,14 @@ def visit(observation, **kwargs):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if cfht_name.file_uri == artifact.uri:
-                    count += _do_energy(artifact, science_file, working_dir)
+                    count += _do_energy(
+                        artifact, science_file, working_dir, cfht_name)
         logging.info(f'Completed ESPaDOnS energy augmentation for '
                      f'{observation.observation_id}.')
     return {'chunks': count}
 
 
-def _do_energy(artifact, science_file, working_dir):
+def _do_energy(artifact, science_file, working_dir, cfht_name):
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -127,7 +128,7 @@ def _do_energy(artifact, science_file, working_dir):
 
     # read in the complete fits file, including the data
     fqn = f'{working_dir}/{science_file}'
-    logging.info(f'Reading data from {fqn}.')
+    logging.info(f'Reading ESPaDOnS energy data from {fqn}.')
     hdus = ac.read_fits_data(fqn)
     wave = hdus[0].data[0, :]
     axis = Axis('WAVE', 'nm')
@@ -143,5 +144,14 @@ def _do_energy(artifact, science_file, working_dir):
                                resolving_power=resolving_power)
     chunk.energy_axis = 1
     chunk.naxis = hdus[0].header.get('NAXIS')
+    if (chunk.naxis is not None and chunk.naxis == 2 and
+            chunk.observable is not None):
+        chunk.observable_axis = 2
+        chunk.position_axis_1 = None
+        chunk.position_axis_2 = None
+        chunk.time_axis = None
+        chunk.custom_axis = None
+        if cfht_name.suffix != 'p':
+            chunk.polarization_axis = None
     hdus.close()
     return 1
