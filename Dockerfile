@@ -23,11 +23,9 @@ RUN pip install  --no-cache-dir \
         ftputil \
         importlib-metadata \
         PyYAML \
-        pytz \
+        python-dateutil \
         spherical-geometry \
         vos
-
-RUN rm -rf /var/lib/apt/lists/ /tmp/* /var/tmp/*
 
 WORKDIR /usr/src/app
 
@@ -44,17 +42,12 @@ RUN git clone https://github.com/HEASARC/cfitsio && \
 
 ARG OPENCADC_BRANCH=master
 ARG OPENCADC_REPO=opencadc
+ARG PIPE_BRANCH=master
+ARG PIPE_REPO=opencadc
 
-RUN git clone --depth=1 https://github.com/${OPENCADC_REPO}/caom2pipe.git --branch=${OPENCADC_BRANCH} && \
-    rm -rf ./caom2pipe/.git && \
-    pip install ./caom2pipe
+RUN pip install git+https://github.com/${OPENCADC_REPO}/caom2pipe@${OPENCADC_BRANCH}#egg=caom2pipe
 
-RUN git clone --depth=1 https://github.com/${OPENCADC_REPO}/cfht2caom2.git --branch=${OPENCADC_BRANCH} && \
-    rm -rf ./cfht2caom2/.git && \
-    cp ./cfht2caom2/scripts/config.yml / && \
-    cp ./cfht2caom2/scripts/cache.yml / && \
-    cp ./cfht2caom2/scripts/docker-entrypoint.sh / && \
-    pip install ./cfht2caom2
+RUN pip install git+https://github.com/${PIPE_REPO}/cfht2caom2@${PIPE_BRANCH}#egg=cfht2caom2
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
