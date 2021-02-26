@@ -434,8 +434,8 @@ OBSID   =              2401727 / See EXPNUM
 CMPLTEXP=                    1                                                  
 NEXP    =                    1                                                  
 CRUNID  = '18Ap01  '           / Camera run ID                                  
-GAIAID  = '470826482635704064' / Camera run ID
-GAIADR  = 'EDR3    '           / Camera run ID
+GAIAID  = 'Gaia EDR3 470826482635704064' / Camera run ID
+GAIADR  = 'Gais EDR3    '      / Camera run ID
 COMMENT  Reserved space.  This line can be used to add a new FITS card.
 COMMENT  Reserved space.  This line can be used to add a new FITS card.
 COMMENT  Reserved space.  This line can be used to add a new FITS card.         
