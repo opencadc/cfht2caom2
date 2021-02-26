@@ -104,13 +104,13 @@ def test_preview_augment():
         'visit_obs_start_sitelle.xml':
             ['2359320o.fits.fz'],
         'visit_obs_start_espadons.xml':
-            # ['2460606i.fits.gz'],
             ['2460606i.fits.gz', '2460606o.fits.gz'],
         'visit_obs_start_espadons_cal.xml':
             ['1001063b.fits.gz'],
         'visit_obs_start_spirou.xml': ['2401734o.fits', '2401734e.fits',
                                        '2401734r.fits', '2401734s.fits',
-                                       '2401734t.fits', '2401734v.fits']
+                                       '2401734t.fits', '2401734v.fits'],
+        'visit_obs_start_2hdus_mega.xml': ['1821271p.fits.fz']
     }
 
     test_checksums = {

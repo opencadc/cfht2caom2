@@ -305,8 +305,11 @@ class CFHTPreview(mc.PreviewVisitor):
                            f'{self._science_fqn}')
         count = 0
         delete_list = []
-        headers = ac.read_fits_headers(self._science_fqn)
-        num_extensions = headers[0].get('NEXTEND')
+        content = ac.read_fits_data(self._science_fqn)
+        headers = [h.header for h in content]
+        # SF - 26-02-21
+        # use the size of the HDUList
+        num_extensions = len(content)
 
         zoom_science_fqn = self._science_fqn
 
@@ -433,6 +436,7 @@ class CFHTPreview(mc.PreviewVisitor):
         if 'scatter' in self._science_fqn:
             mosaic_param = f'-fits {zoom_science_fqn}[1]'
             zoom_science_fqn = ''
+            pan_param = ''
         elif self._instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
             pan_param = ''
         elif self._instrument is md.Inst.WIRCAM:
