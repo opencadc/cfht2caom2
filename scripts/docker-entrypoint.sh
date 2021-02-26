@@ -2,12 +2,12 @@
 
 if [[ ! -e ${PWD}/cache.yml ]]
 then
-  cp /cache.yml ${PWD}
+  cp /usr/local/bin/cache.yml ${PWD}
 fi
 
 if [[ ! -e ${PWD}/config.yml ]]
 then
-  cp /config.yml ${PWD}
+  cp /usr/local/bin/config.yml ${PWD}
 fi
 
 if [[ ! -e ${PWD}/state.yml ]]; then

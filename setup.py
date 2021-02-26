@@ -43,8 +43,9 @@ VERSION = metadata.get('version', 'none')
 with open(os.path.join(PACKAGENAME, 'version.py'), 'w') as f:
     f.write('version = \'{}\'\n'.format(VERSION))
 
-# Treat nothing in scripts as a script to be installed
-scripts = []
+# Treat everything in scripts except README.md as a script to be installed
+scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))
+           if os.path.basename(fname) != 'README.md']
 
 # Define entry points for command-line scripts
 entry_points = {'console_scripts': []}
