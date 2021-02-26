@@ -29,6 +29,8 @@ RUN pip install  --no-cache-dir \
 
 WORKDIR /usr/src/app
 
+WORKDIR /usr/src/app
+
 RUN git clone https://github.com/HEASARC/cfitsio && \
   cd cfitsio && \
   ./configure --prefix=/usr && \
