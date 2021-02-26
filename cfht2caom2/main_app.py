@@ -387,7 +387,7 @@ def _accumulate_espadons_bp(bp, cfht_name):
     """
     logging.debug('Begin _accumulate_espadons_bp.')
 
-    bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+    # bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     bp.set('Plane.provenance.keywords',
@@ -495,7 +495,7 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     """Configure the SPIRou-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+    # bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     if cfht_name.suffix == 'r':
@@ -1932,15 +1932,21 @@ def _get_filter_md(instrument, filter_name, entry):
 
 
 def _get_gaia_target_id(header):
-    data_release = header.get('GAIADR')
     catalog_id = header.get('GAIAID')
+    # catalog id looks like:
+    # GAIAID  = 'Gaia DR2 470826482635704064'
+    # should look like:
+    # Gaia:DRX/SOURCE_ID
+    # from JJK: 25-02-21
     result = None
-    if data_release is not None and catalog_id is not None:
-        # SF - 17-12-20
-        # format is targetID = gaia:${GAIADR}/${GAIAID}
-        result = mc.build_uri(scheme='gaia',
-                              archive=data_release,
-                              file_name=catalog_id)
+    if catalog_id is not None:
+        bits = catalog_id.split()
+        if len(bits) == 2:
+            result = mc.build_uri(scheme=bits[0],
+                                  archive=bits[1],
+                                  file_name=bits[2])
+        else:
+            logging.warning(f'Unexpected GAIAID value {catalog_id}.')
     return result
 
 
