@@ -495,7 +495,7 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     """Configure the SPIRou-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    # bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+    bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     if cfht_name.suffix == 'r':
@@ -1938,11 +1938,13 @@ def _get_gaia_target_id(header):
     # should look like:
     # Gaia:DRX/SOURCE_ID
     # from JJK: 25-02-21
+    # PD: 01-03-21
+    # should be wary of upper-case letters in schemes, so use 'gaia'
     result = None
     if catalog_id is not None:
         bits = catalog_id.split()
-        if len(bits) == 2:
-            result = mc.build_uri(scheme=bits[0],
+        if len(bits) == 3:
+            result = mc.build_uri(scheme=bits[0].lower(),
                                   archive=bits[1],
                                   file_name=bits[2])
         else:
