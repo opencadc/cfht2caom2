@@ -110,7 +110,7 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
 @patch('cfht2caom2.cfht_builder.CadcDataClient')
 @patch('caom2pipe.execute_composable.CadcDataClient')
 @patch('caom2pipe.manage_composable.query_tap_client')
-@patch('caom2pipe.execute_composable.OrganizeExecutesWithDoOne.do_one')
+@patch('caom2pipe.execute_composable.OrganizeExecutes.do_one')
 def test_run_state(run_mock, tap_mock, data_client_mock,
                    builder_data_mock):
     run_mock.return_value = 0

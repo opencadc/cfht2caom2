@@ -305,8 +305,11 @@ class CFHTPreview(mc.PreviewVisitor):
                            f'{self._science_fqn}')
         count = 0
         delete_list = []
-        headers = ac.read_fits_headers(self._science_fqn)
-        num_extensions = headers[0].get('NEXTEND')
+        content = ac.read_fits_data(self._science_fqn)
+        headers = [h.header for h in content]
+        # SF - 26-02-21
+        # use the size of the HDUList
+        num_extensions = len(content)
 
         zoom_science_fqn = self._science_fqn
 
@@ -382,7 +385,14 @@ class CFHTPreview(mc.PreviewVisitor):
         # the data acquisition. A proper one needs processing which is often
         # not done on observations.
         mosaic_param = '-mosaicimage iraf'
-        if self._instrument in [md.Inst.SITELLE, md.Inst.ESPADONS,
+        if 'scatter' in self._science_fqn:
+            # SF 23-02-21
+            # for scatter: just take the first HDU, the headers do not have
+            # the information to display the 36 images as a mosaic. so
+            # basically replacing the -mosaic iraf part and taking [1] for
+            # the hdu
+            mosaic_param = f'-fits {self._science_fqn}[1]'
+        elif self._instrument in [md.Inst.SITELLE, md.Inst.ESPADONS,
                                 md.Inst.SPIROU]:
             mosaic_param = ''
 
@@ -423,7 +433,11 @@ class CFHTPreview(mc.PreviewVisitor):
         zoom_param = '1'
         scope_param = 'global'
         # set zoom parameters
-        if self._instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
+        if 'scatter' in self._science_fqn:
+            mosaic_param = f'-fits {zoom_science_fqn}[1]'
+            zoom_science_fqn = ''
+            pan_param = ''
+        elif self._instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
             pan_param = ''
         elif self._instrument is md.Inst.WIRCAM:
             pan_param = '-pan 484 -484 image'
@@ -436,13 +450,11 @@ class CFHTPreview(mc.PreviewVisitor):
             if num_extensions >= 23:
                 rotate_param = ''
                 mosaic_param = f'-fits {zoom_science_fqn}[23]'
-                zoom_science_fqn = ''
             elif num_extensions >= 14:
                 mosaic_param = f'-fits {zoom_science_fqn}[14]'
-                zoom_science_fqn = ''
             else:
                 mosaic_param = f'-fits {zoom_science_fqn}[1]'
-                zoom_science_fqn = ''
+            zoom_science_fqn = ''
         elif self._instrument is md.Inst.SITELLE:
             pan_param = '-pan -512 1544'
         count += CFHTPreview._gen_image(zoom_science_fqn, geometry,
@@ -771,4 +783,10 @@ def visit(observation, **kwargs):
     cfht_name = cn.CFHTName(instrument=md.Inst(observation.instrument.name),
                             file_name=previewer.science_file)
     previewer.storage_name = cfht_name
-    return previewer.visit(observation, cfht_name)
+    # SF - 23-02-21
+    # No previews for 'frpts' files.
+    if '.frpts.' in previewer.science_file:
+        result = {'artifacts': 0}
+    else:
+        result = previewer.visit(observation, cfht_name)
+    return result
