@@ -77,7 +77,7 @@ import numpy as np
 
 from astropy.io import fits
 from astropy.table import Table
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 from caom2 import ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
@@ -404,6 +404,7 @@ class CFHTPreview(mc.PreviewVisitor):
                                         mosaic_param=mosaic_param,
                                         scale_param=scale_param)
         if count == 1:
+            self._add_title(num_extensions, self._thumb_fqn, 8)
             self.add_preview(self._storage_name.thumb_uri,
                              self._storage_name.thumb, ProductType.THUMBNAIL,
                              ReleaseType.META)
@@ -424,6 +425,7 @@ class CFHTPreview(mc.PreviewVisitor):
                                             mosaic_param=mosaic_param,
                                             scale_param=scale_param)
         if count == 2:
+            self._add_title(num_extensions, self._preview_fqn, offset=2)
             self.add_preview(self._storage_name.prev_uri,
                              self._storage_name.prev, ProductType.PREVIEW,
                              ReleaseType.DATA)
@@ -567,6 +569,31 @@ class CFHTPreview(mc.PreviewVisitor):
         if os.path.exists(save_fqn):
             count = 1
         return count
+
+    def _add_title(self, num_extensions, in_fqn, font_size=16, offset=0):
+        if (self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME] and
+                num_extensions < 36):
+            # SF 02-26-21
+            # add an option to the ds9 command: -grid title text {this file
+            # has only XX HDUs}`, only for MegaPrime files below a threshold
+            # of 36 extensions. I couldn't get ds9 to work, so use PIL
+            # instead.
+            title = f'{self._storage_name.file_name} has only ' \
+                    f'{num_extensions} HDUs'
+            image = Image.open(in_fqn)
+            width, height = image.size
+            draw = ImageDraw.Draw(image)
+            font = ImageFont.truetype(
+                '/usr/local/lib/python3.8/site-packages/matplotlib/mpl-data/'
+                'fonts/ttf/DejaVuSans-Bold.ttf', font_size)
+            text_width, text_height = draw.textsize(title, font=font)
+            text_length = draw.textlength(title)
+            margin = 10
+            x = width / 2 - text_length / 2 - margin * offset
+            y = text_height + margin
+            # text is black
+            draw.text((x, y), title, (0, 0, 0), font=font)
+            image.save(in_fqn)
 
     @staticmethod
     def _gen_square(f_name):

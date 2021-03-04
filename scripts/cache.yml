@@ -953,6 +953,18 @@ program_titles:
   - 20BP97
   - 20BP98
   - 20BP99
+  - 21AP30
+  - 21AP97
+  - 21AP98
+  - 21AP99
+  - 21BP30
+  - 21BP97
+  - 21BP98
+  - 21BP99
+  - 22AP30
+  - 22AP97
+  - 22AP98
+  - 22AP99
   CIPP:
   - 17AP32
   - 17BP32
@@ -1117,6 +1129,11 @@ program_titles:
   - 21AP41
   - 21BP41
   - 22AP41
+  SLS:
+  - 19BP40
+  - 20AP40
+  - 20BP40
+  - 21AP40
   TETrEs:
   - 10BP21
   - 11BP21
@@ -1131,6 +1148,7 @@ program_titles:
   - 19BP31
   - 20AP31
   - 20BP31
+  - 21AP31
   WIRDS:
   - 06AC01
   - 06AC99
