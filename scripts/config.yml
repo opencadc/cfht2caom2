@@ -17,6 +17,9 @@ todo_file_name: todo.txt
 # .fits, .gz, .json endings as defining the work to be 
 # done.
 use_local_files: False
+# if the 'store' task type is listed, ensure the local file has a later
+# timestamp than the file at CADC before transferring the file. 
+# 'use_local_files' must be also be True
 store_newer_files_only: False
 # values DEBUG INFO WARNING ERROR
 logging_level: INFO

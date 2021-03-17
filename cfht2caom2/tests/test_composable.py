@@ -131,13 +131,15 @@ def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
         assert test_result == 0, 'wrong result'
     finally:
         os.getcwd = getcwd_orig
-    import logging
-    logging.error(data_client_mock.return_value.put_file.args)
     assert data_client_mock.return_value.put_file.called, 'expect a put_file'
     data_client_mock.return_value.put_file.assert_called_with(
         'CFHT', '1000003f.fits.fz', archive_stream='default',
         mime_type='application/fits', mime_encoding=None,
-        md5_check=True), 'wrong args'
+        md5_check=True), 'wrong put_file args'
+    assert data_client_mock.return_value.get_file_info.called, \
+        'expect a info call'
+    data_client_mock.return_value.get_file_info.assert_called_with(
+        'CFHT', '1000003f.fits.fz'), 'wrong info args'
 
 
 @patch('cfht2caom2.cfht_builder.CadcDataClient')
