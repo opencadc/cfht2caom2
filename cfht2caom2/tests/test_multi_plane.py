@@ -133,7 +133,7 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, test_name):
         (f'{main_app.APPLICATION} --quiet --no_validate --observation '
          f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
          f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
-         f'{lineage}').split();
+         f'{lineage}').split()
     print(sys.argv)
     main_app.to_caom2()
     expected_fqn = '{}/{}/{}.expected.xml'.format(

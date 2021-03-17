@@ -1,14 +1,14 @@
-working_directory: /usr/src/app
+working_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test
 # the netrc_filename value must be a fully-qualified name
 # netrc_filename: /usr/src/app/netrc
 # this is the name of the proxy certificate file supplied 
 # to the container. It must be a fully-qualified name. 
 # One of netrc_filename or proxy_filename must have a value.
-proxy_file_name: /usr/src/app/cadcproxy.pem
+proxy_file_name: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test/cadcproxy.pem
 # operational value is ivo://cadc.nrc.ca/ams
 # test value - modifies entries on sc2.canfar.net
-# resource_id: ivo://cadc.nrc.ca/sc2repo
-resource_id: ivo://cadc.nrc.ca/ams
+resource_id: ivo://cadc.nrc.ca/sc2repo
+# resource_id: ivo://cadc.nrc.ca/ams
 tap_id: ivo://cadc.nrc.ca/ad
 # file that contains the list of entries to process
 todo_file_name: todo.txt
@@ -16,14 +16,17 @@ todo_file_name: todo.txt
 # when True, the application will look for files with
 # .fits, .gz, .json endings as defining the work to be 
 # done.
-use_local_files: False
-store_newer_files_only: False
+use_local_files: True
+# if the 'store' task type is listed, ensure the local file has a later
+# timestamp than the file at CADC before transferring the file. 
+# 'use_local_files' must be also be True
+store_newer_files_only: True
 # values DEBUG INFO WARNING ERROR
 logging_level: INFO
 # values True False
 log_to_file: True
 # fully qualified name for a directory to write log files
-log_file_directory: /usr/src/app/logs
+log_file_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test/logs
 # the filename where success logs are written
 #
 # this file is created in the logs directory, default is 'success_log.txt'
@@ -53,13 +56,13 @@ collection: CFHT
 # CADC service execution metrics
 #
 observe_execution: True
-observable_directory: /usr/src/app/metrics
+observable_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test/metrics
 # 
 # if the pipeline for the collection tracks known failures, that occurs
 # in this location
 # 
 rejected_file_name: rejected.yml
-rejected_directory: /usr/src/app/rejected
+rejected_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test/rejected
 #
 # for information that needs to be persisted between pipeline 
 # invocations, defaults to 'state.yml', and is found in 'working_directory'
@@ -82,6 +85,7 @@ interval: 600
 # - ingest - read the headers, write the xml to the endpoint found by resource_id
 # - modify - create a footprint and previews for an existing CAOM model record
 task_types: 
+  - store
   - ingest
   - modify
 features:
