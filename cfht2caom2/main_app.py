@@ -2105,46 +2105,51 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                                      cfht_name.suffix == 'g')) or
             (run_id is not None and (cfht_name.instrument is md.Inst.SPIROU and
                                      cfht_name.suffix == 'g'))):
-            idx = 1
+            if len(headers) > 1:
+                idx = 1
 
-            logging.warning(f'Resetting the header/blueprint relationship for '
-                            f'{cfht_name.file_name} in {obs.observation_id}')
-            instrument = _get_instrument(headers[idx])
-            if fqn is not None:
-                # use the fqn to define the URI
-                # TODO - leaking name structure here
-                extension = '.fz'
-                if instrument is md.Inst.ESPADONS:
-                    extension = '.gz'
-                uri = mc.build_uri(cn.ARCHIVE,
-                                   os.path.basename(fqn).replace('.header',
-                                                                 extension))
-                # this is the fits2caom2 implementation, which returns
-                # a list structure
-                unmodified_headers = get_cadc_headers(f'file://{fqn}',
-                                                      subject=subject)
-            elif uri is not None:
-                # this is the fits2caom2 implementation, which returns
-                # a list structure
-                unmodified_headers = get_cadc_headers(uri, subject=subject)
+                logging.warning(f'Resetting the header/blueprint relationship '
+                                f'for {cfht_name.file_name} in '
+                                f'{obs.observation_id}')
+                instrument = _get_instrument(headers[idx])
+                if fqn is not None:
+                    # use the fqn to define the URI
+                    # TODO - leaking name structure here
+                    extension = '.fz'
+                    if instrument is md.Inst.ESPADONS:
+                        extension = '.gz'
+                    uri = mc.build_uri(
+                        cn.ARCHIVE, os.path.basename(fqn).replace('.header',
+                                                                  extension))
+                    # this is the fits2caom2 implementation, which returns
+                    # a list structure
+                    unmodified_headers = get_cadc_headers(f'file://{fqn}',
+                                                          subject=subject)
+                elif uri is not None:
+                    # this is the fits2caom2 implementation, which returns
+                    # a list structure
+                    unmodified_headers = get_cadc_headers(uri, subject=subject)
+                else:
+                    raise mc.CadcException(
+                        f'Cannot retrieve un-modified headers for {uri}')
+                module = importlib.import_module(__name__)
+                bp = ObsBlueprint(module=module)
+                accumulate_bp(bp, uri, instrument)
+
+                # TODO this is not a long-term implementation
+                # re-read the headers from disk, because the first pass through
+                # caom2gen will have modified the header content based on the
+                # original blueprint the execution goes through and sets the
+                # CDELT4 value, then from that sets the CD4_4 value. Then the
+                # second time through, the CD4_4 value update is expressly NOT
+                # done, because the CD4_4 value is already set from the first
+                # pass-through - need to figure out a way to fix this .... sigh
+                tc.add_headers_to_obs_by_blueprint(
+                    obs, unmodified_headers[1:], bp, uri, cfht_name.product_id)
             else:
-                raise mc.CadcException(f'Cannot retrieve un-modified headers '
-                                       f'for {uri}')
-            module = importlib.import_module(__name__)
-            bp = ObsBlueprint(module=module)
-            accumulate_bp(bp, uri, instrument)
-
-            # re-read the headers from disk, because the first pass through
-            # caom2gen will have modified the header content based on the
-            # original blueprint  # TODO this is not a long-term implementation
-            # the execution goes through and sets the CDELT4 value, then from
-            # that sets the CD4_4 value. Then the second time through, the
-            # CD4_4 value update is expressly NOT done, because the CD4_4 value
-            # is already set from the first pass-through - need to figure out a
-            # way to fix this .... sigh
-
-            tc.add_headers_to_obs_by_blueprint(
-                obs, unmodified_headers[1:], bp, uri, cfht_name.product_id)
+                logging.debug(f'Cannot reset the header/blueprint'
+                              f'relationship for {cfht_name.file_name} in '
+                              f'{obs.observation_id}')
 
     logging.debug(f'End _update_observation_metadata.')
     return idx

@@ -70,15 +70,18 @@
 import os
 import shutil
 
+from astropy.io import fits
 from astropy.table import Table
+from datetime import datetime
 from hashlib import md5
 
 from mock import Mock, patch
 
 from cadctap import CadcTapClient
+from caom2 import SimpleObservation, Algorithm, Instrument
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import composable, cfht_name
+from cfht2caom2 import composable, cfht_name, metadata
 import test_main_app
 
 TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
@@ -105,6 +108,38 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
     assert repo_mock.return_value.read.called, 'repo read not called'
     assert repo_mock.return_value.create.called, 'repo create not called'
     assert exec_mock.called, 'expect to be called'
+
+
+@patch('caom2utils.fits2caom2._get_headers_from_fits')
+@patch('caom2utils.fits2caom2.get_cadc_headers')
+@patch('caom2pipe.execute_composable.CAOM2RepoClient')
+@patch('caom2pipe.execute_composable.CadcDataClient')
+def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
+    # TODO - change this test to rely on vos.Client mocks once new CADC
+    # TODO - storage is in place
+    getcwd_orig = os.getcwd
+    os.getcwd = Mock(return_value=os.path.join(
+        test_main_app.TEST_DATA_DIR, 'store_test'))
+    repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
+    data_client_mock.return_value.get_file_info.side_effect = \
+        _mock_get_file_info
+    header_mock.side_effect = _mock_header_read
+    fits_mock.side_effect = _mock_header_read
+    try:
+        # execution
+        test_result = composable._run_by_builder()
+        assert test_result == 0, 'wrong result'
+    finally:
+        os.getcwd = getcwd_orig
+    assert data_client_mock.return_value.put_file.called, 'expect a put_file'
+    data_client_mock.return_value.put_file.assert_called_with(
+        'CFHT', '1000003f.fits.fz', archive_stream='default',
+        mime_type='application/fits', mime_encoding=None,
+        md5_check=True), 'wrong put_file args'
+    assert data_client_mock.return_value.get_file_info.called, \
+        'expect a info call'
+    data_client_mock.return_value.get_file_info.assert_called_with(
+        'CFHT', '1000003f.fits.fz'), 'wrong info args'
 
 
 @patch('cfht2caom2.cfht_builder.CadcDataClient')
@@ -241,6 +276,14 @@ def _mock_repo_read(arg1, arg2):
     return None
 
 
+def _mock_repo_read_not_none(arg1, arg2):
+    return SimpleObservation(
+        observation_id='TEST_OBS_ID',
+        collection='TEST',
+        algorithm=Algorithm(name='exposure'),
+        instrument=Instrument(name=metadata.Inst.MEGAPRIME.value))
+
+
 def _mock_repo_update(ignore1):
     return None
 
@@ -251,12 +294,16 @@ def _mock_get_file_info(archive, file_id):
                 'md5sum': 'md5:{}'.format(
                     md5('-37'.encode()).hexdigest()),
                 'type': 'image/jpeg',
-                'name': file_id}
+                'name': file_id,
+                'lastmod': datetime(
+                    year=2019, month=3, day=4, hour=19, minute=5).timestamp()}
     else:
         return {'size': 665345,
                 'md5sum': 'md5:a347f2754ff2fd4b6209e7566637efad',
                 'type': 'application/fits',
-                'name': file_id}
+                'name': file_id,
+                'lastmod': datetime(
+                    year=2019, month=3, day=4, hour=19, minute=5).timestamp()}
 
 
 def _mock_service_query(arg1, output_file='', data_only=True,
@@ -265,3 +312,19 @@ def _mock_service_query(arg1, output_file='', data_only=True,
             'fileName,ingestDate\n'
             '2281792p.fits.fz,2019-10-23T16:27:19.000\n'.split('\n'),
             format='csv')
+
+
+def _mock_header_read(file_name):
+    x = """SIMPLE  =                    T / 
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    2 / Number of dimensions
+NAXIS1  =                 2048 /
+NAXIS2  =                 2048 /
+INSTRUME= 'WIRCam  '           /
+END
+"""
+    delim = '\nEND'
+    extensions = \
+        [e + delim for e in x.split(delim) if e.strip()]
+    headers = [fits.Header.fromstring(e, sep='\n') for e in extensions]
+    return headers

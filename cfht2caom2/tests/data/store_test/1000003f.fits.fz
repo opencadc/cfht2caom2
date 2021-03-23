@@ -1,0 +1,7 @@
+SIMPLE  =                    T / Fits standard                                 
+BITPIX  =                    8 / Bits per pixel                                
+NAXIS   =                    2 /                                               
+NAXIS1  =                 2048 /                                               
+NAXIS2  =                 2048 /                                               
+INSTRUME= 'MegaPrime'/.........................................................
+END                                                                            

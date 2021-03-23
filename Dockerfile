@@ -20,7 +20,6 @@ RUN pip install  --no-cache-dir \
         caom2 \
         caom2repo \
         caom2utils \
-        ftputil \
         importlib-metadata \
         PyYAML \
         python-dateutil \

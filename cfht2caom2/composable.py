@@ -77,8 +77,8 @@ from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 
 
-meta_visitors = [cleanup_augmentation]
-data_visitors = [espadons_energy_augmentation, preview_augmentation]
+META_VISITORS = [cleanup_augmentation]
+DATA_VISITORS = [espadons_energy_augmentation, preview_augmentation]
 
 CFHT_BOOKMARK = 'cfht_timestamp'
 
@@ -87,8 +87,12 @@ def _run_state():
     config = mc.Config()
     config.get_executors()
     builder = cfht_builder.CFHTBuilder(config)
-    return rc.run_by_state(config, builder, main_app.APPLICATION,
-                           CFHT_BOOKMARK, meta_visitors, data_visitors)
+    return rc.run_by_state(config=config,
+                           name_builder=builder,
+                           command_name=main_app.APPLICATION,
+                           bookmark_name=CFHT_BOOKMARK,
+                           meta_visitors=META_VISITORS,
+                           data_visitors=DATA_VISITORS)
 
 
 def run_state():
@@ -117,8 +121,8 @@ def _run_by_builder():
     builder = cfht_builder.CFHTBuilder(config)
     return rc.run_by_todo(config, builder, chooser=None,
                           command_name=main_app.APPLICATION,
-                          meta_visitors=meta_visitors,
-                          data_visitors=data_visitors)
+                          meta_visitors=META_VISITORS,
+                          data_visitors=DATA_VISITORS)
 
 
 def run_by_builder():
