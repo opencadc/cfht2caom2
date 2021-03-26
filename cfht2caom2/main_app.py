@@ -908,7 +908,7 @@ def update(observation, **kwargs):
 
                         # position axis check is to determine if naxis should
                         # be set
-                        if (cfht_name.suffix in ['d', 'f', 'g'] and
+                        if (cfht_name.suffix in ['d', 'f', 'g', 'o'] and
                                 chunk.position_axis_1 is None):
                             # PD - 17-01-20
                             #  This is a FLAT field exposure so the position
@@ -1371,6 +1371,8 @@ def get_obs_type(header):
 
 def get_plane_data_product_type(header):
     instrument = _get_instrument(header)
+    # caom2wircam.default
+    # caom2wircamdetrend.default
     result = DataProductType.IMAGE
     # caom2spirou.default
     if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
@@ -2381,8 +2383,9 @@ def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
         if chunk is None:
             chunk = Chunk()
         wcs_parser.augment_position(chunk)
-        chunk.position_axis_1 = 1
-        chunk.position_axis_2 = 2
+        if chunk.position is not None:
+            chunk.position_axis_1 = 1
+            chunk.position_axis_2 = 2
     logging.debug(f'End _update_wircam_position_o')
 
 
