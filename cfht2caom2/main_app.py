@@ -909,7 +909,7 @@ def update(observation, **kwargs):
                         # position axis check is to determine if naxis should
                         # be set
                         if (cfht_name.suffix in ['d', 'f', 'g', 'o'] and
-                                chunk.position_axis_1 is None):
+                                chunk.position is None):
                             # PD - 17-01-20
                             #  This is a FLAT field exposure so the position
                             #  is not relevant and only the energy and time is
@@ -929,6 +929,8 @@ def update(observation, **kwargs):
                             #  value (it allows Plane.position.dimension to be
                             #  assigned a value).
                             chunk.naxis = None
+                            chunk.position_axis_1 = None
+                            chunk.position_axis_2 = None
                             chunk.energy_axis = None
                             chunk.time_axis = None
 
