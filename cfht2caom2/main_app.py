@@ -2414,25 +2414,33 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     header = headers[part_index]
     cd1_1 = None
     cd2_2 = None
-    if header.get('CRVAL2') is not None:
+    if (header.get('CRVAL2') is not None or
+            headers[0].get('CRVAL2') is not None):
         cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
         cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
 
     if cd1_1 is None or cd2_2 is None:
+        logging.warning(f'cd1_1 is {cd1_1}, cd2_2 is {cd2_2}, part_num is '
+                        f'{part_num}. No position for this part for '
+                        f'{obs_id}.')
         cc.reset_position(chunk)
         return
 
     wcgd_ra = header.get(f'WCGDRA{part.name}')
+    if wcgd_ra is None:
+        wcgd_ra = headers[0].get(f'WCGDRA{part.name}')
     wcgd_dec = header.get(f'WCGDDEC{part.name}')
+    if wcgd_dec is None:
+        wcgd_dec = headers[0].get(f'WCGDDEC{part.name}')
     if wcgd_ra is None or wcgd_dec is None:
-        logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are '
-                      f'undefined. No position.')
+        logging.warning(f'WCGDRA{part.name} and WCGDDEC{part.name} are '
+                        f'undefined. No position.')
         cc.reset_position(chunk)
         return
     cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
     if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
-        logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are close to '
-                      f'0. No position.')
+        logging.warning(f'WCGDRA{part.name} and WCGDDEC{part.name} are close '
+                        f'to 0. No position.')
         cc.reset_position(chunk)
         return
 
@@ -2462,8 +2470,10 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     if chunk is None:
         chunk = Chunk()
     wcs_parser.augment_position(chunk)
-    chunk.position_axis_1 = 1
-    chunk.position_axis_2 = 2
+    if chunk.position is not None:
+        chunk.naxis = 2
+        chunk.position_axis_1 = 1
+        chunk.position_axis_2 = 2
     logging.debug(f'End _update_wircam_position_g for {obs_id}')
 
 
