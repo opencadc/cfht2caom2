@@ -112,7 +112,8 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             obs = mc.repo_get(self._repo_client, self._config.collection,
                               entry, self._metrics)
             instrument = md.Inst(obs.instrument.name)
-            result = cn.CFHTName(obs_id=entry, instrument=instrument)
+            result = cn.CFHTName(
+                obs_id=entry, instrument=instrument, entry=entry)
         else:
             if mc.StorageName.is_hdf5(entry):
                 headers = []

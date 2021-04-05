@@ -107,10 +107,13 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.main_app._identify_instrument')
 @patch('caom2utils.fits2caom2.CadcDataClient')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_main_app(vo_mock, data_client_mock, inst_mock, test_name):
+def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock, test_name):
+    # cache_mock there so there are no cache update calls - so the tests
+    # work without a network connection
     md.filter_cache.connected = True
     inst_mock.side_effect = _identify_inst_mock
     basename = os.path.basename(test_name)
@@ -193,11 +196,11 @@ def _identify_inst_mock(uri):
                                   '11Bm04.flat.z.36.02'],
               md.Inst.SITELLE: ['2384125', '2480033', '2384125v'],
               md.Inst.ESPADONS: ['2460606', '769448b', '1605366x', '881395a',
-                                 '2238502i', '2554967', '781920'],
+                                 '2238502i', '2554967', '781920', '945987'],
               md.Inst.SPIROU: ['2401727a', '2401712f', '2401728c', '2401734',
                                '2401710d', '2513728g', '2515996g'],
               md.Inst.WIRCAM: ['840066', '1019191', '786586', '1694261',
-                               '787191', '982871']}
+                               '787191', '982871', '1979958']}
     result = None
     for key, value in lookup.items():
         for entry in value:

@@ -7,7 +7,7 @@
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
-  <caom2:intent>calibration</caom2:intent>
+  <caom2:intent>science</caom2:intent>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
     <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>

@@ -4,20 +4,17 @@
 import glob
 import os
 import sys
-import imp
 from setuptools.command.test import test as TestCommand
 from setuptools import find_packages
 
 from setuptools import setup
 
-import distutils.cmd
-import distutils.log
-import subprocess
 
 # read the README.md file and return as string.
 def readme():
     with open('README.md') as r_obj:
         return r_obj.read()
+
 
 # Get some values from the setup.cfg
 try:
@@ -54,6 +51,7 @@ entry_point_list = conf.items('entry_points')
 for entry_point in entry_point_list:
     entry_points['console_scripts'].append('{0} = {1}'.format(entry_point[0],
                                                               entry_point[1]))
+
 
 # add the --cov option to the test command
 class PyTest(TestCommand):
