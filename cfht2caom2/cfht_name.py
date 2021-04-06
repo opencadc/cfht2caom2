@@ -135,6 +135,7 @@ class CFHTName(mc.StorageName):
                f'obs_id {self.obs_id}, ' \
                f'file_id {self.file_id}, ' \
                f'file_name {self.file_name}, ' \
+               f'file_uri {self.file_uri}, ' \
                f'lineage {self.lineage}'
 
     def is_valid(self):

@@ -134,11 +134,11 @@ tiles that overlap the desired region. That's the best that can be done
 because it is not possible to create a CoordFunction1D to say what the
 wavelength of each pixel is
 - PD - Bounds provides more detail than range and enables a crude tile-based
-cutout operation later. If the covergage had significant gaps (eg SCUBA or
+cutout operation later. If the coverage had significant gaps (eg SCUBA or
 SCUBA2 from JCMT) then the extra detail in bounds would enable better
 discovery (as the gaps would be captured in the plane metadata). In the case
 of espadons I don't think the gaps are significant (iirc, espadons is an
-eschelle spetrograph but I don't recall whether the discontinuity between
+eschelle spectrograph but I don't recall whether the discontinuity between
 eschelle was a small gap or an overlap)
 - PD - So: bounds provides more detail and it can in principle improve data
 discovery (if gaps) and enable extraction of subsections of the spectrum via
@@ -260,7 +260,6 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
     bp.clear('Observation.proposal.pi')
     bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
-    bp.set_default('Observation.proposal.pi', 'CFHT')
     bp.set('Observation.proposal.project', 'get_proposal_project(header)')
     bp.set('Observation.proposal.title', 'get_proposal_title(header)')
 
@@ -611,7 +610,7 @@ def update(observation, **kwargs):
     if uri is None:
         instrument = md.Inst(observation.instrument.name)
     else:
-        suffix = cn.CFHTName.remove_extensions(uri)[-1]
+        suffix = cn.CFHTName(ad_uri=uri).suffix
         if suffix == 'z':
             instrument = md.Inst.SITELLE
             ingesting_hdf5 = True
@@ -908,8 +907,8 @@ def update(observation, **kwargs):
 
                         # position axis check is to determine if naxis should
                         # be set
-                        if (cfht_name.suffix in ['d', 'f', 'g'] and
-                                chunk.position_axis_1 is None):
+                        if (cfht_name.suffix in ['d', 'f', 'g', 'o'] and
+                                chunk.position is None):
                             # PD - 17-01-20
                             #  This is a FLAT field exposure so the position
                             #  is not relevant and only the energy and time is
@@ -929,6 +928,8 @@ def update(observation, **kwargs):
                             #  value (it allows Plane.position.dimension to be
                             #  assigned a value).
                             chunk.naxis = None
+                            chunk.position_axis_1 = None
+                            chunk.position_axis_2 = None
                             chunk.energy_axis = None
                             chunk.time_axis = None
 
@@ -939,6 +940,7 @@ def update(observation, **kwargs):
 
                         if chunk.naxis == 2:
                             chunk.time_axis = None
+                            chunk.energy_axis = None
 
                         if (chunk.position is not None and
                                 chunk.position.coordsys.lower() == 'null'):
@@ -983,6 +985,14 @@ def update(observation, **kwargs):
     # relies on update_plane_provenance being called
     if isinstance(observation, DerivedObservation):
         cc.update_observation_members(observation)
+
+    if cfht_name.suffix in ['p', 'y'] and instrument is md.Inst.WIRCAM:
+        # complete the ingestion of the missing bits of a sky construct file
+        _update_wircam_plane(observation, cfht_name, headers)
+
+    if (observation.proposal is not None and
+            observation.proposal.pi_name is None):
+        observation.proposal.pi_name = 'CFHT'
 
     logging.debug('Done update.')
     return observation
@@ -1333,7 +1343,11 @@ def get_obs_intent(header):
     # from caom2IngestWircam.py, l731
     result = ObservationIntentType.CALIBRATION
     obs_type = _get_obstype(header)
-    if obs_type == 'OBJECT':
+    if obs_type is None:
+        # no 'OBSTYPE' keyword, so fits2caom2 will set the value to
+        # science
+        result = None
+    elif obs_type == 'OBJECT':
         run_id = _get_run_id(header)
         if run_id[3].lower() != 'q':
             result = ObservationIntentType.SCIENCE
@@ -1371,6 +1385,8 @@ def get_obs_type(header):
 
 def get_plane_data_product_type(header):
     instrument = _get_instrument(header)
+    # caom2wircam.default
+    # caom2wircamdetrend.default
     result = DataProductType.IMAGE
     # caom2spirou.default
     if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
@@ -1758,7 +1774,7 @@ def get_wircam_bandpass_name(header):
 
 def get_wircam_obs_type(params):
     header, suffix, uri = _decompose_params(params)
-    result = header.get('OBSTYPE')
+    result = _get_obstype(header)
     # caom2IngestWircamdetrend.py, l369
     if 'weight' in uri:
         result = 'WEIGHT'
@@ -2113,14 +2129,7 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                                 f'{obs.observation_id}')
                 instrument = _get_instrument(headers[idx])
                 if fqn is not None:
-                    # use the fqn to define the URI
-                    # TODO - leaking name structure here
-                    extension = '.fz'
-                    if instrument is md.Inst.ESPADONS:
-                        extension = '.gz'
-                    uri = mc.build_uri(
-                        cn.ARCHIVE, os.path.basename(fqn).replace('.header',
-                                                                  extension))
+                    uri = cfht_name.file_uri
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
                     unmodified_headers = get_cadc_headers(f'file://{fqn}',
@@ -2135,7 +2144,6 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                 module = importlib.import_module(__name__)
                 bp = ObsBlueprint(module=module)
                 accumulate_bp(bp, uri, instrument)
-
                 # TODO this is not a long-term implementation
                 # re-read the headers from disk, because the first pass through
                 # caom2gen will have modified the header content based on the
@@ -2363,6 +2371,55 @@ def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
     logging.debug(f'End _update_spirou_time_g for {obs_id}')
 
 
+def _update_wircam_plane(observation, cfht_name, headers):
+    logging.debug(
+        f'Begin _update_wircam_plane for {observation.observation_id}')
+    # for some 'y' files, that don't have enough metadata on their own,
+    # if the 'p' plane exists, and the 'y' plane exists,
+    # copy the metadata to the 'y' plane, because the 'y' file
+    # will not have enough metadata to fill these things in alone
+    copy_to_key = cfht_name.product_id
+    copy_to_artifact_key = cfht_name.file_uri
+    if cfht_name.suffix == 'p':
+        copy_to_key = cfht_name.product_id.replace('p', 'y')
+        copy_to_artifact_key = cfht_name.file_uri.replace('p', 'y', 1)
+
+    copy_from_key = cfht_name.product_id
+    copy_from_artifact_key = cfht_name.file_uri
+    if cfht_name.suffix == 'y':
+        copy_from_key = cfht_name.product_id.replace('y', 'p')
+        copy_from_artifact_key = cfht_name.file_uri.replace('y', 'p', 1)
+
+    if (copy_to_key in observation.planes.keys() and
+            copy_from_key in observation.planes.keys()):
+        copy_to_plane = observation.planes[copy_to_key]
+        copy_from_plane = observation.planes[copy_from_key]
+        copy_from_artifact = copy_from_plane.artifacts[copy_from_artifact_key]
+        copy_to_artifact = copy_to_plane.artifacts[copy_to_artifact_key]
+        if copy_from_plane.provenance is not None:
+            copy_to_plane.provenance = cc.copy_provenance(
+                copy_from_plane.provenance)
+            # set to None, because caom2IngestWircam.py sets only for 'p', 's'
+            # files: l1064, l1092
+            while len(copy_to_plane.provenance.keywords) > 0:
+                copy_to_plane.provenance.keywords.pop()
+        _semi_deep_copy_plane(copy_from_plane, copy_to_plane,
+                              copy_from_artifact, copy_to_artifact)
+    logging.debug('End _update_wircam_plane')
+
+
+def _semi_deep_copy_plane(from_plane, to_plane, from_artifact, to_artifact):
+    to_plane.calibration_level = from_plane.calibration_level
+    to_plane.data_product_type = from_plane.data_product_type
+    to_plane.data_release = from_plane.data_release
+    to_plane.meta_producer = from_plane.meta_producer
+    to_plane.meta_release = from_plane.meta_release
+    for part in from_artifact.parts.values():
+        to_artifact.parts.add(cc.copy_part(part))
+        for chunk in part.chunks:
+            to_artifact.parts[part.name].chunks. append(cc.copy_chunk(chunk))
+
+
 def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
     logging.debug(f'Begin _update_wircam_position_o for {obs_id}')
     part_index = mc.to_int(part.name)
@@ -2381,8 +2438,9 @@ def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
         if chunk is None:
             chunk = Chunk()
         wcs_parser.augment_position(chunk)
-        chunk.position_axis_1 = 1
-        chunk.position_axis_2 = 2
+        if chunk.position is not None:
+            chunk.position_axis_1 = 1
+            chunk.position_axis_2 = 2
     logging.debug(f'End _update_wircam_position_o')
 
 
@@ -2409,25 +2467,33 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     header = headers[part_index]
     cd1_1 = None
     cd2_2 = None
-    if header.get('CRVAL2') is not None:
+    if (header.get('CRVAL2') is not None or
+            headers[0].get('CRVAL2') is not None):
         cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
         cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
 
     if cd1_1 is None or cd2_2 is None:
+        logging.warning(f'cd1_1 is {cd1_1}, cd2_2 is {cd2_2}, part_num is '
+                        f'{part_num}. No position for this part for '
+                        f'{obs_id}.')
         cc.reset_position(chunk)
         return
 
     wcgd_ra = header.get(f'WCGDRA{part.name}')
+    if wcgd_ra is None:
+        wcgd_ra = headers[0].get(f'WCGDRA{part.name}')
     wcgd_dec = header.get(f'WCGDDEC{part.name}')
+    if wcgd_dec is None:
+        wcgd_dec = headers[0].get(f'WCGDDEC{part.name}')
     if wcgd_ra is None or wcgd_dec is None:
-        logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are '
-                      f'undefined. No position.')
+        logging.warning(f'WCGDRA{part.name} and WCGDDEC{part.name} are '
+                        f'undefined. No position.')
         cc.reset_position(chunk)
         return
     cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
     if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
-        logging.debug(f'WCGDRA{part.name} and WCGDDEC{part.name} are close to '
-                      f'0. No position.')
+        logging.warning(f'WCGDRA{part.name} and WCGDDEC{part.name} are close '
+                        f'to 0. No position.')
         cc.reset_position(chunk)
         return
 
@@ -2457,8 +2523,10 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     if chunk is None:
         chunk = Chunk()
     wcs_parser.augment_position(chunk)
-    chunk.position_axis_1 = 1
-    chunk.position_axis_2 = 2
+    if chunk.position is not None:
+        chunk.naxis = 2
+        chunk.position_axis_1 = 1
+        chunk.position_axis_2 = 2
     logging.debug(f'End _update_wircam_position_g for {obs_id}')
 
 

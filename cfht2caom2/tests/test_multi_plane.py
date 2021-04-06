@@ -93,6 +93,7 @@ LOOKUP = {'979339': ['979339i.fits.gz', '979339o.fits.gz'],
           '2384125p': ['2384125p.fits.fz', '2384125z.hdf5'],
           '2401734': ['2401734o.fits', '2401734e.fits', '2401734r.fits',
                       '2401734s.fits', '2401734t.fits', '2401734v.fits'],
+          '1979958': ['1979958p.fits', '1979958y.fits'],
           # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
           # '2460606': ['2460606i.fits.gz']
           }
@@ -105,10 +106,14 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.main_app._identify_instrument')
 @patch('caom2utils.fits2caom2.CadcDataClient')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_multi_plane(svofps_mock, data_client_mock, inst_mock, test_name):
+def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
+                     test_name):
+    # cache_mock there so there are no update cache calls - so the tests
+    # work without a network connection
     metadata.filter_cache.connected = True
     inst_mock.side_effect = test_main_app._identify_inst_mock
     obs_id = test_name
