@@ -2580,6 +2580,11 @@ program_titles:
   - 21AP41
   - 21BP41
   - 22AP41
+  SLS:
+  - 19BP40
+  - 20AP40
+  - 20BP40
+  - 21AP40
   TETrEs:
   - 10BP21
   - 11BP21

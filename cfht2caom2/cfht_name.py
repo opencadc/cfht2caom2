@@ -107,8 +107,16 @@ class CFHTName(mc.StorageName):
             self._file_id = CFHTName.remove_extensions(file_name)
             self._suffix = self._file_id[-1]
             if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
-                self._obs_id = self._file_id
-                if self._suffix in ['o', 'p']:
+                # SF - slack - 02-04-20
+                # - MegaCam - the logic should be probably be 2 planes: p
+                # and o for science. - all cfht exposures are sorted by EXPNUM
+                # if i understand their data acquisition. b,f,d,x should be 1
+                # plane observations. - my assumption is that the b,f,d,x have
+                # no reason to have a processed equivalent.
+                if (self._suffix in ['b', 'd', 'f', 'x'] or
+                        self._suffix.isnumeric()):
+                    self._obs_id = self._file_id
+                else:
                     self._obs_id = self._file_id[:-1]
             else:
                 if self.is_simple and not self.is_master_cal:
@@ -199,7 +207,8 @@ class CFHTName(mc.StorageName):
 
     @property
     def has_polarization(self):
-        return self._suffix in ['p'] and self._instrument is md.Inst.ESPADONS
+        return (self._suffix in ['p'] and
+                self._instrument in [md.Inst.ESPADONS, md.Inst.SPIROU])
 
     @property
     def is_derived_sitelle(self):
@@ -234,7 +243,7 @@ class CFHTName(mc.StorageName):
                                       md.Inst.WIRCAM]) or
                 (self._suffix == 'i' and
                  self._instrument is md.Inst.ESPADONS) or
-                (self._suffix in ['e', 'p', 's', 't', 'v'] and
+                (self._suffix in ['e', 's', 't', 'v'] and
                  self._instrument is md.Inst.SPIROU))
 
     @property

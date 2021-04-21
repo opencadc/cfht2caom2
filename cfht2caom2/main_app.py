@@ -100,8 +100,7 @@ Conversation with CW/SF 02-01-19:
     - MegaCam/WIRCam - 'p' is a processed file that is an additional plane to
             a SimpleObservation
     - SITELLE - 'p' is processed + Derived - a different observation
-    - SPIROU/Espadons - 'p' is polarized + Derived (TBC on Derived), a
-      different observation
+    - SPIROU/Espadons - 'p' is polarized + Derived, a different observation
     - there are other processed files for single exposures
     - users want 'p' files
 
@@ -233,7 +232,9 @@ def accumulate_bp(bp, uri, instrument):
     logging.debug('Begin accumulate_bp.')
     cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     bp.configure_position_axes((1, 2))
-    bp.configure_time_axis(3)
+    if not (cfht_name.suffix == 'p' and
+            cfht_name.instrument == md.Inst.SPIROU):
+        bp.configure_time_axis(3)
     if cfht_name.has_energy:
         bp.configure_energy_axis(4)
     bp.configure_observable_axis(6)
@@ -559,13 +560,20 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
     bp.set('Chunk.position.equinox',
            'get_position_equinox_from_0th_header(header)')
 
-    if cfht_name.suffix != 'g':
+    if cfht_name.suffix not in ['g', 'p']:
         bp.set('Chunk.time.axis.function.delta',
                'get_spirou_time_refcoord_delta(params)')
         bp.set('Chunk.time.axis.function.naxis',
                'get_spirou_time_refcoord_naxis(params)')
         bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
         bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
+
+    if cfht_name.suffix == 'p':
+        bp.configure_polarization_axis(7)
+        bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+        bp.set('Chunk.polarization.axis.function.naxis', 1)
+        bp.set('Chunk.polarization.axis.function.delta', 1.0)
+        bp.set('Chunk.polarization.axis.function.refCoord.pix', 1.0)
 
 
 def _accumulate_wircam_bp(bp, uri, cfht_name):
@@ -860,13 +868,28 @@ def update(observation, **kwargs):
                     elif instrument is md.Inst.SPIROU:
                         _update_position_spirou(
                             chunk, headers[idx], observation.observation_id)
-                        _update_spirou_time_g(chunk, headers, cfht_name,
-                                              observation.observation_id)
 
                         if cfht_name.suffix == 's':
                             part.chunks = TypedList(Chunk,)
                         elif cfht_name.suffix == 'g':
+                            _update_spirou_time_g(chunk, headers, cfht_name,
+                                                  observation.observation_id)
                             plane.data_product_type = DataProductType.IMAGE
+                        elif cfht_name.suffix == 'p':
+                            _update_spirou_time_p(chunk, headers, cfht_name,
+                                                  observation.observation_id,
+                                                  part.name)
+                            _update_spirou_polarization(
+                                chunk, headers, observation.observation_id,
+                                part.name)
+                            # check with Dustin on what a polarization cut-out
+                            # looks like before deciding this is semi-ok
+                            chunk.naxis = None
+                            chunk.position_axis_1 = None
+                            chunk.position_axis_2 = None
+                            chunk.energy_axis = None
+                            chunk.time_axis = None
+                            chunk.polarization_axis = None
                         # stricter WCS validation
                         chunk.naxis = None
                         if chunk.energy is not None:
@@ -1368,7 +1391,8 @@ def get_obs_sequence_number(params):
     # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
     if ((cfht_name.is_simple and not cfht_name.is_master_cal) or (
             instrument in [md.Inst.ESPADONS,
-                           md.Inst.SITELLE] and suffix == 'p')):
+                           md.Inst.SITELLE,
+                           md.Inst.SPIROU] and suffix == 'p')):
         result = cfht_name.file_id[:-1]
     return result
 
@@ -2369,6 +2393,82 @@ def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
                 naxis=time_naxis, delta=time_delta, ref_coord=ref_coord)
 
     logging.debug(f'End _update_spirou_time_g for {obs_id}')
+
+
+def _update_spirou_time_p(chunk, headers, cfht_name, obs_id, part_name):
+    logging.debug(f'Begin _update_spirou_time_p for {obs_id}')
+    if cfht_name.suffix == 'p':
+        # TOTETIME is not in all the HDUs, so copy it from the HDUs that have
+        # it, and use it everywhere - this matches existing CFHT SPIRou 'p'
+        # behaviour
+
+        def _find_keywords_in_header(header, lookup):
+            values = []
+            for keyword in header:
+                if keyword.startswith(lookup) and len(keyword) > len(lookup):
+                    values.append(header.get(keyword))
+            return values
+
+        header = None
+        for h in headers:
+            if h.get('EXTNAME') == part_name:
+                header = h
+                break
+
+        tot_e_time = header.get('TOTETIME')
+
+        lower = _find_keywords_in_header(header, 'MJDATE')
+        upper = _find_keywords_in_header(header, 'MJDEND')
+
+        if len(lower) > 0:
+            for ii, entry in enumerate(lower):
+                chunk.time = cc.build_temporal_wcs_append_sample(
+                    chunk.time, entry, upper[ii])
+
+        if chunk.time is None:
+            logging.warning(f'No chunk time metadata for {obs_id}, '
+                            f'part {part_name}.')
+        elif tot_e_time is None:
+            logging.warning(f'Cannot find time metadata for '
+                            f'{obs_id}, part {part_name}.')
+        else:
+            chunk.time.exposure = tot_e_time
+            chunk.time.resolution = tot_e_time
+    logging.debug(f'End _update_spirou_time_p for {obs_id}')
+
+
+def _update_spirou_polarization(chunk, headers, obs_id, part_name):
+    logging.debug(f'End _update_spirou_polarization for {obs_id}')
+    header = None
+    for h in headers:
+        if h.get('EXTNAME') == part_name:
+            header = h
+            break
+
+    stokes_param = header.get('STOKES')
+    if stokes_param is None:
+        logging.warning(f'No STOKES value for HDU {part_name} in {obs_id}. '
+                        f'No polarization.')
+        chunk.polarization = None
+        chunk.polarization_axis = None
+    else:
+        lookup = {'I': 1.0,
+                  'Q': 2.0,
+                  'U': 3.0,
+                  'V': 4.0,
+                  'W': 5.0}
+        crval = lookup.get(stokes_param, 0.0)
+        if crval == 0.0:
+            logging.warning(f'STOKES value is {crval}. No polarization.')
+            chunk.polarization = None
+            chunk.polarization_axis = None
+        else:
+            if (chunk.polarization is not None and
+                    chunk.polarization.axis is not None and
+                    chunk.polarization.axis.function is not None):
+                chunk.polarization.axis.function.ref_coord.val = crval
+
+    logging.debug(f'End _update_spirou_polarization for {obs_id}')
 
 
 def _update_wircam_plane(observation, cfht_name, headers):
