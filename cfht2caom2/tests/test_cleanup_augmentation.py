@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2020.                            (c) 2020.
+#  (c) 2021.                            (c) 2021.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -62,39 +62,25 @@
 #  <http://www.gnu.org/licenses/>.      pas le cas, consultez :
 #                                       <http://www.gnu.org/licenses/>.
 #
-#  $Revision: 4 $
+#  : 4 $
 #
 # ***********************************************************************
 #
 
-import logging
-
-from caom2 import Observation
+from os import path
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import metadata as md
+from cfht2caom2 import cleanup_augmentation
+import test_main_app
 
 
-def visit(observation, **kwargs):
-    mc.check_param(observation, Observation)
-
-    count = 0
-    delete_list = []
-    for plane in observation.planes.values():
-        if plane.product_id.endswith('og'):
-            delete_list.append(plane.product_id)
-        if (plane.product_id[-1:] in ['b', 'd', 'f', 'x'] and
-                observation.observation_id != plane.product_id and
-                md.Inst(observation.instrument.name) in
-                [md.Inst.MEGACAM, md.Inst.MEGAPRIME]):
-            delete_list.append(plane.product_id)
-
-    for entry in delete_list:
-        logging.info(
-            f'Removing plane {entry} from {observation.observation_id}')
-        count += 1
-        observation.planes.pop(entry)
-
-    logging.info(
-        f'Completed cleanup augmentation for {observation.observation_id}. '
-        f'Remove {count} planes from the observation.')
-    return {'planes': count}
+def test_cleanup_augmentation():
+    test_obs = mc.read_obs_from_file(path.join(test_main_app.TEST_DATA_DIR,
+                                               'visit_obs_start_cleanup.xml'))
+    assert len(test_obs.planes) == 3, 'initial conditions failed'
+    kwargs = {}
+    test_result = cleanup_augmentation.visit(test_obs, **kwargs)
+    assert test_result is not None, 'expect a result'
+    assert test_result.get('planes') is not None, 'expect a plane count'
+    assert test_result.get('planes') == 2, 'wrong number of planes removed'
+    assert len(test_obs.planes) == 1, 'post-test conditions failed'
+    assert '1927963p' in test_obs.planes.keys(), 'wrong plane deleted'
