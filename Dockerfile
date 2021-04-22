@@ -21,12 +21,10 @@ RUN pip install  --no-cache-dir \
         caom2repo \
         caom2utils \
         importlib-metadata \
-        PyYAML \
         python-dateutil \
+        PyYAML \
         spherical-geometry \
         vos
-
-WORKDIR /usr/src/app
 
 WORKDIR /usr/src/app
 

@@ -1982,13 +1982,23 @@ def _get_gaia_target_id(header):
     # should be wary of upper-case letters in schemes, so use 'gaia'
     result = None
     if catalog_id is not None:
-        bits = catalog_id.split()
-        if len(bits) == 3:
-            result = mc.build_uri(scheme=bits[0].lower(),
-                                  archive=bits[1],
-                                  file_name=bits[2])
+        if isinstance(catalog_id, int):
+            catalog_dr = header.get('GAIADR')
+            bits = catalog_dr.split()
+            if len(bits) == 2:
+                result = mc.build_uri(scheme=bits[0].lower(),
+                                      archive=bits[1],
+                                      file_name=str(catalog_id))
+            else:
+                logging.warning(f'Unexpected GAIADR value {catalog_dr}.')
         else:
-            logging.warning(f'Unexpected GAIAID value {catalog_id}.')
+            bits = catalog_id.split()
+            if len(bits) == 3:
+                result = mc.build_uri(scheme=bits[0].lower(),
+                                      archive=bits[1],
+                                      file_name=bits[2])
+            else:
+                logging.warning(f'Unexpected GAIAID value {catalog_id}.')
     return result
 
 
