@@ -21,12 +21,10 @@ RUN pip install  --no-cache-dir \
         caom2repo \
         caom2utils \
         importlib-metadata \
-        python-dateutil \
         PyYAML \
+        python-dateutil \
         spherical-geometry \
         vos
-
-WORKDIR /usr/src/app
 
 RUN git clone https://github.com/HEASARC/cfitsio && \
   cd cfitsio && \
@@ -47,6 +45,10 @@ ARG PIPE_REPO=opencadc
 RUN pip install git+https://github.com/${OPENCADC_REPO}/caom2pipe@${OPENCADC_BRANCH}#egg=caom2pipe
 
 RUN pip install git+https://github.com/${PIPE_REPO}/cfht2caom2@${PIPE_BRANCH}#egg=cfht2caom2
+
+RUN adduser --no-create-home --shell /bin/bash cadcops
+USER cadcops
+WORKDIR /usr/src/app
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
