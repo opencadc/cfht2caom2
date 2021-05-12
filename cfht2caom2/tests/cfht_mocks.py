@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2021.                            (c) 2021.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -62,78 +62,25 @@
 #  <http://www.gnu.org/licenses/>.      pas le cas, consultez :
 #                                       <http://www.gnu.org/licenses/>.
 #
-#  $Revision: 4 $
+#  : 4 $
 #
 # ***********************************************************************
 #
 
-import logging
-import sys
-import traceback
+import os
 
-from caom2pipe import data_source_composable as dsc
-from caom2pipe import manage_composable as mc
-from caom2pipe import run_composable as rc
-from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
-from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+TEST_DATA_DIR = os.path.join(THIS_DIR, 'data')
+SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
+TEST_FILES_DIR = '/test_files'
 
 
-META_VISITORS = [cleanup_augmentation]
-DATA_VISITORS = [espadons_energy_augmentation, preview_augmentation]
-
-CFHT_BOOKMARK = 'cfht_timestamp'
-
-
-def _run_state():
-    config = mc.Config()
-    config.get_executors()
-    builder = cfht_builder.CFHTBuilder(config)
-    return rc.run_by_state(config=config,
-                           name_builder=builder,
-                           command_name=main_app.APPLICATION,
-                           bookmark_name=CFHT_BOOKMARK,
-                           meta_visitors=META_VISITORS,
-                           data_visitors=DATA_VISITORS)
-
-
-def run_state():
-    """Wraps _run_state in exception handling."""
-    try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
-
-
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
-
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config = mc.Config()
-    config.get_executors()
-    builder = cfht_builder.CFHTBuilder(config)
-    data_source = dsc.ListDirSeparateDataSource(config)
-    return rc.run_by_todo(config, builder, chooser=None,
-                          command_name=main_app.APPLICATION,
-                          source=data_source,
-                          meta_visitors=META_VISITORS,
-                          data_visitors=DATA_VISITORS)
-
-
-def run_by_builder():
-    try:
-        result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,
+    decompress=False, fhead=True, wcs=False, process_types=None,
+    md5_check=True):
+    return b.write(b'SIMPLE  = T\n'
+                   b'BITPIX  = -32\n'
+                   b'END\n'
+                   b'SIMPLE  = T\n'
+                   b'INSTRUME= \'WIRCam\'\n'
+                   b'END')

@@ -76,6 +76,7 @@ def test_is_valid():
     assert test_subject.obs_id == '2463796', 'wrong obs id'
     assert test_subject.file_id == '2463796o', 'wrong file id'
     assert test_subject.file_uri == 'ad:CFHT/2463796o.fits.fz', 'wrong uri'
+    assert test_subject.source_names == [], 'not local'
     assert test_subject.is_simple, 'should be simple'
 
     test_subject = CFHTName(file_name='1944968p.fits.fz', instrument='SITELLE')

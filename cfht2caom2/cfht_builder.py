@@ -85,17 +85,12 @@ __all__ = ['CFHTBuilder']
 
 class CFHTBuilder(nbc.StorageNameBuilder):
 
-    def __init__(self, config):
+    def __init__(self, clients, archive, use_local_files):
         super(CFHTBuilder, self).__init__()
-        self._config = config
-        self._data_client = None
-        self._repo_client = None
-        self._metrics = mc.Metrics(self._config)
-        if not self._config.use_local_files:
-            subject = mc.define_subject(self._config)
-            self._data_client = CadcDataClient(subject)
-            self._repo_client = CAOM2RepoClient(
-                subject, resource_id=self._config.resource_id)
+        self._data_client = clients.data_client
+        self._repo_client = clients.metadata_client
+        self._archive = archive
+        self._use_local_files = use_local_files
         self._logger = logging.getLogger(__name__)
 
     def build(self, entry):
@@ -107,29 +102,24 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
-        if (mc.TaskType.INGEST_OBS in self._config.task_types and
-                ('.fits' not in entry and not mc.StorageName.is_hdf5(entry))):
-            obs = mc.repo_get(self._repo_client, self._config.collection,
-                              entry, self._metrics)
-            instrument = md.Inst(obs.instrument.name)
-            result = cn.CFHTName(
-                obs_id=entry, instrument=instrument, entry=entry)
+        if mc.StorageName.is_hdf5(entry):
+            headers = []
         else:
-            if mc.StorageName.is_hdf5(entry):
-                headers = []
+            if self._use_local_files:
+                headers = fits2caom2.get_cadc_headers(f'file://{entry}')
             else:
-                if self._config.use_local_files:
-                    cwd = os.getcwd()
-                    headers = fits2caom2.get_cadc_headers(
-                        f'file://{cwd}/{entry}')
-                else:
-                    headers_str = mc.get_cadc_headers_client(
-                        self._config.archive, entry, self._data_client)
-                    headers = ac.make_headers_from_string(headers_str)
+                headers_str = mc.get_cadc_headers_client(
+                    self._archive, entry, self._data_client
+                )
+                headers = ac.make_headers_from_string(headers_str)
 
-            instrument = CFHTBuilder.get_instrument(headers, entry)
-            result = cn.CFHTName(file_name=entry, instrument=instrument,
-                                 entry=entry)
+        instrument = CFHTBuilder.get_instrument(headers, entry)
+        result = cn.CFHTName(
+            file_name=os.path.basename(entry),
+            source_names=[entry],
+            instrument=instrument,
+            entry=entry,
+        )
         return result
 
     @staticmethod

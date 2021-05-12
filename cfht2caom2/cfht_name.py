@@ -92,14 +92,15 @@ class CFHTName(mc.StorageName):
     CFHT_NAME_PATTERN = '*'
 
     def __init__(self, obs_id=None, file_name=None,
-                 instrument=None, ad_uri=None, entry=None):
+                 instrument=None, ad_uri=None, entry=None,
+                 source_names=[]):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
         # including the .fz | .gz | '' to indicate compression type
         if obs_id is None:
             super(CFHTName, self).__init__(
                 None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
-                compression='', entry=entry)
+                compression='', entry=entry, source_names=source_names)
             self._instrument = md.Inst(instrument)
             if ad_uri is not None and file_name is None:
                 file_name = mc.CaomName(ad_uri).file_name
@@ -139,12 +140,14 @@ class CFHTName(mc.StorageName):
         # self._logger.debug(self)
 
     def __str__(self):
-        return f'instrument {self.instrument}, ' \
-               f'obs_id {self.obs_id}, ' \
-               f'file_id {self.file_id}, ' \
-               f'file_name {self.file_name}, ' \
-               f'file_uri {self.file_uri}, ' \
-               f'lineage {self.lineage}'
+        return f'\n' \
+               f'  instrument: {self.instrument}\n' \
+               f'      obs_id: {self.obs_id}\n' \
+               f'     file_id: {self.file_id}\n' \
+               f'   file_name: {self.file_name}\n' \
+               f'source_names: {self.source_names}\n' \
+               f'    file_uri: {self.file_uri}\n' \
+               f'     lineage: {self.lineage}\n'
 
     def is_valid(self):
         return True

@@ -88,8 +88,8 @@ TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
 @patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local')
-@patch('caom2pipe.execute_composable.CAOM2RepoClient')
-@patch('caom2pipe.execute_composable.CadcDataClient')
+@patch('caom2pipe.run_composable.CAOM2RepoClient')
+@patch('caom2pipe.manage_composable.CadcDataClient')
 def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
@@ -263,7 +263,7 @@ def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,
 
 def _mock_repo_create(arg1):
     # arg1 is an Observation instance
-    act_fqn = f'{TEST_DIR}/{arg1.observation_id}.fits.xml'
+    act_fqn = f'{TEST_DIR}/{arg1.observation_id}.xml'
     ex_fqn = f'{TEST_DIR}/{arg1.observation_id}.expected.xml'
     mc.write_obs_to_file(arg1, act_fqn)
     result = cc.compare(ex_fqn, act_fqn, arg1.observation_id)

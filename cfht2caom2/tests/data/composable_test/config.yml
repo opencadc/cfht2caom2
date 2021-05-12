@@ -4,7 +4,7 @@ working_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test
 # this is the name of the proxy certificate file supplied 
 # to the container. It must be a fully-qualified name. 
 # One of netrc_filename or proxy_filename must have a value.
-proxy_file_name: /usr/src/app/cadcproxy.pem
+proxy_file_name: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test/cadcproxy.pem
 # operational value is ivo://cadc.nrc.ca/caom2repo
 # - modifies entries on sc2.canfar.net
 resource_id: ivo://cadc.nrc.ca/sc2repo
@@ -23,7 +23,7 @@ logging_level: WARNING
 # values True False
 log_to_file: True
 # fully qualified name for a directory to write log files
-log_file_directory: /usr/src/app/cfht2caom2/tests/data/composable_test/logs
+log_file_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test/logs
 # the filename where success logs are written
 #
 # this file is created in the logs directory, default is 'success_log.txt'
@@ -71,6 +71,13 @@ state_file_name: state.yml
 # time-box.
 #
 interval: 600
+data_sources:
+  - /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test/test_files
+data_source_extensions:
+  - .fits.fz
+  - .hdf5
+  - .fits.gz
+  - .fits
 # how to control the work that gets done
 # possible values are:
 # - scrape - read the headers, write out the xml - kind of a test mode
@@ -82,7 +89,6 @@ task_types:
   - ingest
 features:
   supports_composite: False
-  supports_latest_caom: True
   supports_multiple_files: True
   use_file_names: True
   use_urls: False
