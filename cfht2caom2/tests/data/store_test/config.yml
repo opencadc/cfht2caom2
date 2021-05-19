@@ -72,6 +72,10 @@ rejected_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test/rej
 #
 state_file_name: state.yml
 cache_file_name: cache.yml
+data_sources:
+  - /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test
+data_source_extensions:
+  - .fits.fz
 #
 # if using a state file to time-box execution chunks, this is 
 # the interval, in minutes, that define the start and end of the 

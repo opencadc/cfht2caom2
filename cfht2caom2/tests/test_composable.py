@@ -80,6 +80,7 @@ from mock import Mock, patch
 from cadctap import CadcTapClient
 from caom2 import SimpleObservation, Algorithm, Instrument
 from caom2pipe import caom_composable as cc
+from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import composable, cfht_name, metadata
 import test_main_app
@@ -88,8 +89,8 @@ TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
 @patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local')
-@patch('caom2pipe.run_composable.CAOM2RepoClient')
-@patch('caom2pipe.manage_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.CadcDataClient')
 def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
@@ -112,14 +113,14 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
 
 @patch('caom2utils.fits2caom2._get_headers_from_fits')
 @patch('caom2utils.fits2caom2.get_cadc_headers')
-@patch('caom2pipe.execute_composable.CAOM2RepoClient')
-@patch('caom2pipe.execute_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.CadcDataClient')
 def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
     # TODO - change this test to rely on vos.Client mocks once new CADC
     # TODO - storage is in place
+    test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
     getcwd_orig = os.getcwd
-    os.getcwd = Mock(return_value=os.path.join(
-        test_main_app.TEST_DATA_DIR, 'store_test'))
+    os.getcwd = Mock(return_value=test_dir_fqn)
     repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
     data_client_mock.return_value.get_file_info.side_effect = \
         _mock_get_file_info
@@ -133,29 +134,36 @@ def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
         os.getcwd = getcwd_orig
     assert data_client_mock.return_value.put_file.called, 'expect a put_file'
     data_client_mock.return_value.put_file.assert_called_with(
-        'CFHT', '1000003f.fits.fz', archive_stream='default',
-        mime_type='application/fits', mime_encoding=None,
-        md5_check=True), 'wrong put_file args'
-    assert data_client_mock.return_value.get_file_info.called, \
-        'expect a info call'
+        'CFHT',
+        os.path.join(test_dir_fqn, '1000003f.fits.fz'),
+        archive_stream='default',
+        mime_type='application/fits',
+        mime_encoding=None,
+        md5_check=True,
+    ), 'wrong put_file args'
+    assert (
+        data_client_mock.return_value.get_file_info.called
+    ), 'expect a info call'
     data_client_mock.return_value.get_file_info.assert_called_with(
-        'CFHT', '1000003f.fits.fz'), 'wrong info args'
+        'CFHT', '1000003f.fits.fz'
+    ), 'wrong info args'
 
 
-@patch('cfht2caom2.cfht_builder.CadcDataClient')
-@patch('caom2pipe.execute_composable.CadcDataClient')
-@patch('caom2pipe.manage_composable.query_tap_client')
+@patch('caom2pipe.client_composable.CadcDataClient')
+@patch(
+    'caom2pipe.data_source_composable.ListDirTimeBoxDataSource.'
+    'get_time_box_work',
+    autospec=True,
+)
 @patch('caom2pipe.execute_composable.OrganizeExecutes.do_one')
-def test_run_state(run_mock, tap_mock, data_client_mock,
-                   builder_data_mock):
+def test_run_state(run_mock, tap_mock, data_client_mock):
     run_mock.return_value = 0
-    tap_mock.side_effect = _mock_service_query
-    builder_data_mock.return_value.get_file.side_effect = _mock_get_file
+    tap_mock.side_effect = _mock_dir_listing
+    data_client_mock.return_value.get_file.side_effect = _mock_get_file
     data_client_mock.return_value.get_file_info.side_effect = \
         _mock_get_file_info
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=TEST_DIR)
-    CadcTapClient.__init__ = Mock(return_value=None)
 
     test_obs_id = '2281792'
     test_f_name = f'{test_obs_id}p.fits.fz'
@@ -190,7 +198,7 @@ def test_run_by_builder_hdf5_first():
     test_dir = f'{test_main_app.TEST_DATA_DIR}/hdf5_test'
     fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
     hdf5_fqn = f'{test_dir}/2384125z.hdf5'
-    actual_fqn = f'{test_dir}/{test_obs_id}.fits.xml'
+    actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
     expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
 
     # clean up existing observation
@@ -216,13 +224,12 @@ def test_run_by_builder_hdf5_added_to_existing():
     test_dir = f'{test_main_app.TEST_DATA_DIR}/hdf5_test'
     hdf5_fqn = f'{test_dir}/2384125z.hdf5'
     fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
-    actual_fqn = f'{test_dir}/{test_obs_id}.fits.xml'
+    actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
     expected_fqn = f'{test_dir}/all.expected.xml'
     expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
 
     # make sure expected files are present
-    if not os.path.exists(actual_fqn):
-        shutil.copy(expected_hdf5_only_fqn, actual_fqn)
+    shutil.copy(expected_hdf5_only_fqn, actual_fqn)
     if not os.path.exists(fits_fqn):
         shutil.copy(f'{test_main_app.TEST_DATA_DIR}/multi_plane/'
                     f'{test_obs_id}.fits.header', fits_fqn)
@@ -306,12 +313,17 @@ def _mock_get_file_info(archive, file_id):
                     year=2019, month=3, day=4, hour=19, minute=5).timestamp()}
 
 
-def _mock_service_query(arg1, output_file='', data_only=True,
-                        response_format='arg4'):
-    return Table.read(
-            'fileName,ingestDate\n'
-            '2281792p.fits.fz,2019-10-23T16:27:19.000\n'.split('\n'),
-            format='csv')
+def _mock_dir_listing(
+    arg1, output_file='', data_only=True, response_format='arg4'
+):
+    return [
+        dsc.StateRunnerMeta(
+           os.path.join(
+               os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz'
+           ),
+           '2019-10-23T16:27:19.000',
+        ),
+    ]
 
 
 def _mock_header_read(file_name):

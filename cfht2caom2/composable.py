@@ -71,6 +71,7 @@ import logging
 import sys
 import traceback
 
+from caom2pipe import client_composable as cc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
@@ -87,13 +88,19 @@ CFHT_BOOKMARK = 'cfht_timestamp'
 def _run_state():
     config = mc.Config()
     config.get_executors()
-    builder = cfht_builder.CFHTBuilder(config)
-    return rc.run_by_state(config=config,
-                           name_builder=builder,
-                           command_name=main_app.APPLICATION,
-                           bookmark_name=CFHT_BOOKMARK,
-                           meta_visitors=META_VISITORS,
-                           data_visitors=DATA_VISITORS)
+    clients = cc.ClientCollection(config)
+    builder = cfht_builder.CFHTBuilder(
+        clients.data_client, config.archive, config.use_local_files
+    )
+    return rc.run_by_state(
+        config=config,
+        name_builder=builder,
+        command_name=main_app.APPLICATION,
+        bookmark_name=CFHT_BOOKMARK,
+        meta_visitors=META_VISITORS,
+        data_visitors=DATA_VISITORS,
+        clients=clients,
+    )
 
 
 def run_state():
@@ -119,13 +126,20 @@ def _run_by_builder():
     """
     config = mc.Config()
     config.get_executors()
-    builder = cfht_builder.CFHTBuilder(config)
+    clients = cc.ClientCollection(config)
+    builder = cfht_builder.CFHTBuilder(
+        clients.data_client, config.archive, config.use_local_files
+    )
     data_source = dsc.ListDirSeparateDataSource(config)
-    return rc.run_by_todo(config, builder, chooser=None,
-                          command_name=main_app.APPLICATION,
-                          source=data_source,
-                          meta_visitors=META_VISITORS,
-                          data_visitors=DATA_VISITORS)
+    return rc.run_by_todo(
+        config,
+        builder,
+        command_name=main_app.APPLICATION,
+        source=data_source,
+        meta_visitors=META_VISITORS,
+        data_visitors=DATA_VISITORS,
+        clients=clients,
+    )
 
 
 def run_by_builder():

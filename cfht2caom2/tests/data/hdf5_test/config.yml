@@ -1,10 +1,15 @@
 working_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/hdf5_test
+data_sources: 
+  - /usr/src/app/cfht2caom2/cfht2caom2/tests/data/hdf5_test
+data_source_extensions:
+  - .hdf5
+  - .fits.header
 # the netrc_filename value must be a fully-qualified name
 # netrc_filename: /usr/src/app/netrc
 # this is the name of the proxy certificate file supplied 
 # to the container. It must be a fully-qualified name. 
 # One of netrc_filename or proxy_filename must have a value.
-proxy_file_name: /usr/src/app/cadcproxy.pem
+proxy_file_name: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/hdf5_test/cadcproxy.pem
 # operational value is ivo://cadc.nrc.ca/caom2repo
 # - modifies entries on sc2.canfar.net
 resource_id: ivo://cadc.nrc.ca/sc2repo
@@ -19,11 +24,11 @@ todo_file_name: todo.txt
 # done.
 use_local_files: True
 # values DEBUG INFO WARNING ERROR
-logging_level: INFO
+logging_level: WARNING
 # values True False
 log_to_file: True
 # fully qualified name for a directory to write log files
-log_file_directory: /usr/src/app/cfht2caom2/tests/data/hdf5_test/logs
+log_file_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/hdf5_test/logs
 # the filename where success logs are written
 #
 # this file is created in the logs directory, default is 'success_log.txt'
@@ -53,13 +58,13 @@ collection: CFHT
 # CADC service execution metrics
 #
 observe_execution: True
-observable_directory: /usr/src/app/cfht2caom2/tests/data/hdf5_test/metrics
+observable_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/hdf5_test/metrics
 # 
 # if the pipeline for the collection tracks known failures, that occurs
 # in this location
 # 
 rejected_file_name: rejected.yml
-rejected_directory: /usr/src/app/cfht2caom2/tests/data/hdf5_test/rejected
+rejected_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/hdf5_test/rejected
 #
 # for information that needs to be persisted between pipeline 
 # invocations, defaults to 'state.yml', and is found in 'working_directory'
@@ -82,7 +87,6 @@ task_types:
   - scrape
 features:
   supports_composite: False
-  supports_latest_caom: True
   supports_multiple_files: False
   use_file_names: True
   use_urls: False

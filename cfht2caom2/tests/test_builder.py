@@ -70,22 +70,21 @@
 import os
 
 from caom2pipe import manage_composable as mc
-from caom2pipe import run_composable as rc
 from cfht2caom2 import CFHTBuilder, metadata
 
-from mock import patch
+from mock import patch, ANY
 import cfht_mocks
 
 
-@patch('caom2pipe.run_composable.RunnerClients', autospec=True)
-def test_cfht_builder(client_init_mock):
+@patch(
+    'caom2pipe.client_composable.CadcDataClient',
+    autospec=True
+)
+def test_cfht_builder(client_mock):
     test_config = mc.Config()
     test_config.use_local_files = True
-    test_run_clients = rc.RunnerClients(test_config)
     test_subject = CFHTBuilder(
-        test_run_clients,
-        test_config.archive,
-        test_config.use_local_files,
+        client_mock, test_config.archive, test_config.use_local_files,
     )
     assert test_subject is not None, 'ctor failure'
 
@@ -107,17 +106,12 @@ def test_cfht_builder(client_init_mock):
         test_result.file_name == os.path.basename(test_fqn)
     ), 'wrong local file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
-    assert not (
-        client_init_mock.return_value.data_client.called
-    ), 'should not use client'
+    assert not client_mock.called, 'should not use client'
 
-    client_init_mock.return_value.data_client.get_file.side_effect = \
-        cfht_mocks._mock_get_file
+    client_mock.get_file.side_effect = cfht_mocks._mock_get_file
     test_config.use_local_files = False
     test_subject = CFHTBuilder(
-        test_run_clients,
-        test_config.archive,
-        test_config.use_local_files,
+        client_mock, test_config.archive, test_config.use_local_files,
     )
     assert test_subject is not None, 'ctor failure 2'
     test_result = test_subject.build(test_fqn)
@@ -126,6 +120,7 @@ def test_cfht_builder(client_init_mock):
             test_result.file_name == os.path.basename(test_fqn)
     ), 'wrong remote file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
-    assert (
-        client_init_mock.return_value.data_client.get_file.called
-    ), 'should use client'
+    assert client_mock.get_file.called, 'should use client'
+    client_mock.get_file.assert_called_with(
+        None, test_fqn, ANY, fhead=True
+    ), 'wrong get file parameters'

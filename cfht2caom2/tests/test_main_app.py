@@ -93,11 +93,13 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.main_app._identify_instrument')
 @patch('caom2utils.fits2caom2.CadcDataClient')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock, test_name):
+def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock,
+                  client_mock, test_name):
     # cache_mock there so there are no cache update calls - so the tests
     # work without a network connection
     md.filter_cache.connected = True

@@ -191,6 +191,7 @@ from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2utils import FitsParser, WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
+from caom2pipe import client_composable
 from caom2pipe import manage_composable as mc
 from caom2pipe import translate_composable as tc
 
@@ -2734,11 +2735,8 @@ def _update_wircam_time(part, chunk, headers, idx, cfht_name, obs_type,
     logging.debug(f'End _update_wircam_time for {obs_id}')
 
 
-def _identify_instrument(uri):
+def _identify_instrument(uri, cfht_builder):
     logging.debug(f'Begin _identify_instrument for uri {uri}.')
-    config = mc.Config()
-    config.get_executors()
-    cfht_builder = cb.CFHTBuilder(config)
     storage_name = cfht_builder.build(mc.CaomName(uri).file_name)
     logging.debug(
         f'End _identify_instrument for uri {uri} instrument is '
@@ -2746,7 +2744,7 @@ def _identify_instrument(uri):
     return storage_name.instrument
 
 
-def _build_blueprints(uris):
+def _build_blueprints(storage_names):
     """This application relies on the caom2utils fits2caom2 ObsBlueprint
     definition for mapping FITS file values to CAOM model element
     attributes. This method builds the DRAO-ST blueprint for a single
@@ -2755,29 +2753,35 @@ def _build_blueprints(uris):
     The blueprint handles the mapping of values with cardinality of 1:1
     between the blueprint entries and the model attributes.
 
-    :param uris The artifact URIs for the files to be processed."""
+    :param storage_names list of CFHTName instances for the files to be
+        processed."""
     module = importlib.import_module(__name__)
     blueprints = {}
-    for uri in uris:
-        instrument = _identify_instrument(uri)
+    for storage_name in storage_names:
         blueprint = ObsBlueprint(module=module)
-        if ((not mc.StorageName.is_preview(uri)) and
-                (not mc.StorageName.is_hdf5(uri))):
-            accumulate_bp(blueprint, uri, instrument)
-        blueprints[uri] = blueprint
+        if (
+            not mc.StorageName.is_preview(storage_name.file_uri) and
+            not mc.StorageName.is_hdf5(storage_name.file_uri)
+        ):
+            accumulate_bp(
+                blueprint, storage_name.file_uri, storage_name.instrument
+            )
+        blueprints[storage_name.file_uri] = blueprint
     return blueprints
 
 
-def _get_uris(args):
+def _get_storage_names(args, cfht_builder):
     result = []
-    if args.lineage:
-        for ii in args.lineage:
-            result.append(ii.split('/', 1)[1])
-    elif args.local:
+    if args.local:
         for ii in args.local:
-            # TODO hack that leaks naming format - sigh ... :(
-            file_uri = mc.build_uri(cn.ARCHIVE, os.path.basename(ii))
-            result.append(file_uri)
+            storage_name = cfht_builder.build(ii)
+            result.append(storage_name)
+    elif args.lineage:
+        for ii in args.lineage:
+            ignore_product_id, uri = mc.decompose_lineage(ii)
+            ignore_scheme, ignore_path, file_name = mc.decompose_uri(uri)
+            storage_name = cfht_builder.build(file_name)
+            result.append(storage_name)
     else:
         raise mc.CadcException(
             f'Could not define uri from these args {args}')
@@ -2871,8 +2875,14 @@ def to_caom2():
     """This function is called by pipeline execution. It must have this name.
     """
     args = _cfht_args_parser()
-    uris = _get_uris(args)
-    blueprints = _build_blueprints(uris)
+    config = mc.Config()
+    config.get_executors()
+    clients = client_composable.ClientCollection(config)
+    cfht_builder = cb.CFHTBuilder(
+        clients.data_client, config.archive, config.use_local_files
+    )
+    storage_names = _get_storage_names(args, cfht_builder)
+    blueprints = _build_blueprints(storage_names)
     result = gen_proc(args, blueprints)
     return result
 

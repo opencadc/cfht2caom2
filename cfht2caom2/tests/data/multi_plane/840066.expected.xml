@@ -56,7 +56,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-bdcf-013d17ecbdba" caom2:lastModified="2017-11-03T02:16:57.957" caom2:maxLastModified="2017-11-03T02:16:57.957" caom2:metaChecksum="md5:75f0cbd54128288c83f81055913242b8" caom2:accMetaChecksum="md5:02cd2f413d9f37da33a4d9f7456d2fd0" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/840066g.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/840066g.fits.header</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -244,7 +244,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-bdcf-013d17ecba3c" caom2:lastModified="2017-11-03T02:16:57.957" caom2:maxLastModified="2017-11-03T02:16:57.957" caom2:metaChecksum="md5:ddb7e22c20ac3302255cb5e1b5ac5857" caom2:accMetaChecksum="md5:914290ae21a2f6beda859944c32e3a9f" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/840066o.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/840066o.fits.header</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

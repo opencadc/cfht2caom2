@@ -136,8 +136,6 @@ class CFHTName(mc.StorageName):
             self._file_name = None
             self._file_id = None
             self._suffix = None
-        # self._logger = logging.getLogger(__name__)
-        # self._logger.debug(self)
 
     def __str__(self):
         return f'\n' \
