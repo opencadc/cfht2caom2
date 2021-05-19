@@ -84,18 +84,24 @@ def visit(observation, **kwargs):
     if science_file is None:
         raise mc.CadcException('Visitor needs a science_file parameter.')
 
-    cfht_name = cn.CFHTName(file_name=science_file,
-                            instrument=observation.instrument.name)
+    cfht_name = cn.CFHTName(
+        file_name=science_file, instrument=observation.instrument.name
+    )
     count = 0
-    if (cfht_name.instrument is md.Inst.ESPADONS and
-            cfht_name.suffix in ['i', 'p']):
+    if (
+        cfht_name.instrument is md.Inst.ESPADONS and
+        cfht_name.suffix in ['i', 'p']
+    ):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if cfht_name.file_uri == artifact.uri:
                     count += _do_energy(
-                        artifact, science_file, working_dir, cfht_name)
-        logging.info(f'Completed ESPaDOnS energy augmentation for '
-                     f'{observation.observation_id}.')
+                        artifact, science_file, working_dir, cfht_name
+                    )
+        logging.info(
+            f'Completed ESPaDOnS energy augmentation for '
+            f'{observation.observation_id}.'
+        )
     return {'chunks': count}
 
 
@@ -134,18 +140,25 @@ def _do_energy(artifact, science_file, working_dir, cfht_name):
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
     coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
-    params = {'header': hdus[0].header,
-              'uri': artifact.uri}
+    params = {
+        'header': hdus[0].header,
+        'uri': artifact.uri,
+    }
     resolving_power = main_app.get_espadons_energy_resolving_power(params)
     chunk = artifact.parts['0'].chunks[0]
-    chunk.energy = SpectralWCS(coord_axis,
-                               specsys='TOPOCENT',
-                               ssyssrc='TOPOCENT',
-                               resolving_power=resolving_power)
+    chunk.energy = SpectralWCS(
+        coord_axis,
+        specsys='TOPOCENT',
+        ssyssrc='TOPOCENT',
+        resolving_power=resolving_power,
+    )
     chunk.energy_axis = 1
     chunk.naxis = hdus[0].header.get('NAXIS')
-    if (chunk.naxis is not None and chunk.naxis == 2 and
-            chunk.observable is not None):
+    if (
+        chunk.naxis is not None and
+        chunk.naxis == 2 and
+        chunk.observable is not None
+    ):
         chunk.observable_axis = 2
         chunk.position_axis_1 = None
         chunk.position_axis_2 = None

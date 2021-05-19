@@ -160,22 +160,27 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                         if instrument is None:
                             nextend = headers[0].get('NEXTEND')
                             if nextend is None:
-                                raise mc.CadcException(f'Could not identify '
-                                                       f'instrument for '
-                                                       f'{entry}.')
+                                raise mc.CadcException(
+                                    f'Could not identify instrument for '
+                                    f'{entry}.'
+                                )
             elif instrument == 'Unknown':
                 detector = headers[0].get('DETECTOR')
             if instrument is None and nextend is not None and nextend > 30:
                 inst = md.Inst.MEGAPRIME
             else:
-                msg = f'Unknown value for instrument {instrument}, detector ' \
-                      f'{detector} and nextend {nextend} for {entry}.'
+                msg = (
+                    f'Unknown value for instrument {instrument}, detector '
+                    f'{detector} and nextend {nextend} for {entry}.'
+                )
 
                 try:
                     inst = md.Inst(instrument)
                 except ValueError:
-                    if (instrument == 'CFHT MegaPrime' or
-                            instrument == 'megacam'):
+                    if (
+                        instrument == 'CFHT MegaPrime' or
+                        instrument == 'megacam'
+                    ):
                         inst = md.Inst.MEGAPRIME
                     elif instrument == 'Unknown' and detector is not None:
                         if detector == 'OLAPA':
