@@ -83,9 +83,10 @@ def test_project_titles_cache(query_mock):
     test_run_id = '09BC26'
     test_result = test_subject.get_title(test_run_id)
     assert test_result is not None, 'expect a result'
-    assert test_result == 'The Next Generation Virgo Survey -- ' \
-                          'Infrared: K_s-Band Observations of the Central 4 ' \
-                          'deg^2', 'wrong result'
+    assert test_result == (
+        'The Next Generation Virgo Survey -- Infrared: K_s-Band Observations '
+        'of the Central 4 deg^2'
+    ), 'wrong result'
 
     # empty string does nothing - support case with no RUN_ID in header
     test_run_id = ''
@@ -96,22 +97,25 @@ def test_project_titles_cache(query_mock):
     test_run_id = '20AS19'
     test_result = test_subject.get_title(test_run_id)
     assert test_result is not None, f'expect a result {test_run_id}'
-    assert test_result == 'Revealing the origin of rprocess elements from ' \
-                          'the renhanced stars', 'wrong result'
+    assert test_result == (
+        'Revealing the origin of rprocess elements from the renhanced stars'
+    ), 'wrong result'
 
     test_run_id = '19BS10'
     test_result = test_subject.get_title(test_run_id)
     assert test_result is not None, f'expect a result {test_run_id}'
-    assert test_result == 'RVxTESS: Photometric and Spectropolarimetric ' \
-                          'studies of M dwarfs with simultaneous TESS and ' \
-                          'CFHT/SPIRou Observations', 'wrong result'
+    assert test_result == (
+        'RVxTESS: Photometric and Spectropolarimetric studies of M dwarfs '
+        'with simultaneous TESS and CFHT/SPIRou Observations'
+    ), 'wrong result'
 
     test_run_id = '14BC11'
     test_result = test_subject.get_title(test_run_id)
     assert test_result is not None, f'expect a result {test_run_id}'
-    assert test_result == 'Characterizing the magnetic fields of two ' \
-                          'recently discovered rare Sigma Ori E type ' \
-                          'stars', 'wrong result'
+    assert test_result == (
+        'Characterizing the magnetic fields of two recently discovered rare '
+        'Sigma Ori E type stars'
+    ), 'wrong result'
 
 
 def test_get_repair():
@@ -153,13 +157,17 @@ def _mock_query(url):
 
     response = Object()
     if url == 'http://www.cfht.hawaii.edu/en/science/QSO/2020A/':
-        with open(f'{test_main_app.TEST_DATA_DIR}/programs/'
-                  f'2020a_index.htm') as f:
+        with open(
+            f'{test_main_app.TEST_DATA_DIR}/programs/2020a_index.htm'
+        ) as f:
             response.text = f.read()
-    elif url == 'http://www.cfht.hawaii.edu/en/science/QSO/2020A/' \
-                'qso_prog_ESP_2020A.html':
-        with open(f'{test_main_app.TEST_DATA_DIR}/programs/'
-                  f'espadons_2020a.htm') as f:
+    elif url == (
+        'http://www.cfht.hawaii.edu/en/science/QSO/2020A/'
+        'qso_prog_ESP_2020A.html'
+    ):
+        with open(
+            f'{test_main_app.TEST_DATA_DIR}/programs/espadons_2020a.htm'
+        ) as f:
             response.text = f.read()
     else:
         response.text = ''

@@ -91,25 +91,36 @@ def test_preview_augment():
     test_observable = mc.Observable(test_rejected, mc.Metrics(test_config))
 
     test_files = {
-        'visit_obs_start_wircam.xml':
-            ['1151210o.fits.fz', '1151210s.fits.fz', '1151210m.fits.fz',
-             '1151210p.fits.fz', '1151210w.fits.fz', '1151210y.fits.fz',
-             '1151210g.fits.fz'],
-        'visit_obs_start_megacam_sci.xml':
-            ['1927963f.fits.fz', '1927963o.fits.fz', '1927963p.fits.fz'],
-        'visit_obs_start_megacam_cal.xml':
-            ['979412b.fits.fz', '979412o.fits.fz', '979412p.fits.fz'],
-        'visit_obs_start_sitelle_calibrated_cube.xml':
-            ['2359320p.fits'],
-        'visit_obs_start_sitelle.xml':
-            ['2359320o.fits.fz'],
-        'visit_obs_start_espadons.xml':
-            ['2460606i.fits.gz', '2460606o.fits.gz'],
+        'visit_obs_start_wircam.xml': [
+            '1151210o.fits.fz',
+            '1151210s.fits.fz',
+            '1151210m.fits.fz',
+            '1151210p.fits.fz',
+            '1151210w.fits.fz',
+            '1151210y.fits.fz',
+            '1151210g.fits.fz',
+        ],
+        'visit_obs_start_megacam_sci.xml': [
+            '1927963f.fits.fz', '1927963o.fits.fz', '1927963p.fits.fz'
+        ],
+        'visit_obs_start_megacam_cal.xml': [
+            '979412b.fits.fz', '979412o.fits.fz', '979412p.fits.fz'
+        ],
+        'visit_obs_start_sitelle_calibrated_cube.xml': ['2359320p.fits'],
+        'visit_obs_start_sitelle.xml': ['2359320o.fits.fz'],
+        'visit_obs_start_espadons.xml': [
+            '2460606i.fits.gz', '2460606o.fits.gz'
+        ],
         'visit_obs_start_espadons_cal.xml':
             ['1001063b.fits.gz'],
-        'visit_obs_start_spirou.xml': ['2401734o.fits', '2401734e.fits',
-                                       '2401734r.fits', '2401734s.fits',
-                                       '2401734t.fits', '2401734v.fits'],
+        'visit_obs_start_spirou.xml': [
+            '2401734o.fits',
+            '2401734e.fits',
+            '2401734r.fits',
+            '2401734s.fits',
+            '2401734t.fits',
+            '2401734v.fits',
+        ],
         'visit_obs_start_2hdus_mega.xml': ['1821271p.fits.fz']
     }
 
@@ -245,10 +256,12 @@ def test_preview_augment():
         'ad:CFHT/1151210y_preview_zoom_1024.jpg':
             'md5:53cfa0d681c46fedfc2bf719e88231b5'
     }
-    kwargs = {'working_directory': TEST_FILES_DIR,
-              'cadc_client': None,
-              'stream': 'stream',
-              'observable': test_observable}
+    kwargs = {
+        'working_directory': TEST_FILES_DIR,
+        'cadc_client': None,
+        'stream': 'stream',
+        'observable': test_observable
+    }
 
     for entry in glob.glob(f'{TEST_FILES_DIR}/*.jpg'):
         os.unlink(entry)
@@ -272,13 +285,16 @@ def test_preview_augment():
         for f_name in value:
             kwargs['science_file'] = f_name
 
-            test_name = cfht_name.CFHTName(file_name=f_name,
-                                           instrument=instrument)
+            test_name = cfht_name.CFHTName(
+                file_name=f_name, instrument=instrument
+            )
             check_number = 1
             if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
                 check_number = 3
-            assert len(obs.planes[test_name.product_id].artifacts) == \
-                check_number, f'initial condition {f_name}'
+            assert (
+                len(obs.planes[test_name.product_id].artifacts) ==
+                check_number
+            ), f'initial condition {f_name}'
 
             try:
                 from datetime import datetime
@@ -298,22 +314,32 @@ def test_preview_augment():
 
             check_number = 3
             end_artifact_count = 4
-            f_name_list = [test_name.prev_uri, test_name.thumb_uri,
-                           test_name.zoom_uri]
-            if ((instrument is md.Inst.ESPADONS and test_name.suffix == 'i') or
-                    (instrument is md.Inst.SPIROU and
-                     test_name.suffix in ['e', 'p', 's', 't', 'v'])):
+            f_name_list = [
+                test_name.prev_uri, test_name.thumb_uri, test_name.zoom_uri
+            ]
+            if (
+                (
+                    instrument is md.Inst.ESPADONS and test_name.suffix == 'i'
+                ) or
+                (
+                    instrument is md.Inst.SPIROU and
+                    test_name.suffix in ['e', 'p', 's', 't', 'v']
+                )
+            ):
                 check_number = 2
                 end_artifact_count = 3
                 f_name_list = [test_name.prev_uri, test_name.thumb_uri]
 
-            assert test_result['artifacts'] == check_number, \
-                f'artifacts should be added {f_name}'
+            assert (
+                test_result['artifacts'] == check_number
+            ), f'artifacts should be added {f_name}'
 
             if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
                 end_artifact_count = 6
-            assert len(obs.planes[test_name.product_id].artifacts) == \
-                end_artifact_count, f'new artifacts {f_name}'
+            assert (
+                len(obs.planes[test_name.product_id].artifacts) ==
+                end_artifact_count
+            ), f'new artifacts {f_name}'
 
             for p in f_name_list:
                 # assert p in \
@@ -326,8 +352,10 @@ def test_preview_augment():
                         if artifact.content_checksum.uri != test_checksums[p]:
                             checksum_failures.append(
                                 f'{p} expected {test_checksums[p]} actual '
-                                f'{artifact.content_checksum.uri}')
+                                f'{artifact.content_checksum.uri}'
+                            )
 
-    assert len(checksum_failures) == 0, \
-        '\n'.join(ii for ii in checksum_failures)
+    assert (
+        len(checksum_failures) == 0, '\n'.join(ii for ii in checksum_failures)
+    )
     # assert False

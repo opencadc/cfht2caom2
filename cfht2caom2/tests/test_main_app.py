@@ -112,8 +112,9 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock,
     elif instrument is md.Inst.SPIROU:
         extension = ''
     file_name = basename.replace('.header', extension)
-    cfht_name = CFHTName(file_name=file_name,
-                         instrument=instrument)
+    cfht_name = CFHTName(
+        file_name=file_name, instrument=instrument
+    )
     obs_path = f'{SINGLE_PLANE_DIR}/{cfht_name.obs_id}.expected.xml'
     output_file = f'{SINGLE_PLANE_DIR}/{basename}.actual.xml'
 
@@ -128,10 +129,11 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock,
     # cannot use the --not_connected parameter in this test, because the
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
     # as well
-    sys.argv = \
-        (f'{APPLICATION} --no_validate --local {local} --observation '
-         f'{COLLECTION} {cfht_name.obs_id} -o {output_file} --plugin {PLUGIN} '
-         f'--module {PLUGIN} --lineage {_get_lineage(cfht_name)}').split()
+    sys.argv = (
+        f'{APPLICATION} --no_validate --local {local} --observation '
+        f'{COLLECTION} {cfht_name.obs_id} -o {output_file} --plugin {PLUGIN} '
+        f'--module {PLUGIN} --lineage {_get_lineage(cfht_name)}'
+    ).split()
     print(sys.argv)
     try:
         main_app.to_caom2()
@@ -151,8 +153,9 @@ def _get_file_info(archive, file_id):
 
 
 def _get_lineage(cfht_name):
-    result = mc.get_lineage(ARCHIVE, cfht_name.product_id,
-                            f'{cfht_name.file_name}')
+    result = mc.get_lineage(
+        ARCHIVE, cfht_name.product_id, f'{cfht_name.file_name}'
+    )
     return result
 
 
@@ -169,27 +172,102 @@ def _vo_mock(url):
         x = url.split('/')
         filter_name = x[-1].replace('&VERB=0', '')
         votable = parse_single_table(
-            f'{TEST_DATA_DIR}/votable/{filter_name}.xml')
+            f'{TEST_DATA_DIR}/votable/{filter_name}.xml'
+        )
         return votable, None
     except Exception as e:
         logging.error(f'get_vo_table failure for url {url}')
 
 
 def _identify_inst_mock(uri):
-    lookup = {md.Inst.MEGAPRIME: ['2452990p', '979412b', '979412o', '979412p',
-                                  '1927963f', '1927963o', '1927963p',
-                                  '675258o', '2003A.frpts.z.36.00',
-                                  '02Bm05.scatter.g.36.00', '1257365o',
-                                  '1257365p', '02AE10.bias.0.36.00',
-                                  '11Bm04.flat.z.36.02'],
-              md.Inst.SITELLE: ['2384125', '2480033', '2384125v'],
-              md.Inst.ESPADONS: ['2460606', '769448b', '1605366x', '881395a',
-                                 '2238502i', '2554967', '781920', '945987'],
-              md.Inst.SPIROU: ['2401727a', '2401712f', '2401728c', '2401734',
-                               '2401710d', '2513728g', '2515996g', '2455409p'],
-              md.Inst.WIRCAM: ['840066', '1019191', '786586', '1694261',
-                               '787191', '982871', '1979958']}
-    result = None
+    lookup = {
+        md.Inst.MEGAPRIME: [
+            '2452990p',
+            '979412b',
+            '979412o',
+            '979412p',
+            '1927963f',
+            '1927963o',
+            '1927963p',
+            '675258o',
+            '2003A.frpts.z.36.00',
+            '02Bm05.scatter.g.36.00',
+            '1257365o',
+            '1257365p',
+            '02AE10.bias.0.36.00',
+            '11Bm04.flat.z.36.02',
+            '2463796o',
+            '676000',
+            '1013337',
+            '2463857',
+            '2004B.mask',
+            '19Bm03.bias',
+            '718955',
+            '07Bm06.flat',
+            '2463854',
+            '03Am02.dark',
+            '1000003',
+            '03Am05.fringe',
+            '1265044'
+        ],
+        md.Inst.SITELLE: [
+            '2384125', '2480033', '2384125v'
+        ],
+        md.Inst.ESPADONS: [
+            '2460606',
+            '769448b',
+            '1605366x',
+            '881395a',
+            '2238502i',
+            '2554967',
+            '781920',
+            '945987',
+            '1001063b',
+            '1001836x',
+            '1003681',
+            '1219059',
+            '1883829c',
+            '2460602a',
+            '760296f',
+            '881162d',
+            '979339',
+            '2460503p',
+        ],
+        md.Inst.SPIROU: [
+            '2401727a',
+            '2401712f',
+            '2401728c',
+            '2401734',
+            '2401710d',
+            '2513728g',
+            '2515996g',
+            '2455409p',
+        ],
+        md.Inst.WIRCAM: [
+            '840066',
+            '1019191',
+            '786586',
+            '1694261',
+            '787191',
+            '982871',
+            '1979958',
+            '2281792p',
+            '2157095o',
+            'weight',
+            '2281792',
+            '1681594',
+            '981337',
+            'master',
+            '1706150',
+            '1758254',
+            '2462928',
+            '1151210',
+            'hotpix',
+            '1007126',
+            'dark_003s_',
+            ],
+    }
+    result = md.Inst.SITELLE
     for key, value in lookup.items():
         for entry in value:
             if entry in uri:
@@ -197,24 +275,4 @@ def _identify_inst_mock(uri):
                 break
         if result is not None:
             break
-    if result is None:
-        result = md.Inst.SITELLE  # 1944968p, 2445397p
-        if ('2463796o' in uri or '676000' in uri or '1013337' in uri or
-                '2463857' in uri or '2004B.mask' in uri or '19Bm03.bias' in uri or
-                '718955' in uri or '07Bm06.flat' in uri or '2463854' in uri or
-                '03Am02.dark' in uri or '1000003' in uri or
-                '03Am05.fringe' in uri or '1265044' in uri):
-            result = md.Inst.MEGAPRIME
-        elif ('2281792p' in uri or '2157095o' in uri or 'weight' in uri or
-              '2281792' in uri or '1681594' in uri or '981337' in uri or
-              'master' in uri or '1706150' in uri or '1758254' in uri or
-              '2462928' in uri or '1151210' in uri or 'hotpix' in uri or
-              '1007126' in uri or 'dark_003s_' in uri):
-            result = md.Inst.WIRCAM
-        elif ('1001063b' in uri or '1001836x' in uri or '1003681' in uri or
-                '1219059' in uri or '1883829c' in uri or
-                '2460602a' in uri or
-                '760296f' in uri or '881162d' in uri or '979339' in uri or
-                '2460503p' in uri):
-            result = md.Inst.ESPADONS
     return result

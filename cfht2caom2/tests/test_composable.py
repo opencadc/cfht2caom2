@@ -115,7 +115,9 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
 @patch('caom2utils.fits2caom2.get_cadc_headers')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcDataClient')
-def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
+def test_run_store(
+    data_client_mock, repo_client_mock, header_mock, fits_mock
+):
     # TODO - change this test to rely on vos.Client mocks once new CADC
     # TODO - storage is in place
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
@@ -182,8 +184,9 @@ def test_run_state(run_mock, tap_mock, data_client_mock):
     assert test_storage.file_name == test_f_name, 'wrong file name'
     assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
     assert test_storage.url is None, 'wrong url'
-    assert test_storage.lineage == f'{test_obs_id}p/ad:CFHT/{test_f_name}', \
-        'wrong lineage'
+    assert (
+        test_storage.lineage == f'{test_obs_id}p/ad:CFHT/{test_f_name}'
+    ), 'wrong lineage'
     assert test_storage.external_urls is None, 'wrong external urls'
 
 
@@ -209,8 +212,10 @@ def test_run_by_builder_hdf5_first():
 
     # make sure expected files are present
     if not os.path.exists(hdf5_fqn):
-        shutil.copy(f'{test_main_app.TEST_DATA_DIR}/multi_plane/2384125z.hdf5',
-                    hdf5_fqn)
+        shutil.copy(
+            f'{test_main_app.TEST_DATA_DIR}/multi_plane/2384125z.hdf5',
+            hdf5_fqn,
+        )
 
     _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
 
@@ -231,8 +236,11 @@ def test_run_by_builder_hdf5_added_to_existing():
     # make sure expected files are present
     shutil.copy(expected_hdf5_only_fqn, actual_fqn)
     if not os.path.exists(fits_fqn):
-        shutil.copy(f'{test_main_app.TEST_DATA_DIR}/multi_plane/'
-                    f'{test_obs_id}.fits.header', fits_fqn)
+        shutil.copy(
+            f'{test_main_app.TEST_DATA_DIR}/multi_plane/'
+            f'{test_obs_id}.fits.header',
+            fits_fqn,
+        )
 
     # clean up unexpected files
     if os.path.exists(hdf5_fqn):
@@ -257,15 +265,25 @@ def _common_execution(test_dir, actual_fqn, expected_fqn):
         raise AssertionError(compare_result)
 
 
-def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,
-                   decompress=False, fhead=True, wcs=False, process_types=None,
-                   md5_check=True):
-    return b.write(b'SIMPLE  = T\n'
-                   b'BITPIX  = -32\n'
-                   b'END\n'
-                   b'SIMPLE  = T\n'
-                   b'INSTRUME= \'WIRCam\'\n'
-                   b'END')
+def _mock_get_file(
+    archive_ignore,
+    fname_ignore,
+    b,
+    cutout=None,
+    decompress=False,
+    fhead=True,
+    wcs=False,
+    process_types=None,
+    md5_check=True,
+):
+    return b.write(
+        b'SIMPLE  = T\n'
+        b'BITPIX  = -32\n'
+        b'END\n'
+        b'SIMPLE  = T\n'
+        b'INSTRUME= \'WIRCam\'\n'
+        b'END'
+    )
 
 
 def _mock_repo_create(arg1):
@@ -288,7 +306,8 @@ def _mock_repo_read_not_none(arg1, arg2):
         observation_id='TEST_OBS_ID',
         collection='TEST',
         algorithm=Algorithm(name='exposure'),
-        instrument=Instrument(name=metadata.Inst.MEGAPRIME.value))
+        instrument=Instrument(name=metadata.Inst.MEGAPRIME.value)
+    )
 
 
 def _mock_repo_update(ignore1):
@@ -297,20 +316,25 @@ def _mock_repo_update(ignore1):
 
 def _mock_get_file_info(archive, file_id):
     if '_prev' in file_id:
-        return {'size': 10290,
-                'md5sum': 'md5:{}'.format(
-                    md5('-37'.encode()).hexdigest()),
-                'type': 'image/jpeg',
-                'name': file_id,
-                'lastmod': datetime(
-                    year=2019, month=3, day=4, hour=19, minute=5).timestamp()}
+        return {
+            'size': 10290,
+            'md5sum': 'md5:{}'.format(md5('-37'.encode()).hexdigest()),
+            'type': 'image/jpeg',
+            'name': file_id,
+            'lastmod': datetime(
+                year=2019, month=3, day=4, hour=19, minute=5
+            ).timestamp(),
+        }
     else:
-        return {'size': 665345,
-                'md5sum': 'md5:a347f2754ff2fd4b6209e7566637efad',
-                'type': 'application/fits',
-                'name': file_id,
-                'lastmod': datetime(
-                    year=2019, month=3, day=4, hour=19, minute=5).timestamp()}
+        return {
+            'size': 665345,
+            'md5sum': 'md5:a347f2754ff2fd4b6209e7566637efad',
+            'type': 'application/fits',
+            'name': file_id,
+            'lastmod': datetime(
+                year=2019, month=3, day=4, hour=19, minute=5
+            ).timestamp(),
+        }
 
 
 def _mock_dir_listing(

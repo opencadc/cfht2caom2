@@ -80,10 +80,14 @@ def test_visit():
 
     # pre-conditions
     uri = f'ad:CFHT/{product_id}.fits.gz'
-    assert obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy \
-        is None, 'expect to assign'
-    kwargs = {'science_file': f_name,
-              'working_directory': test_main_app.TEST_FILES_DIR}
+    assert (
+        obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy
+        is None
+    ), 'expect to assign'
+    kwargs = {
+        'science_file': f_name,
+        'working_directory': test_main_app.TEST_FILES_DIR,
+    }
 
     test_result = espadons_energy_augmentation.visit(obs, **kwargs)
     assert test_result is not None, 'expect a result'

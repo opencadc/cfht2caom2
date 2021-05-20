@@ -79,25 +79,36 @@ import test_main_app
 # structured by observation id, list of file ids that make up a multi-plane
 # observation
 DIR_NAME = 'multi_plane'
-LOOKUP = {'979339': ['979339i.fits', '979339o.fits.header'],
-          '2281792': ['2281792s.fits.header', '2281792p.fits.header',
-                      '2281792o.fits.header', '2281792g.fits.header'],
-          '1151210': ['1151210g.fits.header', '1151210m.fits.header',
-                      '1151210w.fits.header'],
-          '979412': ['979412o.fits.header', '979412p.fits.header'],
-          '1257365': ['1257365o.fits.header', '1257365p.fits.header'],
-          '840066': ['840066g.fits.header', '840066o.fits.header'],
-          # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
-          #             '1927963p.fits.fz'],
-          # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
-          '2384125p': ['2384125p.fits.header', '2384125z.hdf5'],
-          '2401734': ['2401734o.fits.header', '2401734e.fits.header',
-                      '2401734r.fits.header', '2401734s.fits.header',
-                      '2401734t.fits.header', '2401734v.fits.header'],
-          '1979958': ['1979958p.fits.header', '1979958y.fits.header'],
-          # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
-          # '2460606': ['2460606i.fits.gz']
-          }
+LOOKUP = {
+    '979339': ['979339i.fits', '979339o.fits.header'],
+    '2281792': [
+        '2281792s.fits.header',
+        '2281792p.fits.header',
+        '2281792o.fits.header',
+        '2281792g.fits.header',
+    ],
+    '1151210': [
+        '1151210g.fits.header', '1151210m.fits.header', '1151210w.fits.header'
+    ],
+    '979412': ['979412o.fits.header', '979412p.fits.header'],
+    '1257365': ['1257365o.fits.header', '1257365p.fits.header'],
+    '840066': ['840066g.fits.header', '840066o.fits.header'],
+    # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
+    #             '1927963p.fits.fz'],
+    # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
+    '2384125p': ['2384125p.fits.header', '2384125z.hdf5'],
+    '2401734': [
+        '2401734o.fits.header',
+        '2401734e.fits.header',
+        '2401734r.fits.header',
+        '2401734s.fits.header',
+        '2401734t.fits.header',
+        '2401734v.fits.header',
+    ],
+    '1979958': ['1979958p.fits.header', '1979958y.fits.header'],
+    # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
+    # '2460606': ['2460606i.fits.gz']
+}
 
 
 def pytest_generate_tests(metafunc):
@@ -135,15 +146,17 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
     # cannot use the --not_connected parameter in this test, because the
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
     # as well
-    sys.argv = \
-        (f'{main_app.APPLICATION} --quiet --no_validate --observation '
-         f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
-         f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
-         f'{lineage}').split()
+    sys.argv = (
+        f'{main_app.APPLICATION} --quiet --no_validate --observation '
+        f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
+        f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
+        f'{lineage}'
+    ).split()
     print(sys.argv)
     main_app.to_caom2()
     expected_fqn = '{}/{}/{}.expected.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
+        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id
+    )
     compare_result = mc.compare_observations(actual_fqn, expected_fqn)
     if compare_result is not None:
         raise AssertionError(compare_result)
@@ -153,8 +166,11 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
 def _get_lineage(obs_id):
     result = ''
     for ii in LOOKUP[obs_id]:
-        fits = mc.get_lineage(cfht_name.ARCHIVE,
-                              cfht_name.CFHTName.remove_extensions(ii), ii)
+        fits = mc.get_lineage(
+            cfht_name.ARCHIVE,
+            cfht_name.CFHTName.remove_extensions(ii),
+            ii,
+        )
         result = f'{result } {fits}'
     return result
 
@@ -163,17 +179,22 @@ def _get_local(obs_id):
     result = ''
     root = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}'
     if '979339' in obs_id:
-        result = f'{test_main_app.TEST_FILES_DIR}/979339i.fits ' \
-                 f'{root}/979339o.fits.header'
+        result = (
+            f'{test_main_app.TEST_FILES_DIR}/979339i.fits '
+            f'{root}/979339o.fits.header'
+        )
     elif '2384125p' in obs_id:
         # result = f'{root}/2384125p.fits.header ' \
         #          f'{root}/2384125v.fits.header' \
         #          f'{root}/2384125z.hdf5'
         # result = f'{root}/2384125z.hdf5'
-        result = f'{root}/2384125p.fits.header ' \
-                 f'{root}/2384125z.hdf5'
+        result = (
+            f'{root}/2384125p.fits.header {root}/2384125z.hdf5'
+        )
     else:
         for ii in LOOKUP[obs_id]:
-            result = f'{result} {root}/' \
-                     f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
+            result = (
+                f'{result} {root}/'
+                f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
+            )
     return result
