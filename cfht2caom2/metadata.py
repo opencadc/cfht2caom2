@@ -201,9 +201,12 @@ class CFHTCache(mc.Cache):
         result = self._project_titles.get(run_id)
         if result is None:
             self._logger.warning(
-                f'Could not find project information for run id {run_id}.')
-            if (not self._semester_cached(run_id) and
-                    run_id not in ['SMEARING', '00', 'CFHT', 'setup']):
+                f'Could not find project information for run id {run_id}.'
+            )
+            if (
+                not self._semester_cached(run_id) and
+                run_id not in ['SMEARING', '00', 'CFHT', 'setup']
+            ):
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
                 result = self._project_titles.get(run_id)
@@ -239,21 +242,32 @@ class CFHTCache(mc.Cache):
     @staticmethod
     def clean(value):
         """Remove web page formatting artefacts."""
-        return re.sub('\s+', ' ', value.replace('\r\n\t', ' ').replace(
-            '\r\n', ' ').replace('\\ ', ''))
+        return re.sub(
+            '\s+',
+            ' ',
+            value.replace(
+                '\r\n\t', ' '
+            ).replace(
+                '\r\n', ' '
+            ).replace('\\ ', '')
+        )
 
 
 def reverse_lookup(value_to_find):
-    result = next(key for key, value in
-                  cache.get_from(FILTER_REPAIR_CACHE).items()
-                  if value == value_to_find)
+    result = next(
+        key for key, value in
+        cache.get_from(FILTER_REPAIR_CACHE).items()
+        if value == value_to_find
+    )
     return result
 
 
 cache = CFHTCache()
 
-filter_cache = ac.FilterMetadataCache(cache.get_from(FILTER_REPAIR_CACHE),
-                                      INSTRUMENT_REPAIR_LOOKUP,
-                                      'CFHT',
-                                      cache.get_from(ENERGY_DEFAULTS_CACHE),
-                                      'NONE')
+filter_cache = ac.FilterMetadataCache(
+    cache.get_from(FILTER_REPAIR_CACHE),
+    INSTRUMENT_REPAIR_LOOKUP,
+    'CFHT',
+    cache.get_from(ENERGY_DEFAULTS_CACHE),
+    'NONE',
+)
