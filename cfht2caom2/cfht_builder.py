@@ -70,11 +70,10 @@
 import logging
 import os
 
-from cadcdata import CadcDataClient
-from caom2repo import CAOM2RepoClient
 from caom2utils import fits2caom2
-from caom2pipe import name_builder_composable as nbc
 from caom2pipe import astro_composable as ac
+from caom2pipe import client_composable as clc
+from caom2pipe import name_builder_composable as nbc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -107,7 +106,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             if self._use_local_files:
                 headers = fits2caom2.get_cadc_headers(f'file://{entry}')
             else:
-                headers_str = mc.get_cadc_headers_client(
+                headers_str = clc.get_cadc_headers_client(
                     self._archive, entry, self._data_client
                 )
                 headers = ac.make_headers_from_string(headers_str)

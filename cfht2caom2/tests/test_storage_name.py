@@ -158,3 +158,8 @@ def test_is_valid():
     assert test_subject.file_uri == 'ad:CFHT/2455409p.fits', 'wrong uri'
     assert not test_subject.is_master_cal, 'should not be master cal'
     assert not test_subject.is_simple, 'should be derived'
+
+    test_subject = CFHTName(
+        file_name='2238502i.fits.fz', instrument='ESPaDOnS'
+    )
+    assert test_subject.obs_id == '2238502', 'wrong obs id'

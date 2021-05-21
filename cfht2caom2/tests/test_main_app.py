@@ -210,9 +210,6 @@ def _identify_inst_mock(uri):
             '03Am05.fringe',
             '1265044'
         ],
-        md.Inst.SITELLE: [
-            '2384125', '2480033', '2384125v'
-        ],
         md.Inst.ESPADONS: [
             '2460606',
             '769448b',
@@ -273,6 +270,6 @@ def _identify_inst_mock(uri):
             if entry in uri:
                 result = key
                 break
-        if result is not None:
+        if result is not md.Inst.SITELLE:
             break
     return result
