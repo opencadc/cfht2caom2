@@ -163,3 +163,8 @@ def test_is_valid():
         file_name='2238502i.fits.fz', instrument='ESPaDOnS'
     )
     assert test_subject.obs_id == '2238502', 'wrong obs id'
+
+    test_subject = CFHTName(
+        file_name='2602045r.fits.fz', instrument='SPIRou'
+    )
+    assert test_subject.obs_id == '2602045', 'wrong obs id'

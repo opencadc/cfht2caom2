@@ -109,8 +109,8 @@ Conversation with CW/SF 02-01-19:
 
   JJK - slack - 01-04-20
   CFHT files are independent, in that, for example, a user does not require a
-  'p' file to understand the content of a 'b' file. Given this independence, it
-  is acceptable to map one plane / file.
+  'p' file to understand the content of a 'b' file. Given this independence,
+  it is acceptable to map one plane / file.
 
   SF - slack - 02-04-20
   - MegaCam - the logic should be probably be 2 planes: p and o for science.
@@ -167,6 +167,10 @@ SITELLE 'v' files:
 
 SF 22-12-20
 - as a general rule, fix typos from header metadata in CAOM2 records
+
+SF 12-04-21
+- SPIRou 'r' files are 'ramp' files, and should be 'RAW' for caom2:
+  https://www.cfht.hawaii.edu/Instruments/SPIRou/FileStructure.php
 
 """
 
