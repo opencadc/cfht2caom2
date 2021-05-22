@@ -46,8 +46,6 @@ RUN pip install git+https://github.com/${OPENCADC_REPO}/caom2pipe@${OPENCADC_BRA
 
 RUN pip install git+https://github.com/${PIPE_REPO}/cfht2caom2@${PIPE_BRANCH}#egg=cfht2caom2
 
-RUN useradd --no-create-home --shell /bin/bash cadcops
-USER cadcops
 WORKDIR /usr/src/app
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
