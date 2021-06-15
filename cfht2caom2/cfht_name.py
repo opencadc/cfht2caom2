@@ -127,8 +127,8 @@ class CFHTName(mc.StorageName):
                 # plane observations. - my assumption is that the b,f,d,x have
                 # no reason to have a processed equivalent.
                 if (
-                    self._suffix in ['b', 'd', 'f', 'x'] or
-                    self._suffix.isnumeric()
+                    self._suffix in ['b', 'd', 'f', 'x']
+                    or self._suffix.isnumeric()
                 ):
                     self._obs_id = self._file_id
                 else:
@@ -216,35 +216,35 @@ class CFHTName(mc.StorageName):
     @property
     def is_master_cal(self):
         return (
-            'weight' in self._file_id or
-            'master' in self._file_id or
-            'hotpix' in self._file_id or
-            'badpix' in self._file_id or
-            'deadpix' in self._file_id or
-            'dark' in self._file_id or
-            'scatter' in self._file_id
+            'weight' in self._file_id
+            or 'master' in self._file_id
+            or 'hotpix' in self._file_id
+            or 'badpix' in self._file_id
+            or 'deadpix' in self._file_id
+            or 'dark' in self._file_id
+            or 'scatter' in self._file_id
         )
 
     @property
     def has_energy(self):
         return not (
-            self._instrument is md.Inst.ESPADONS and
-            self._suffix in ['i', 'p']
+            self._instrument is md.Inst.ESPADONS and self._suffix in ['i', 'p']
         )
 
     @property
     def has_polarization(self):
-        return (
-            self._suffix in ['p'] and
-            self._instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]
-        )
+        return self._suffix in ['p'] and self._instrument in [
+            md.Inst.ESPADONS,
+            md.Inst.SPIROU,
+        ]
 
     @property
     def is_derived_sitelle(self):
-        return (
-            self._instrument == md.Inst.SITELLE and
-            self._suffix in ['p', 'v', 'z']
-        )
+        return self._instrument == md.Inst.SITELLE and self._suffix in [
+            'p',
+            'v',
+            'z',
+        ]
 
     @property
     def is_feasible(self):
@@ -260,13 +260,27 @@ class CFHTName(mc.StorageName):
     def is_simple(self):
         result = False
         if (
-            self._suffix in [
-                'a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's', 'w', 'x', 'y'
+            self._suffix
+            in [
+                'a',
+                'b',
+                'c',
+                'd',
+                'f',
+                'g',
+                'l',
+                'm',
+                'o',
+                's',
+                'w',
+                'x',
+                'y',
             ]
-            or self.simple_by_suffix or self.is_master_cal or
-            (
-                self._instrument is md.Inst.SPIROU and
-                self._suffix in ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v']
+            or self.simple_by_suffix
+            or self.is_master_cal
+            or (
+                self._instrument is md.Inst.SPIROU
+                and self._suffix in ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v']
             )
         ):
             result = True
@@ -276,17 +290,14 @@ class CFHTName(mc.StorageName):
     def simple_by_suffix(self):
         return (
             (
-                self._suffix in ['p', 's'] and
-                self._instrument in [
-                    md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM
-                ]
-            ) or
-            (
-                self._suffix == 'i' and self._instrument is md.Inst.ESPADONS
-            ) or
-            (
-                self._suffix in ['e', 's', 't', 'v'] and
-                self._instrument is md.Inst.SPIROU
+                self._suffix in ['p', 's']
+                and self._instrument
+                in [md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM]
+            )
+            or (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS)
+            or (
+                self._suffix in ['e', 's', 't', 'v']
+                and self._instrument is md.Inst.SPIROU
             )
         )
 
@@ -299,14 +310,10 @@ class CFHTName(mc.StorageName):
         """How to get the file_id from a file_name."""
         # ESPaDOnS files have a .gz extension ;)
         # SITELLE has hdf5 files
-        return name.replace(
-            '.fits', ''
-        ).replace(
-            '.fz', ''
-        ).replace(
-            '.header', ''
-        ).replace(
-            '.gz', ''
-        ).replace(
-            '.hdf5', ''
+        return (
+            name.replace('.fits', '')
+            .replace('.fz', '')
+            .replace('.header', '')
+            .replace('.gz', '')
+            .replace('.hdf5', '')
         )

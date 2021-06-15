@@ -160,7 +160,8 @@ class CFHTCache(mc.Cache):
         base_url = 'http://www.cfht.hawaii.edu/en/science/QSO/'
         semester_url = f'{base_url}20{sem}/'
         self._logger.info(
-            f'Checking for semester information at {semester_url}')
+            f'Checking for semester information at {semester_url}'
+        )
         response = mc.query_endpoint(semester_url)
         soup = BeautifulSoup(response.text, features='lxml')
         response.close()
@@ -175,7 +176,8 @@ class CFHTCache(mc.Cache):
                 inst_url = f'{semester_url}/{inst_url}'
 
             self._logger.info(
-                f'Querying {inst_url} for new project information.')
+                f'Querying {inst_url} for new project information.'
+            )
             inst_response = mc.query_endpoint(inst_url)
             inst_soup = BeautifulSoup(inst_response.text, features='lxml')
             inst_response.close()
@@ -189,8 +191,9 @@ class CFHTCache(mc.Cache):
                     if count == 5:
                         title = td.text
                         updated_content = True
-                        self._project_titles[program_id] = \
-                            CFHTCache.clean(title)
+                        self._project_titles[program_id] = CFHTCache.clean(
+                            title
+                        )
                         break
                     count += 1
         if updated_content:
@@ -203,10 +206,12 @@ class CFHTCache(mc.Cache):
             self._logger.warning(
                 f'Could not find project information for run id {run_id}.'
             )
-            if (
-                not self._semester_cached(run_id) and
-                run_id not in ['SMEARING', '00', 'CFHT', 'setup']
-            ):
+            if not self._semester_cached(run_id) and run_id not in [
+                'SMEARING',
+                '00',
+                'CFHT',
+                'setup',
+            ]:
                 self._try_to_append_to_cache(run_id)
                 # in case the cache was updated
                 result = self._project_titles.get(run_id)
@@ -245,18 +250,16 @@ class CFHTCache(mc.Cache):
         return re.sub(
             '\s+',
             ' ',
-            value.replace(
-                '\r\n\t', ' '
-            ).replace(
-                '\r\n', ' '
-            ).replace('\\ ', '')
+            value.replace('\r\n\t', ' ')
+            .replace('\r\n', ' ')
+            .replace('\\ ', ''),
         )
 
 
 def reverse_lookup(value_to_find):
     result = next(
-        key for key, value in
-        cache.get_from(FILTER_REPAIR_CACHE).items()
+        key
+        for key, value in cache.get_from(FILTER_REPAIR_CACHE).items()
         if value == value_to_find
     )
     return result

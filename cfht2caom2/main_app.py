@@ -217,7 +217,8 @@ APPLICATION = 'cfht2caom2'
 class ProvenanceType(Enum):
     """The different types of header values that identify provenance
     information. Used to specify different functions for
-    execution. """
+    execution."""
+
     COMMENT = 'COMMENT'
     FILENAME = 'FILENAM'
     IMCMB = 'IMCMB'
@@ -328,9 +329,7 @@ def accumulate_bp(bp, uri, instrument):
     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
     #
     # Gemini is all range, make Mega* range too, and WIRCam too
-    if instrument not in [
-        md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM
-    ]:
+    if instrument not in [md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM]:
         bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
         bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
         bp.set('Chunk.energy.axis.error.rnder', 1.0)
@@ -550,9 +549,7 @@ def _accumulate_sitelle_bp(bp, uri, cfht_name):
         'Chunk.time.axis.function.delta',
         'get_sitelle_time_refcoord_delta(params)',
     )
-    bp.set(
-        'Chunk.time.axis.function.refCoord.val', '_get_mjd_start(header)'
-    )
+    bp.set('Chunk.time.axis.function.refCoord.val', '_get_mjd_start(header)')
 
     logging.debug('End _accumulate_sitelle_bp.')
 
@@ -583,7 +580,7 @@ def _accumulate_spirou_bp(bp, uri, cfht_name):
             (
                 'https://www.cfht.hawaii.edu/Instruments/SPIRou/'
                 'SPIRou_pipeline.php'
-            )
+            ),
         )
         bp.clear('Plane.provenance.version')
         bp.add_fits_attribute('Plane.provenance.version', 'VERSION')
@@ -727,9 +724,7 @@ def update(observation, **kwargs):
     # fqn is not always defined
     if uri is not None:
         ignore_scheme, ignore_archive, f_name = mc.decompose_uri(uri)
-        cfht_name = cn.CFHTName(
-            file_name=f_name, instrument=instrument
-        )
+        cfht_name = cn.CFHTName(file_name=f_name, instrument=instrument)
     elif fqn is not None:
         cfht_name = cn.CFHTName(
             file_name=os.path.basename(fqn), instrument=instrument
@@ -775,8 +770,8 @@ def update(observation, **kwargs):
             observation, headers, cfht_name, fqn, uri, subject
         )
     if (
-        instrument is md.Inst.ESPADONS and
-        observation.target_position is not None
+        instrument is md.Inst.ESPADONS
+        and observation.target_position is not None
     ):
         if observation.target_position.equinox is not None:
             observation.target_position.equinox = md.cache.get_repair(
@@ -794,7 +789,7 @@ def update(observation, **kwargs):
     ctype1 = headers[idx].get('CTYPE1')
     filter_name = headers[idx].get('FILTER')
     if filter_name is None and len(headers) > idx + 1:
-        filter_name = headers[idx+1].get('FILTER')
+        filter_name = headers[idx + 1].get('FILTER')
 
     for plane in observation.planes.values():
         if plane.product_id != cfht_name.product_id:
@@ -815,9 +810,7 @@ def update(observation, **kwargs):
                 'uri': artifact.uri,
                 'header': headers[idx],
             }
-            if (
-                get_calibration_level(params) == CalibrationLevel.RAW_STANDARD
-            ):
+            if get_calibration_level(params) == CalibrationLevel.RAW_STANDARD:
                 time_delta = get_time_refcoord_delta_simple(params)
             else:
                 time_delta = get_time_refcoord_delta_derived(headers[idx])
@@ -837,9 +830,9 @@ def update(observation, **kwargs):
                             chunk.energy.bandpass_name = None
 
                         if (
-                            chunk.energy.axis is not None and
-                            chunk.energy.axis.axis is not None and
-                            chunk.energy.axis.axis.ctype is not None
+                            chunk.energy.axis is not None
+                            and chunk.energy.axis.axis is not None
+                            and chunk.energy.axis.axis.ctype is not None
                         ):
                             # PD 08-04-20
                             # the correct way to express "inverse meter" is
@@ -874,11 +867,11 @@ def update(observation, **kwargs):
                             if not (
                                 cfht_name.suffix in ['a', 'i', 'o', 'p']
                                 and (
-                                    radecsys is None or
-                                     radecsys.lower() != 'null'
-                                ) and
-                                headers[idx].get('RA_DEG') is not None and
-                                headers[idx].get('DEC_DEG') is not None
+                                    radecsys is None
+                                    or radecsys.lower() != 'null'
+                                )
+                                and headers[idx].get('RA_DEG') is not None
+                                and headers[idx].get('DEC_DEG') is not None
                             ):
                                 cc.reset_position(chunk)
 
@@ -891,8 +884,7 @@ def update(observation, **kwargs):
                             )
 
                         if not (
-                            chunk.naxis is not None and
-                            chunk.position is None
+                            chunk.naxis is not None and chunk.position is None
                         ):
                             if chunk.energy is not None:
                                 chunk.energy_axis = None
@@ -922,10 +914,10 @@ def update(observation, **kwargs):
                         # type calibration) and/or position info not in header
                         # or binned 8x8
                         if (
-                            cfht_name.suffix in ['b', 'l', 'd', 'f'] or
-                            ccdbin == 8 or
-                            radecsys is None or
-                            ctype1 is None
+                            cfht_name.suffix in ['b', 'l', 'd', 'f']
+                            or ccdbin == 8
+                            or radecsys is None
+                            or ctype1 is None
                         ):
                             cc.reset_position(chunk)
                             chunk.naxis = None
@@ -940,13 +932,12 @@ def update(observation, **kwargs):
                             instrument, filter_name, uri
                         )
                         if (
-                            filter_name is None or
-                            filter_name in ['Open', 'NONE'] or
-                            ac.FilterMetadataCache.get_fwhm(
-                                filter_md
-                            ) is None or
-                            cfht_name.suffix in ['b', 'l', 'd'] or
-                            observation.type in ['DARK']
+                            filter_name is None
+                            or filter_name in ['Open', 'NONE']
+                            or ac.FilterMetadataCache.get_fwhm(filter_md)
+                            is None
+                            or cfht_name.suffix in ['b', 'l', 'd']
+                            or observation.type in ['DARK']
                         ):
                             cc.reset_energy(chunk)
                         else:
@@ -971,8 +962,8 @@ def update(observation, **kwargs):
                             chunk.time_axis = 4
 
                         if (
-                            cfht_name.suffix in ['a', 'o', 'x'] and
-                            chunk.position is None
+                            cfht_name.suffix in ['a', 'o', 'x']
+                            and chunk.position is None
                         ):
                             _update_position_sitelle(
                                 chunk,
@@ -980,9 +971,9 @@ def update(observation, **kwargs):
                                 observation.observation_id,
                             )
                             if (
-                                chunk.naxis is not None and
-                                chunk.naxis == 3 and
-                                chunk.energy is not None
+                                chunk.naxis is not None
+                                and chunk.naxis == 3
+                                and chunk.energy is not None
                             ):
                                 chunk.time_axis = None
                                 chunk.energy_axis = 3
@@ -1016,7 +1007,9 @@ def update(observation, **kwargs):
                         )
 
                         if cfht_name.suffix == 's':
-                            part.chunks = TypedList(Chunk,)
+                            part.chunks = TypedList(
+                                Chunk,
+                            )
                         elif cfht_name.suffix == 'g':
                             _update_spirou_time_g(
                                 chunk,
@@ -1071,12 +1064,12 @@ def update(observation, **kwargs):
                             observation.observation_id,
                         )
 
-                        if (
-                            cfht_name.suffix in ['f'] or
-                            observation.type in [
-                                'BPM', 'DARK', 'FLAT', 'WEIGHT'
-                            ]
-                        ):
+                        if cfht_name.suffix in ['f'] or observation.type in [
+                            'BPM',
+                            'DARK',
+                            'FLAT',
+                            'WEIGHT',
+                        ]:
                             cc.reset_position(chunk)
                             chunk.naxis = None
 
@@ -1104,8 +1097,8 @@ def update(observation, **kwargs):
                         # position axis check is to determine if naxis should
                         # be set
                         if (
-                            cfht_name.suffix in ['d', 'f', 'g', 'o'] and
-                            chunk.position is None
+                            cfht_name.suffix in ['d', 'f', 'g', 'o']
+                            and chunk.position is None
                         ):
                             # PD - 17-01-20
                             #  This is a FLAT field exposure so the position
@@ -1143,8 +1136,8 @@ def update(observation, **kwargs):
                             chunk.energy_axis = None
 
                         if (
-                            chunk.position is not None and
-                            chunk.position.coordsys.lower() == 'null'
+                            chunk.position is not None
+                            and chunk.position.coordsys.lower() == 'null'
                         ):
                             cc.reset_position(chunk)
                             chunk.naxis = None
@@ -1187,12 +1180,17 @@ def update(observation, **kwargs):
         elif instrument is md.Inst.ESPADONS and cfht_name.suffix == 'i':
             # caom2IngestEspadons.py, l714
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
-        elif (instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM] and
-              cfht_name.suffix == 'p'):
+        elif (
+            instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]
+            and cfht_name.suffix == 'p'
+        ):
             # caom2IngestMegacam.py, l142
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
-        elif (instrument is md.Inst.SPIROU and
-              cfht_name.suffix in ['e', 's', 't']):
+        elif instrument is md.Inst.SPIROU and cfht_name.suffix in [
+            'e',
+            's',
+            't',
+        ]:
             # caom2IngestSpirou.py, l584
             _update_plane_provenance_p(plane, observation.observation_id, 'o')
 
@@ -1205,8 +1203,8 @@ def update(observation, **kwargs):
         _update_wircam_plane(observation, cfht_name, headers)
 
     if (
-        observation.proposal is not None and
-        observation.proposal.pi_name is None
+        observation.proposal is not None
+        and observation.proposal.pi_name is None
     ):
         observation.proposal.pi_name = 'CFHT'
 
@@ -1220,9 +1218,9 @@ def get_calibration_level(params):
     cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
     result = CalibrationLevel.CALIBRATED
     if (
-        cfht_name.is_simple and not
-        cfht_name.simple_by_suffix and not
-        cfht_name.is_master_cal
+        cfht_name.is_simple
+        and not cfht_name.simple_by_suffix
+        and not cfht_name.is_master_cal
     ):
         result = CalibrationLevel.RAW_STANDARD
     return result
@@ -1326,7 +1324,7 @@ def get_energy_resolving_power(params):
         val = get_energy_function_val(params)
         result = None
         if delta is not None and val is not None:
-            result = val/delta
+            result = val / delta
     return result
 
 
@@ -1492,10 +1490,10 @@ def get_espadons_time_refcoord_val(params):
             date_obs = header.get('DATE-OBS')
             time_obs = header.get('TIME-OBS')
             if (
-                date_obs is None or
-                time_obs is None or
-                date_obs == '1970-01-01' or
-                date_obs == '1970-00-01'
+                date_obs is None
+                or time_obs is None
+                or date_obs == '1970-01-01'
+                or date_obs == '1970-00-01'
             ):
                 hst_time = header.get('HSTTIME)')
                 # fmt 'Mon Nov 27 15:58:17 HST 2006'
@@ -1591,15 +1589,9 @@ def get_obs_sequence_number(params):
     #
     # SGo - because of this, use the file name to find the sequence number,
     # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
-    if (
-        (
-            cfht_name.is_simple and not cfht_name.is_master_cal
-        ) or
-        (
-            instrument in [
-                md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU
-            ] and suffix == 'p'
-        )
+    if (cfht_name.is_simple and not cfht_name.is_master_cal) or (
+        instrument in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
+        and suffix == 'p'
     ):
         result = cfht_name.file_id[:-1]
     return result
@@ -1650,11 +1642,8 @@ def get_plane_data_release(header):
             if run_id == 'SMEARING':
                 result = header.get('DATE')
             elif (
-                (
-                    run_id[3].lower() == 'e' or run_id[3].lower() == 'q'
-                ) and
-                date_obs is not None
-            ):
+                run_id[3].lower() == 'e' or run_id[3].lower() == 'q'
+            ) and date_obs is not None:
                 result = f'{date_obs}T00:00:00'
             else:
                 obs_intent = get_obs_intent(header)
@@ -1684,16 +1673,12 @@ def get_sitelle_v_plane_data_release(header):
     if rel_date is not None:
         rel_date_dt = mc.make_time(rel_date)
         # add approximately 13 months
-        result = rel_date_dt + timedelta(days=13*30)
+        result = rel_date_dt + timedelta(days=13 * 30)
     return result
 
 
 def get_polarization_function_val(header):
-    lookup = {'I': 1,
-              'Q': 2,
-              'U': 3,
-              'V': 4,
-              'W': 5}
+    lookup = {'I': 1, 'Q': 2, 'U': 3, 'V': 4, 'W': 5}
     result = 6
     temp = header.get('CMMTSEQ')
     if temp is not None:
@@ -1929,9 +1914,9 @@ def get_target_standard(header):
                     result = False
             else:
                 if (
-                    'flat' in obj_name or
-                    'focus' in obj_name or
-                    'zenith' in obj_name
+                    'flat' in obj_name
+                    or 'focus' in obj_name
+                    or 'zenith' in obj_name
                 ):
                     result = False
                 else:
@@ -2185,7 +2170,8 @@ def _get_filter_md(instrument, filter_name, entry):
     #
     # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
     updated_filter_name = mc.reverse_lookup(
-        filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE))
+        filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE)
+    )
     if updated_filter_name is None:
         updated_filter_name = filter_name
     return filter_md, updated_filter_name
@@ -2257,9 +2243,7 @@ def _is_derived(headers, cfht_name, obs_id):
 def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
     logging.debug(f'Begin _update_energy_espadons for {obs_id} {uri} {fqn}')
     if fqn is None:
-        cfht_name = cn.CFHTName(
-            ad_uri=uri, instrument=md.Inst.ESPADONS
-        )
+        cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.ESPADONS)
     else:
         cfht_name = cn.CFHTName(
             file_name=os.path.basename(fqn), instrument=md.Inst.ESPADONS
@@ -2278,7 +2262,7 @@ def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
             cdelt1 = get_energy_function_delta(params)
             crval1 = get_energy_function_val(params)
             ref_coord_1 = RefCoord(0.5, crval1)
-            ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1)*cdelt1)
+            ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1) * cdelt1)
             coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
             coord_axis = CoordAxis1D(axis=axis, range=coord_range)
         elif suffix in ['b', 'd', 'i', 'p']:
@@ -2384,18 +2368,16 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
         run_id = headers[0].get('CRUNID')
         # xor
         if (
-            (
-                run_id is None and not
-                (
-                    cfht_name.instrument is md.Inst.SPIROU and
-                    cfht_name.suffix == 'g'
-                )
-            ) or (
-                    run_id is not None and
-                (
-                    cfht_name.instrument is md.Inst.SPIROU and
-                    cfht_name.suffix == 'g'
-                )
+            run_id is None
+            and not (
+                cfht_name.instrument is md.Inst.SPIROU
+                and cfht_name.suffix == 'g'
+            )
+        ) or (
+            run_id is not None
+            and (
+                cfht_name.instrument is md.Inst.SPIROU
+                and cfht_name.suffix == 'g'
             )
         ):
             if len(headers) > 1:
@@ -2464,14 +2446,10 @@ def _update_position_spirou(chunk, header, obs_id):
     ra_deg = header.get('RA_DEG')
     dec_deg = header.get('DEC_DEG')
     ra_dec_sys = header.get('RADECSYS')
-    if (
-        obs_type not in ['OBJECT', 'ALIGN'] or
-        (
-            ra_deg is None and dec_deg is None and
-            (
-                 ra_dec_sys is None or ra_dec_sys.lower() == 'null'
-            )
-        )
+    if obs_type not in ['OBJECT', 'ALIGN'] or (
+        ra_deg is None
+        and dec_deg is None
+        and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
     ):
         cc.reset_position(chunk)
     logging.debug(f'Begin _update_position_spirou for {obs_id}')
@@ -2496,22 +2474,18 @@ def _update_position_sitelle(chunk, header, obs_id):
     pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
     # obs_dec_tr == obs_dec_tl
     delta_ra_top = (1024.0 * pix_scale1) / (
-                3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0)))
+        3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
+    )
     delta_ra_bot = (1024.0 * pix_scale1) / (
-                3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0)))
+        3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0))
+    )
     obs_ra_bl = obs_ra + delta_ra_bot
     obs_ra_tr = obs_ra - delta_ra_top
 
     axis = CoordAxis2D(Axis('RA', 'deg'), Axis('DEC', 'deg'))
     axis.range = CoordRange2D(
-        Coord2D(
-            RefCoord(0.5, obs_ra_bl),
-            RefCoord(0.5, obs_dec_bl)
-        ),
-        Coord2D(
-            RefCoord(2048.5, obs_ra_tr),
-            RefCoord(2048.5, obs_dec_tr)
-        )
+        Coord2D(RefCoord(0.5, obs_ra_bl), RefCoord(0.5, obs_dec_bl)),
+        Coord2D(RefCoord(2048.5, obs_ra_tr), RefCoord(2048.5, obs_dec_tr)),
     )
     position = SpatialWCS(axis)
     position.coordsys = 'FK5'
@@ -2557,7 +2531,8 @@ def _update_position_function_sitelle(chunk, header, obs_id, extension):
 
 def _update_sitelle_plane(observation, uri):
     logging.debug(
-        f'Begin _update_sitelle_plane for {observation.observation_id}')
+        f'Begin _update_sitelle_plane for {observation.observation_id}'
+    )
     # if the 'p' plane exists, the observation id is the same as the plane id,
     # so copy the metadata to the 'z' plane
     z_plane_key = observation.observation_id.replace('p', 'z')
@@ -2584,17 +2559,17 @@ def _update_sitelle_plane(observation, uri):
             else:
                 p_artifact_key = temp.replace('z', 'p', 1)
             if p_artifact_key not in p_plane.artifacts.keys():
-                p_artifact_key = uri.replace(
-                    'z', 'p', 1
-                ).replace('.hdf5', '.fits')
+                p_artifact_key = uri.replace('z', 'p', 1).replace(
+                    '.hdf5', '.fits'
+                )
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = uri.replace(
-                        'z', 'p', 1
-                    ).replace('.hdf5', '.fits.gz')
+                    p_artifact_key = uri.replace('z', 'p', 1).replace(
+                        '.hdf5', '.fits.gz'
+                    )
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = uri.replace(
-                            'z', 'p', 1
-                        ).replace('.hdf5', '.fits.header')
+                        p_artifact_key = uri.replace('z', 'p', 1).replace(
+                            '.hdf5', '.fits.header'
+                        )
                         if p_artifact_key not in p_plane.artifacts.keys():
                             raise mc.CadcException(
                                 f'Unexpected extension name pattern for '
@@ -2606,12 +2581,12 @@ def _update_sitelle_plane(observation, uri):
             for part in p_plane.artifacts[p_artifact_key].parts.values():
                 z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
                 for chunk in part.chunks:
-                    z_plane.artifacts[z_artifact_key].parts[part.name].chunks.\
-                        append(
-                        cc.copy_chunk(chunk, features)
-                    )
-            z_plane.artifacts[z_artifact_key].meta_producer = \
-                p_plane.artifacts[p_artifact_key].meta_producer
+                    z_plane.artifacts[z_artifact_key].parts[
+                        part.name
+                    ].chunks.append(cc.copy_chunk(chunk, features))
+            z_plane.artifacts[
+                z_artifact_key
+            ].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
             z_plane.provenance = p_plane.provenance
             z_plane.calibration_level = p_plane.calibration_level
             z_plane.data_product_type = p_plane.data_product_type
@@ -2659,9 +2634,7 @@ def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
             naxis_key = f'NAXIS{time_index}'
             time_naxis = _get_keyword(naxis_key, headers)
 
-        ref_coord = RefCoord(
-            pix=0.5, val=mc.to_float(ref_coord_mjd)
-        )
+        ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_mjd))
 
         e_time = _get_keyword('ETIME', headers)
         if e_time is None:
@@ -2756,9 +2729,9 @@ def _update_spirou_polarization(chunk, headers, obs_id, part_name):
             chunk.polarization_axis = None
         else:
             if (
-                chunk.polarization is not None and
-                chunk.polarization.axis is not None and
-                chunk.polarization.axis.function is not None
+                chunk.polarization is not None
+                and chunk.polarization.axis is not None
+                and chunk.polarization.axis.function is not None
             ):
                 chunk.polarization.axis.function.ref_coord.val = crval
 
@@ -2786,8 +2759,8 @@ def _update_wircam_plane(observation, cfht_name, headers):
         copy_from_artifact_key = cfht_name.file_uri.replace('y', 'p', 1)
 
     if (
-        copy_to_key in observation.planes.keys() and
-        copy_from_key in observation.planes.keys()
+        copy_to_key in observation.planes.keys()
+        and copy_from_key in observation.planes.keys()
     ):
         copy_to_plane = observation.planes[copy_to_key]
         copy_from_plane = observation.planes[copy_from_key]
@@ -2819,7 +2792,7 @@ def _semi_deep_copy_plane(from_plane, to_plane, from_artifact, to_artifact):
     for part in from_artifact.parts.values():
         to_artifact.parts.add(cc.copy_part(part))
         for chunk in part.chunks:
-            to_artifact.parts[part.name].chunks. append(cc.copy_chunk(chunk))
+            to_artifact.parts[part.name].chunks.append(cc.copy_chunk(chunk))
 
 
 def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
@@ -2872,8 +2845,8 @@ def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
     cd1_1 = None
     cd2_2 = None
     if (
-        header.get('CRVAL2') is not None or
-        headers[0].get('CRVAL2') is not None
+        header.get('CRVAL2') is not None
+        or headers[0].get('CRVAL2') is not None
     ):
         cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
         cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
@@ -2981,9 +2954,7 @@ def _update_wircam_time(
             )
 
         if chunk.time.axis.function is None:
-            ref_coord = RefCoord(
-                pix=0.5, val=mc.to_float(ref_coord_val)
-            )
+            ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val))
 
             time_index = part_header.get('ZNAXIS')
             if time_index is None:
@@ -2995,9 +2966,9 @@ def _update_wircam_time(
                 time_naxis = part_header.get(naxis_key)
 
             if (
-                time_naxis is not None and
-                time_index is not None and
-                time_index == 3
+                time_naxis is not None
+                and time_index is not None
+                and time_index == 3
             ):
                 # caom2.4 wcs validation conformance
                 chunk.time_axis = 3
@@ -3034,8 +3005,10 @@ def _update_wircam_time(
     # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
     # seem to prefer NAXIS, so odd as this placement seems, do not rely
     # on function execution, because it affects NAXIS, not ZNAXIS - sigh
-    if (obs_type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT'] and
-            cfht_name.suffix != 'g'):
+    if (
+        obs_type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT']
+        and cfht_name.suffix != 'g'
+    ):
         n_exp = headers[idx].get('NEXP')
         if n_exp is not None:
             # caom2IngestWircam.py, l843
@@ -3069,10 +3042,9 @@ def _build_blueprints(storage_names):
     blueprints = {}
     for storage_name in storage_names:
         blueprint = ObsBlueprint(module=module)
-        if (
-            not mc.StorageName.is_preview(storage_name.file_uri) and
-            not mc.StorageName.is_hdf5(storage_name.file_uri)
-        ):
+        if not mc.StorageName.is_preview(
+            storage_name.file_uri
+        ) and not mc.StorageName.is_hdf5(storage_name.file_uri):
             accumulate_bp(
                 blueprint, storage_name.file_uri, storage_name.instrument
             )
@@ -3093,9 +3065,7 @@ def _get_storage_names(args, cfht_builder):
             storage_name = cfht_builder.build(file_name)
             result.append(storage_name)
     else:
-        raise mc.CadcException(
-            f'Could not define uri from these args {args}'
-        )
+        raise mc.CadcException(f'Could not define uri from these args {args}')
     return result
 
 
@@ -3183,8 +3153,7 @@ def _cfht_args_parser():
 
 
 def to_caom2():
-    """This function is called by pipeline execution. It must have this name.
-    """
+    """This function is called by pipeline execution. It must have this name."""
     args = _cfht_args_parser()
     config = mc.Config()
     config.get_executors()

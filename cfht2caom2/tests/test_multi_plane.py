@@ -88,7 +88,9 @@ LOOKUP = {
         '2281792g.fits.header',
     ],
     '1151210': [
-        '1151210g.fits.header', '1151210m.fits.header', '1151210w.fits.header'
+        '1151210g.fits.header',
+        '1151210m.fits.header',
+        '1151210w.fits.header',
     ],
     '979412': ['979412o.fits.header', '979412p.fits.header'],
     '1257365': ['1257365o.fits.header', '1257365p.fits.header'],
@@ -122,8 +124,9 @@ def pytest_generate_tests(metafunc):
 @patch('cfht2caom2.main_app._identify_instrument')
 @patch('caom2utils.fits2caom2.CadcDataClient')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
-                     test_name):
+def test_multi_plane(
+    svofps_mock, data_client_mock, inst_mock, cache_mock, test_name
+):
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
     metadata.filter_cache.connected = True
@@ -131,7 +134,8 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
     obs_id = test_name
     lineage = _get_lineage(obs_id)
     actual_fqn = '{}/{}/{}.actual.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
+        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id
+    )
 
     local = _get_local(test_name)
     plugin = test_main_app.PLUGIN
@@ -139,8 +143,9 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
     if os.path.exists(actual_fqn):
         os.remove(actual_fqn)
 
-    data_client_mock.return_value.get_file_info.side_effect = \
+    data_client_mock.return_value.get_file_info.side_effect = (
         test_main_app._get_file_info
+    )
     svofps_mock.side_effect = test_main_app._vo_mock
 
     # cannot use the --not_connected parameter in this test, because the
@@ -188,9 +193,7 @@ def _get_local(obs_id):
         #          f'{root}/2384125v.fits.header' \
         #          f'{root}/2384125z.hdf5'
         # result = f'{root}/2384125z.hdf5'
-        result = (
-            f'{root}/2384125p.fits.header {root}/2384125z.hdf5'
-        )
+        result = f'{root}/2384125p.fits.header {root}/2384125z.hdf5'
     else:
         for ii in LOOKUP[obs_id]:
             result = (

@@ -75,12 +75,22 @@ SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
 TEST_FILES_DIR = '/test_files'
 
 
-def _mock_get_file(archive_ignore, fname_ignore, b, cutout=None,
-    decompress=False, fhead=True, wcs=False, process_types=None,
-    md5_check=True):
-    return b.write(b'SIMPLE  = T\n'
-                   b'BITPIX  = -32\n'
-                   b'END\n'
-                   b'SIMPLE  = T\n'
-                   b'INSTRUME= \'WIRCam\'\n'
-                   b'END')
+def _mock_get_file(
+    archive_ignore,
+    fname_ignore,
+    b,
+    cutout=None,
+    decompress=False,
+    fhead=True,
+    wcs=False,
+    process_types=None,
+    md5_check=True,
+):
+    return b.write(
+        b'SIMPLE  = T\n'
+        b'BITPIX  = -32\n'
+        b'END\n'
+        b'SIMPLE  = T\n'
+        b'INSTRUME= \'WIRCam\'\n'
+        b'END'
+    )

@@ -95,11 +95,13 @@ def pytest_generate_tests(metafunc):
 
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('cfht2caom2.main_app._identify_instrument')
+# @patch('cfht2caom2.main_app._identify_instrument')
+@patch('cfht2caom2.cfht_builder.CFHTBuilder.get_instrument')
 @patch('caom2utils.fits2caom2.CadcDataClient')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock,
-                  client_mock, test_name):
+def test_main_app(
+    vo_mock, data_client_mock, inst_mock, cache_mock, client_mock, test_name
+):
     # cache_mock there so there are no cache update calls - so the tests
     # work without a network connection
     md.filter_cache.connected = True
@@ -112,9 +114,7 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock,
     elif instrument is md.Inst.SPIROU:
         extension = ''
     file_name = basename.replace('.header', extension)
-    cfht_name = CFHTName(
-        file_name=file_name, instrument=instrument
-    )
+    cfht_name = CFHTName(file_name=file_name, instrument=instrument)
     obs_path = f'{SINGLE_PLANE_DIR}/{cfht_name.obs_id}.expected.xml'
     output_file = f'{SINGLE_PLANE_DIR}/{basename}.actual.xml'
 
@@ -140,6 +140,7 @@ def test_main_app(vo_mock, data_client_mock, inst_mock, cache_mock,
     except Exception as e:
         import logging
         import traceback
+
         logging.error(traceback.format_exc())
 
     compare_result = mc.compare_observations(output_file, obs_path)
@@ -179,7 +180,7 @@ def _vo_mock(url):
         logging.error(f'get_vo_table failure for url {url}')
 
 
-def _identify_inst_mock(uri):
+def _identify_inst_mock(uri, ign=None):
     lookup = {
         md.Inst.MEGAPRIME: [
             '2452990p',
@@ -208,7 +209,7 @@ def _identify_inst_mock(uri):
             '03Am02.dark',
             '1000003',
             '03Am05.fringe',
-            '1265044'
+            '1265044',
         ],
         md.Inst.ESPADONS: [
             '2460606',
@@ -263,9 +264,10 @@ def _identify_inst_mock(uri):
             'hotpix',
             '1007126',
             'dark_003s_',
-            ],
+        ],
     }
-    result = md.Inst.SITELLE
+    # result = md.Inst.SITELLE
+    result = md.Inst.ESPADONS
     for key, value in lookup.items():
         for entry in value:
             if entry in uri:

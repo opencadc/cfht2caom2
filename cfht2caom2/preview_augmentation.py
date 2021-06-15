@@ -89,7 +89,6 @@ __all__ = ['visit']
 
 
 class CFHTPreview(mc.PreviewVisitor):
-
     def __init__(self, instrument, intent, obs_type, target, **kwargs):
         super(CFHTPreview, self).__init__(cn.ARCHIVE, **kwargs)
         self._instrument = md.Inst(instrument)
@@ -102,7 +101,7 @@ class CFHTPreview(mc.PreviewVisitor):
             self._working_dir, self._storage_name.file_name
         )
         self._preview_fqn = os.path.join(
-            self._working_dir,  self._storage_name.prev
+            self._working_dir, self._storage_name.prev
         )
         self._thumb_fqn = os.path.join(
             self._working_dir, self._storage_name.thumb
@@ -117,18 +116,18 @@ class CFHTPreview(mc.PreviewVisitor):
 
     def generate_plots(self, obs_id):
         if (
-            self._instrument is md.Inst.SITELLE and
-            self._storage_name.suffix == 'p'
+            self._instrument is md.Inst.SITELLE
+            and self._storage_name.suffix == 'p'
         ):
             count = self._sitelle_calibrated_cube()
         elif (
-            self._instrument is md.Inst.ESPADONS and
-            self._storage_name.suffix in ['i', 'p']
+            self._instrument is md.Inst.ESPADONS
+            and self._storage_name.suffix in ['i', 'p']
         ):
             count = self._do_espadons_science()
         elif (
-            self._instrument is md.Inst.SPIROU and
-            self._storage_name.suffix in ['e', 'p', 's', 't', 'v']
+            self._instrument is md.Inst.SPIROU
+            and self._storage_name.suffix in ['e', 'p', 's', 't', 'v']
         ):
             if self._storage_name.suffix == 'v':
                 count = self._do_spirou_bintable()
@@ -145,8 +144,8 @@ class CFHTPreview(mc.PreviewVisitor):
         )
         # from genEspaprevperplane.py
 
-        #Polarization scale factor
-        pScale=5.0
+        # Polarization scale factor
+        pScale = 5.0
 
         espadons = fits.open(self._science_fqn)
         ext = 0
@@ -179,16 +178,18 @@ class CFHTPreview(mc.PreviewVisitor):
         npix = sw.shape[0]
 
         swa = 10.0 * sw
-        sia = np.arange(0., npix, 1.0)
+        sia = np.arange(0.0, npix, 1.0)
         spa = None
         if self._storage_name.suffix == 'p':
-            spa = np.arange(0., npix, 1.0)
+            spa = np.arange(0.0, npix, 1.0)
 
         # determine upper/lower y limits for two planes from intensity values
         for i in range(sia.shape[0]):
             sia[i] = float(si[i])
             if self._storage_name.suffix == 'p':
-                spa[i] = float(sp[i]) * pScale  # increase scale of polarization
+                spa[i] = (
+                    float(sp[i]) * pScale
+                )  # increase scale of polarization
 
         fig = plt.figure(figsize=(10.24, 10.24), dpi=100)
         self._subplot(
@@ -451,10 +452,9 @@ class CFHTPreview(mc.PreviewVisitor):
         # set up the correct parameters to the ds9 command
         scope_param = 'local'
         if (
-            self._instrument in [
-                md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU
-            ] or
-            self._intent is ObservationIntentType.SCIENCE
+            self._instrument
+            in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
+            or self._intent is ObservationIntentType.SCIENCE
         ):
             scope_param = 'global'
 
@@ -470,7 +470,9 @@ class CFHTPreview(mc.PreviewVisitor):
             # the hdu
             mosaic_param = f'-fits {self._science_fqn}[1]'
         elif self._instrument in [
-            md.Inst.SITELLE, md.Inst.ESPADONS, md.Inst.SPIROU
+            md.Inst.SITELLE,
+            md.Inst.ESPADONS,
+            md.Inst.SPIROU,
         ]:
             mosaic_param = ''
 
@@ -618,10 +620,10 @@ class CFHTPreview(mc.PreviewVisitor):
         npix = sw.shape[0]
 
         swa = 10.0 * sw
-        sia = np.arange(0., npix, 1.0)
+        sia = np.arange(0.0, npix, 1.0)
         spa = None
         if self._storage_name.suffix == 'p':
-            spa = np.arange(0., npix, 1.0)
+            spa = np.arange(0.0, npix, 1.0)
         # determine upper/lower y limits for two planes from intensity values
         for i in range(sia.shape[0]):
             sia[i] = float(si[i])
@@ -706,8 +708,8 @@ class CFHTPreview(mc.PreviewVisitor):
 
     def _add_title(self, num_extensions, in_fqn, font_size=16, offset=0):
         if (
-            self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME] and
-            num_extensions < 36
+            self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]
+            and num_extensions < 36
         ):
             # SF 02-26-21
             # add an option to the ds9 command: -grid title text {this file
@@ -724,7 +726,7 @@ class CFHTPreview(mc.PreviewVisitor):
             font = ImageFont.truetype(
                 '/usr/local/lib/python3.8/site-packages/matplotlib/mpl-data/'
                 'fonts/ttf/DejaVuSans-Bold.ttf',
-                font_size
+                font_size,
             )
             text_width, text_height = draw.textsize(title, font=font)
             text_length = draw.textlength(title)
@@ -788,7 +790,7 @@ class CFHTPreview(mc.PreviewVisitor):
         self._logger.debug(f'{numedgechannels}')
 
         data[:numedgechannels, :, :] = 0.0
-        data[(-1 * numedgechannels):, :, :] = 0.0
+        data[(-1 * numedgechannels) :, :, :] = 0.0
         nspecaxis = data.shape[0]
         nspataxis = data.shape[1] * data.shape[2]
         self._logger.debug(
@@ -990,8 +992,8 @@ class CFHTPreview(mc.PreviewVisitor):
         assert not np.sometrue(np.mod(a.shape, new_shape))
 
         slices = [
-            slice(None, None, mc.to_int(old / new)) for old, new in
-            zip(a.shape, new_shape)
+            slice(None, None, mc.to_int(old / new))
+            for old, new in zip(a.shape, new_shape)
         ]
         self._logger.debug(slices)
         return a[slices]

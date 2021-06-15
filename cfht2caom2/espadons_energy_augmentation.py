@@ -88,10 +88,10 @@ def visit(observation, **kwargs):
         file_name=science_file, instrument=observation.instrument.name
     )
     count = 0
-    if (
-        cfht_name.instrument is md.Inst.ESPADONS and
-        cfht_name.suffix in ['i', 'p']
-    ):
+    if cfht_name.instrument is md.Inst.ESPADONS and cfht_name.suffix in [
+        'i',
+        'p',
+    ]:
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if cfht_name.file_uri == artifact.uri:
@@ -155,9 +155,9 @@ def _do_energy(artifact, science_file, working_dir, cfht_name):
     chunk.energy_axis = 1
     chunk.naxis = hdus[0].header.get('NAXIS')
     if (
-        chunk.naxis is not None and
-        chunk.naxis == 2 and
-        chunk.observable is not None
+        chunk.naxis is not None
+        and chunk.naxis == 2
+        and chunk.observable is not None
     ):
         chunk.observable_axis = 2
         chunk.position_axis_1 = None

@@ -71,9 +71,7 @@ from cfht2caom2 import CFHTName
 
 def test_is_valid():
     assert CFHTName(file_name='anything', instrument='SITELLE').is_valid()
-    test_subject = CFHTName(
-        file_name='2463796o.fits.fz', instrument='MegaCam'
-    )
+    test_subject = CFHTName(file_name='2463796o.fits.fz', instrument='MegaCam')
     assert test_subject.obs_id == '2463796', 'wrong obs id'
     assert test_subject.file_id == '2463796o', 'wrong file id'
     assert test_subject.file_uri == 'ad:CFHT/2463796o.fits.fz', 'wrong uri'
@@ -103,18 +101,14 @@ def test_is_valid():
     assert test_subject.file_uri == 'ad:CFHT/2452990p.fits.fz', 'wrong uri'
     assert test_subject.is_simple, 'should be simple'
 
-    test_subject = CFHTName(
-        file_name='2384125z.hdf5', instrument='SITELLE'
-    )
+    test_subject = CFHTName(file_name='2384125z.hdf5', instrument='SITELLE')
     assert not test_subject.simple_by_suffix, 'should be derived'
     assert test_subject.obs_id == '2384125p', 'wrong obs id'
     assert test_subject.file_id == '2384125z', 'wrong file id'
     assert test_subject.file_uri == 'ad:CFHT/2384125z.hdf5', 'wrong uri'
     assert not test_subject.is_simple, 'should be derived'
 
-    test_subject = CFHTName(
-        file_name='2384125p.fits.fz', instrument='SITELLE'
-    )
+    test_subject = CFHTName(file_name='2384125p.fits.fz', instrument='SITELLE')
     assert not test_subject.simple_by_suffix, 'should be derived'
     assert test_subject.obs_id == '2384125p', 'wrong obs id'
     assert test_subject.file_id == '2384125p', 'wrong file id'
@@ -164,7 +158,5 @@ def test_is_valid():
     )
     assert test_subject.obs_id == '2238502', 'wrong obs id'
 
-    test_subject = CFHTName(
-        file_name='2602045r.fits.fz', instrument='SPIRou'
-    )
+    test_subject = CFHTName(file_name='2602045r.fits.fz', instrument='SPIRou')
     assert test_subject.obs_id == '2602045', 'wrong obs id'

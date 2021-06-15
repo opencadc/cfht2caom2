@@ -83,7 +83,6 @@ __all__ = ['CFHTBuilder']
 
 
 class CFHTBuilder(nbc.StorageNameBuilder):
-
     def __init__(self, data_client, archive, use_local_files):
         super(CFHTBuilder, self).__init__()
         self._data_client = data_client
@@ -177,8 +176,8 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                     inst = md.Inst(instrument)
                 except ValueError:
                     if (
-                        instrument == 'CFHT MegaPrime' or
-                        instrument == 'megacam'
+                        instrument == 'CFHT MegaPrime'
+                        or instrument == 'megacam'
                     ):
                         inst = md.Inst.MEGAPRIME
                     elif instrument == 'Unknown' and detector is not None:

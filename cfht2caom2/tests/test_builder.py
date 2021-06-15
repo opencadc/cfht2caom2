@@ -76,15 +76,14 @@ from mock import patch, ANY
 import cfht_mocks
 
 
-@patch(
-    'caom2pipe.client_composable.CadcDataClient',
-    autospec=True
-)
+@patch('caom2pipe.client_composable.CadcDataClient', autospec=True)
 def test_cfht_builder(client_mock):
     test_config = mc.Config()
     test_config.use_local_files = True
     test_subject = CFHTBuilder(
-        client_mock, test_config.archive, test_config.use_local_files,
+        client_mock,
+        test_config.archive,
+        test_config.use_local_files,
     )
     assert test_subject is not None, 'ctor failure'
 
@@ -102,8 +101,8 @@ def test_cfht_builder(client_mock):
 
     test_result = test_subject.build(test_fqn)
     assert test_result is not None, 'local fits file failed'
-    assert (
-        test_result.file_name == os.path.basename(test_fqn)
+    assert test_result.file_name == os.path.basename(
+        test_fqn
     ), 'wrong local file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
     assert not client_mock.called, 'should not use client'
@@ -111,13 +110,15 @@ def test_cfht_builder(client_mock):
     client_mock.get_file.side_effect = cfht_mocks._mock_get_file
     test_config.use_local_files = False
     test_subject = CFHTBuilder(
-        client_mock, test_config.archive, test_config.use_local_files,
+        client_mock,
+        test_config.archive,
+        test_config.use_local_files,
     )
     assert test_subject is not None, 'ctor failure 2'
     test_result = test_subject.build(test_fqn)
     assert test_result is not None, 'remote fits file failed'
-    assert (
-            test_result.file_name == os.path.basename(test_fqn)
+    assert test_result.file_name == os.path.basename(
+        test_fqn
     ), 'wrong remote file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
     assert client_mock.get_file.called, 'should use client'

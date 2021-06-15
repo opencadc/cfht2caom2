@@ -95,8 +95,9 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
     repo_mock.return_value.update.side_effect = _mock_repo_update
-    data_client_mock.return_value.get_file_info.side_effect = \
+    data_client_mock.return_value.get_file_info.side_effect = (
         _mock_get_file_info
+    )
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=TEST_DIR)
     try:
@@ -115,17 +116,16 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
 @patch('caom2utils.fits2caom2.get_cadc_headers')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcDataClient')
-def test_run_store(
-    data_client_mock, repo_client_mock, header_mock, fits_mock
-):
+def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
     # TODO - change this test to rely on vos.Client mocks once new CADC
     # TODO - storage is in place
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=test_dir_fqn)
     repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
-    data_client_mock.return_value.get_file_info.side_effect = \
+    data_client_mock.return_value.get_file_info.side_effect = (
         _mock_get_file_info
+    )
     header_mock.side_effect = _mock_header_read
     fits_mock.side_effect = _mock_header_read
     try:
@@ -162,8 +162,9 @@ def test_run_state(run_mock, tap_mock, data_client_mock):
     run_mock.return_value = 0
     tap_mock.side_effect = _mock_dir_listing
     data_client_mock.return_value.get_file.side_effect = _mock_get_file
-    data_client_mock.return_value.get_file_info.side_effect = \
+    data_client_mock.return_value.get_file_info.side_effect = (
         _mock_get_file_info
+    )
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=TEST_DIR)
 
@@ -306,7 +307,7 @@ def _mock_repo_read_not_none(arg1, arg2):
         observation_id='TEST_OBS_ID',
         collection='TEST',
         algorithm=Algorithm(name='exposure'),
-        instrument=Instrument(name=metadata.Inst.MEGAPRIME.value)
+        instrument=Instrument(name=metadata.Inst.MEGAPRIME.value),
     )
 
 
@@ -342,10 +343,10 @@ def _mock_dir_listing(
 ):
     return [
         dsc.StateRunnerMeta(
-           os.path.join(
-               os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz'
-           ),
-           '2019-10-23T16:27:19.000',
+            os.path.join(
+                os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz'
+            ),
+            '2019-10-23T16:27:19.000',
         ),
     ]
 
@@ -360,7 +361,6 @@ INSTRUME= 'WIRCam  '           /
 END
 """
     delim = '\nEND'
-    extensions = \
-        [e + delim for e in x.split(delim) if e.strip()]
+    extensions = [e + delim for e in x.split(delim) if e.strip()]
     headers = [fits.Header.fromstring(e, sep='\n') for e in extensions]
     return headers
