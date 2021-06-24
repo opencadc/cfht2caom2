@@ -174,10 +174,8 @@ SF 12-04-21
 
 """
 
-import copy
 import importlib
 import logging
-import math
 import os
 import sys
 import traceback
@@ -187,12 +185,9 @@ from enum import Enum
 
 from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, DerivedObservation, TypedList, Chunk
-from caom2 import CoordRange2D, CoordAxis2D, Axis, Coord2D, RefCoord
-from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
-from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
-from caom2 import ObservableAxis, CoordError, TemporalWCS, CoordFunction1D
+from caom2 import DataProductType
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
-from caom2utils import WcsParser, get_cadc_headers
+from caom2utils import get_cadc_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import client_composable
@@ -201,6 +196,7 @@ from caom2pipe import translate_composable as tc
 
 from cfht2caom2 import cfht_builder as cb
 from cfht2caom2 import cfht_name as cn
+from cfht2caom2 import instruments
 from cfht2caom2 import metadata as md
 
 
@@ -769,43 +765,23 @@ def update(observation, **kwargs):
         idx = _update_observation_metadata(
             observation, headers, cfht_name, fqn, uri, subject
         )
-    if (
-        instrument is md.Inst.ESPADONS
-        and observation.target_position is not None
-    ):
-        if observation.target_position.equinox is not None:
-            observation.target_position.equinox = md.cache.get_repair(
-                'Observation.target_position.equinox',
-                observation.target_position.equinox,
-            )
-        if observation.target_position.coordsys is not None:
-            observation.target_position.coordsys = md.cache.get_repair(
-                'Observation.target_position.coordsys',
-                observation.target_position.coordsys,
-            )
-
-    ccdbin = headers[idx].get('CCBIN1')
-    radecsys = headers[idx].get('RADECSYS')
-    ctype1 = headers[idx].get('CTYPE1')
-    filter_name = headers[idx].get('FILTER')
-    if filter_name is None and len(headers) > idx + 1:
-        filter_name = headers[idx + 1].get('FILTER')
-
+    x = instruments.instrument_factory(
+        instrument,
+        headers,
+        idx,
+        cfht_name,
+        observation,
+    )
+    x.update_observation()
     for plane in observation.planes.values():
         if plane.product_id != cfht_name.product_id:
             # do only the work for the applicable plane
             continue
 
-        if instrument is md.Inst.SPIROU and not cfht_name.suffix == 'r':
-            cc.rename_parts(observation, headers)
-
-        if observation.algorithm.name == 'scan':
-            plane.data_product_type = DataProductType.CUBE
-            if plane.provenance is not None:
-                plane.provenance.last_executed = mc.make_time(
-                    headers[idx].get('DATE'),
-                )
+        x.plane = plane
         for artifact in plane.artifacts.values():
+            if artifact.uri != cfht_name.file_uri:
+                continue
             params = {
                 'uri': artifact.uri,
                 'header': headers[idx],
@@ -814,335 +790,16 @@ def update(observation, **kwargs):
                 time_delta = get_time_refcoord_delta_simple(params)
             else:
                 time_delta = get_time_refcoord_delta_derived(headers[idx])
+
             for part in artifact.parts.values():
+                if instrument is md.Inst.SPIROU and cfht_name.suffix == 's':
+                    part.chunks = TypedList(Chunk,)
 
-                for c in part.chunks:
-                    chunk_idx = part.chunks.index(c)
-                    chunk = part.chunks[chunk_idx]
-
+                for chunk in part.chunks:
                     cc.undo_astropy_cdfix_call(chunk, time_delta)
-
-                    if chunk.energy is not None:
-                        if chunk.energy.bandpass_name in ['NONE', 'Open']:
-                            # CW
-                            # If no or "open" filter then set filter name to
-                            # null
-                            chunk.energy.bandpass_name = None
-
-                        if (
-                            chunk.energy.axis is not None
-                            and chunk.energy.axis.axis is not None
-                            and chunk.energy.axis.axis.ctype is not None
-                        ):
-                            # PD 08-04-20
-                            # the correct way to express "inverse meter" is
-                            # either  m**-1 or m^-1
-                            #
-                            # we support both exponentiations but convert ^
-                            # to ** so I guess at that time we thought ** was
-                            # the more common style.
-                            if chunk.energy.axis.axis.cunit == '1 / m':
-                                chunk.energy.axis.axis.cunit = 'm**-1'
-
-                    if instrument is md.Inst.ESPADONS:
-                        _update_energy_espadons(
-                            chunk,
-                            cfht_name.suffix,
-                            headers,
-                            idx,
-                            artifact.uri,
-                            fqn,
-                            observation.observation_id,
-                        )
-
-                        if chunk.position is not None:
-                            # conform to stricter WCS validation
-                            chunk.position_axis_1 = None
-                            chunk.position_axis_2 = None
-                            chunk.naxis = None
-                            # CW - Ignore position wcs if a calibration file
-                            # suffix list from caom2IngestEspadons.py, l389
-                            # 'b', 'd', 'c', 'f', 'x'
-                            # with missing spatial indicator keywords
-                            if not (
-                                cfht_name.suffix in ['a', 'i', 'o', 'p']
-                                and (
-                                    radecsys is None
-                                    or radecsys.lower() != 'null'
-                                )
-                                and headers[idx].get('RA_DEG') is not None
-                                and headers[idx].get('DEC_DEG') is not None
-                            ):
-                                cc.reset_position(chunk)
-
-                        if cfht_name.suffix in ['i', 'p']:
-                            _update_observable(
-                                part,
-                                chunk,
-                                cfht_name.suffix,
-                                observation.observation_id,
-                            )
-
-                        if not (
-                            chunk.naxis is not None and chunk.position is None
-                        ):
-                            if chunk.energy is not None:
-                                chunk.energy_axis = None
-                            if chunk.time is not None:
-                                chunk.time_axis = None
-                        if chunk.naxis is None:
-                            if chunk.observable_axis is not None:
-                                chunk.observable_axis = None
-                            if chunk.polarization_axis is not None:
-                                chunk.polarization_axis = None
-
-                        if chunk.position is not None:
-                            if chunk.position.equinox is not None:
-                                chunk.position.equinox = md.cache.get_repair(
-                                    'Chunk.position.equinox',
-                                    chunk.position.equinox,
-                                )
-                            if chunk.position.coordsys is not None:
-                                chunk.position.coordsys = md.cache.get_repair(
-                                    'Chunk.position.coordsys',
-                                    chunk.position.coordsys,
-                                )
-
-                    elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
-                        # CW
-                        # Ignore position wcs if a calibration file (except 'x'
-                        # type calibration) and/or position info not in header
-                        # or binned 8x8
-                        if (
-                            cfht_name.suffix in ['b', 'l', 'd', 'f']
-                            or ccdbin == 8
-                            or radecsys is None
-                            or ctype1 is None
-                        ):
-                            cc.reset_position(chunk)
-                            chunk.naxis = None
-
-                        # CW
-                        # Ignore energy wcs if some type of calibration file
-                        # or filter='None' or 'Open' or there is no filter
-                        # match
-                        #
-                        # SGo - use range for energy with filter information
-                        filter_md, updated_filter_name = _get_filter_md(
-                            instrument, filter_name, uri
-                        )
-                        if (
-                            filter_name is None
-                            or filter_name in ['Open', 'NONE']
-                            or ac.FilterMetadataCache.get_fwhm(filter_md)
-                            is None
-                            or cfht_name.suffix in ['b', 'l', 'd']
-                            or observation.type in ['DARK']
-                        ):
-                            cc.reset_energy(chunk)
-                        else:
-                            _update_energy_range(
-                                chunk, updated_filter_name, filter_md
-                            )
-
-                        # PD - in general, do not assign, unless the wcs
-                        # metadata is in the FITS header
-                        if chunk.time_axis is not None:
-                            chunk.time_axis = None
-
-                    elif instrument is md.Inst.SITELLE:
-                        if chunk.energy_axis is not None:
-                            # CW, SF 18-12-19 - SITELLE biases and darks have
-                            # no energy, all other observation types do
-                            if observation.type in ['BIAS', 'DARK']:
-                                cc.reset_energy(chunk)
-                            else:
-                                chunk.energy_axis = 3
-                        if chunk.time_axis is not None:
-                            chunk.time_axis = 4
-
-                        if (
-                            cfht_name.suffix in ['a', 'o', 'x']
-                            and chunk.position is None
-                        ):
-                            _update_position_sitelle(
-                                chunk,
-                                headers[idx],
-                                observation.observation_id,
-                            )
-                            if (
-                                chunk.naxis is not None
-                                and chunk.naxis == 3
-                                and chunk.energy is not None
-                            ):
-                                chunk.time_axis = None
-                                chunk.energy_axis = 3
-
-                        if cfht_name.suffix == 'p':
-                            if chunk.position.axis.function is None:
-                                _update_position_function_sitelle(
-                                    chunk,
-                                    headers[idx],
-                                    observation.observation_id,
-                                    idx,
-                                )
-                            _update_sitelle_plane(observation, uri)
-                        if cfht_name.suffix == 'v':
-                            cc.reset_energy(chunk)
-
-                        # because SITELLE has the information from two
-                        # detectors amalgamated into one set of HDUs
-                        if chunk.naxis is not None and chunk.naxis <= 2:
-                            if chunk.position_axis_1 is None:
-                                chunk.naxis = None
-                            chunk.time_axis = None
-                            chunk.energy_axis = None
-                        else:
-                            chunk.time_axis = 4
-                            chunk.energy_axis = 3
-
-                    elif instrument is md.Inst.SPIROU:
-                        _update_position_spirou(
-                            chunk, headers[idx], observation.observation_id
-                        )
-
-                        if cfht_name.suffix == 's':
-                            part.chunks = TypedList(
-                                Chunk,
-                            )
-                        elif cfht_name.suffix == 'g':
-                            _update_spirou_time_g(
-                                chunk,
-                                headers,
-                                cfht_name,
-                                observation.observation_id,
-                            )
-                            plane.data_product_type = DataProductType.IMAGE
-                        elif cfht_name.suffix == 'p':
-                            _update_spirou_time_p(
-                                chunk,
-                                headers,
-                                cfht_name,
-                                observation.observation_id,
-                                part.name,
-                            )
-                            _update_spirou_polarization(
-                                chunk,
-                                headers,
-                                observation.observation_id,
-                                part.name,
-                            )
-                            # check with Dustin on what a polarization cut-out
-                            # looks like before deciding this is semi-ok
-                            chunk.naxis = None
-                            chunk.position_axis_1 = None
-                            chunk.position_axis_2 = None
-                            chunk.energy_axis = None
-                            chunk.time_axis = None
-                            chunk.polarization_axis = None
-                        # stricter WCS validation
-                        chunk.naxis = None
-                        if chunk.energy is not None:
-                            chunk.energy_axis = None
-                            if observation.type == 'DARK':
-                                # caom2IngestSpirou.py, l514
-                                chunk.energy = None
-                        if chunk.time is not None:
-                            chunk.time_axis = None
-                        if chunk.position is not None:
-                            chunk.position_axis_1 = None
-                            chunk.position_axis_2 = None
-
-                    elif instrument is md.Inst.WIRCAM:
-                        _update_wircam_time(
-                            part,
-                            chunk,
-                            headers,
-                            idx,
-                            cfht_name,
-                            observation.type,
-                            observation.observation_id,
-                        )
-
-                        if cfht_name.suffix in ['f'] or observation.type in [
-                            'BPM',
-                            'DARK',
-                            'FLAT',
-                            'WEIGHT',
-                        ]:
-                            cc.reset_position(chunk)
-                            chunk.naxis = None
-
-                        if cfht_name.suffix == 'g':
-                            _update_wircam_position_g(
-                                part,
-                                chunk,
-                                headers,
-                                idx,
-                                observation.observation_id,
-                            )
-                            temp_bandpass_name = headers[idx].get('FILTER')
-                            if temp_bandpass_name == 'FakeBlank':
-                                cc.reset_energy(chunk)
-
-                        if cfht_name.suffix == 'o':
-                            _update_wircam_position_o(
-                                part,
-                                chunk,
-                                headers,
-                                idx,
-                                observation.observation_id,
-                            )
-
-                        # position axis check is to determine if naxis should
-                        # be set
-                        if (
-                            cfht_name.suffix in ['d', 'f', 'g', 'o']
-                            and chunk.position is None
-                        ):
-                            # PD - 17-01-20
-                            #  This is a FLAT field exposure so the position
-                            #  is not relevant and only the energy and time is
-                            #  relevant for discovery. The easiest correct
-                            #  thing to do is to leave naxis, energyAxis, and
-                            #  timeAxis all null: the same plane metadata
-                            #  should be generated and that should be valid.
-                            #  The most correct thing to do would be to set
-                            #  naxis=2, positionAxis1=1, positionAxis2=2 (to
-                            #  indicate image) and then use a suitable
-                            #  coordinate system description that meant "this
-                            #  patch of the inside of the dome" or maybe some
-                            #  description of the pixel coordinate system
-                            #  (because wcs kind of treats the sky and the
-                            #  pixels as two different systems)... I don't
-                            #  know how to do that and it adds very minimal
-                            #  value (it allows Plane.position.dimension to be
-                            #  assigned a value).
-                            chunk.naxis = None
-                            chunk.position_axis_1 = None
-                            chunk.position_axis_2 = None
-                            chunk.energy_axis = None
-                            chunk.time_axis = None
-
-                        filter_md, updated_filter_name = _get_filter_md(
-                            instrument, filter_name, uri
-                        )
-                        _update_energy_range(
-                            chunk, updated_filter_name, filter_md
-                        )
-
-                        if chunk.naxis == 2:
-                            chunk.time_axis = None
-                            chunk.energy_axis = None
-
-                        if (
-                            chunk.position is not None
-                            and chunk.position.coordsys.lower() == 'null'
-                        ):
-                            cc.reset_position(chunk)
-                            chunk.naxis = None
-                            chunk.energy_axis = None
-                            chunk.time_axis = None
+                    x.part = part
+                    x.chunk = chunk
+                    x.update_chunk()
 
         if isinstance(observation, DerivedObservation):
             if derived_type is ProvenanceType.IMCMB:
@@ -1172,27 +829,11 @@ def update(observation, **kwargs):
                     _repair_filename_provenance_value,
                     observation.observation_id,
                 )
-        if instrument is md.Inst.WIRCAM and cfht_name.suffix in ['p', 's']:
-            # caom2IngestWircam.py, l193
-            # CW 09-01-20
-            # Only the 'o' is input
-            _update_plane_provenance_p(plane, observation.observation_id, 'o')
-        elif instrument is md.Inst.ESPADONS and cfht_name.suffix == 'i':
-            # caom2IngestEspadons.py, l714
-            _update_plane_provenance_p(plane, observation.observation_id, 'o')
-        elif (
-            instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]
-            and cfht_name.suffix == 'p'
-        ):
-            # caom2IngestMegacam.py, l142
-            _update_plane_provenance_p(plane, observation.observation_id, 'o')
-        elif instrument is md.Inst.SPIROU and cfht_name.suffix in [
-            'e',
-            's',
-            't',
-        ]:
-            # caom2IngestSpirou.py, l584
-            _update_plane_provenance_p(plane, observation.observation_id, 'o')
+        x.update_plane()
+        # this is here, because the bits that are being copied have been
+        # created/modified by the update_chunk call
+        if instrument is md.Inst.SITELLE and cfht_name.suffix == 'p':
+            _update_sitelle_plane(observation, uri)
 
     # relies on update_plane_provenance being called
     if isinstance(observation, DerivedObservation):
@@ -1200,13 +841,7 @@ def update(observation, **kwargs):
 
     if cfht_name.suffix in ['p', 'y'] and instrument is md.Inst.WIRCAM:
         # complete the ingestion of the missing bits of a sky construct file
-        _update_wircam_plane(observation, cfht_name, headers)
-
-    if (
-        observation.proposal is not None
-        and observation.proposal.pi_name is None
-    ):
-        observation.proposal.pi_name = 'CFHT'
+        _update_wircam_plane(observation, cfht_name)
 
     logging.debug('Done update.')
     return observation
@@ -2232,88 +1867,6 @@ def _is_derived(headers, cfht_name, obs_id):
     return result, derived_type
 
 
-def _update_energy_espadons(chunk, suffix, headers, idx, uri, fqn, obs_id):
-    logging.debug(f'Begin _update_energy_espadons for {obs_id} {uri} {fqn}')
-    if fqn is None:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=md.Inst.ESPADONS)
-    else:
-        cfht_name = cn.CFHTName(
-            file_name=os.path.basename(fqn), instrument=md.Inst.ESPADONS
-        )
-    if cfht_name.suffix == suffix:
-        axis = Axis('WAVE', 'nm')
-        params = {
-            'header': headers[idx],
-            'uri': uri,
-        }
-        resolving_power = get_espadons_energy_resolving_power(params)
-        coord_axis = None
-        if suffix in ['a', 'c', 'f', 'o', 'x']:
-            # caom2IngestEspadons.py, l818
-            naxis1 = get_energy_function_naxis(params)
-            cdelt1 = get_energy_function_delta(params)
-            crval1 = get_energy_function_val(params)
-            ref_coord_1 = RefCoord(0.5, crval1)
-            ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1) * cdelt1)
-            coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
-            coord_axis = CoordAxis1D(axis=axis, range=coord_range)
-        elif suffix in ['b', 'd', 'i', 'p']:
-            # i, p, are done in the espadons energy data visitor, and b, d are
-            # not done at all
-            # CW caom2IngestEspadons.py, l393
-            # Ignore energy wcs if some type of calibration file
-            return
-        chunk.energy = SpectralWCS(
-            coord_axis,
-            specsys='TOPOCENT',
-            ssyssrc='TOPOCENT',
-            resolving_power=resolving_power,
-        )
-        chunk.energy_axis = 1
-    logging.debug(f'End _update_energy_espadons for {obs_id}')
-
-
-def _update_energy_range(chunk, filter_name, filter_md):
-    """
-    Make the MegaCam/MegaPrime energy metadata look more like the
-    Gemini metadata.
-    """
-    cc.build_chunk_energy_range(chunk, filter_name, filter_md)
-    if chunk.energy is not None:
-        chunk.energy.ssysobs = 'TOPOCENT'
-        chunk.energy.ssyssrc = 'TOPOCENT'
-        # values from caom2megacam.default, caom2megacamdetrend.default
-        chunk.energy.axis.error = CoordError(1.0, 1.0)
-
-
-def _update_observable(part, chunk, suffix, obs_id):
-    logging.debug(f'Begin _update_observable for {obs_id}')
-    # caom2IngestEspadons.py, l828
-    # CW Set up observable axes, row 1 is wavelength, row 2 is normalized
-    # flux, row 3 ('p' only) is Stokes spectrum
-
-    # this check is here, because it's quite difficult to find the 'right'
-    # chunk, and blind updating generally causes both chunks to have the
-    # same metadata values.
-    if chunk.observable is None:
-        independent_axis = Axis('WAVE', 'nm')
-        independent = Slice(independent_axis, 1)
-        dependent_axis = Axis('flux', 'counts')
-        dependent = Slice(dependent_axis, 2)
-        chunk.observable = ObservableAxis(dependent, independent)
-        chunk.observable_axis = 2
-
-        if suffix == 'p' and len(part.chunks) == 1:
-            # caom2IngestEspadons.py, l863
-            dependent_axis = Axis('polarized flux', 'percent')
-            dependent = Slice(dependent_axis, 3)
-            new_chunk = copy.deepcopy(chunk)
-            new_chunk.observable = ObservableAxis(dependent, independent)
-            new_chunk._id = Chunk._gen_id()
-            part.chunks.append(new_chunk)
-    logging.debug(f'End _update_observable for {obs_id}')
-
-
 def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
     """
     Why this method exists:
@@ -2421,108 +1974,6 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
     return idx
 
 
-def _update_plane_provenance_p(plane, obs_id, suffix):
-    logging.debug(f'Begin _update_plane_provenance_p for {obs_id}')
-    obs_member_str = mc.CaomName.make_obs_uri_from_obs_id(
-        cn.COLLECTION, obs_id
-    )
-    obs_member = ObservationURI(obs_member_str)
-    plane_uri = PlaneURI.get_plane_uri(obs_member, f'{obs_id}{suffix}')
-    plane.provenance.inputs.add(plane_uri)
-    logging.debug(f'End _update_plane_provenance_p for {obs_id}')
-
-
-def _update_position_spirou(chunk, header, obs_id):
-    logging.debug(f'Begin _update_position_spirou for {obs_id}')
-    # from caom2IngestSpirou.py, l499+
-    # CW - ignore position wcs if a calibration file
-    obs_type = _get_obstype(header)
-    ra_deg = header.get('RA_DEG')
-    dec_deg = header.get('DEC_DEG')
-    ra_dec_sys = header.get('RADECSYS')
-    if obs_type not in ['OBJECT', 'ALIGN'] or (
-        ra_deg is None
-        and dec_deg is None
-        and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
-    ):
-        cc.reset_position(chunk)
-    logging.debug(f'Begin _update_position_spirou for {obs_id}')
-
-
-def _update_position_sitelle(chunk, header, obs_id):
-    logging.debug(f'Begin _update_position_sitelle for {obs_id}')
-    # from caom2IngestSitelle.py l894
-    obs_ra = header.get('RA_DEG')
-    obs_dec = header.get('DEC_DEG')
-    if obs_ra is None or obs_dec is None:
-        logging.error(
-            'RA_DEG {obs_ra} DEC_DEG {obs_dec} for {obs_id} are not set.'
-        )
-        return
-
-    pix_scale2 = mc.to_float(header.get('PIXSCAL2'))
-    delta_dec = (1024.0 * pix_scale2) / 3600.0
-    obs_dec_bl = obs_dec - delta_dec
-    obs_dec_tr = obs_dec + delta_dec
-
-    pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
-    # obs_dec_tr == obs_dec_tl
-    delta_ra_top = (1024.0 * pix_scale1) / (
-        3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
-    )
-    delta_ra_bot = (1024.0 * pix_scale1) / (
-        3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0))
-    )
-    obs_ra_bl = obs_ra + delta_ra_bot
-    obs_ra_tr = obs_ra - delta_ra_top
-
-    axis = CoordAxis2D(Axis('RA', 'deg'), Axis('DEC', 'deg'))
-    axis.range = CoordRange2D(
-        Coord2D(RefCoord(0.5, obs_ra_bl), RefCoord(0.5, obs_dec_bl)),
-        Coord2D(RefCoord(2048.5, obs_ra_tr), RefCoord(2048.5, obs_dec_tr)),
-    )
-    position = SpatialWCS(axis)
-    position.coordsys = 'FK5'
-    position.equinox = 2000.0
-    chunk.position = position
-    chunk.position_axis_1 = 1
-    chunk.position_axis_2 = 2
-    logging.debug(f'End _update_position_sitelle for {obs_id}')
-
-
-def _update_position_function_sitelle(chunk, header, obs_id, extension):
-    logging.debug(f'Begin _update_position_function_sitelle for {obs_id}')
-    cd1_1 = header.get('CD1_1')
-    # caom2IngestSitelle.py, l745
-    # CW
-    # Be able to handle any of the 3 wcs systems used
-    if cd1_1 is None:
-        pc1_1 = header.get('PC1_1')
-        if pc1_1 is not None:
-            cdelt1 = mc.to_float(header.get('CDELT1'))
-            if cdelt1 is None:
-                cd1_1 = mc.to_float(header.get('PC1_1'))
-                cd1_2 = mc.to_float(header.get('PC1_2'))
-                cd2_1 = mc.to_float(header.get('PC2_1'))
-                cd2_2 = mc.to_float(header.get('PC2_2'))
-            else:
-                cdelt2 = mc.to_float(header.get('CDELT2'))
-                cd1_1 = cdelt1 * mc.to_float(header.get('PC1_1'))
-                cd1_2 = cdelt1 * mc.to_float(header.get('PC1_2'))
-                cd2_1 = cdelt2 * mc.to_float(header.get('PC2_1'))
-                cd2_2 = cdelt2 * mc.to_float(header.get('PC2_2'))
-            header['CD1_1'] = cd1_1
-            header['CD1_2'] = cd1_2
-            header['CD2_1'] = cd2_1
-            header['CD2_2'] = cd2_2
-
-    wcs_parser = WcsParser(header, obs_id, extension)
-    if chunk is None:
-        chunk = Chunk()
-    wcs_parser.augment_position(chunk)
-    logging.debug(f'End _update_position_function_sitelle for {obs_id}')
-
-
 def _update_sitelle_plane(observation, uri):
     logging.debug(
         f'Begin _update_sitelle_plane for {observation.observation_id}'
@@ -2591,148 +2042,7 @@ def _update_sitelle_plane(observation, uri):
     logging.debug('End _update_sitelle_plane')
 
 
-def _update_spirou_time_g(chunk, headers, cfht_name, obs_id):
-    logging.debug(f'Begin _update_spirou_time_g for {obs_id}')
-    if cfht_name.suffix == 'g':
-        # construct TemporalWCS for 'g' files from the CAOM2 pieces
-        # because the structure of 'g' files is so varied, it's not possible
-        # to hand over even part of the construction to the blueprint.
-        # SF - 22-09-20 - use ETIME
-
-        ref_coord_val = _get_keyword('DATE', headers)
-        ref_coord_mjd = ac.get_datetime(ref_coord_val).value
-
-        if chunk.time is None:
-            chunk.time = TemporalWCS(
-                CoordAxis1D(Axis('TIME', 'd')), timesys='UTC'
-            )
-        if chunk.time.axis is None:
-            chunk.time.axis = CoordAxis1D(
-                axis=Axis('TIME', 'd'),
-                error=None,
-                range=None,
-                bounds=None,
-                function=None,
-            )
-
-        time_index = headers[0].get('ZNAXIS')
-        if time_index is None or time_index == 0:
-            time_index = headers[1].get('ZNAXIS')
-            if time_index is None or time_index == 0:
-                time_index = headers[0].get('NAXIS')
-                if time_index is None or time_index == 0:
-                    time_index = headers[1].get('NAXIS')
-        naxis_key = f'ZNAXIS{time_index}'
-        time_naxis = _get_keyword(naxis_key, headers)
-        if time_naxis is None:
-            naxis_key = f'NAXIS{time_index}'
-            time_naxis = _get_keyword(naxis_key, headers)
-
-        ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_mjd))
-
-        e_time = _get_keyword('ETIME', headers)
-        if e_time is None:
-            logging.warning(
-                f'No exposure found for {cfht_name.file_name}. No Temporal '
-                f'WCS.'
-            )
-        else:
-            chunk.time.exposure = e_time / 1000.0
-            chunk.time.resolution = chunk.time.exposure
-            time_delta = chunk.time.exposure / 86400.0
-            chunk.time.axis.function = CoordFunction1D(
-                naxis=time_naxis, delta=time_delta, ref_coord=ref_coord
-            )
-
-    logging.debug(f'End _update_spirou_time_g for {obs_id}')
-
-
-def _update_spirou_time_p(chunk, headers, cfht_name, obs_id, part_name):
-    logging.debug(f'Begin _update_spirou_time_p for {obs_id}')
-    if cfht_name.suffix == 'p':
-        # TOTETIME is not in all the HDUs, so copy it from the HDUs that have
-        # it, and use it everywhere - this matches existing CFHT SPIRou 'p'
-        # behaviour
-
-        def _find_keywords_in_header(header, lookup):
-            values = []
-            for keyword in header:
-                if keyword.startswith(lookup) and len(keyword) > len(lookup):
-                    values.append(header.get(keyword))
-            return values
-
-        header = None
-        for h in headers:
-            if h.get('EXTNAME') == part_name:
-                header = h
-                break
-
-        tot_e_time = header.get('TOTETIME')
-
-        lower = _find_keywords_in_header(header, 'MJDATE')
-        upper = _find_keywords_in_header(header, 'MJDEND')
-
-        if len(lower) > 0:
-            for ii, entry in enumerate(lower):
-                chunk.time = cc.build_temporal_wcs_append_sample(
-                    chunk.time, entry, upper[ii]
-                )
-
-        if chunk.time is None:
-            logging.warning(
-                f'No chunk time metadata for {obs_id}, part {part_name}.'
-            )
-        elif tot_e_time is None:
-            logging.warning(
-                f'Cannot find time metadata for {obs_id}, part {part_name}.'
-            )
-        else:
-            chunk.time.exposure = tot_e_time
-            chunk.time.resolution = tot_e_time
-    logging.debug(f'End _update_spirou_time_p for {obs_id}')
-
-
-def _update_spirou_polarization(chunk, headers, obs_id, part_name):
-    logging.debug(f'End _update_spirou_polarization for {obs_id}')
-    header = None
-    for h in headers:
-        if h.get('EXTNAME') == part_name:
-            header = h
-            break
-
-    stokes_param = header.get('STOKES')
-    if stokes_param is None:
-        logging.warning(
-            f'No STOKES value for HDU {part_name} in {obs_id}. No '
-            f'polarization.'
-        )
-        chunk.polarization = None
-        chunk.polarization_axis = None
-    else:
-        lookup = {
-            'I': 1.0,
-            'Q': 2.0,
-            'U': 3.0,
-            'V': 4.0,
-            'W': 5.0,
-        }
-        crval = lookup.get(stokes_param, 0.0)
-        if crval == 0.0:
-            logging.warning(f'STOKES value is {crval}. No polarization.')
-            chunk.polarization = None
-            chunk.polarization_axis = None
-        else:
-            if (
-                chunk.polarization is not None
-                and chunk.polarization.axis is not None
-                and chunk.polarization.axis.function is not None
-            ):
-                chunk.polarization.axis.function.ref_coord.val = crval
-
-    logging.debug(f'End _update_spirou_polarization for {obs_id}')
-
-
-def _update_wircam_plane(observation, cfht_name, headers):
+def _update_wircam_plane(observation, cfht_name):
     logging.debug(
         f'Begin _update_wircam_plane for {observation.observation_id}'
     )
@@ -2787,228 +2097,6 @@ def _semi_deep_copy_plane(from_plane, to_plane, from_artifact, to_artifact):
         to_artifact.parts.add(cc.copy_part(part))
         for chunk in part.chunks:
             to_artifact.parts[part.name].chunks.append(cc.copy_chunk(chunk))
-
-
-def _update_wircam_position_o(part, chunk, headers, idx, obs_id):
-    logging.debug(f'Begin _update_wircam_position_o for {obs_id}')
-    part_index = mc.to_int(part.name)
-    header = headers[part_index]
-    ra_deg = header.get('RA_DEG')
-    dec_deg = header.get('DEC_DEG')
-    if chunk.position is None and ra_deg is not None and dec_deg is not None:
-        logging.info(f'Adding position information for {obs_id}')
-        header['CTYPE1'] = 'RA---TAN'
-        header['CTYPE2'] = 'DEC--TAN'
-        header['CUNIT1'] = 'deg'
-        header['CUNIT2'] = 'deg'
-        header['CRVAL1'] = ra_deg
-        header['CRVAL2'] = dec_deg
-        wcs_parser = WcsParser(header, obs_id, idx)
-        if chunk is None:
-            chunk = Chunk()
-        wcs_parser.augment_position(chunk)
-        if chunk.position is not None:
-            chunk.position_axis_1 = 1
-            chunk.position_axis_2 = 2
-    logging.debug(f'End _update_wircam_position_o')
-
-
-def _update_wircam_position_g(part, chunk, headers, idx, obs_id):
-    """'g' file position handling, which is quite unique."""
-    logging.debug(f'Begin _update_wircam_position_g for {obs_id}')
-    header = headers[idx]
-
-    obj_name = header.get('OBJNAME')
-    part_num = mc.to_int(part.name)
-    if obj_name == 'zenith' or part_num >= 5:
-        # SGo - the second clause is here, because there are only four sets
-        # of position information in headers (RA/DEC of guide start on
-        # arrays 1 2 3 4), and that's the only thing that is calculated
-        # in the original code. Values for HDU 5+ are not written as part of
-        # the override file, and thus default to 0, which fails ingestion
-        # to the service.
-        logging.warning(
-            f'obj_name is {obj_name}. part_num is {part_num} No position '
-            f'for {obs_id}'
-        )
-        cc.reset_position(chunk)
-        return
-
-    part_index = mc.to_int(part.name)
-    header = headers[part_index]
-    cd1_1 = None
-    cd2_2 = None
-    if (
-        header.get('CRVAL2') is not None
-        or headers[0].get('CRVAL2') is not None
-    ):
-        cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
-        cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
-
-    if cd1_1 is None or cd2_2 is None:
-        logging.warning(
-            f'cd1_1 is {cd1_1}, cd2_2 is {cd2_2}, part_num is {part_num}. '
-            f'No position for this part for {obs_id}.'
-        )
-        cc.reset_position(chunk)
-        return
-
-    wcgd_ra = header.get(f'WCGDRA{part.name}')
-    if wcgd_ra is None:
-        wcgd_ra = headers[0].get(f'WCGDRA{part.name}')
-    wcgd_dec = header.get(f'WCGDDEC{part.name}')
-    if wcgd_dec is None:
-        wcgd_dec = headers[0].get(f'WCGDDEC{part.name}')
-    if wcgd_ra is None or wcgd_dec is None:
-        logging.warning(
-            f'WCGDRA{part.name} and WCGDDEC{part.name} are undefined. No '
-            f'position.'
-        )
-        cc.reset_position(chunk)
-        return
-    cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
-    if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
-        logging.warning(
-            f'WCGDRA{part.name} and WCGDDEC{part.name} are close to 0. No '
-            f'position.'
-        )
-        cc.reset_position(chunk)
-        return
-
-    naxis_1 = header.get('NAXIS1')
-    if naxis_1 is None:
-        naxis_1 = header.get('ZNAXIS1')
-    naxis_2 = header.get('NAXIS2')
-    if naxis_2 is None:
-        naxis_2 = header.get('ZNAXIS2')
-
-    if mc.to_float(obs_id) < 980000:
-        cr_val2 *= 15.0
-
-    # caom2IngestWircam.py, l367
-    header['NAXIS1'] = naxis_1
-    header['NAXIS2'] = naxis_2
-    header['CRPIX1'] = naxis_1 / 2.0
-    header['CRPIX2'] = naxis_2 / 2.0
-    header['CRVAL1'] = cr_val1
-    header['CRVAL2'] = cr_val2
-    header['CD1_1'] = -1.0 * cd1_1
-    header['CD1_2'] = 0.0
-    header['CD2_1'] = 0.0
-    header['CD2_2'] = cd2_2
-
-    wcs_parser = WcsParser(header, obs_id, idx)
-    if chunk is None:
-        chunk = Chunk()
-    wcs_parser.augment_position(chunk)
-    if chunk.position is not None:
-        chunk.naxis = 2
-        chunk.position_axis_1 = 1
-        chunk.position_axis_2 = 2
-    logging.debug(f'End _update_wircam_position_g for {obs_id}')
-
-
-def _update_wircam_time(
-    part, chunk, headers, idx, cfht_name, obs_type, obs_id
-):
-    logging.debug(f'Begin _update_wircam_time for {obs_id}')
-    if cfht_name.suffix == 'g':
-        # construct TemporalWCS for 'g' files from the CAOM2 pieces
-        # because the structure of 'g' files is so varied, it's not possible
-        # to hand over even part of the construction to the blueprint.
-
-        # SF - 07-05-20
-        # so NAXIS here (where 'here' is a 'g' file) is ZNAXIS=3: time sequence
-        # of images of the guiding camera => this means try ZNAXIS* keyword
-        # values before trying NAXIS*, hence the header lookup code
-
-        ref_coord_val = headers[0].get('MJD-OBS')
-        if ref_coord_val is None:
-            ref_coord_val = headers[1].get('MJD-OBS')
-        part_index = mc.to_int(part.name)
-        part_header = headers[part_index]
-
-        if chunk.time is None:
-            chunk.time = TemporalWCS(
-                CoordAxis1D(Axis('TIME', 'd')), timesys='UTC'
-            )
-
-        if chunk.time.axis is None:
-            chunk.time.axis = CoordAxis1D(
-                axis=Axis('TIME', 'd'),
-                error=None,
-                range=None,
-                bounds=None,
-                function=None,
-            )
-
-        if chunk.time.axis.error is None:
-            chunk.time.axis.error = CoordError(
-                rnder=0.0000001, syser=0.0000001
-            )
-
-        if chunk.time.axis.function is None:
-            ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val))
-
-            time_index = part_header.get('ZNAXIS')
-            if time_index is None:
-                time_index = part_header.get('NAXIS')
-            naxis_key = f'ZNAXIS{time_index}'
-            time_naxis = part_header.get(naxis_key)
-            if time_naxis is None:
-                naxis_key = f'NAXIS{time_index}'
-                time_naxis = part_header.get(naxis_key)
-
-            if (
-                time_naxis is not None
-                and time_index is not None
-                and time_index == 3
-            ):
-                # caom2.4 wcs validation conformance
-                chunk.time_axis = 3
-
-            # CW
-            # Define time samples for guidecube data
-            # Guiding time doesn't seem to match up very well, so just say that
-            # use MJD-OBS gnaxis3 and WCPERIOD
-            #
-            # code from caom2IngestWircam.py, l876+
-            wcgdra1_0 = headers[0].get('WCGDRA1')
-            wc_period_0 = headers[0].get('WCPERIOD')
-            wc_period = None
-            if wcgdra1_0 is not None and wc_period_0 is not None:
-                wc_period = wc_period_0
-            else:
-                wcgdra1_1 = headers[1].get('WCGDRA1')
-                wc_period_1 = headers[1].get('WCPERIOD')
-                if wcgdra1_1 is not None and wc_period_1 is not None:
-                    wc_period = wc_period_1
-
-            time_delta = None
-            if wc_period is not None:
-                if wc_period < 0.0:
-                    wc_period = 100.0
-                # caom2IngestWircam.py, l375
-                chunk.time.exposure = wc_period / 1000.0
-                chunk.time.resolution = chunk.time.exposure
-                time_delta = chunk.time.exposure / 86400.0
-            chunk.time.axis.function = CoordFunction1D(
-                naxis=time_naxis, delta=time_delta, ref_coord=ref_coord
-            )
-
-    # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
-    # seem to prefer NAXIS, so odd as this placement seems, do not rely
-    # on function execution, because it affects NAXIS, not ZNAXIS - sigh
-    if (
-        obs_type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT']
-        and cfht_name.suffix != 'g'
-    ):
-        n_exp = headers[idx].get('NEXP')
-        if n_exp is not None:
-            # caom2IngestWircam.py, l843
-            chunk.time.axis.function.naxis = mc.to_int(n_exp)
-
-    logging.debug(f'End _update_wircam_time for {obs_id}')
 
 
 def _identify_instrument(uri, cfht_builder):
