@@ -79,6 +79,13 @@ __all__ = ['CFHTName', 'COLLECTION', 'ARCHIVE']
 COLLECTION = 'CFHT'
 ARCHIVE = 'CFHT'
 
+# minimize the number of times the code tries to figure out which instrument
+# generated the file being ingested
+#
+# declare the global here, so that it survives the importlib.import_module
+# done by fits2caom2
+cfht_names = {}
+
 
 class CFHTName(mc.StorageName):
     """Naming rules:
@@ -116,7 +123,7 @@ class CFHTName(mc.StorageName):
             self._instrument = md.Inst(instrument)
             if ad_uri is not None and file_name is None:
                 file_name = mc.CaomName(ad_uri).file_name
-            self._file_name = file_name
+            self._file_name = file_name.replace('.header', '')
             self._file_id = CFHTName.remove_extensions(file_name)
             self._suffix = self._file_id[-1]
             if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
@@ -168,6 +175,10 @@ class CFHTName(mc.StorageName):
 
     def is_valid(self):
         return True
+
+    @property
+    def destination_uris(self):
+        return [self.file_uri]
 
     @property
     def file_id(self):

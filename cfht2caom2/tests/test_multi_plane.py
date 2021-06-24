@@ -80,34 +80,34 @@ import test_main_app
 # observation
 DIR_NAME = 'multi_plane'
 LOOKUP = {
-    '979339': ['979339i.fits', '979339o.fits.header'],
+    '979339': ['979339i.fits', '979339o.fits'],
     '2281792': [
-        '2281792s.fits.header',
-        '2281792p.fits.header',
-        '2281792o.fits.header',
-        '2281792g.fits.header',
+        '2281792s.fits',
+        '2281792p.fits',
+        '2281792o.fits',
+        '2281792g.fits',
     ],
     '1151210': [
-        '1151210g.fits.header',
-        '1151210m.fits.header',
-        '1151210w.fits.header',
+        '1151210g.fits',
+        '1151210m.fits',
+        '1151210w.fits',
     ],
-    '979412': ['979412o.fits.header', '979412p.fits.header'],
-    '1257365': ['1257365o.fits.header', '1257365p.fits.header'],
-    '840066': ['840066g.fits.header', '840066o.fits.header'],
+    '979412': ['979412o.fits', '979412p.fits'],
+    '1257365': ['1257365o.fits', '1257365p.fits'],
+    '840066': ['840066g.fits', '840066o.fits'],
     # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
     #             '1927963p.fits.fz'],
     # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
-    '2384125p': ['2384125p.fits.header', '2384125z.hdf5'],
+    '2384125p': ['2384125p.fits', '2384125z.hdf5'],
     '2401734': [
-        '2401734o.fits.header',
-        '2401734e.fits.header',
-        '2401734r.fits.header',
-        '2401734s.fits.header',
-        '2401734t.fits.header',
-        '2401734v.fits.header',
+        '2401734o.fits',
+        '2401734e.fits',
+        '2401734r.fits',
+        '2401734s.fits',
+        '2401734t.fits',
+        '2401734v.fits',
     ],
-    '1979958': ['1979958p.fits.header', '1979958y.fits.header'],
+    '1979958': ['1979958p.fits', '1979958y.fits'],
     # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
     # '2460606': ['2460606i.fits.gz']
 }

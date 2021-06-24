@@ -192,7 +192,7 @@ from caom2 import SpatialWCS, DataProductType, ObservationURI, PlaneURI
 from caom2 import CoordAxis1D, CoordRange1D, SpectralWCS, Slice
 from caom2 import ObservableAxis, CoordError, TemporalWCS, CoordFunction1D
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
-from caom2utils import FitsParser, WcsParser, get_cadc_headers
+from caom2utils import WcsParser, get_cadc_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import client_composable
@@ -281,7 +281,7 @@ def accumulate_bp(bp, uri, instrument):
         'get_instrument_keywords(header)',
     )
 
-    bp.set('Observation.target.standard', 'get_target_standard(header)')
+    bp.set('Observation.target.standard', 'get_target_standard(params)')
 
     bp.clear('Observation.target_position.coordsys')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'OBJRADEC')
@@ -290,11 +290,11 @@ def accumulate_bp(bp, uri, instrument):
     bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQUIN')
     bp.set(
         'Observation.target_position.point.cval1',
-        'get_target_position_cval1(header)',
+        'get_target_position_cval1(params)',
     )
     bp.set(
         'Observation.target_position.point.cval2',
-        'get_target_position_cval2(header)',
+        'get_target_position_cval2(params)',
     )
 
     bp.set('Observation.telescope.name', 'CFHT 3.6m')
@@ -303,7 +303,7 @@ def accumulate_bp(bp, uri, instrument):
     bp.set('Observation.telescope.geoLocationY', y)
     bp.set('Observation.telescope.geoLocationZ', z)
 
-    bp.set('Plane.dataProductType', 'get_plane_data_product_type(header)')
+    bp.set('Plane.dataProductType', 'get_plane_data_product_type(params)')
     bp.set('Plane.calibrationLevel', 'get_calibration_level(params)')
     bp.set('Plane.dataRelease', 'get_plane_data_release(header)')
     bp.set('Plane.metaRelease', 'get_meta_release(header)')
@@ -1214,8 +1214,7 @@ def update(observation, **kwargs):
 
 def get_calibration_level(params):
     header, suffix, uri = _decompose_params(params)
-    instrument = _get_instrument(header)
-    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+    cfht_name = cn.cfht_names.get(uri)
     result = CalibrationLevel.CALIBRATED
     if (
         cfht_name.is_simple
@@ -1262,8 +1261,9 @@ def get_energy_function_delta(params):
                 result = 10.0 * mc.to_float(header.get('FILTERBW'))
         else:
             filter_name = header.get('FILTER')
-            instrument = _get_instrument(header)
-            temp, ignore = _get_filter_md(instrument, filter_name, uri)
+            temp, ignore = _get_filter_md(
+                cn.cfht_names.get(uri).instrument, filter_name, uri
+            )
             result = ac.FilterMetadataCache.get_fwhm(temp)
     return result
 
@@ -1310,8 +1310,9 @@ def get_energy_function_val(params):
                 result = 10.0 * mc.to_float(header.get('FILTERLB'))
         else:
             filter_name = header.get('FILTER')
-            instrument = _get_instrument(header)
-            temp, ignore = _get_filter_md(instrument, filter_name, uri)
+            temp, ignore = _get_filter_md(
+                cn.cfht_names.get(uri).instrument, filter_name, uri
+            )
             result = ac.FilterMetadataCache.get_central_wavelength(temp)
     return result
 
@@ -1342,14 +1343,13 @@ def get_environment_elevation(header):
 def get_exptime(params):
     header, suffix, uri = _decompose_params(params)
     exptime = mc.to_float(header.get('EXPTIME'))
-    instrument = _get_instrument(header)
-    if instrument is md.Inst.SITELLE:
+    cfht_name = cn.cfht_names.get(uri)
+    if cfht_name.instrument is md.Inst.SITELLE:
         if suffix == 'p':
             num_steps = header.get('STEPNB')
             exptime = exptime * num_steps
     # units are seconds
     if exptime is None:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
         if cfht_name.is_simple:
             # caom2IngestMegacaomdetrend.py, l438
             exptime = 0.0
@@ -1579,8 +1579,7 @@ def get_obs_intent(header):
 
 def get_obs_sequence_number(params):
     header, suffix, uri = _decompose_params(params)
-    instrument = _get_instrument(header)
-    cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+    cfht_name = cn.cfht_names.get(uri)
     result = None
     # SF 09-01-20
     # *y files are produced from other files, I am guessing the sky
@@ -1590,8 +1589,10 @@ def get_obs_sequence_number(params):
     # SGo - because of this, use the file name to find the sequence number,
     # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
     if (cfht_name.is_simple and not cfht_name.is_master_cal) or (
-        instrument in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
-        and suffix == 'p'
+        cfht_name.instrument in [
+            md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU
+        ] and
+        suffix == 'p'
     ):
         result = cfht_name.file_id[:-1]
     return result
@@ -1607,13 +1608,14 @@ def get_obs_type(header):
     return result
 
 
-def get_plane_data_product_type(header):
-    instrument = _get_instrument(header)
+def get_plane_data_product_type(params):
+    header, suffix, uri = _decompose_params(params)
+    cfht_name = cn.cfht_names.get(uri)
     # caom2wircam.default
     # caom2wircamdetrend.default
     result = DataProductType.IMAGE
     # caom2spirou.default
-    if instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
+    if cfht_name.instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
         result = DataProductType.SPECTRUM
     return result
 
@@ -1880,25 +1882,28 @@ def get_spirou_time_refcoord_naxis(params):
     return result
 
 
-def get_target_position_cval1(header):
+def get_target_position_cval1(params):
+    header, suffix, uri = _decompose_params(params)
     ra, ignore_dec = _get_ra_dec(header)
     if ra is None:
-        instrument = _get_instrument(header)
-        if instrument is md.Inst.ESPADONS:
+        cfht_name = cn.cfht_names.get(uri)
+        if cfht_name.instrument is md.Inst.ESPADONS:
             ra = header.get('RA_DEG')
     return ra
 
 
-def get_target_position_cval2(header):
+def get_target_position_cval2(params):
+    header, suffix, uri = _decompose_params(params)
     ignore_ra, dec = _get_ra_dec(header)
     if dec is None:
-        instrument = _get_instrument(header)
-        if instrument is md.Inst.ESPADONS:
+        cfht_name = cn.cfht_names.get(uri)
+        if cfht_name.instrument is md.Inst.ESPADONS:
             dec = header.get('DEC_DEG')
     return dec
 
 
-def get_target_standard(header):
+def get_target_standard(params):
+    header, suffix, uri = _decompose_params(params)
     obs_type = _get_obstype(header)
     run_id = _get_run_id(header)
     result = None
@@ -1906,8 +1911,8 @@ def get_target_standard(header):
         run_id_type = run_id[3].lower()
         if run_id_type == 'q' and obs_type == 'OBJECT':
             obj_name = header.get('OBJECT').lower()
-            instrument = _get_instrument(header)
-            if instrument is md.Inst.SITELLE:
+            cfht_name = cn.cfht_names.get(uri)
+            if cfht_name.instrument is md.Inst.SITELLE:
                 if 'std' in obj_name:
                     result = True
                 else:
@@ -2027,23 +2032,12 @@ def get_wircam_provenance_keywords(uri):
 def _decompose_params(params):
     header = params.get('header')
     uri = params.get('uri')
-    instrument = _get_instrument(header)
-    suffix = cn.CFHTName(ad_uri=uri, instrument=instrument)._suffix
-    return header, suffix, uri
+    cfht_name = cn.cfht_names.get(uri)
+    return header, cfht_name.suffix, uri
 
 
 def _get_filename(header):
     return header.get('FILENAME')
-
-
-def _get_instrument(header):
-    try:
-        result = md.Inst(header.get('INSTRUME'))
-    except ValueError:
-        # set the entry parameter to nothing, as it's only used to check
-        # for hdf5
-        result = cb.CFHTBuilder.get_instrument([header, {}], '')
-    return result
 
 
 def _get_mjd_obs(header):
@@ -2135,20 +2129,18 @@ def _has_energy(header):
 
 
 def _is_espadons_energy(header, uri):
-    instrument = _get_instrument(header)
+    cfht_name = cn.cfht_names.get(uri)
     result = False
-    if instrument is md.Inst.ESPADONS:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+    if cfht_name.instrument is md.Inst.ESPADONS:
         if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x']:
             result = True
     return result
 
 
 def _is_sitelle_energy(header, uri):
-    instrument = _get_instrument(header)
+    cfht_name = cn.cfht_names.get(uri)
     result = False
-    if instrument is md.Inst.SITELLE:
-        cfht_name = cn.CFHTName(ad_uri=uri, instrument=instrument)
+    if cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
             result = True
     return result
@@ -2387,7 +2379,9 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                     f'Resetting the header/blueprint relationship for '
                     f'{cfht_name.file_name} in {obs.observation_id}'
                 )
-                instrument = _get_instrument(headers[idx])
+                instrument = cb.CFHTBuilder.get_instrument(
+                    headers, cfht_name.file_uri
+                )
                 if fqn is not None:
                     uri = cfht_name.file_uri
                     # this is the fits2caom2 implementation, which returns
@@ -3153,7 +3147,9 @@ def _cfht_args_parser():
 
 
 def to_caom2():
-    """This function is called by pipeline execution. It must have this name."""
+    """
+    This function is called by pipeline execution. It must have this name.
+    """
     args = _cfht_args_parser()
     config = mc.Config()
     config.get_executors()
@@ -3162,6 +3158,9 @@ def to_caom2():
         clients.data_client, config.archive, config.use_local_files
     )
     storage_names = _get_storage_names(args, cfht_builder)
+    cn.cfht_names = {}
+    for storage_name in storage_names:
+        cn.cfht_names[storage_name.file_uri] = storage_name
     blueprints = _build_blueprints(storage_names)
     result = gen_proc(args, blueprints)
     return result

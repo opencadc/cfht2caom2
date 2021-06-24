@@ -95,7 +95,6 @@ def pytest_generate_tests(metafunc):
 
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-# @patch('cfht2caom2.main_app._identify_instrument')
 @patch('cfht2caom2.cfht_builder.CFHTBuilder.get_instrument')
 @patch('caom2utils.fits2caom2.CadcDataClient')
 @patch('caom2pipe.astro_composable.get_vo_table')
@@ -107,14 +106,8 @@ def test_main_app(
     md.filter_cache.connected = True
     inst_mock.side_effect = _identify_inst_mock
     basename = os.path.basename(test_name)
-    instrument = _identify_inst_mock(test_name)
-    extension = '.fz'
-    if instrument is md.Inst.ESPADONS:
-        extension = '.gz'
-    elif instrument is md.Inst.SPIROU:
-        extension = ''
-    file_name = basename.replace('.header', extension)
-    cfht_name = CFHTName(file_name=file_name, instrument=instrument)
+    instrument = _identify_inst_mock(None, test_name)
+    cfht_name = CFHTName(file_name=basename, instrument=instrument)
     obs_path = f'{SINGLE_PLANE_DIR}/{cfht_name.obs_id}.expected.xml'
     output_file = f'{SINGLE_PLANE_DIR}/{basename}.actual.xml'
 
@@ -180,7 +173,7 @@ def _vo_mock(url):
         logging.error(f'get_vo_table failure for url {url}')
 
 
-def _identify_inst_mock(uri, ign=None):
+def _identify_inst_mock(ignore_headers, uri):
     lookup = {
         md.Inst.MEGAPRIME: [
             '2452990p',
@@ -266,8 +259,7 @@ def _identify_inst_mock(uri, ign=None):
             'dark_003s_',
         ],
     }
-    # result = md.Inst.SITELLE
-    result = md.Inst.ESPADONS
+    result = md.Inst.SITELLE
     for key, value in lookup.items():
         for entry in value:
             if entry in uri:

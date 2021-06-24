@@ -68,6 +68,8 @@
 
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import espadons_energy_augmentation
+from cfht2caom2 import cfht_name as cn
+from cfht2caom2 import metadata as md
 
 import test_main_app
 
@@ -88,6 +90,9 @@ def test_visit():
         'science_file': f_name,
         'working_directory': test_main_app.TEST_FILES_DIR,
     }
+    cn.cfht_names[uri] = cn.CFHTName(
+        file_name=f_name, instrument=md.Inst.ESPADONS
+    )
 
     test_result = espadons_energy_augmentation.visit(obs, **kwargs)
     assert test_result is not None, 'expect a result'
