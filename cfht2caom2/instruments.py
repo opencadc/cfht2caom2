@@ -204,7 +204,7 @@ class InstrumentType:
         pass
 
     def update_observation(self):
-        if(
+        if (
             self._observation.proposal is not None
             and self._observation.proposal.pi_name is None
         ):
@@ -306,21 +306,22 @@ class Espadons(InstrumentType):
             radecsys = self._headers[self._extension].get('RADECSYS')
             if not (
                 self._cfht_name.suffix in ['a', 'i', 'o', 'p']
-                and (
-                    radecsys is None
-                    or radecsys.lower() != 'null'
-                )
+                and (radecsys is None or radecsys.lower() != 'null')
                 and self._headers[self._extension].get('RA_DEG') is not None
                 and self._headers[self._extension].get('DEC_DEG') is not None
             ):
                 cc.reset_position(self._chunk)
 
     def update_energy(self):
-        self._logger.debug(
-            f'Begin _update_energy_espadons for {self._obs_id}'
-        )
+        self._logger.debug(f'Begin _update_energy_espadons for {self._obs_id}')
         if (
-            self._cfht_name.suffix in ['b', 'd', 'i', 'p']
+            self._cfht_name.suffix
+            in [
+                'b',
+                'd',
+                'i',
+                'p',
+            ]
             or self._observation_type in ['BIAS', 'DARK']
         ):
             # i, p, are done in the espadons energy data visitor, and b, d are
@@ -332,6 +333,7 @@ class Espadons(InstrumentType):
         if self._cfht_name.suffix in ['a', 'c', 'f', 'o', 'x']:
             from caom2 import Axis, RefCoord, CoordRange1D, CoordAxis1D
             from caom2 import SpectralWCS
+
             # caom2IngestEspadons.py, l818
             axis = Axis('WAVE', 'nm')
             # caom2IngestEspadons.py l636
@@ -369,9 +371,7 @@ class Espadons(InstrumentType):
                 independent = Slice(independent_axis, 1)
                 dependent_axis = Axis('flux', 'counts')
                 dependent = Slice(dependent_axis, 2)
-                self._chunk.observable = ObservableAxis(
-                    dependent, independent
-                )
+                self._chunk.observable = ObservableAxis(dependent, independent)
                 self._chunk.observable_axis = 2
 
                 if (
@@ -393,14 +393,18 @@ class Espadons(InstrumentType):
         super(Espadons, self).update_observation()
         if self._observation.target_position is not None:
             if self._observation.target_position.equinox is not None:
-                self._observation.target_position.equinox = md.cache.get_repair(
-                    'Observation.target_position.equinox',
-                    self._observation.target_position.equinox,
+                self._observation.target_position.equinox = (
+                    md.cache.get_repair(
+                        'Observation.target_position.equinox',
+                        self._observation.target_position.equinox,
+                    )
                 )
             if self._observation.target_position.coordsys is not None:
-                self._observation.target_position.coordsys = md.cache.get_repair(
-                    'Observation.target_position.coordsys',
-                    self._observation.target_position.coordsys,
+                self._observation.target_position.coordsys = (
+                    md.cache.get_repair(
+                        'Observation.target_position.coordsys',
+                        self._observation.target_position.coordsys,
+                    )
                 )
 
     def update_plane(self):
@@ -457,12 +461,11 @@ class Mega(InstrumentType):
         # match
         filter_md, updated_filter_name = self.get_filter_md(self._filter_name)
         if (
-                self._filter_name is None
-                or self._filter_name in ['Open', 'NONE']
-                or ac.FilterMetadataCache.get_fwhm(filter_md)
-                is None
-                or self._cfht_name.suffix in ['b', 'l', 'd']
-                or self._observation_type in ['DARK']
+            self._filter_name is None
+            or self._filter_name in ['Open', 'NONE']
+            or ac.FilterMetadataCache.get_fwhm(filter_md) is None
+            or self._cfht_name.suffix in ['b', 'l', 'd']
+            or self._observation_type in ['DARK']
         ):
             cc.reset_energy(self._chunk)
 
@@ -489,18 +492,18 @@ class Mega(InstrumentType):
         # SGo - use range for energy with filter information
         filter_md, updated_filter_name = self.get_filter_md(self._filter_name)
         if not (
-                self._filter_name is None
-                or self._filter_name in ['Open', 'NONE']
-                or ac.FilterMetadataCache.get_fwhm(filter_md)
-                is None
-                or self._cfht_name.suffix in ['b', 'l', 'd']
-                or self._observation_type in ['DARK']
+            self._filter_name is None
+            or self._filter_name in ['Open', 'NONE']
+            or ac.FilterMetadataCache.get_fwhm(filter_md) is None
+            or self._cfht_name.suffix in ['b', 'l', 'd']
+            or self._observation_type in ['DARK']
         ):
             cc.build_chunk_energy_range(
                 self._chunk, updated_filter_name, filter_md
             )
             if self._chunk.energy is not None:
                 from caom2 import CoordError
+
                 self._chunk.energy.ssysobs = 'TOPOCENT'
                 self._chunk.energy.ssyssrc = 'TOPOCENT'
                 # values from caom2megacam.default, caom2megacamdetrend.default
@@ -531,9 +534,9 @@ class Sitelle(InstrumentType):
 
     def make_axes_consistent(self):
         if (
-            self._cfht_name.suffix in ['a', 'o', 'x'] and
-            self._chunk.position is None and
-            self._chunk.naxis is not None
+            self._cfht_name.suffix in ['a', 'o', 'x']
+            and self._chunk.position is None
+            and self._chunk.naxis is not None
             and self._chunk.naxis == 3
             and self._chunk.energy is not None
         ):
@@ -578,7 +581,9 @@ class Sitelle(InstrumentType):
                 self._update_function_position()
 
     def _update_function_position(self):
-        self._logger.debug(f'Begin update_position_function for {self._obs_id}')
+        self._logger.debug(
+            f'Begin update_position_function for {self._obs_id}'
+        )
         header = self._headers[self._extension]
         cd1_1 = header.get('CD1_1')
         # caom2IngestSitelle.py, l745
@@ -630,10 +635,10 @@ class Sitelle(InstrumentType):
         pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
         # obs_dec_tr == obs_dec_tl
         delta_ra_top = (1024.0 * pix_scale1) / (
-                3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
+            3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
         )
         delta_ra_bot = (1024.0 * pix_scale1) / (
-                3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0))
+            3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0))
         )
         obs_ra_bl = obs_ra + delta_ra_bot
         obs_ra_tr = obs_ra - delta_ra_top
@@ -691,9 +696,9 @@ class Spirou(InstrumentType):
         dec_deg = self._header.get('DEC_DEG')
         ra_dec_sys = self._header.get('RADECSYS')
         if self._observation_type not in ['OBJECT', 'ALIGN'] or (
-                ra_deg is None
-                and dec_deg is None
-                and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
+            ra_deg is None
+            and dec_deg is None
+            and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
         ):
             cc.reset_position(self._chunk)
         self._logger.debug(f'End reset_position for {self._obs_id}')
@@ -749,7 +754,9 @@ class Spirou(InstrumentType):
                         and self._chunk.polarization.axis is not None
                         and self._chunk.polarization.axis.function is not None
                     ):
-                        self._chunk.polarization.axis.function.ref_coord.val = crval
+                        self._chunk.polarization.axis.function.ref_coord.val = (
+                            crval
+                        )
             # check with Dustin on what a polarization cut-out
             # looks like before deciding this is semi-ok
             self._chunk.naxis = None
@@ -926,7 +933,7 @@ class Wircam(InstrumentType):
     def reset_position(self):
         if (
             self._chunk.position is not None
-                and self._chunk.position.coordsys.lower() == 'null'
+            and self._chunk.position.coordsys.lower() == 'null'
         ):
             cc.reset_position(self._chunk)
             self._chunk.naxis = None
@@ -947,9 +954,12 @@ class Wircam(InstrumentType):
         if filter_name is None and len(self._headers) > self._extension + 1:
             filter_name = self._headers[self._extension + 1].get('FILTER')
         filter_md, updated_filter_name = self.get_filter_md(filter_name)
-        cc.build_chunk_energy_range(self._chunk, updated_filter_name, filter_md)
+        cc.build_chunk_energy_range(
+            self._chunk, updated_filter_name, filter_md
+        )
         if self._chunk.energy is not None:
             from caom2 import CoordError
+
             self._chunk.energy.ssysobs = 'TOPOCENT'
             self._chunk.energy.ssyssrc = 'TOPOCENT'
             # values from caom2megacam.default, caom2megacamdetrend.default
@@ -1077,7 +1087,9 @@ class Wircam(InstrumentType):
             and ra_deg is not None
             and dec_deg is not None
         ):
-            self._logger.info(f'Adding position information for {self._obs_id}')
+            self._logger.info(
+                f'Adding position information for {self._obs_id}'
+            )
             header['CTYPE1'] = 'RA---TAN'
             header['CTYPE2'] = 'DEC--TAN'
             header['CUNIT1'] = 'deg'
@@ -1146,9 +1158,9 @@ class Wircam(InstrumentType):
                     time_naxis = part_header.get(naxis_key)
 
                 if (
-                        time_naxis is not None
-                        and time_index is not None
-                        and time_index == 3
+                    time_naxis is not None
+                    and time_index is not None
+                    and time_index == 3
                 ):
                     # caom2.4 wcs validation conformance
                     self._chunk.time_axis = 3

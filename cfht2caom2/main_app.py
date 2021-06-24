@@ -793,7 +793,9 @@ def update(observation, **kwargs):
 
             for part in artifact.parts.values():
                 if instrument is md.Inst.SPIROU and cfht_name.suffix == 's':
-                    part.chunks = TypedList(Chunk,)
+                    part.chunks = TypedList(
+                        Chunk,
+                    )
 
                 for chunk in part.chunks:
                     cc.undo_astropy_cdfix_call(chunk, time_delta)
@@ -1224,10 +1226,9 @@ def get_obs_sequence_number(params):
     # SGo - because of this, use the file name to find the sequence number,
     # not the 'EXPNUM' keyword as in the originating caom2Ingest*.py scripts.
     if (cfht_name.is_simple and not cfht_name.is_master_cal) or (
-        cfht_name.instrument in [
-            md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU
-        ] and
-        suffix == 'p'
+        cfht_name.instrument
+        in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
+        and suffix == 'p'
     ):
         result = cfht_name.file_id[:-1]
     return result
