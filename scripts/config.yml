@@ -29,10 +29,18 @@ data_source_extensions:
   - .fits.fz
   - .fits.gz
   - .hdf5
-# if the 'store' task type is listed, ensure the local file has a later
-# timestamp than the file at CADC before transferring the file. 
+# if the 'store' task type is listed, ensure the local file has a different
+# md5 checksum than the file at CADC before transferring the file.
 # 'use_local_files' must be also be True
-store_newer_files_only: True
+store_modified_files_only: True
+# If cleanup_files_when_storing is True, and the STORE task_type is
+# specified, move files that are successfully transferred to CADC
+# to the cleanup_success_destination when the transfer is done, and
+# to the cleanup_failure_destination when the transfer fails, or the
+# file fails FITS verification.
+cleanup_files_when_storing: False
+cleanup_success_destination: /dev/null
+cleanup_failure_destination: /dev/null
 # values DEBUG INFO WARNING ERROR
 logging_level: INFO
 # values True False

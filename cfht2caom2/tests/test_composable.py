@@ -91,7 +91,8 @@ TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 @patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcDataClient')
-def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
+@patch('caom2pipe.client_composable.CadcTapClient')
+def test_run_by_builder(tap_mock, data_client_mock, repo_mock, exec_mock):
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
     repo_mock.return_value.update.side_effect = _mock_repo_update
@@ -116,7 +117,10 @@ def test_run_by_builder(data_client_mock, repo_mock, exec_mock):
 @patch('caom2utils.fits2caom2.get_cadc_headers')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcDataClient')
-def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
+@patch('caom2pipe.client_composable.CadcTapClient')
+def test_run_store(
+    tap_mock, data_client_mock, repo_client_mock, header_mock, fits_mock
+):
     # TODO - change this test to rely on vos.Client mocks once new CADC
     # TODO - storage is in place
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
@@ -145,6 +149,8 @@ def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
     ), 'wrong put_file args'
 
 
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.CadcTapClient')
 @patch('caom2pipe.client_composable.CadcDataClient')
 @patch(
     'caom2pipe.data_source_composable.ListDirTimeBoxDataSource.'
@@ -152,7 +158,9 @@ def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
     autospec=True,
 )
 @patch('caom2pipe.execute_composable.OrganizeExecutes.do_one')
-def test_run_state(run_mock, tap_mock, data_client_mock):
+def test_run_state(
+    run_mock, tap_mock, data_client_mock, tap_client_mock, repo_mock
+):
     run_mock.return_value = 0
     tap_mock.side_effect = _mock_dir_listing
     data_client_mock.return_value.get_file.side_effect = _mock_get_file

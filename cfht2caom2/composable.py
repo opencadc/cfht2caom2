@@ -77,6 +77,7 @@ from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
+from cfht2caom2 import data_source
 
 
 META_VISITORS = [cleanup_augmentation]
@@ -92,6 +93,11 @@ def _run_state():
     builder = cfht_builder.CFHTBuilder(
         clients.data_client, config.archive, config.use_local_files
     )
+    source = None
+    if config.use_local_files:
+        source = data_source.CFHTTimeBoxDataSource(
+            config, clients.data_client
+        )
     return rc.run_by_state(
         config=config,
         name_builder=builder,
@@ -100,6 +106,7 @@ def _run_state():
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
+        source=source,
     )
 
 
@@ -130,12 +137,10 @@ def _run_by_builder():
     builder = cfht_builder.CFHTBuilder(
         clients.data_client, config.archive, config.use_local_files
     )
-    data_source = dsc.ListDirSeparateDataSource(config)
     return rc.run_by_todo(
         config,
         builder,
         command_name=main_app.APPLICATION,
-        source=data_source,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,

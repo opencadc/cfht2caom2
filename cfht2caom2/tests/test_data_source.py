@@ -104,7 +104,7 @@ def test_cfht_transfer_check_fits_verify():
             'size': 12,
             'md5sum': 'e4e153121805745792991935e04de322',
         }
-        test_subject = data_source.CFHTDataSource(
+        test_subject = data_source.CFHTTimeBoxDataSource(
             test_config, cadc_client_mock
         )
 
@@ -153,7 +153,7 @@ def test_cfht_transfer_check_fits_verify():
         test_config.features.supports_latest_client = True
         cadc_client_mock = Mock(autospec=True)
         cadc_client_mock.get_node.side_effect = _mock_get_node
-        test_subject = data_source.CFHTDataSource(
+        test_subject = data_source.CFHTTimeBoxDataSource(
             test_config, cadc_client_mock
         )
         assert test_subject is not None, 'expect construction to work'
@@ -201,7 +201,7 @@ def test_cfht_transfer_check_fits_verify():
                 'md5sum': 'e4e153121805745792991935e04de322',
             }
 
-            test_subject = data_source.CFHTDataSource(
+            test_subject = data_source.CFHTTimeBoxDataSource(
                 test_config, cadc_client_mock
             )
             with pytest.raises(mc.CadcException):

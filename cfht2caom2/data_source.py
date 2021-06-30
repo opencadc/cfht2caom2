@@ -66,7 +66,7 @@
 #
 # ***********************************************************************
 #
-
+import logging
 import shutil
 import traceback
 
@@ -76,24 +76,22 @@ from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 
-__all__ = ['CFHTDataSource']
+__all__ = ['CFHTTimeBoxDataSource']
 
 
-class CFHTDataSource(dsc.ListDirTimeBoxDataSource):
+class CFHTTimeBoxDataSource(dsc.ListDirTimeBoxDataSource):
     def __init__(self, config, cadc_client):
-        super(CFHTDataSource, self).__init__(config)
+        super(CFHTTimeBoxDataSource, self).__init__(config)
         self._cadc_client = cadc_client
-        self._cleanup_when_storing = (
-            config.cleanup_files_when_storing and config.use_local_files
-        )
+        self._cleanup_when_storing = config.cleanup_files_when_storing
         self._cleanup_failure_directory = config.cleanup_failure_destination
         self._cleanup_success_directory = config.cleanup_success_destination
-        self._store_modified_files_only = (
-                config.store_modified_files_only and config.use_local_files
-        )
+        self._store_modified_files_only = config.store_modified_files_only
         self._supports_latest_client = config.features.supports_latest_client
         self._archive = config.archive
         self._collection = config.collection
+        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger.error('hello sailor')
 
     def clean_up(self):
         if self._cleanup_when_storing:
@@ -104,7 +102,7 @@ class CFHTDataSource(dsc.ListDirTimeBoxDataSource):
 
     def default_filter(self, entry):
         copy_file = True
-        if super(CFHTDataSource, self).default_filter(entry):
+        if super(CFHTTimeBoxDataSource, self).default_filter(entry):
             if entry.name.startswith('.'):
                 # skip dot files
                 copy_file = False
