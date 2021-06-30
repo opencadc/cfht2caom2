@@ -94,5 +94,3 @@ task_types:
   - modify
 features:
   supports_composite: False
-  use_file_names: True
-  use_urls: False

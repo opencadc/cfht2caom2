@@ -143,12 +143,6 @@ def test_run_store(data_client_mock, repo_client_mock, header_mock, fits_mock):
         mime_encoding=None,
         md5_check=True,
     ), 'wrong put_file args'
-    assert (
-        data_client_mock.return_value.get_file_info.called
-    ), 'expect a info call'
-    data_client_mock.return_value.get_file_info.assert_called_with(
-        'CFHT', '1000003f.fits.fz'
-    ), 'wrong info args'
 
 
 @patch('caom2pipe.client_composable.CadcDataClient')
