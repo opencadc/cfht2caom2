@@ -85,8 +85,9 @@ def visit(observation, **kwargs):
     if science_file is None:
         raise mc.CadcException('Visitor needs a science_file parameter.')
 
+    science_file = os.path.basename(science_file)
     cfht_name = cn.CFHTName(
-        file_name=os.path.basename(science_file),
+        file_name=science_file,
         instrument=observation.instrument.name
     )
     count = 0
