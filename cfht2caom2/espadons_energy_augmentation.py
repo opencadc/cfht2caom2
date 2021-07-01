@@ -67,6 +67,7 @@
 # ***********************************************************************
 
 import logging
+import os
 
 from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
 from caom2pipe import astro_composable as ac
@@ -85,7 +86,8 @@ def visit(observation, **kwargs):
         raise mc.CadcException('Visitor needs a science_file parameter.')
 
     cfht_name = cn.CFHTName(
-        file_name=science_file, instrument=observation.instrument.name
+        file_name=os.path.basename(science_file),
+        instrument=observation.instrument.name
     )
     count = 0
     if cfht_name.instrument is md.Inst.ESPADONS and cfht_name.suffix in [

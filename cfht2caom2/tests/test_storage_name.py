@@ -160,3 +160,4 @@ def test_is_valid():
 
     test_subject = CFHTName(file_name='2602045r.fits.fz', instrument='SPIRou')
     assert test_subject.obs_id == '2602045', 'wrong obs id'
+    assert test_subject.product_id == '2602045r', 'wrong product id'

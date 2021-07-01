@@ -68,7 +68,9 @@
 #
 
 import glob
+import logging
 import os
+import traceback
 
 from cfht2caom2 import preview_augmentation
 from cfht2caom2 import metadata as md
@@ -239,18 +241,12 @@ def test_preview_augment():
 
             try:
                 from datetime import datetime
-                import logging
-
                 start_ts = datetime.utcnow().timestamp()
                 test_result = preview_augmentation.visit(obs, **kwargs)
                 end_ts = datetime.utcnow().timestamp()
                 logging.error(f'{f_name} execution time {end_ts - start_ts}')
             except Exception as e:
-                import logging
-
                 logging.error(e)
-                import traceback
-
                 logging.error(traceback.format_exc())
                 assert False
 

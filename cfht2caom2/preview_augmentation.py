@@ -94,6 +94,7 @@ class CFHTPreview(mc.PreviewVisitor):
         self._instrument = md.Inst(instrument)
         self._intent = intent
         self._obs_type = obs_type
+        self._science_file = os.path.basename(self._science_file)
         self._storage_name = cn.CFHTName(
             instrument=self._instrument, file_name=self._science_file
         )
@@ -1027,15 +1028,10 @@ def visit(observation, **kwargs):
         observation.target,
         **kwargs,
     )
-    cfht_name = cn.CFHTName(
-        instrument=md.Inst(observation.instrument.name),
-        file_name=previewer.science_file,
-    )
-    previewer.storage_name = cfht_name
     # SF - 23-02-21
     # No previews for 'frpts' files.
     if '.frpts.' in previewer.science_file:
         result = {'artifacts': 0}
     else:
-        result = previewer.visit(observation, cfht_name)
+        result = previewer.visit(observation, previewer.storage_name)
     return result
