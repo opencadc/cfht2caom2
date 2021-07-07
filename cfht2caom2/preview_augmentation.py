@@ -997,7 +997,7 @@ class CFHTPreview(mc.PreviewVisitor):
             for old, new in zip(a.shape, new_shape)
         ]
         self._logger.debug(slices)
-        return a[slices]
+        return a[tuple(slices)]
 
     def _save_figure(self):
         self.add_to_delete(self._preview_fqn)

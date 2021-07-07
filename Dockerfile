@@ -1,7 +1,7 @@
 FROM opencadc/matplotlib:3.8-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y && apt-get dist-upgrade -y && \
+RUN apt-get update --no-install-recommends && apt-get dist-upgrade -y && \
     apt-get install -y \
     xvfb \
     git \
@@ -47,6 +47,8 @@ RUN pip install git+https://github.com/${OPENCADC_REPO}/caom2pipe@${OPENCADC_BRA
 RUN pip install git+https://github.com/${PIPE_REPO}/cfht2caom2@${PIPE_BRANCH}#egg=cfht2caom2
 
 WORKDIR /usr/src/app
+RUN useradd --create-home --shell /bin/bash cadcops
+USER cadcops
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
