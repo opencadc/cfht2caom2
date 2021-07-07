@@ -70,26 +70,29 @@ import logging
 import shutil
 import traceback
 
+from os import scandir
 from os.path import basename
 from caom2pipe import astro_composable as ac
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 
-__all__ = ['CFHTTimeBoxDataSource']
+__all__ = ['CFHTUseLocalFilesDataSource']
 
 
-class CFHTTimeBoxDataSource(dsc.ListDirTimeBoxDataSource):
-    def __init__(self, config, cadc_client):
-        super(CFHTTimeBoxDataSource, self).__init__(config)
+class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
+    def __init__(self, config, cadc_client, recursive=True):
+        super(CFHTUseLocalFilesDataSource, self).__init__(config)
         self._cadc_client = cadc_client
         self._cleanup_when_storing = config.cleanup_files_when_storing
         self._cleanup_failure_directory = config.cleanup_failure_destination
         self._cleanup_success_directory = config.cleanup_success_destination
         self._store_modified_files_only = config.store_modified_files_only
         self._supports_latest_client = config.features.supports_latest_client
+        self._source_directories = config.data_sources
         self._archive = config.archive
         self._collection = config.collection
+        self._recursive = recursive
         self._logger = logging.getLogger(self.__class__.__name__)
         self._logger.error('hello sailor')
 
@@ -102,10 +105,13 @@ class CFHTTimeBoxDataSource(dsc.ListDirTimeBoxDataSource):
 
     def default_filter(self, entry):
         copy_file = True
-        if super(CFHTTimeBoxDataSource, self).default_filter(entry):
+        if super(CFHTUseLocalFilesDataSource, self).default_filter(entry):
             if entry.name.startswith('.'):
                 # skip dot files
                 copy_file = False
+            elif '.hdf5' in entry.name:
+                # no hdf5 validation
+                pass
             elif ac.check_fits(entry.path):
                 # only transfer files that pass the FITS verification
                 if self._store_modified_files_only:
@@ -120,13 +126,26 @@ class CFHTTimeBoxDataSource(dsc.ListDirTimeBoxDataSource):
                             entry.path, self._cleanup_success_directory
                         )
             else:
-                self._logger.warning(
-                    f'Moving {entry.path} to '
-                    f'{self._cleanup_failure_directory}'
-                )
-                self._move_action(entry.path, self._cleanup_failure_directory)
+                if self._cleanup_when_storing:
+                    self._logger.warning(
+                        f'Moving {entry.path} to '
+                        f'{self._cleanup_failure_directory}'
+                    )
+                    self._move_action(
+                        entry.path, self._cleanup_failure_directory
+                    )
                 copy_file = False
+        else:
+            copy_file = False
         return copy_file
+
+    def get_work(self):
+        self._logger.debug(f'Begin get_work.')
+        for source in self._source_directories:
+            self._logger.info(f'Look in {source} for work.')
+            self._find_work(source)
+        self._logger.debug('End get_work')
+        return self._work
 
     def _check_md5sum(self, entry_path):
         # get the metadata locally
@@ -154,8 +173,20 @@ class CFHTTimeBoxDataSource(dsc.ListDirTimeBoxDataSource):
             result = False
         return result
 
+    def _find_work(self, entry):
+        with scandir(entry) as dir_listing:
+            for entry in dir_listing:
+                if entry.is_dir() and self._recursive:
+                    self._find_work(entry.path)
+                else:
+                    if self.default_filter(entry):
+                        self._logger.error(
+                            f'Adding {entry.path} to work list.'
+                        )
+                        self._work.append(entry.path)
+
     def _move_action(self, fqn, destination):
-        # if move when storing is enabled, move to the failure location
+        # if move when storing is enabled, move to an after-action location
         if self._cleanup_when_storing:
             # shutil.move is atomic if it's within a file system, which I
             # believe is the description Kanoa gave. It also supports

@@ -72,7 +72,6 @@ import sys
 import traceback
 
 from caom2pipe import client_composable as cc
-from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
@@ -95,7 +94,7 @@ def _run_state():
     )
     source = None
     if config.use_local_files:
-        source = data_source.CFHTTimeBoxDataSource(
+        source = data_source.CFHTUseLocalFilesDataSource(
             config, clients.data_client
         )
     return rc.run_by_state(
@@ -137,6 +136,11 @@ def _run_by_builder():
     builder = cfht_builder.CFHTBuilder(
         clients.data_client, config.archive, config.use_local_files
     )
+    source = None
+    if config.use_local_files:
+        source = data_source.CFHTUseLocalFilesDataSource(
+            config, clients.data_client
+        )
     return rc.run_by_todo(
         config,
         builder,
@@ -144,6 +148,7 @@ def _run_by_builder():
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
+        source=source,
     )
 
 

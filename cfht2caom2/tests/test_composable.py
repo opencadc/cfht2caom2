@@ -170,8 +170,8 @@ def test_run_state(
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=TEST_DIR)
 
-    test_obs_id = '2281792'
-    test_f_name = f'{test_obs_id}p.fits.fz'
+    test_obs_id = '2359320p'
+    test_f_name = f'{test_obs_id}.fits'
     try:
         # execution
         test_result = composable._run_state()
@@ -188,12 +188,15 @@ def test_run_state(
     assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
     assert test_storage.url is None, 'wrong url'
     assert (
-        test_storage.lineage == f'{test_obs_id}p/ad:CFHT/{test_f_name}'
+        test_storage.lineage == f'{test_obs_id}/ad:CFHT/{test_f_name}'
     ), 'wrong lineage'
     assert test_storage.external_urls is None, 'wrong external urls'
 
 
-def test_run_by_builder_hdf5_first():
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.CadcTapClient')
+@patch('caom2pipe.client_composable.CadcDataClient')
+def test_run_by_builder_hdf5_first(data_mock, tap_mock, repo_mock):
     # create a new observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service
     #
@@ -223,7 +226,10 @@ def test_run_by_builder_hdf5_first():
     _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
 
 
-def test_run_by_builder_hdf5_added_to_existing():
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.CadcTapClient')
+@patch('caom2pipe.client_composable.CadcDataClient')
+def test_run_by_builder_hdf5_added_to_existing(data_mock, tap_mock, repo_mock):
     # add to an existing observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service, and the
     # 'p' metadata gets duplicated correctly
@@ -346,7 +352,7 @@ def _mock_dir_listing(
     return [
         dsc.StateRunnerMeta(
             os.path.join(
-                os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz'
+                os.path.join(TEST_DIR, 'test_files'), '2359320p.fits'
             ),
             '2019-10-23T16:27:19.000',
         ),

@@ -96,7 +96,7 @@ def test_cfht_builder(client_mock):
 
     test_fqn = os.path.join(
         cfht_mocks.TEST_DATA_DIR,
-        'composable_test/test_files/2281792p.fits.fz',
+        'composable_test/test_files/2359320p.fits',
     )
 
     test_result = test_subject.build(test_fqn)
@@ -104,7 +104,7 @@ def test_cfht_builder(client_mock):
     assert test_result.file_name == os.path.basename(
         test_fqn
     ), 'wrong local file name'
-    assert test_result.instrument == metadata.Inst.WIRCAM
+    assert test_result.instrument == metadata.Inst.SITELLE
     assert not client_mock.called, 'should not use client'
 
     client_mock.get_file.side_effect = cfht_mocks._mock_get_file

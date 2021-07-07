@@ -84,6 +84,8 @@ ARCHIVE = 'CFHT'
 #
 # declare the global here, so that it survives the importlib.import_module
 # done by fits2caom2
+# key - Artifact uri
+# value - CFHTName instance
 cfht_names = {}
 
 
