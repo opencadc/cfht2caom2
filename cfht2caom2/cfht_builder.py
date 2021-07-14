@@ -204,4 +204,5 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                                     raise mc.CadcException(msg)
                     else:
                         raise mc.CadcException(msg)
+        logging.debug(f'Instrument is {inst}')
         return inst

@@ -2057,22 +2057,28 @@ def _update_wircam_plane(observation, cfht_name):
     ):
         copy_to_plane = observation.planes[copy_to_key]
         copy_from_plane = observation.planes[copy_from_key]
-        copy_from_artifact = copy_from_plane.artifacts[copy_from_artifact_key]
-        copy_to_artifact = copy_to_plane.artifacts[copy_to_artifact_key]
-        if copy_from_plane.provenance is not None:
-            copy_to_plane.provenance = cc.copy_provenance(
-                copy_from_plane.provenance
+        if (
+            copy_from_artifact_key in copy_from_plane.artifacts.keys() and
+            copy_to_artifact_key in copy_to_plane.artifacts.keys()
+        ):
+            copy_from_artifact = copy_from_plane.artifacts[
+                copy_from_artifact_key
+            ]
+            copy_to_artifact = copy_to_plane.artifacts[copy_to_artifact_key]
+            if copy_from_plane.provenance is not None:
+                copy_to_plane.provenance = cc.copy_provenance(
+                    copy_from_plane.provenance
+                )
+                # set to None, because caom2IngestWircam.py sets only for
+                # 'p', 's' files: l1064, l1092
+                while len(copy_to_plane.provenance.keywords) > 0:
+                    copy_to_plane.provenance.keywords.pop()
+            _semi_deep_copy_plane(
+                copy_from_plane,
+                copy_to_plane,
+                copy_from_artifact,
+                copy_to_artifact,
             )
-            # set to None, because caom2IngestWircam.py sets only for 'p', 's'
-            # files: l1064, l1092
-            while len(copy_to_plane.provenance.keywords) > 0:
-                copy_to_plane.provenance.keywords.pop()
-        _semi_deep_copy_plane(
-            copy_from_plane,
-            copy_to_plane,
-            copy_from_artifact,
-            copy_to_artifact,
-        )
     logging.debug('End _update_wircam_plane')
 
 
