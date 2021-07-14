@@ -150,11 +150,13 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             detector = None
             instrument = headers[0].get('INSTRUME')
             if instrument is None:
-                instrument = headers[1].get('INSTRUME')
+                if len(headers) > 1:
+                    instrument = headers[1].get('INSTRUME')
                 if instrument is None:
                     instrument = headers[0].get('DETECTOR')
                     if instrument is None:
-                        instrument = headers[1].get('DETECTOR')
+                        if len(headers) > 1:
+                            instrument = headers[1].get('DETECTOR')
                         if instrument is None:
                             nextend = headers[0].get('NEXTEND')
                             if nextend is None:
