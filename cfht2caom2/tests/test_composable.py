@@ -71,32 +71,31 @@ import os
 import shutil
 
 from astropy.io import fits
-from astropy.table import Table
 from datetime import datetime
 from hashlib import md5
 
 from mock import Mock, patch
 
-from cadctap import CadcTapClient
+from caom2utils import cadc_client_wrapper
 from caom2 import SimpleObservation, Algorithm, Instrument
 from caom2pipe import caom_composable as cc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import composable, cfht_name, metadata
-import test_main_app
+import test_main_app, cfht_mocks
 
 TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
 @patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_by_builder(tap_mock, data_client_mock, repo_mock, exec_mock):
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
     repo_mock.return_value.update.side_effect = _mock_repo_update
-    data_client_mock.return_value.get_file_info.side_effect = (
+    data_client_mock.return_value.info.side_effect = (
         _mock_get_file_info
     )
     getcwd_orig = os.getcwd
@@ -113,13 +112,11 @@ def test_run_by_builder(tap_mock, data_client_mock, repo_mock, exec_mock):
     assert exec_mock.called, 'expect to be called'
 
 
-@patch('caom2utils.fits2caom2._get_headers_from_fits')
-@patch('caom2utils.fits2caom2.get_cadc_headers')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store(
-    tap_mock, data_client_mock, repo_client_mock, header_mock, fits_mock
+    tap_mock, data_client_mock, repo_client_mock
 ):
     # TODO - change this test to rely on vos.Client mocks once new CADC
     # TODO - storage is in place
@@ -127,31 +124,29 @@ def test_run_store(
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=test_dir_fqn)
     repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
-    data_client_mock.return_value.get_file_info.side_effect = (
+    data_client_mock.return_value.info.side_effect = (
         _mock_get_file_info
     )
-    header_mock.side_effect = _mock_header_read
-    fits_mock.side_effect = _mock_header_read
+    cadc_client_wrapper.get_local_file_headers = Mock(
+        side_effect=_mock_header_read
+    )
     try:
         # execution
         test_result = composable._run_by_builder()
         assert test_result == 0, 'wrong result'
     finally:
         os.getcwd = getcwd_orig
-    assert data_client_mock.return_value.put_file.called, 'expect a put_file'
-    data_client_mock.return_value.put_file.assert_called_with(
-        'CFHT',
-        os.path.join(test_dir_fqn, '1000003f.fits.fz'),
-        archive_stream='default',
-        mime_type='application/fits',
-        mime_encoding=None,
-        md5_check=True,
+    assert data_client_mock.return_value.put.called, 'expect a file put'
+    data_client_mock.return_value.put.assert_called_with(
+        f'{test_dir_fqn}/1000003',
+        'ad:CFHT/1000003f.fits.fz',
+        'default',
     ), 'wrong put_file args'
 
 
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
-@patch('caom2pipe.client_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch(
     'caom2pipe.data_source_composable.ListDirTimeBoxDataSource.'
     'get_time_box_work',
@@ -163,8 +158,8 @@ def test_run_state(
 ):
     run_mock.return_value = 0
     tap_mock.side_effect = _mock_dir_listing
-    data_client_mock.return_value.get_file.side_effect = _mock_get_file
-    data_client_mock.return_value.get_file_info.side_effect = (
+    data_client_mock.return_value.get_head.side_effect = cfht_mocks._mock_get_head
+    data_client_mock.return_value.info.side_effect = (
         _mock_get_file_info
     )
     getcwd_orig = os.getcwd
@@ -195,7 +190,7 @@ def test_run_state(
 
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
-@patch('caom2pipe.client_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
 def test_run_by_builder_hdf5_first(data_mock, tap_mock, repo_mock):
     # create a new observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service
@@ -228,7 +223,7 @@ def test_run_by_builder_hdf5_first(data_mock, tap_mock, repo_mock):
 
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
-@patch('caom2pipe.client_composable.CadcDataClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
 def test_run_by_builder_hdf5_added_to_existing(data_mock, tap_mock, repo_mock):
     # add to an existing observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service, and the
@@ -272,27 +267,6 @@ def _common_execution(test_dir, actual_fqn, expected_fqn):
     compare_result = mc.compare_observations(actual_fqn, expected_fqn)
     if compare_result is not None:
         raise AssertionError(compare_result)
-
-
-def _mock_get_file(
-    archive_ignore,
-    fname_ignore,
-    b,
-    cutout=None,
-    decompress=False,
-    fhead=True,
-    wcs=False,
-    process_types=None,
-    md5_check=True,
-):
-    return b.write(
-        b'SIMPLE  = T\n'
-        b'BITPIX  = -32\n'
-        b'END\n'
-        b'SIMPLE  = T\n'
-        b'INSTRUME= \'WIRCam\'\n'
-        b'END'
-    )
 
 
 def _mock_repo_create(arg1):

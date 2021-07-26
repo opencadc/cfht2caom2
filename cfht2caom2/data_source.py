@@ -94,7 +94,6 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._collection = config.collection
         self._recursive = recursive
         self._logger = logging.getLogger(self.__class__.__name__)
-        self._logger.error('hello sailor')
 
     def clean_up(self):
         if self._cleanup_when_storing:
@@ -180,7 +179,7 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                     self._find_work(entry.path)
                 else:
                     if self.default_filter(entry):
-                        self._logger.error(
+                        self._logger.info(
                             f'Adding {entry.path} to work list.'
                         )
                         self._work.append(entry.path)

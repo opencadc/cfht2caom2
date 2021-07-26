@@ -73,6 +73,7 @@ from astropy.io.votable import parse_single_table
 
 from mock import patch
 
+from cadcdata import FileInfo
 from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
 from cfht2caom2 import metadata as md
@@ -93,16 +94,24 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
-@patch('caom2pipe.client_composable.ClientCollection')
+@patch('cfht2caom2.main_app.cadc_client_wrapper.StorageClientWrapper')
+@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.cfht_builder.CFHTBuilder.get_instrument')
-@patch('caom2utils.fits2caom2.CadcDataClient')
+@patch('caom2utils.cadc_client_wrapper.StorageClientWrapper')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_main_app(
-    vo_mock, data_client_mock, inst_mock, cache_mock, client_mock, test_name
+    vo_mock,
+    client_mock,
+    inst_mock,
+    cache_mock,
+    access_url_mock,
+    second_mock,
+    test_name,
 ):
     # cache_mock there so there are no cache update calls - so the tests
     # work without a network connection
+    access_url_mock.return_value = 'https://localhost'
     md.filter_cache.connected = True
     inst_mock.side_effect = _identify_inst_mock
     basename = os.path.basename(test_name)
@@ -116,7 +125,8 @@ def test_main_app(
 
     local = _get_local(basename)
 
-    data_client_mock.return_value.get_file_info.side_effect = _get_file_info
+    client_mock.return_value.info.side_effect = _get_file_info
+    second_mock.return_value.info.side_effect = _get_file_info
     vo_mock.side_effect = _vo_mock
 
     # cannot use the --not_connected parameter in this test, because the
@@ -125,7 +135,8 @@ def test_main_app(
     sys.argv = (
         f'{APPLICATION} --no_validate --local {local} --observation '
         f'{COLLECTION} {cfht_name.obs_id} -o {output_file} --plugin {PLUGIN} '
-        f'--module {PLUGIN} --lineage {_get_lineage(cfht_name)}'
+        f'--module {PLUGIN} --lineage {_get_lineage(cfht_name)} '
+        f'--resource-id ivo://cadc.nrc.ca/test'
     ).split()
     print(sys.argv)
     try:
@@ -135,6 +146,7 @@ def test_main_app(
         import traceback
 
         logging.error(traceback.format_exc())
+        raise e
 
     compare_result = mc.compare_observations(output_file, obs_path)
     if compare_result is not None:
@@ -142,8 +154,12 @@ def test_main_app(
     # assert False  # cause I want to see logging messages
 
 
-def _get_file_info(archive, file_id):
-    return {'type': 'application/fits'}
+def _get_file_info(file_id):
+    return FileInfo(
+        id=file_id,
+        file_type='application/fits',
+        md5sum='abc',
+    )
 
 
 def _get_lineage(cfht_name):

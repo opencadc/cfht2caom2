@@ -68,6 +68,7 @@
 #
 
 import os
+from astropy.io import fits
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEST_DATA_DIR = os.path.join(THIS_DIR, 'data')
@@ -75,22 +76,13 @@ SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
 TEST_FILES_DIR = '/test_files'
 
 
-def _mock_get_file(
-    archive_ignore,
-    fname_ignore,
-    b,
-    cutout=None,
-    decompress=False,
-    fhead=True,
-    wcs=False,
-    process_types=None,
-    md5_check=True,
+def _mock_get_head(
+    uri_ignore
 ):
-    return b.write(
-        b'SIMPLE  = T\n'
-        b'BITPIX  = -32\n'
-        b'END\n'
-        b'SIMPLE  = T\n'
-        b'INSTRUME= \'WIRCam\'\n'
-        b'END'
-    )
+    hdr1 = fits.Header()
+    hdr1['SIMPLE'] = 'T'
+    hdr1['BITPIX'] = -32
+    hdr2 = fits.Header()
+    hdr2['SIMPLE'] = 'T'
+    hdr2['INSTRUME'] = 'WIRCam'
+    return [hdr1, hdr2]

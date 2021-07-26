@@ -187,7 +187,7 @@ from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, DerivedObservation, TypedList, Chunk
 from caom2 import DataProductType
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
-from caom2utils import get_cadc_headers
+from caom2utils import cadc_client_wrapper
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import client_composable
@@ -701,15 +701,12 @@ def update(observation, **kwargs):
     if uri is None:
         instrument = md.Inst(observation.instrument.name)
     else:
-        suffix = cn.cfht_names.get(uri).suffix
-        if suffix == 'z':
-            instrument = md.Inst.SITELLE
+        instrument = cb.CFHTBuilder.get_instrument(headers, uri)
+        if cn.cfht_names.get(uri).suffix == 'z':
             ingesting_hdf5 = True
             logging.info(
                 f'Ingesting the hdf5 plane for {observation.observation_id}'
             )
-        else:
-            instrument = cb.CFHTBuilder.get_instrument(headers, uri)
 
     if instrument is md.Inst.MEGACAM:
         # need the 'megacam' for the filter lookup at SVO, but there is only
@@ -1927,13 +1924,20 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                     uri = cfht_name.file_uri
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
-                    unmodified_headers = get_cadc_headers(
-                        f'file://{fqn}', subject=subject
+                    unmodified_headers = (
+                        cadc_client_wrapper.get_local_file_headers(fqn)
                     )
                 elif uri is not None:
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
-                    unmodified_headers = get_cadc_headers(uri, subject=subject)
+                    config = mc.Confg()
+                    config.get_executors()
+                    data_client = cadc_client_wrapper.StorageClientWrapper(
+                        subject,
+                        config.features.supports_latest_client,
+                        config.storage_inventory_resource_id,
+                    )
+                    unmodified_headers = data_client.get_head(uri)
                 else:
                     raise mc.CadcException(
                         f'Cannot retrieve un-modified headers for {uri}'

@@ -120,15 +120,24 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('cfht2caom2.main_app.cadc_client_wrapper.StorageClientWrapper')
+@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.main_app._identify_instrument')
-@patch('caom2utils.fits2caom2.CadcDataClient')
+@patch('caom2utils.cadc_client_wrapper.StorageClientWrapper')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_multi_plane(
-    svofps_mock, data_client_mock, inst_mock, cache_mock, test_name
+    svofps_mock,
+    data_client_mock,
+    inst_mock,
+    cache_mock,
+    access_mock,
+    second_mock,
+    test_name,
 ):
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
+    access_mock.return_value = 'https://localhost'
     metadata.filter_cache.connected = True
     inst_mock.side_effect = test_main_app._identify_inst_mock
     obs_id = test_name
@@ -143,9 +152,10 @@ def test_multi_plane(
     if os.path.exists(actual_fqn):
         os.remove(actual_fqn)
 
-    data_client_mock.return_value.get_file_info.side_effect = (
+    data_client_mock.return_value.info.side_effect = (
         test_main_app._get_file_info
     )
+    second_mock.return_value.info.side_effect = test_main_app._get_file_info
     svofps_mock.side_effect = test_main_app._vo_mock
 
     # cannot use the --not_connected parameter in this test, because the
@@ -155,7 +165,7 @@ def test_multi_plane(
         f'{main_app.APPLICATION} --quiet --no_validate --observation '
         f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
         f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
-        f'{lineage}'
+        f'{lineage} --resource-id ivo://cadc.nrc.ca/test'
     ).split()
     print(sys.argv)
     main_app.to_caom2()

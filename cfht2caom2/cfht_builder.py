@@ -70,9 +70,7 @@
 import logging
 import os
 
-from caom2utils import fits2caom2
-from caom2pipe import astro_composable as ac
-from caom2pipe import client_composable as clc
+from caom2utils import cadc_client_wrapper
 from caom2pipe import name_builder_composable as nbc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
@@ -100,17 +98,13 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
         if mc.StorageName.is_hdf5(entry):
-            headers = []
+            instrument = md.Inst.SITELLE
         else:
             if self._use_local_files:
-                headers = fits2caom2.get_cadc_headers(f'file://{entry}')
+                headers = cadc_client_wrapper.get_local_file_headers(entry)
             else:
-                headers_str = clc.get_cadc_headers_client(
-                    self._archive, entry, self._data_client
-                )
-                headers = ac.make_headers_from_string(headers_str)
-
-        instrument = CFHTBuilder.get_instrument(headers, entry)
+                headers = self._data_client.get_head(entry)
+            instrument = CFHTBuilder.get_instrument(headers, entry)
         result = cn.CFHTName(
             file_name=os.path.basename(entry),
             source_names=[entry],

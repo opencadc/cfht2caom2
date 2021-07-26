@@ -76,7 +76,7 @@ from mock import patch, ANY
 import cfht_mocks
 
 
-@patch('caom2pipe.client_composable.CadcDataClient', autospec=True)
+@patch('caom2pipe.client_composable.StorageClientWrapper', autospec=True)
 def test_cfht_builder(client_mock):
     test_config = mc.Config()
     test_config.use_local_files = True
@@ -105,9 +105,9 @@ def test_cfht_builder(client_mock):
         test_fqn
     ), 'wrong local file name'
     assert test_result.instrument == metadata.Inst.SITELLE
-    assert not client_mock.called, 'should not use client'
+    assert not client_mock.get_head.called, 'should not use client'
 
-    client_mock.get_file.side_effect = cfht_mocks._mock_get_file
+    client_mock.get_head.side_effect = cfht_mocks._mock_get_head
     test_config.use_local_files = False
     test_subject = CFHTBuilder(
         client_mock,
@@ -121,7 +121,5 @@ def test_cfht_builder(client_mock):
         test_fqn
     ), 'wrong remote file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
-    assert client_mock.get_file.called, 'should use client'
-    client_mock.get_file.assert_called_with(
-        None, test_fqn, ANY, fhead=True
-    ), 'wrong get file parameters'
+    assert client_mock.get_head.called, 'should use client'
+    client_mock.get_head.assert_called_with(test_fqn), 'wrong get head param'
