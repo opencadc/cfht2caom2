@@ -1930,7 +1930,7 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                 elif uri is not None:
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
-                    config = mc.Confg()
+                    config = mc.Config()
                     config.get_executors()
                     data_client = cadc_client_wrapper.StorageClientWrapper(
                         subject,
