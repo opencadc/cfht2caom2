@@ -70,6 +70,8 @@
 import logging
 import os
 
+from urllib.parse import urlparse
+
 from caom2utils import cadc_client_wrapper
 from caom2pipe import name_builder_composable as nbc
 from caom2pipe import manage_composable as mc
@@ -103,7 +105,10 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             if self._use_local_files:
                 headers = cadc_client_wrapper.get_local_file_headers(entry)
             else:
-                headers = self._data_client.get_head(entry)
+                uri = mc.build_uri(
+                    cn.ARCHIVE, os.path.basename(urlparse(entry).path)
+                )
+                headers = self._data_client.get_head(uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
         result = cn.CFHTName(
             file_name=os.path.basename(entry),

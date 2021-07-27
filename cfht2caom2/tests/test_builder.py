@@ -122,4 +122,5 @@ def test_cfht_builder(client_mock):
     ), 'wrong remote file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
     assert client_mock.get_head.called, 'should use client'
-    client_mock.get_head.assert_called_with(test_fqn), 'wrong get head param'
+    test_uri = 'ad:CFHT/2359320p.fits'
+    client_mock.get_head.assert_called_with(test_uri), 'wrong get head param'
