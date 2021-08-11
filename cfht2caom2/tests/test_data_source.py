@@ -97,6 +97,10 @@ def test_cfht_transfer_check_fits_verify():
     test_dot_file = Path('/cfht_source/.dot_file.fits')
     test_same_source = Path('/test_files/same_file.fits')
     test_same_file = Path('/cfht_source/same_file.fits')
+    test_already_successful = Path('/cfht_source/already_successful.fits')
+    test_already_successful_source = Path(
+        '/test_files/already_successful.fits'
+    )
 
     def mock_info(uri):
         return FileInfo(
@@ -217,9 +221,16 @@ def test_cfht_transfer_check_fits_verify():
         for entry in [test_empty_file, test_dot_file]:
             entry.touch()
         for source in [
-            test_broken_source, test_correct_source, test_same_source
+            test_broken_source,
+            test_correct_source,
+            test_same_source,
+            test_already_successful_source,
         ]:
             shutil.copy(source, test_source_directory)
+
+        # CFHT test case - try to move a file that would have the effect
+        # of replacing a file already in the destination directory
+        shutil.copy(test_already_successful_source, test_success_directory)
 
         test_config = mc.Config()
         test_config.use_local_files = True

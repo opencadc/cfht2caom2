@@ -72,7 +72,7 @@ import shutil
 import traceback
 
 from os import scandir
-from os.path import basename
+from os.path import basename, join
 from caom2utils import cadc_client_wrapper
 from caom2pipe import astro_composable as ac
 from caom2pipe import data_source_composable as dsc
@@ -186,7 +186,11 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
             # mv-invocation.html#mv-invocation when copying between
             # file systems for moving a single file.
             try:
-                shutil.move(fqn, destination)
+                f_name = basename(fqn)
+                # if the destination is a fully-qualified name, an
+                # over-write will succeed
+                dest_fqn = join(destination, f_name)
+                shutil.move(fqn, dest_fqn)
             except Exception as e:
                 self._logger.debug(traceback.format_exc())
                 self._logger.error(
