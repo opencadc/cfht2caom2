@@ -66,14 +66,15 @@
 #
 # ***********************************************************************
 #
+
 import logging
 import shutil
 import traceback
 
 from os import scandir
 from os.path import basename
+from caom2utils import cadc_client_wrapper
 from caom2pipe import astro_composable as ac
-from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 
@@ -96,11 +97,12 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def clean_up(self):
-        if self._cleanup_when_storing:
-            for entry in self._work:
-                self._move_action(
-                    entry.entry_name, self._cleanup_success_directory
-                )
+        for entry in self._work:
+            if isinstance(entry, str):
+                fqn = entry
+            else:
+                fqn = entry.entry_name
+            self._move_action(fqn, self._cleanup_success_directory)
 
     def default_filter(self, entry):
         copy_file = True
@@ -149,23 +151,13 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
     def _check_md5sum(self, entry_path):
         # get the metadata locally
         result = True
-        local_meta = mc.get_file_meta(entry_path)
-
+        local_meta = cadc_client_wrapper.get_local_file_info(entry_path)
         # get the metadata at CADC
         f_name = basename(entry_path)
-        if self._supports_latest_client:
-            destination_name = mc.build_uri(self._collection, f_name, 'cadc')
-            cadc_meta = clc.get_cadc_meta_client_v(
-                destination_name, self._cadc_client
-            )
-            cadc_md5sum = cadc_meta.md5sum
-        else:
-            cadc_meta = clc.get_cadc_meta_client(
-                self._cadc_client, self._archive, f_name,
-            )
-            cadc_md5sum = cadc_meta.md5sum
-
-        if local_meta.get('md5sum') == cadc_md5sum:
+        scheme = 'cadc' if self._supports_latest_client else 'ad'
+        destination_name = mc.build_uri(self._collection, f_name, scheme)
+        cadc_meta = self._cadc_client.info(destination_name)
+        if local_meta.md5sum == cadc_meta.md5sum:
             self._logger.warning(
                 f'{entry_path} has the same md5sum at CADC. Not transferring.'
             )

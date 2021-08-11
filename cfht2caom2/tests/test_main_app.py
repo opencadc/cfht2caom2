@@ -68,6 +68,7 @@
 #
 import glob
 import logging
+import traceback
 
 from astropy.io.votable import parse_single_table
 
@@ -142,9 +143,6 @@ def test_main_app(
     try:
         main_app.to_caom2()
     except Exception as e:
-        import logging
-        import traceback
-
         logging.error(traceback.format_exc())
         raise e
 

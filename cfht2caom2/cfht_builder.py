@@ -83,11 +83,18 @@ __all__ = ['CFHTBuilder']
 
 
 class CFHTBuilder(nbc.StorageNameBuilder):
-    def __init__(self, data_client, archive, use_local_files):
+    def __init__(
+        self,
+        data_client,
+        archive,
+        use_local_files,
+        supports_latest_client=False,
+    ):
         super(CFHTBuilder, self).__init__()
         self._data_client = data_client
         self._archive = archive
         self._use_local_files = use_local_files
+        self._supports_latest_client = supports_latest_client
         self._logger = logging.getLogger(__name__)
 
     def build(self, entry):
@@ -110,11 +117,13 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                 )
                 headers = self._data_client.get_head(uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
+        scheme = 'cadc' if self._supports_latest_client else 'ad'
         result = cn.CFHTName(
             file_name=os.path.basename(entry),
             source_names=[entry],
             instrument=instrument,
             entry=entry,
+            scheme=scheme,
         )
         self._logger.debug('End build.')
         return result

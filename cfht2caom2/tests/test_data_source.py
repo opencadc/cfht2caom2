@@ -74,6 +74,7 @@ from datetime import datetime, timedelta, timezone
 from mock import Mock, patch
 from pathlib import Path
 
+from cadcdata import FileInfo
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import data_source
 
@@ -97,13 +98,17 @@ def test_cfht_transfer_check_fits_verify():
     test_same_source = Path('/test_files/same_file.fits')
     test_same_file = Path('/cfht_source/same_file.fits')
 
+    def mock_info(uri):
+        return FileInfo(
+            id=uri,
+            size=12,
+            md5sum='e4e153121805745792991935e04de322',
+        )
+
     def _at_cfht(test_start_ts, test_end_ts):
         test_config.cleanup_files_when_storing = True
         cadc_client_mock = Mock(autospec=True)
-        cadc_client_mock.get_file_info.return_value = {
-            'size': 12,
-            'md5sum': 'e4e153121805745792991935e04de322',
-        }
+        cadc_client_mock.info.side_effect = mock_info
         test_subject = data_source.CFHTUseLocalFilesDataSource(
             test_config, cadc_client_mock
         )
@@ -141,18 +146,10 @@ def test_cfht_transfer_check_fits_verify():
         assert not moved.exists(), 'dot file at destination'
 
     def _at_cadc(test_start_ts, test_end_ts):
-        def _mock_get_node(uri, **kwargs):
-            node = type('', (), {})()
-            node.props = {
-                'length': 42,
-                'MD5': 'e4e153121805745792991935e04de322',
-            }
-            return node
-
         test_config.cleanup_files_when_storing = False
         test_config.features.supports_latest_client = True
         cadc_client_mock = Mock(autospec=True)
-        cadc_client_mock.get_node.side_effect = _mock_get_node
+        cadc_client_mock.info.side_effect = mock_info
         test_subject = data_source.CFHTUseLocalFilesDataSource(
             test_config, cadc_client_mock
         )
@@ -164,27 +161,27 @@ def test_cfht_transfer_check_fits_verify():
         assert (
             test_result[0].entry_name == '/cfht_source/correct.fits.gz'
         ), 'wrong result'
-        for entry in [
+        for f in [
             test_empty_file,
             test_broken_file,
             test_correct_file,
             test_dot_file,
             test_same_file,
         ]:
-            assert entry.exists(), 'file at source'
-            moved = Path(test_failure_directory, entry.name)
+            assert f.exists(), 'file at source'
+            moved = Path(test_failure_directory, f.name)
             assert not moved.exists(), 'file at destination'
         # clean up should do nothing
         test_subject.clean_up()
-        for entry in [
+        for f in [
             test_empty_file,
             test_broken_file,
             test_correct_file,
             test_dot_file,
             test_same_file,
         ]:
-            assert entry.exists(), 'file at source'
-            moved = Path(test_failure_directory, entry.name)
+            assert f.exists(), 'file at source'
+            moved = Path(test_failure_directory, f.name)
             assert not moved.exists(), 'file at destination'
 
     def _move_failure(test_start_ts, test_end_ts):
@@ -196,11 +193,7 @@ def test_cfht_transfer_check_fits_verify():
         try:
             test_config.cleanup_files_when_storing = True
             cadc_client_mock = Mock(autospec=True)
-            cadc_client_mock.get_file_info.return_value = {
-                'size': 12,
-                'md5sum': 'e4e153121805745792991935e04de322',
-            }
-
+            cadc_client_mock.info.side_effect = mock_info
             test_subject = data_source.CFHTUseLocalFilesDataSource(
                 test_config, cadc_client_mock
             )
@@ -225,7 +218,7 @@ def test_cfht_transfer_check_fits_verify():
             entry.touch()
         for source in [
             test_broken_source, test_correct_source, test_same_source
-       ]:
+        ]:
             shutil.copy(source, test_source_directory)
 
         test_config = mc.Config()

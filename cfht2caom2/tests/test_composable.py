@@ -76,6 +76,7 @@ from hashlib import md5
 
 from mock import Mock, patch
 
+from cadcdata import FileInfo
 from caom2utils import cadc_client_wrapper
 from caom2 import SimpleObservation, Algorithm, Instrument
 from caom2pipe import caom_composable as cc
@@ -89,15 +90,11 @@ TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 @patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
-@patch('caom2pipe.client_composable.CadcTapClient')
-def test_run_by_builder(tap_mock, data_client_mock, repo_mock, exec_mock):
+def test_run_by_builder(repo_mock, exec_mock):
+    # should attempt to run LocalMetaCreate
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
     repo_mock.return_value.update.side_effect = _mock_repo_update
-    data_client_mock.return_value.info.side_effect = (
-        _mock_get_file_info
-    )
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=TEST_DIR)
     try:
@@ -110,6 +107,7 @@ def test_run_by_builder(tap_mock, data_client_mock, repo_mock, exec_mock):
     assert repo_mock.return_value.read.called, 'repo read not called'
     assert repo_mock.return_value.create.called, 'repo create not called'
     assert exec_mock.called, 'expect to be called'
+    exec_mock.assert_called_with(), 'wrong exec args'
 
 
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
@@ -138,9 +136,7 @@ def test_run_store(
         os.getcwd = getcwd_orig
     assert data_client_mock.return_value.put.called, 'expect a file put'
     data_client_mock.return_value.put.assert_called_with(
-        f'{test_dir_fqn}/1000003',
-        'ad:CFHT/1000003f.fits.fz',
-        'default',
+        test_dir_fqn, 'ad:CFHT/1000003f.fits.fz', 'default'
     ), 'wrong put_file args'
 
 
@@ -178,7 +174,9 @@ def test_run_state(
     args, kwargs = run_mock.call_args
     test_storage = args[0]
     assert isinstance(test_storage, cfht_name.CFHTName), type(test_storage)
-    assert test_storage.obs_id == test_obs_id, 'wrong obs id'
+    assert (
+        test_storage.obs_id == test_obs_id
+    ), f'wrong obs id {test_storage.obs_id}'
     assert test_storage.file_name == test_f_name, 'wrong file name'
     assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
     assert test_storage.url is None, 'wrong url'
@@ -297,27 +295,27 @@ def _mock_repo_update(ignore1):
     return None
 
 
-def _mock_get_file_info(archive, file_id):
+def _mock_get_file_info(file_id):
     if '_prev' in file_id:
-        return {
-            'size': 10290,
-            'md5sum': 'md5:{}'.format(md5('-37'.encode()).hexdigest()),
-            'type': 'image/jpeg',
-            'name': file_id,
-            'lastmod': datetime(
+        return FileInfo(
+            id=file_id,
+            size=10290,
+            md5sum='md5:{}'.format(md5('-37'.encode()).hexdigest()),
+            file_type='image/jpeg',
+            lastmod=datetime(
                 year=2019, month=3, day=4, hour=19, minute=5
             ).timestamp(),
-        }
+        )
     else:
-        return {
-            'size': 665345,
-            'md5sum': 'md5:a347f2754ff2fd4b6209e7566637efad',
-            'type': 'application/fits',
-            'name': file_id,
-            'lastmod': datetime(
+        return FileInfo(
+            id=file_id,
+            size=665345,
+            md5sum='md5:a347f2754ff2fd4b6209e7566637efad',
+            file_type='application/fits',
+            lastmod=datetime(
                 year=2019, month=3, day=4, hour=19, minute=5
             ).timestamp(),
-        }
+        )
 
 
 def _mock_dir_listing(

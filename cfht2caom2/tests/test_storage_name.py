@@ -71,17 +71,21 @@ from cfht2caom2 import CFHTName
 
 def test_is_valid():
     assert CFHTName(file_name='anything', instrument='SITELLE').is_valid()
-    test_subject = CFHTName(file_name='2463796o.fits.fz', instrument='MegaCam')
+    test_subject = CFHTName(
+        file_name='2463796o.fits.fz', instrument='MegaCam', scheme='ad'
+    )
     assert test_subject.obs_id == '2463796', 'wrong obs id'
     assert test_subject.file_id == '2463796o', 'wrong file id'
     assert test_subject.file_uri == 'ad:CFHT/2463796o.fits.fz', 'wrong uri'
     assert test_subject.source_names == [], 'not local'
     assert test_subject.is_simple, 'should be simple'
 
-    test_subject = CFHTName(file_name='1944968p.fits.fz', instrument='SITELLE')
+    test_subject = CFHTName(
+        file_name='1944968p.fits.fz', instrument='SITELLE', scheme='cadc'
+    )
     assert test_subject.obs_id == '1944968p', 'wrong obs id'
     assert test_subject.file_id == '1944968p', 'wrong file id'
-    assert test_subject.file_uri == 'ad:CFHT/1944968p.fits.fz', 'wrong uri'
+    assert test_subject.file_uri == 'cadc:CFHT/1944968p.fits.fz', 'wrong uri'
     assert not test_subject.is_simple, 'should be composite'
 
     test_subject = CFHTName(
@@ -158,6 +162,21 @@ def test_is_valid():
     )
     assert test_subject.obs_id == '2238502', 'wrong obs id'
 
-    test_subject = CFHTName(file_name='2602045r.fits.fz', instrument='SPIRou')
+    test_subject = CFHTName(
+        file_name='2602045r.fits.fz', instrument='SPIRou', scheme='cadc'
+    )
     assert test_subject.obs_id == '2602045', 'wrong obs id'
     assert test_subject.product_id == '2602045r', 'wrong product id'
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
+    ), 'wrong file uri'
+    assert (
+        test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
+    ), 'wrong thumb uri'
+    assert (
+        test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
+    ), 'wrong preview uri'
+    assert (
+            test_subject.zoom_uri ==
+            'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
+    ), 'wrong zoom uri'

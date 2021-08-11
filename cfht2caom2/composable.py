@@ -90,7 +90,10 @@ def _run_state():
     config.get_executors()
     clients = cc.ClientCollection(config)
     builder = cfht_builder.CFHTBuilder(
-        clients.data_client, config.archive, config.use_local_files
+        clients.data_client,
+        config.archive,
+        config.use_local_files,
+        config.features.supports_latest_client,
     )
     source = None
     if config.use_local_files:
@@ -134,7 +137,10 @@ def _run_by_builder():
     config.get_executors()
     clients = cc.ClientCollection(config)
     builder = cfht_builder.CFHTBuilder(
-        clients.data_client, config.archive, config.use_local_files
+        clients.data_client,
+        config.archive,
+        config.use_local_files,
+        config.features.supports_latest_client,
     )
     source = None
     if config.use_local_files:

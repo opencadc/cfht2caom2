@@ -108,6 +108,7 @@ class CFHTName(mc.StorageName):
         ad_uri=None,
         entry=None,
         source_names=[],
+        scheme='ad',
     ):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
@@ -121,6 +122,7 @@ class CFHTName(mc.StorageName):
                 compression='',
                 entry=entry,
                 source_names=source_names,
+                scheme=scheme,
             )
             self._instrument = md.Inst(instrument)
             if ad_uri is not None and file_name is None:
@@ -155,6 +157,7 @@ class CFHTName(mc.StorageName):
                 COLLECTION,
                 CFHTName.CFHT_NAME_PATTERN,
                 compression='',
+                scheme=scheme,
             )
             self.obs_id = obs_id
             self._instrument = None
