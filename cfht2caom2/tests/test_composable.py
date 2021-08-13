@@ -116,8 +116,6 @@ def test_run_by_builder(repo_mock, exec_mock):
 def test_run_store(
     tap_mock, data_client_mock, repo_client_mock
 ):
-    # TODO - change this test to rely on vos.Client mocks once new CADC
-    # TODO - storage is in place
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=test_dir_fqn)
@@ -304,7 +302,7 @@ def _mock_get_file_info(file_id):
             file_type='image/jpeg',
             lastmod=datetime(
                 year=2019, month=3, day=4, hour=19, minute=5
-            ).timestamp(),
+            ),
         )
     else:
         return FileInfo(
@@ -314,7 +312,7 @@ def _mock_get_file_info(file_id):
             file_type='application/fits',
             lastmod=datetime(
                 year=2019, month=3, day=4, hour=19, minute=5
-            ).timestamp(),
+            ),
         )
 
 

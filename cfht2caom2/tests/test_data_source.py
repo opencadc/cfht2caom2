@@ -136,13 +136,16 @@ def test_cfht_transfer_check_fits_verify():
 
         # correct file - the file stays where it is until it's transferred
         assert test_correct_file.exists(), 'correct file at source'
-        moved = Path(test_success_directory, test_correct_file.name)
-        assert not moved.exists(), 'correct file at destination'
+        moved_success = Path(test_success_directory, test_correct_file.name)
+        moved_failure = Path(test_failure_directory, test_correct_file.name)
+        assert not moved_success.exists(), 'correct file at success'
+        assert not moved_failure.exists(), 'correct file at failure'
 
         # and after the transfer
         test_subject.clean_up()
         assert not test_correct_file.exists(), 'correct file at source'
-        assert moved.exists(), 'correct file at destination'
+        assert not moved_success.exists(), 'correct file at destination'
+        assert moved_failure.exists(), 'correct file at destination'
 
         # dot file - which should be ignored
         assert test_dot_file.exists(), 'correct file at source'
@@ -246,3 +249,65 @@ def test_cfht_transfer_check_fits_verify():
             test_start_time.timestamp(),
             test_end_time.timestamp(),
         )
+
+
+@patch('caom2pipe.astro_composable.check_fits')
+def test_transfer_fails(check_fits_mock):
+    check_fits_mock.return_value = True
+
+    # set up a correct transfer
+    test_source_directory = Path('/cfht_source')
+    test_failure_directory = Path('/cfht_transfer_failure')
+    test_success_directory = Path('/cfht_transfer_success')
+    test_correct_file_1 = Path('/cfht_source/correct_1.fits.gz')
+    test_correct_file_2 = Path('/cfht_source/correct_2.fits.gz')
+    test_correct_source = Path('/test_files/correct.fits.gz')
+
+    for entry in [
+        test_failure_directory,
+        test_success_directory,
+        test_source_directory
+    ]:
+        if not entry.exists():
+            entry.mkdir()
+        for child in entry.iterdir():
+            child.unlink()
+    shutil.copy(test_correct_source, test_correct_file_1)
+    shutil.copy(test_correct_source, test_correct_file_2)
+
+    test_config = mc.Config()
+    test_config.data_sources = [test_source_directory.as_posix()]
+    test_config.data_source_extensions = ['.fits.gz']
+    test_config.cleanup_files_when_storing = True
+    test_config.cleanup_failure_destination = test_failure_directory.as_posix()
+    test_config.cleanup_success_destination = test_success_directory.as_posix()
+
+    cadc_client_mock = Mock(autospec=True)
+    test_subject = data_source.CFHTUseLocalFilesDataSource(
+        test_config, cadc_client_mock
+    )
+    assert test_subject is not None, 'ctor failure'
+    test_result = test_subject.get_work()
+    assert test_result is not None, 'expect a result'
+    assert len(test_result) == 2, 'wrong number of entries in result'
+
+    match = FileInfo(
+        id=test_correct_file_1.as_posix(),
+        size=12,
+        md5sum='dfb5ddab74844d911dd54552415dd8ab',
+    )
+    different = FileInfo(
+        id=test_correct_file_2.as_posix(),
+        size=12,
+        md5sum='e4e153121805745792991935e04de322',
+    )
+
+    cadc_client_mock.info.side_effect = [match, different]
+    test_subject.clean_up()
+
+    assert not test_correct_file_1.exists(), 'file 1 should be moved'
+    assert not test_correct_file_2.exists(), 'file 2 should be moved'
+    moved_1 = Path(test_success_directory, test_correct_file_1.name)
+    moved_2 = Path(test_failure_directory, test_correct_file_2.name)
+    assert moved_1.exists(), 'file 1 not moved to correct location'
+    assert moved_2.exists(), 'file 2 not moved to correct location'

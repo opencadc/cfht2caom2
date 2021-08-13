@@ -97,12 +97,17 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def clean_up(self):
-        for entry in self._work:
-            if isinstance(entry, str):
-                fqn = entry
-            else:
-                fqn = entry.entry_name
-            self._move_action(fqn, self._cleanup_success_directory)
+        if self._cleanup_when_storing:
+            for entry in self._work:
+                if isinstance(entry, str):
+                    fqn = entry
+                else:
+                    fqn = entry.entry_name
+                if self._check_md5sum(fqn):
+                    # the transfer itself failed, so track as a failure
+                    self._move_action(fqn, self._cleanup_failure_directory)
+                else:
+                    self._move_action(fqn, self._cleanup_success_directory)
 
     def default_filter(self, entry):
         copy_file = True
@@ -149,6 +154,10 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         return self._work
 
     def _check_md5sum(self, entry_path):
+        """
+        :return: boolean False if the metadata is the same locally as at
+            CADC, True otherwise
+        """
         # get the metadata locally
         result = True
         local_meta = cadc_client_wrapper.get_local_file_info(entry_path)
