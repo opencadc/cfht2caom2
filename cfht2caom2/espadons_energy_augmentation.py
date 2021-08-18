@@ -72,7 +72,6 @@ import os
 from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import main_app
 from cfht2caom2 import metadata as md
 
@@ -81,26 +80,20 @@ def visit(observation, **kwargs):
     mc.check_param(observation, Observation)
 
     working_dir = kwargs.get('working_directory', './')
-    science_file = kwargs.get('science_file')
-    if science_file is None:
-        raise mc.CadcException('Visitor needs a science_file parameter.')
+    storage_name = kwargs.get('storage_name')
+    if storage_name is None:
+        raise mc.CadcException('Visitor needs a storage_name parameter.')
 
-    science_file = os.path.basename(science_file)
-    cfht_name = cn.CFHTName(
-        file_name=science_file,
-        instrument=observation.instrument.name
-    )
+    science_fqn = storage_name.get_file_fqn(working_dir)
     count = 0
-    if cfht_name.instrument is md.Inst.ESPADONS and cfht_name.suffix in [
+    if storage_name.instrument is md.Inst.ESPADONS and storage_name.suffix in [
         'i',
         'p',
     ]:
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
-                if cfht_name.file_uri == artifact.uri:
-                    count += _do_energy(
-                        artifact, science_file, working_dir, cfht_name
-                    )
+                if storage_name.file_uri == artifact.uri:
+                    count += _do_energy(artifact, science_fqn, storage_name)
         logging.info(
             f'Completed ESPaDOnS energy augmentation for '
             f'{observation.observation_id}.'
@@ -108,7 +101,7 @@ def visit(observation, **kwargs):
     return {'chunks': count}
 
 
-def _do_energy(artifact, science_file, working_dir, cfht_name):
+def _do_energy(artifact, science_fqn, cfht_name):
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -136,9 +129,8 @@ def _do_energy(artifact, science_file, working_dir, cfht_name):
     # range is first and last bounds.
 
     # read in the complete fits file, including the data
-    fqn = f'{working_dir}/{science_file}'
-    logging.info(f'Reading ESPaDOnS energy data from {fqn}.')
-    hdus = ac.read_fits_data(fqn)
+    logging.info(f'Reading ESPaDOnS energy data from {science_fqn}.')
+    hdus = ac.read_fits_data(science_fqn)
     wave = hdus[0].data[0, :]
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave, axis)

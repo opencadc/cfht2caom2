@@ -66,6 +66,8 @@
 #
 # ***********************************************************************
 
+from os.path import join
+
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import espadons_energy_augmentation
 from cfht2caom2 import cfht_name as cn
@@ -86,13 +88,17 @@ def test_visit():
         obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy
         is None
     ), 'expect to assign'
-    kwargs = {
-        'science_file': f_name,
-        'working_directory': test_main_app.TEST_FILES_DIR,
-    }
-    cn.cfht_names[uri] = cn.CFHTName(
+    test_storage_name = cn.CFHTName(
         file_name=f_name, instrument=md.Inst.ESPADONS
     )
+    test_storage_name.source_names = [
+        join(test_main_app.TEST_FILES_DIR, f_name),
+    ]
+    kwargs = {
+        'storage_name': test_storage_name,
+        'working_directory': test_main_app.TEST_FILES_DIR,
+    }
+    cn.cfht_names[uri] = test_storage_name
 
     test_result = espadons_energy_augmentation.visit(obs, **kwargs)
     assert test_result is not None, 'expect a result'

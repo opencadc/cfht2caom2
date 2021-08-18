@@ -731,9 +731,7 @@ def update(observation, **kwargs):
     if ingesting_hdf5:
         # avoid all the code that references undefined headers variable
         if not isinstance(observation, DerivedObservation):
-            observation = cc.change_to_composite(
-                observation, 'scan', cn.COLLECTION
-            )
+            observation = cc.change_to_composite(observation, 'scan')
         _update_sitelle_plane(observation, uri)
         logging.debug('Done hdf5 update.')
         return observation
@@ -752,9 +750,7 @@ def update(observation, **kwargs):
                 algorithm_name = 'polarization'
             else:
                 algorithm_name = 'scan'
-        observation = cc.change_to_composite(
-            observation, algorithm_name, cn.COLLECTION
-        )
+        observation = cc.change_to_composite(observation, algorithm_name)
 
     if instrument is md.Inst.SITELLE and cfht_name.suffix == 'v':
         idx = 0

@@ -118,6 +118,7 @@ def test_run_store(
 ):
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
     getcwd_orig = os.getcwd
+    get_local_orig = cadc_client_wrapper.get_local_file_headers
     os.getcwd = Mock(return_value=test_dir_fqn)
     repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
     data_client_mock.return_value.info.side_effect = (
@@ -132,6 +133,8 @@ def test_run_store(
         assert test_result == 0, 'wrong result'
     finally:
         os.getcwd = getcwd_orig
+        cadc_client_wrapper.get_local_file_headers = get_local_orig
+
     assert data_client_mock.return_value.put.called, 'expect a file put'
     data_client_mock.return_value.put.assert_called_with(
         test_dir_fqn, 'ad:CFHT/1000003f.fits.fz', 'default'

@@ -227,11 +227,11 @@ def test_preview_augment():
         else:
             assert False, 'do not understand instrument'
         for f_name in value:
-            kwargs['science_file'] = f_name
-
             test_name = cfht_name.CFHTName(
                 file_name=f_name, instrument=instrument
             )
+            test_name.source_names = [os.path.join(TEST_FILES_DIR, f_name)]
+            kwargs['storage_name'] = test_name
             check_number = 1
             if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
                 check_number = 3
