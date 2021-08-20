@@ -72,7 +72,7 @@ import os
 
 from urllib.parse import urlparse
 
-from caom2utils import cadc_client_wrapper
+from caom2utils import data_util
 from caom2pipe import name_builder_composable as nbc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
@@ -110,7 +110,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             instrument = md.Inst.SITELLE
         else:
             if self._use_local_files:
-                headers = cadc_client_wrapper.get_local_file_headers(entry)
+                headers = data_util.get_local_file_headers(entry)
             else:
                 uri = mc.build_uri(
                     cn.ARCHIVE, os.path.basename(urlparse(entry).path)

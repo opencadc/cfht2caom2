@@ -77,7 +77,7 @@ from hashlib import md5
 from mock import Mock, patch
 
 from cadcdata import FileInfo
-from caom2utils import cadc_client_wrapper
+from caom2utils import data_util
 from caom2 import SimpleObservation, Algorithm, Instrument
 from caom2pipe import caom_composable as cc
 from caom2pipe import data_source_composable as dsc
@@ -118,13 +118,13 @@ def test_run_store(
 ):
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
     getcwd_orig = os.getcwd
-    get_local_orig = cadc_client_wrapper.get_local_file_headers
+    get_local_orig = data_util.get_local_file_headers
     os.getcwd = Mock(return_value=test_dir_fqn)
     repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
     data_client_mock.return_value.info.side_effect = (
         _mock_get_file_info
     )
-    cadc_client_wrapper.get_local_file_headers = Mock(
+    data_util.get_local_file_headers = Mock(
         side_effect=_mock_header_read
     )
     try:
@@ -133,7 +133,7 @@ def test_run_store(
         assert test_result == 0, 'wrong result'
     finally:
         os.getcwd = getcwd_orig
-        cadc_client_wrapper.get_local_file_headers = get_local_orig
+        data_util.get_local_file_headers = get_local_orig
 
     assert data_client_mock.return_value.put.called, 'expect a file put'
     data_client_mock.return_value.put.assert_called_with(

@@ -187,7 +187,7 @@ from caom2 import Observation, CalibrationLevel, ObservationIntentType
 from caom2 import ProductType, DerivedObservation, TypedList, Chunk
 from caom2 import DataProductType
 from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
-from caom2utils import cadc_client_wrapper
+from caom2utils import data_util
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import client_composable
@@ -1921,14 +1921,14 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
                     unmodified_headers = (
-                        cadc_client_wrapper.get_local_file_headers(fqn)
+                        data_util.get_local_file_headers(fqn)
                     )
                 elif uri is not None:
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
                     config = mc.Config()
                     config.get_executors()
-                    data_client = cadc_client_wrapper.StorageClientWrapper(
+                    data_client = data_util.StorageClientWrapper(
                         subject,
                         config.features.supports_latest_client,
                         config.storage_inventory_resource_id,

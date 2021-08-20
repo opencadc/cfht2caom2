@@ -95,11 +95,11 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
-@patch('cfht2caom2.main_app.cadc_client_wrapper.StorageClientWrapper')
+@patch('cfht2caom2.main_app.data_util.StorageClientWrapper')
 @patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.cfht_builder.CFHTBuilder.get_instrument')
-@patch('caom2utils.cadc_client_wrapper.StorageClientWrapper')
+@patch('caom2utils.data_util.StorageClientWrapper')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_main_app(
     vo_mock,

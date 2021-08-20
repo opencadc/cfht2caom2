@@ -73,7 +73,7 @@ import traceback
 
 from os import scandir
 from os.path import basename, join
-from caom2utils import cadc_client_wrapper
+from caom2utils import data_util
 from caom2pipe import astro_composable as ac
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
@@ -160,7 +160,7 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         """
         # get the metadata locally
         result = True
-        local_meta = cadc_client_wrapper.get_local_file_info(entry_path)
+        local_meta = data_util.get_local_file_info(entry_path)
         # get the metadata at CADC
         f_name = basename(entry_path)
         scheme = 'cadc' if self._supports_latest_client else 'ad'
