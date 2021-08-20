@@ -97,6 +97,7 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def clean_up(self):
+        self._logger.debug('Begin clean_up')
         if self._cleanup_when_storing:
             for entry in self._work:
                 if isinstance(entry, str):
@@ -108,6 +109,7 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                     self._move_action(fqn, self._cleanup_failure_directory)
                 else:
                     self._move_action(fqn, self._cleanup_success_directory)
+        self._logger.debug('End clean_up.')
 
     def default_filter(self, entry):
         copy_file = True
@@ -143,6 +145,9 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                 copy_file = False
         else:
             copy_file = False
+        self._logger.debug(
+            f'Done default_filter copy_file is {copy_file} for {entry}'
+        )
         return copy_file
 
     def get_work(self):
@@ -171,6 +176,9 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                 f'{entry_path} has the same md5sum at CADC. Not transferring.'
             )
             result = False
+        self._logger.debug(
+            f'Done _check_md5sum for {entry_path} result is {result}'
+        )
         return result
 
     def _find_work(self, entry):
@@ -199,6 +207,7 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                 # if the destination is a fully-qualified name, an
                 # over-write will succeed
                 dest_fqn = join(destination, f_name)
+                self._logger.debug(f'Moving {fqn} to {dest_fqn}')
                 shutil.move(fqn, dest_fqn)
             except Exception as e:
                 self._logger.debug(traceback.format_exc())

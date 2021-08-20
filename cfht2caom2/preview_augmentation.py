@@ -109,6 +109,7 @@ class CFHTPreview(mc.PreviewVisitor):
         self._logger = logging.getLogger(__name__)
 
     def generate_plots(self, obs_id):
+        self._logger.debug(f'Begin generate_plots for {obs_id}')
         if (
             self._instrument is md.Inst.SITELLE
             and self._storage_name.suffix == 'p'
@@ -129,6 +130,7 @@ class CFHTPreview(mc.PreviewVisitor):
                 count = self._do_spirou_intensity_spectrum()
         else:
             count = self._do_ds9_prev(obs_id)
+        self._logger.debug('End generate_plots')
         return count
 
     def _do_espadons_science(self):
