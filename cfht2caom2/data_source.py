@@ -166,7 +166,7 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         scheme = 'cadc' if self._supports_latest_client else 'ad'
         destination_name = mc.build_uri(self._collection, f_name, scheme)
         cadc_meta = self._cadc_client.info(destination_name)
-        if local_meta.md5sum == cadc_meta.md5sum:
+        if cadc_meta is not None and local_meta.md5sum == cadc_meta.md5sum:
             self._logger.warning(
                 f'{entry_path} has the same md5sum at CADC. Not transferring.'
             )
