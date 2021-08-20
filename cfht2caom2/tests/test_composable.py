@@ -88,9 +88,11 @@ import test_main_app, cfht_mocks
 TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 
 
+@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('caom2pipe.execute_composable.CaomExecute._fits2caom2_cmd_local')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
-def test_run_by_builder(repo_mock, exec_mock):
+def test_run_by_builder(repo_mock, exec_mock, access_mock):
+    access_mock.return_value = 'https://localhost'
     # should attempt to run LocalMetaCreate
     repo_mock.return_value.read.side_effect = _mock_repo_read
     repo_mock.return_value.create.side_effect = Mock()
