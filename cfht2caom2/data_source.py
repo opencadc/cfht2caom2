@@ -112,6 +112,9 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._logger.debug('End clean_up.')
 
     def default_filter(self, entry):
+        """
+        :param entry: os.DirEntry
+        """
         copy_file = True
         if super(CFHTUseLocalFilesDataSource, self).default_filter(entry):
             if entry.name.startswith('.'):
@@ -126,6 +129,10 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                     # only transfer files with a different MD5 checksum
                     copy_file = self._check_md5sum(entry.path)
                     if not copy_file and self._cleanup_when_storing:
+                        self._logger.warning(
+                            f'{entry.path} has the same md5sum at CADC. Not '
+                            f'transferring.'
+                        )
                         # KW - 23-06-21
                         # if the file already exists, with the same
                         # checksum, at CADC, Kanoa says move it to the
@@ -172,17 +179,14 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         destination_name = mc.build_uri(self._collection, f_name, scheme)
         cadc_meta = self._cadc_client.info(destination_name)
         if cadc_meta is not None and local_meta.md5sum == cadc_meta.md5sum:
-            self._logger.warning(
-                f'{entry_path} has the same md5sum at CADC. Not transferring.'
-            )
             result = False
         self._logger.debug(
             f'Done _check_md5sum for {entry_path} result is {result}'
         )
         return result
 
-    def _find_work(self, entry):
-        with scandir(entry) as dir_listing:
+    def _find_work(self, entry_path):
+        with scandir(entry_path) as dir_listing:
             for entry in dir_listing:
                 if entry.is_dir() and self._recursive:
                     self._find_work(entry.path)
