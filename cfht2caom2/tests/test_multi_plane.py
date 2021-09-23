@@ -120,6 +120,7 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cfht2caom2.main_app.data_util.StorageClientWrapper')
 @patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
@@ -133,6 +134,7 @@ def test_multi_plane(
     cache_mock,
     access_mock,
     second_mock,
+    local_headers_mock,
     test_name,
 ):
     # cache_mock there so there are no update cache calls - so the tests
@@ -157,6 +159,10 @@ def test_multi_plane(
     )
     second_mock.return_value.info.side_effect = test_main_app._get_file_info
     svofps_mock.side_effect = test_main_app._vo_mock
+    # during cfht2caom2 operation, want to use astropy on FITS files
+    # but during testing want to use headers and built-in Python file
+    # operations
+    local_headers_mock.side_effect = test_main_app._local_headers
 
     # cannot use the --not_connected parameter in this test, because the
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong

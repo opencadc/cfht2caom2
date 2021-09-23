@@ -1921,7 +1921,7 @@ def _update_observation_metadata(obs, headers, cfht_name, fqn, uri, subject):
                     # this is the fits2caom2 implementation, which returns
                     # a list structure
                     unmodified_headers = (
-                        data_util.get_local_file_headers(fqn)
+                        data_util.get_local_headers_from_fits(fqn)
                     )
                 elif uri is not None:
                     # this is the fits2caom2 implementation, which returns

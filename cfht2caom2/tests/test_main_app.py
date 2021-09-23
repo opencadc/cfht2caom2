@@ -75,6 +75,7 @@ from astropy.io.votable import parse_single_table
 from mock import patch
 
 from cadcdata import FileInfo
+from caom2utils import data_util
 from cfht2caom2 import main_app, APPLICATION, COLLECTION, CFHTName
 from cfht2caom2 import ARCHIVE
 from cfht2caom2 import metadata as md
@@ -95,6 +96,7 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cfht2caom2.main_app.data_util.StorageClientWrapper')
 @patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
@@ -108,6 +110,7 @@ def test_main_app(
     cache_mock,
     access_url_mock,
     second_mock,
+    local_headers_mock,
     test_name,
 ):
     # cache_mock there so there are no cache update calls - so the tests
@@ -129,6 +132,10 @@ def test_main_app(
     client_mock.return_value.info.side_effect = _get_file_info
     second_mock.return_value.info.side_effect = _get_file_info
     vo_mock.side_effect = _vo_mock
+    # during cfht2caom2 operation, want to use astropy on FITS files
+    # but during testing want to use headers and built-in Python file
+    # operations
+    local_headers_mock.side_effect = _local_headers
 
     # cannot use the --not_connected parameter in this test, because the
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
@@ -282,3 +289,18 @@ def _identify_inst_mock(ignore_headers, uri):
         if result is not md.Inst.SITELLE:
             break
     return result
+
+
+def _local_headers(fqn):
+    from urllib.parse import urlparse
+    from astropy.io import fits
+    file_uri = urlparse(fqn)
+    try:
+        fits_header = open(file_uri.path).read()
+        headers = data_util.make_headers_from_string(fits_header)
+    except UnicodeDecodeError:
+        hdulist = fits.open(fqn, memmap=True, lazy_load_hdus=True)
+        hdulist.verify('fix')
+        hdulist.close()
+        headers = [h.header for h in hdulist]
+    return headers
