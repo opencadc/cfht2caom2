@@ -110,7 +110,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             instrument = md.Inst.SITELLE
         else:
             if self._use_local_files:
-                headers = data_util.get_local_file_headers(entry)
+                headers = data_util.get_local_headers_from_fits(entry)
             else:
                 uri = mc.build_uri(
                     cn.ARCHIVE, os.path.basename(urlparse(entry).path)
