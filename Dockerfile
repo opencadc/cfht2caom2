@@ -1,4 +1,4 @@
-FROM opencadc/matplotlib:3.8-slim
+FROM opencadc/matplotlib:3.9-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update --no-install-recommends && apt-get dist-upgrade -y && \
