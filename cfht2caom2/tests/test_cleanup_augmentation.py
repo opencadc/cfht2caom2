@@ -74,8 +74,9 @@ import test_main_app
 
 
 def test_cleanup_augmentation():
-    test_obs = mc.read_obs_from_file(path.join(test_main_app.TEST_DATA_DIR,
-                                               'visit_obs_start_cleanup.xml'))
+    test_obs = mc.read_obs_from_file(
+        path.join(test_main_app.TEST_DATA_DIR, 'visit_obs_start_cleanup.xml')
+    )
     assert len(test_obs.planes) == 3, 'initial conditions failed'
     kwargs = {}
     test_result = cleanup_augmentation.visit(test_obs, **kwargs)

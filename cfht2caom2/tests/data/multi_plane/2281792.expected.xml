@@ -65,7 +65,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-c2d7-0165fe94646b" caom2:lastModified="2018-09-22T00:01:04.327" caom2:maxLastModified="2018-09-22T00:01:04.327" caom2:metaChecksum="md5:a1c6d526c795daa6be1e34e3ea8df7b2" caom2:accMetaChecksum="md5:4e47fc2c1e8c0672341c01275dad133c" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2281792p.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/2281792p.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -510,7 +510,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-4d74-01644f3f6fe5" caom2:lastModified="2018-06-30T05:51:57.513" caom2:maxLastModified="2018-06-30T05:51:57.513" caom2:metaChecksum="md5:3e50ab94c17ec69a95d8130ede632e4a" caom2:accMetaChecksum="md5:3d487ac34395cfa247cd3bb87ff1932d" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2281792s.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/2281792s.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -947,7 +947,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-bc5f-0163c06e1aa1" caom2:lastModified="2018-06-02T12:17:16.323" caom2:maxLastModified="2018-06-02T12:17:16.323" caom2:metaChecksum="md5:96e0fbcb1690b85167b7ba9219b63e2f" caom2:accMetaChecksum="md5:78c370297dff2242685b2248ab7f7e2c" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2281792o.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/2281792o.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -1384,7 +1384,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-c5e3-0163c06d942d" caom2:lastModified="2018-06-02T12:16:39.407" caom2:maxLastModified="2018-06-02T12:16:39.407" caom2:metaChecksum="md5:f98cc29685e4e86744d63d2667c73c81" caom2:accMetaChecksum="md5:2f58dcb7b2d93670daae20c836e3ee2c" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2281792g.fits.gz</caom2:uri>
+          <caom2:uri>ad:CFHT/2281792g.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

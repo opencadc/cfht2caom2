@@ -17,10 +17,7 @@ todo_file_name: todo.txt
 # .fits, .gz, .json endings as defining the work to be 
 # done.
 use_local_files: True
-# if the 'store' task type is listed, ensure the local file has a later
-# timestamp than the file at CADC before transferring the file. 
-# 'use_local_files' must be also be True
-store_newer_files_only: True
+store_modified_files_only: True
 # values DEBUG INFO WARNING ERROR
 logging_level: INFO
 # values True False
@@ -72,6 +69,10 @@ rejected_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test/rej
 #
 state_file_name: state.yml
 cache_file_name: cache.yml
+data_sources:
+  - /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store_test
+data_source_extensions:
+  - .fits.fz
 #
 # if using a state file to time-box execution chunks, this is 
 # the interval, in minutes, that define the start and end of the 
@@ -90,5 +91,3 @@ task_types:
   - modify
 features:
   supports_composite: False
-  use_file_names: True
-  use_urls: False

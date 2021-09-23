@@ -79,24 +79,38 @@ import test_main_app
 # structured by observation id, list of file ids that make up a multi-plane
 # observation
 DIR_NAME = 'multi_plane'
-LOOKUP = {'979339': ['979339i.fits.gz', '979339o.fits.gz'],
-          '2281792': ['2281792s.fits.fz', '2281792p.fits.fz',
-                      '2281792o.fits.fz', '2281792g.fits.gz'],
-          '1151210': ['1151210g.fits.fz', '1151210m.fits.fz',
-                      '1151210w.fits.gz'],
-          '979412': ['979412o.fits.fz', '979412p.fits.fz'],
-          '1257365': ['1257365o.fits.fz', '1257365p.fits.fz'],
-          '840066': ['840066g.fits.fz', '840066o.fits.fz'],
-          # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
-          #             '1927963p.fits.fz'],
-          # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
-          '2384125p': ['2384125p.fits.fz', '2384125z.hdf5'],
-          '2401734': ['2401734o.fits', '2401734e.fits', '2401734r.fits',
-                      '2401734s.fits', '2401734t.fits', '2401734v.fits'],
-          '1979958': ['1979958p.fits', '1979958y.fits'],
-          # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
-          # '2460606': ['2460606i.fits.gz']
-          }
+LOOKUP = {
+    '979339': ['979339i.fits', '979339o.fits'],
+    '2281792': [
+        '2281792s.fits',
+        '2281792p.fits',
+        '2281792o.fits',
+        '2281792g.fits',
+    ],
+    '1151210': [
+        '1151210g.fits',
+        '1151210m.fits',
+        '1151210w.fits',
+    ],
+    '979412': ['979412o.fits', '979412p.fits'],
+    '1257365': ['1257365o.fits', '1257365p.fits'],
+    '840066': ['840066g.fits', '840066o.fits'],
+    # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
+    #             '1927963p.fits.fz'],
+    # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
+    '2384125p': ['2384125p.fits', '2384125z.hdf5'],
+    '2401734': [
+        '2401734o.fits',
+        '2401734e.fits',
+        '2401734r.fits',
+        '2401734s.fits',
+        '2401734t.fits',
+        '2401734v.fits',
+    ],
+    '1979958': ['1979958p.fits', '1979958y.fits'],
+    # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
+    # '2460606': ['2460606i.fits.gz']
+}
 
 
 def pytest_generate_tests(metafunc):
@@ -106,20 +120,33 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('caom2utils.data_util.get_local_headers_from_fits')
+@patch('cfht2caom2.main_app.data_util.StorageClientWrapper')
+@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.main_app._identify_instrument')
-@patch('caom2utils.fits2caom2.CadcDataClient')
+@patch('caom2utils.data_util.StorageClientWrapper')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
-                     test_name):
+def test_multi_plane(
+    svofps_mock,
+    data_client_mock,
+    inst_mock,
+    cache_mock,
+    access_mock,
+    second_mock,
+    local_headers_mock,
+    test_name,
+):
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
+    access_mock.return_value = 'https://localhost'
     metadata.filter_cache.connected = True
     inst_mock.side_effect = test_main_app._identify_inst_mock
     obs_id = test_name
     lineage = _get_lineage(obs_id)
     actual_fqn = '{}/{}/{}.actual.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
+        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id
+    )
 
     local = _get_local(test_name)
     plugin = test_main_app.PLUGIN
@@ -127,22 +154,30 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
     if os.path.exists(actual_fqn):
         os.remove(actual_fqn)
 
-    data_client_mock.return_value.get_file_info.side_effect = \
+    data_client_mock.return_value.info.side_effect = (
         test_main_app._get_file_info
+    )
+    second_mock.return_value.info.side_effect = test_main_app._get_file_info
     svofps_mock.side_effect = test_main_app._vo_mock
+    # during cfht2caom2 operation, want to use astropy on FITS files
+    # but during testing want to use headers and built-in Python file
+    # operations
+    local_headers_mock.side_effect = test_main_app._local_headers
 
     # cannot use the --not_connected parameter in this test, because the
     # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
     # as well
-    sys.argv = \
-        (f'{main_app.APPLICATION} --quiet --no_validate --observation '
-         f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
-         f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
-         f'{lineage}').split()
+    sys.argv = (
+        f'{main_app.APPLICATION} --quiet --no_validate --observation '
+        f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
+        f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
+        f'{lineage} --resource-id ivo://cadc.nrc.ca/test'
+    ).split()
     print(sys.argv)
     main_app.to_caom2()
     expected_fqn = '{}/{}/{}.expected.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id)
+        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id
+    )
     compare_result = mc.compare_observations(actual_fqn, expected_fqn)
     if compare_result is not None:
         raise AssertionError(compare_result)
@@ -152,8 +187,11 @@ def test_multi_plane(svofps_mock, data_client_mock, inst_mock, cache_mock,
 def _get_lineage(obs_id):
     result = ''
     for ii in LOOKUP[obs_id]:
-        fits = mc.get_lineage(cfht_name.ARCHIVE,
-                              cfht_name.CFHTName.remove_extensions(ii), ii)
+        fits = mc.get_lineage(
+            cfht_name.ARCHIVE,
+            cfht_name.CFHTName.remove_extensions(ii),
+            ii,
+        )
         result = f'{result } {fits}'
     return result
 
@@ -162,17 +200,20 @@ def _get_local(obs_id):
     result = ''
     root = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}'
     if '979339' in obs_id:
-        result = f'{test_main_app.TEST_FILES_DIR}/979339i.fits ' \
-                 f'{root}/979339o.fits.header'
+        result = (
+            f'{test_main_app.TEST_FILES_DIR}/979339i.fits '
+            f'{root}/979339o.fits.header'
+        )
     elif '2384125p' in obs_id:
         # result = f'{root}/2384125p.fits.header ' \
         #          f'{root}/2384125v.fits.header' \
         #          f'{root}/2384125z.hdf5'
         # result = f'{root}/2384125z.hdf5'
-        result = f'{root}/2384125p.fits.header ' \
-                 f'{root}/2384125z.hdf5'
+        result = f'{root}/2384125p.fits.header {root}/2384125z.hdf5'
     else:
         for ii in LOOKUP[obs_id]:
-            result = f'{result} {root}/' \
-                     f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
+            result = (
+                f'{result} {root}/'
+                f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
+            )
     return result

@@ -51,7 +51,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-f4ac-0154a07902d6" caom2:lastModified="2017-11-22T15:42:08.643" caom2:maxLastModified="2017-11-22T15:42:08.643" caom2:metaChecksum="md5:93f87341e1d423d8e4b8d31e5737cd52" caom2:accMetaChecksum="md5:82fdaf55b3d4224f24b39827c67ce262" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/1927963f.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/1927963f.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -2400,7 +2400,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-a032-0154a3cc7b74" caom2:lastModified="2017-11-22T15:42:08.643" caom2:maxLastModified="2017-11-22T15:42:08.643" caom2:metaChecksum="md5:da96d5e88d2ce0d9e6804c1a75aceafa" caom2:accMetaChecksum="md5:b5d9c346c797202fb3cb3f9fc71d396f" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/1927963o.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/1927963o.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -6515,7 +6515,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-653e-0154e485dedf" caom2:lastModified="2017-11-22T15:42:08.643" caom2:maxLastModified="2017-11-22T15:42:08.643" caom2:metaChecksum="md5:4ef030070d43ec9403565868d1692d7f" caom2:accMetaChecksum="md5:3155255940ea34c3f474649f0f504d3b" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/1927963p.fits.fz</caom2:uri>
+          <caom2:uri>ad:CFHT/1927963p.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

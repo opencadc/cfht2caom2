@@ -82,19 +82,23 @@ def visit(observation, **kwargs):
     for plane in observation.planes.values():
         if plane.product_id.endswith('og'):
             delete_list.append(plane.product_id)
-        if (plane.product_id[-1:] in ['b', 'd', 'f', 'x'] and
-                observation.observation_id != plane.product_id and
-                md.Inst(observation.instrument.name) in
-                [md.Inst.MEGACAM, md.Inst.MEGAPRIME]):
+        if (
+            plane.product_id[-1:] in ['b', 'd', 'f', 'x']
+            and observation.observation_id != plane.product_id
+            and md.Inst(observation.instrument.name)
+            in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]
+        ):
             delete_list.append(plane.product_id)
 
     for entry in delete_list:
         logging.info(
-            f'Removing plane {entry} from {observation.observation_id}')
+            f'Removing plane {entry} from {observation.observation_id}'
+        )
         count += 1
         observation.planes.pop(entry)
 
     logging.info(
         f'Completed cleanup augmentation for {observation.observation_id}. '
-        f'Remove {count} planes from the observation.')
+        f'Remove {count} planes from the observation.'
+    )
     return {'planes': count}

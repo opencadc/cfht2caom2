@@ -79,6 +79,15 @@ __all__ = ['CFHTName', 'COLLECTION', 'ARCHIVE']
 COLLECTION = 'CFHT'
 ARCHIVE = 'CFHT'
 
+# minimize the number of times the code tries to figure out which instrument
+# generated the file being ingested
+#
+# declare the global here, so that it survives the importlib.import_module
+# done by fits2caom2
+# key - Artifact uri
+# value - CFHTName instance
+cfht_names = {}
+
 
 class CFHTName(mc.StorageName):
     """Naming rules:
@@ -91,19 +100,34 @@ class CFHTName(mc.StorageName):
 
     CFHT_NAME_PATTERN = '*'
 
-    def __init__(self, obs_id=None, file_name=None,
-                 instrument=None, ad_uri=None, entry=None):
+    def __init__(
+        self,
+        obs_id=None,
+        file_name=None,
+        instrument=None,
+        ad_uri=None,
+        entry=None,
+        source_names=[],
+        scheme='ad',
+    ):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
         # including the .fz | .gz | '' to indicate compression type
         if obs_id is None:
             super(CFHTName, self).__init__(
-                None, COLLECTION, CFHTName.CFHT_NAME_PATTERN, file_name,
-                compression='', entry=entry)
+                None,
+                COLLECTION,
+                CFHTName.CFHT_NAME_PATTERN,
+                file_name,
+                compression='',
+                entry=entry,
+                source_names=source_names,
+                scheme=scheme,
+            )
             self._instrument = md.Inst(instrument)
             if ad_uri is not None and file_name is None:
                 file_name = mc.CaomName(ad_uri).file_name
-            self._file_name = file_name
+            self._file_name = file_name.replace('.header', '')
             self._file_id = CFHTName.remove_extensions(file_name)
             self._suffix = self._file_id[-1]
             if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
@@ -113,8 +137,10 @@ class CFHTName(mc.StorageName):
                 # if i understand their data acquisition. b,f,d,x should be 1
                 # plane observations. - my assumption is that the b,f,d,x have
                 # no reason to have a processed equivalent.
-                if (self._suffix in ['b', 'd', 'f', 'x'] or
-                        self._suffix.isnumeric()):
+                if (
+                    self._suffix in ['b', 'd', 'f', 'x']
+                    or self._suffix.isnumeric()
+                ):
                     self._obs_id = self._file_id
                 else:
                     self._obs_id = self._file_id[:-1]
@@ -127,27 +153,39 @@ class CFHTName(mc.StorageName):
                         self.obs_id = self.obs_id.replace(self._suffix, 'p')
         else:
             super(CFHTName, self).__init__(
-                obs_id, COLLECTION, CFHTName.CFHT_NAME_PATTERN,
-                compression='')
+                obs_id,
+                COLLECTION,
+                CFHTName.CFHT_NAME_PATTERN,
+                compression='',
+                scheme=scheme,
+            )
             self.obs_id = obs_id
             self._instrument = None
             self._file_id = None
             self._file_name = None
             self._file_id = None
             self._suffix = None
-        # self._logger = logging.getLogger(__name__)
-        # self._logger.debug(self)
+        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger.debug(self)
 
     def __str__(self):
-        return f'instrument {self.instrument}, ' \
-               f'obs_id {self.obs_id}, ' \
-               f'file_id {self.file_id}, ' \
-               f'file_name {self.file_name}, ' \
-               f'file_uri {self.file_uri}, ' \
-               f'lineage {self.lineage}'
+        return (
+            f'\n'
+            f'  instrument: {self.instrument}\n'
+            f'      obs_id: {self.obs_id}\n'
+            f'     file_id: {self.file_id}\n'
+            f'   file_name: {self.file_name}\n'
+            f'source_names: {self.source_names}\n'
+            f'    file_uri: {self.file_uri}\n'
+            f'     lineage: {self.lineage}\n'
+        )
 
     def is_valid(self):
         return True
+
+    @property
+    def destination_uris(self):
+        return [self.file_uri]
 
     @property
     def file_id(self):
@@ -195,25 +233,36 @@ class CFHTName(mc.StorageName):
 
     @property
     def is_master_cal(self):
-        return ('weight' in self._file_id or 'master' in self._file_id or
-                'hotpix' in self._file_id or 'badpix' in self._file_id or
-                'deadpix' in self._file_id or 'dark' in self._file_id or
-                'scatter' in self._file_id)
+        return (
+            'weight' in self._file_id
+            or 'master' in self._file_id
+            or 'hotpix' in self._file_id
+            or 'badpix' in self._file_id
+            or 'deadpix' in self._file_id
+            or 'dark' in self._file_id
+            or 'scatter' in self._file_id
+        )
 
     @property
     def has_energy(self):
-        return not (self._instrument is md.Inst.ESPADONS and
-                    self._suffix in ['i', 'p'])
+        return not (
+            self._instrument is md.Inst.ESPADONS and self._suffix in ['i', 'p']
+        )
 
     @property
     def has_polarization(self):
-        return (self._suffix in ['p'] and
-                self._instrument in [md.Inst.ESPADONS, md.Inst.SPIROU])
+        return self._suffix in ['p'] and self._instrument in [
+            md.Inst.ESPADONS,
+            md.Inst.SPIROU,
+        ]
 
     @property
     def is_derived_sitelle(self):
-        return (self._instrument == md.Inst.SITELLE and
-                self._suffix in ['p', 'v', 'z'])
+        return self._instrument == md.Inst.SITELLE and self._suffix in [
+            'p',
+            'v',
+            'z',
+        ]
 
     @property
     def is_feasible(self):
@@ -228,23 +277,47 @@ class CFHTName(mc.StorageName):
     @property
     def is_simple(self):
         result = False
-        if (self._suffix in ['a', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'o', 's',
-                             'w', 'x', 'y']
-                or self.simple_by_suffix or self.is_master_cal or
-                (self._instrument is md.Inst.SPIROU and self._suffix in
-                 ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v'])):
+        if (
+            self._suffix
+            in [
+                'a',
+                'b',
+                'c',
+                'd',
+                'f',
+                'g',
+                'l',
+                'm',
+                'o',
+                's',
+                'w',
+                'x',
+                'y',
+            ]
+            or self.simple_by_suffix
+            or self.is_master_cal
+            or (
+                self._instrument is md.Inst.SPIROU
+                and self._suffix in ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v']
+            )
+        ):
             result = True
         return result
 
     @property
     def simple_by_suffix(self):
-        return ((self._suffix in ['p', 's'] and
-                 self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME,
-                                      md.Inst.WIRCAM]) or
-                (self._suffix == 'i' and
-                 self._instrument is md.Inst.ESPADONS) or
-                (self._suffix in ['e', 's', 't', 'v'] and
-                 self._instrument is md.Inst.SPIROU))
+        return (
+            (
+                self._suffix in ['p', 's']
+                and self._instrument
+                in [md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM]
+            )
+            or (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS)
+            or (
+                self._suffix in ['e', 's', 't', 'v']
+                and self._instrument is md.Inst.SPIROU
+            )
+        )
 
     @property
     def suffix(self):
@@ -255,5 +328,10 @@ class CFHTName(mc.StorageName):
         """How to get the file_id from a file_name."""
         # ESPaDOnS files have a .gz extension ;)
         # SITELLE has hdf5 files
-        return name.replace('.fits', '').replace('.fz', '').replace(
-            '.header', '').replace('.gz', '').replace('.hdf5', '')
+        return (
+            name.replace('.fits', '')
+            .replace('.fz', '')
+            .replace('.header', '')
+            .replace('.gz', '')
+            .replace('.hdf5', '')
+        )

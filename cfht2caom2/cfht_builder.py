@@ -70,11 +70,10 @@
 import logging
 import os
 
-from cadcdata import CadcDataClient
-from caom2repo import CAOM2RepoClient
-from caom2utils import fits2caom2
+from urllib.parse import urlparse
+
+from caom2utils import data_util
 from caom2pipe import name_builder_composable as nbc
-from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -84,18 +83,18 @@ __all__ = ['CFHTBuilder']
 
 
 class CFHTBuilder(nbc.StorageNameBuilder):
-
-    def __init__(self, config):
+    def __init__(
+        self,
+        data_client,
+        archive,
+        use_local_files,
+        supports_latest_client=False,
+    ):
         super(CFHTBuilder, self).__init__()
-        self._config = config
-        self._data_client = None
-        self._repo_client = None
-        self._metrics = mc.Metrics(self._config)
-        if not self._config.use_local_files:
-            subject = mc.define_subject(self._config)
-            self._data_client = CadcDataClient(subject)
-            self._repo_client = CAOM2RepoClient(
-                subject, resource_id=self._config.resource_id)
+        self._data_client = data_client
+        self._archive = archive
+        self._use_local_files = use_local_files
+        self._supports_latest_client = supports_latest_client
         self._logger = logging.getLogger(__name__)
 
     def build(self, entry):
@@ -107,29 +106,26 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
-        if (mc.TaskType.INGEST_OBS in self._config.task_types and
-                ('.fits' not in entry and not mc.StorageName.is_hdf5(entry))):
-            obs = mc.repo_get(self._repo_client, self._config.collection,
-                              entry, self._metrics)
-            instrument = md.Inst(obs.instrument.name)
-            result = cn.CFHTName(
-                obs_id=entry, instrument=instrument, entry=entry)
+        if mc.StorageName.is_hdf5(entry):
+            instrument = md.Inst.SITELLE
         else:
-            if mc.StorageName.is_hdf5(entry):
-                headers = []
+            if self._use_local_files:
+                headers = data_util.get_local_headers_from_fits(entry)
             else:
-                if self._config.use_local_files:
-                    cwd = os.getcwd()
-                    headers = fits2caom2.get_cadc_headers(
-                        f'file://{cwd}/{entry}')
-                else:
-                    headers_str = mc.get_cadc_headers_client(
-                        self._config.archive, entry, self._data_client)
-                    headers = ac.make_headers_from_string(headers_str)
-
+                uri = mc.build_uri(
+                    cn.ARCHIVE, os.path.basename(urlparse(entry).path)
+                )
+                headers = self._data_client.get_head(uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
-            result = cn.CFHTName(file_name=entry, instrument=instrument,
-                                 entry=entry)
+        scheme = 'cadc' if self._supports_latest_client else 'ad'
+        result = cn.CFHTName(
+            file_name=os.path.basename(entry),
+            source_names=[entry],
+            instrument=instrument,
+            entry=entry,
+            scheme=scheme,
+        )
+        self._logger.debug('End build.')
         return result
 
     @staticmethod
@@ -162,30 +158,37 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             detector = None
             instrument = headers[0].get('INSTRUME')
             if instrument is None:
-                instrument = headers[1].get('INSTRUME')
+                if len(headers) > 1:
+                    instrument = headers[1].get('INSTRUME')
                 if instrument is None:
                     instrument = headers[0].get('DETECTOR')
                     if instrument is None:
-                        instrument = headers[1].get('DETECTOR')
+                        if len(headers) > 1:
+                            instrument = headers[1].get('DETECTOR')
                         if instrument is None:
                             nextend = headers[0].get('NEXTEND')
                             if nextend is None:
-                                raise mc.CadcException(f'Could not identify '
-                                                       f'instrument for '
-                                                       f'{entry}.')
+                                raise mc.CadcException(
+                                    f'Could not identify instrument for '
+                                    f'{entry}.'
+                                )
             elif instrument == 'Unknown':
                 detector = headers[0].get('DETECTOR')
             if instrument is None and nextend is not None and nextend > 30:
                 inst = md.Inst.MEGAPRIME
             else:
-                msg = f'Unknown value for instrument {instrument}, detector ' \
-                      f'{detector} and nextend {nextend} for {entry}.'
+                msg = (
+                    f'Unknown value for instrument {instrument}, detector '
+                    f'{detector} and nextend {nextend} for {entry}.'
+                )
 
                 try:
                     inst = md.Inst(instrument)
                 except ValueError:
-                    if (instrument == 'CFHT MegaPrime' or
-                            instrument == 'megacam'):
+                    if (
+                        instrument == 'CFHT MegaPrime'
+                        or instrument == 'megacam'
+                    ):
                         inst = md.Inst.MEGAPRIME
                     elif instrument == 'Unknown' and detector is not None:
                         if detector == 'OLAPA':
@@ -209,4 +212,5 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                                     raise mc.CadcException(msg)
                     else:
                         raise mc.CadcException(msg)
+        logging.debug(f'Instrument is {inst}')
         return inst

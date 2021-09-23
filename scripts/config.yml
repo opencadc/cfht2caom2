@@ -16,11 +16,31 @@ todo_file_name: todo.txt
 # when True, the application will look for files with
 # .fits, .gz, .json endings as defining the work to be 
 # done.
-use_local_files: False
-# if the 'store' task type is listed, ensure the local file has a later
-# timestamp than the file at CADC before transferring the file. 
+use_local_files: True
+# If use_local_files is set to True, specify directories in which 
+# to search for files. This is a YAML list. It may be a list of 
+# length 1, set to the same value as the working_directory.
+data_sources:
+  - /data
+# specify a list of the file extensions to be recognized for 
+# processing by the pipeline. e.g. '.fits', '.fits.fz', '.hdf5'
+data_source_extensions:
+  - .fits
+  - .fits.fz
+  - .fits.gz
+  - .hdf5
+# if the 'store' task type is listed, ensure the local file has a different
+# md5 checksum than the file at CADC before transferring the file.
 # 'use_local_files' must be also be True
-store_newer_files_only: False
+store_modified_files_only: True
+# If cleanup_files_when_storing is True, and the STORE task_type is
+# specified, move files that are successfully transferred to CADC
+# to the cleanup_success_destination when the transfer is done, and
+# to the cleanup_failure_destination when the transfer fails, or the
+# file fails FITS verification.
+cleanup_files_when_storing: False
+cleanup_success_destination: /dev/null
+cleanup_failure_destination: /dev/null
 # values DEBUG INFO WARNING ERROR
 logging_level: INFO
 # values True False

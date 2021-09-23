@@ -69,7 +69,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="17e8d308-70fc-4185-8640-929d5e6fe58e" caom2:lastModified="2019-11-22T18:58:41.100" caom2:maxLastModified="2019-11-22T18:58:41.100" caom2:metaChecksum="md5:6f5d0f64d34bee61e0356b6d296d5605" caom2:accMetaChecksum="md5:1d5c057206c9779f3e4cc7321ac5f60f" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2460503p.fits.gz</caom2:uri>
+          <caom2:uri>ad:CFHT/2460503p.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
