@@ -96,19 +96,19 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._recursive = recursive
         self._logger = logging.getLogger(self.__class__.__name__)
 
-    def clean_up(self):
-        self._logger.debug('Begin clean_up')
+    def clean_up(self, entry):
+        self._logger.debug(f'Begin clean_up with {entry}')
         if self._cleanup_when_storing:
-            for entry in self._work:
-                if isinstance(entry, str):
-                    fqn = entry
-                else:
-                    fqn = entry.entry_name
-                if self._check_md5sum(fqn):
-                    # the transfer itself failed, so track as a failure
-                    self._move_action(fqn, self._cleanup_failure_directory)
-                else:
-                    self._move_action(fqn, self._cleanup_success_directory)
+            if isinstance(entry, str):
+                fqn = entry
+            else:
+                fqn = entry.entry_name
+            self._logger.debug(f'Clean up f{fqn}')
+            if self._check_md5sum(fqn):
+                # the transfer itself failed, so track as a failure
+                self._move_action(fqn, self._cleanup_failure_directory)
+            else:
+                self._move_action(fqn, self._cleanup_success_directory)
         self._logger.debug('End clean_up.')
 
     def default_filter(self, entry):
@@ -182,16 +182,19 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
                     # FITS file
                     #
                     # send the dir_listing value
-                    entry_stats = entry.stat()
-                    if (
-                            exec_time
-                            >= entry_stats.st_mtime
-                            >= prev_exec_time
-                    ):
-                        if self.default_filter(entry):
-                            self._temp[entry_stats.st_mtime].append(
-                                entry.path
-                            )
+                    # skip dot files, but have a special exclusion, because
+                    # otherwise the entry.stat() call will sometimes fail.
+                    if not entry.name.startswith('.'):
+                        entry_stats = entry.stat()
+                        if (
+                                exec_time
+                                >= entry_stats.st_mtime
+                                >= prev_exec_time
+                        ):
+                            if self.default_filter(entry):
+                                self._temp[entry_stats.st_mtime].append(
+                                    entry.path
+                                )
 
     def _check_md5sum(self, entry_path):
         """
