@@ -112,11 +112,12 @@ def test_run_by_builder(repo_mock, exec_mock, access_mock):
     exec_mock.assert_called_with(), 'wrong exec args'
 
 
+@patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store(
-    tap_mock, data_client_mock, repo_client_mock
+    tap_mock, data_client_mock, repo_client_mock, check_fits_mock
 ):
     test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
     getcwd_orig = os.getcwd
@@ -126,9 +127,10 @@ def test_run_store(
     data_client_mock.return_value.info.side_effect = (
         _mock_get_file_info
     )
-    data_util.get_local_file_headers = Mock(
+    data_util.get_local_headers_from_fits = Mock(
         side_effect=_mock_header_read
     )
+    check_fits_mock.return_value = True
     try:
         # execution
         test_result = composable._run_by_builder()
