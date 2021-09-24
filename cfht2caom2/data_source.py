@@ -165,6 +165,34 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._logger.debug('End get_work')
         return self._work
 
+    def _append_work(self, prev_exec_time, exec_time, entry_path):
+        with scandir(entry_path) as dir_listing:
+            for entry in dir_listing:
+                if entry.is_dir() and self._recursive:
+                    entry_stats = entry.stat()
+                    if exec_time >= entry_stats.st_mtime >= prev_exec_time:
+                        self._append_work(
+                            prev_exec_time, exec_time, entry.path
+                        )
+                else:
+                    # order the stats check before the default_filter check,
+                    # because CFHT likes to work with tens of thousands of
+                    # files, not a few, and the default filter is the one
+                    # that opens and reads every file to see if it's a valid
+                    # FITS file
+                    #
+                    # send the dir_listing value
+                    entry_stats = entry.stat()
+                    if (
+                            exec_time
+                            >= entry_stats.st_mtime
+                            >= prev_exec_time
+                    ):
+                        if self.default_filter(entry):
+                            self._temp[entry_stats.st_mtime].append(
+                                entry.path
+                            )
+
     def _check_md5sum(self, entry_path):
         """
         :return: boolean False if the metadata is the same locally as at
