@@ -1,0 +1,5 @@
+FROM opencadc/cfht2caom2:latest
+ARG UID
+RUN useradd --create-home --shell /bin/bash --uid ${UID} cadcops
+USER cadcops
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
