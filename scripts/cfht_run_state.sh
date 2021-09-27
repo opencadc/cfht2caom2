@@ -1,7 +1,7 @@
 #!/bin/bash
 
 COLLECTION="cfht"
-IMAGE="opencadc/${COLLECTION}2caom2"
+IMAGE="bucket.canfar.net/${COLLECTION}2caom2"
 
 echo "Get a proxy certificate"
 cp $HOME/.ssl/cadcproxy.pem ./ || exit $?
