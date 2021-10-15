@@ -142,7 +142,8 @@ def test_cfht_transfer_check_fits_verify():
         assert not moved_failure.exists(), 'correct file at failure'
 
         # and after the transfer
-        test_subject.clean_up()
+        for test_entry in test_result:
+            test_subject.clean_up(test_entry)
         assert not test_correct_file.exists(), 'correct file at source'
         assert not moved_success.exists(), 'correct file at destination'
         assert moved_failure.exists(), 'correct file at destination'
@@ -179,7 +180,8 @@ def test_cfht_transfer_check_fits_verify():
             moved = Path(test_failure_directory, f.name)
             assert not moved.exists(), 'file at destination'
         # clean up should do nothing
-        test_subject.clean_up()
+        for test_entry in test_result:
+            test_subject.clean_up(test_entry)
         for f in [
             test_empty_file,
             test_broken_file,
@@ -303,7 +305,8 @@ def test_transfer_fails(check_fits_mock):
     )
 
     cadc_client_mock.info.side_effect = [match, different]
-    test_subject.clean_up()
+    for test_entry in test_result:
+        test_subject.clean_up(test_entry)
 
     assert not test_correct_file_1.exists(), 'file 1 should be moved'
     assert not test_correct_file_2.exists(), 'file 2 should be moved'
