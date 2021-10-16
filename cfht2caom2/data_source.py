@@ -97,6 +97,14 @@ class CFHTUseLocalFilesDataSource(dsc.ListDirTimeBoxDataSource):
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def clean_up(self, entry):
+        """
+        Move a file to the success or failure location, depending on
+        whether a file with the same checksum is at CADC.
+
+        :param entry: either a data_source_composable.StateRunnerMeta instance
+            or an str, depending on whether the clean-up is invoked from a
+            time-boxed or all-in-one invocation of cfht2caom2.
+        """
         self._logger.debug(f'Begin clean_up with {entry}')
         if self._cleanup_when_storing:
             if isinstance(entry, str):
