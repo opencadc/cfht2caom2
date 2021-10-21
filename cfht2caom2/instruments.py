@@ -533,6 +533,7 @@ class Sitelle(InstrumentType):
         )
 
     def make_axes_consistent(self):
+        self._chunk.time_axis = None
         if (
             self._cfht_name.suffix in ['a', 'o', 'x']
             and self._chunk.position is None
@@ -540,7 +541,6 @@ class Sitelle(InstrumentType):
             and self._chunk.naxis == 3
             and self._chunk.energy is not None
         ):
-            self._chunk.time_axis = None
             self._chunk.energy_axis = 3
 
         # because SITELLE has the information from two
@@ -548,14 +548,9 @@ class Sitelle(InstrumentType):
         if self._chunk.naxis is not None and self._chunk.naxis <= 2:
             if self._chunk.position_axis_1 is None:
                 self._chunk.naxis = None
-            self._chunk.time_axis = None
             self._chunk.energy_axis = None
         else:
-            self._chunk.time_axis = 4
             self._chunk.energy_axis = 3
-
-        if self._chunk.time_axis is not None:
-            self._chunk.time_axis = 4
 
     def reset_energy(self):
         if self._chunk.energy_axis is not None:

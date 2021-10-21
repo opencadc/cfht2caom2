@@ -237,6 +237,9 @@ def accumulate_bp(bp, uri):
     if not (
         cfht_name.suffix == 'p' and cfht_name.instrument == md.Inst.SPIROU
     ):
+        # TODO if instrument == SITELLE and suffix == 'p', energy_axis == 3
+        # it will remove all the if instrument == sitelle and suffix = 'p'
+        # in the get_energy_* functions
         bp.configure_time_axis(3)
     if cfht_name.has_energy:
         bp.configure_energy_axis(4)
@@ -883,9 +886,11 @@ def get_energy_function_delta(params):
         if _is_espadons_energy(cfht_name):
             # caom2IngestEspadons.py l639
             result = 0.0031764
-        elif _is_sitelle_energy(cfht_name):
-            result = header.get('CDELT3')
-            if result is None:
+        elif cfht_name.instrument is md.Inst.SITELLE:
+            # caom2IngestSitelle.py l590
+            if cfht_name.suffix == 'p':
+                result = header.get('CDELT3')
+            else:
                 # units in file are nm, units in blueprint are Angstroms
                 result = 10.0 * mc.to_float(header.get('FILTERBW'))
         else:
@@ -903,9 +908,10 @@ def get_energy_function_naxis(params):
     if _is_espadons_energy(cfht_name):
         # caom2IngestEspadons.py l636
         result = 213542
-    elif _is_sitelle_energy(cfht_name):
-        result = header.get('NAXIS3')
-        if result is None:
+    elif cfht_name.instrument is md.Inst.SITELLE:
+        if cfht_name.suffix == 'p':
+            result = header.get('NAXIS3', 1.0)
+        else:
             result = 1.0
     return result
 
@@ -918,9 +924,11 @@ def get_energy_function_pix(params):
         if _is_espadons_energy(cfht_name):
             # caom2IngestEspadons.py l637
             result = 0.5
-        elif _is_sitelle_energy(cfht_name):
-            result = header.get('CRPIX3')
-            if result is None:
+        elif cfht_name.instrument is md.Inst.SITELLE:
+            # caom2IngestSitelle.py l590
+            if cfht_name.suffix == 'p':
+                result = header.get('CRPIX3', 0.5)
+            else:
                 result = 0.5
     return result
 
@@ -932,9 +940,11 @@ def get_energy_function_val(params):
         if _is_espadons_energy(cfht_name):
             # caom2IngestEspadons.py l638
             result = 370.0
-        elif _is_sitelle_energy(cfht_name):
-            result = header.get('CRVAL3')
-            if result is None:
+        elif cfht_name.instrument is md.Inst.SITELLE:
+            # caom2IngestSitelle.py l590
+            if cfht_name.suffix == 'p':
+                result = header.get('CRVAL3')
+            else:
                 # units in file are nm, units in blueprint are Angstroms
                 result = 10.0 * mc.to_float(header.get('FILTERLB'))
         else:
@@ -1753,14 +1763,6 @@ def _is_espadons_energy(cfht_name):
     result = False
     if cfht_name.instrument is md.Inst.ESPADONS:
         if cfht_name.suffix in ['a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x']:
-            result = True
-    return result
-
-
-def _is_sitelle_energy(cfht_name):
-    result = False
-    if cfht_name.instrument is md.Inst.SITELLE:
-        if cfht_name.suffix in ['a', 'c', 'f', 'o', 'p', 'x']:
             result = True
     return result
 
