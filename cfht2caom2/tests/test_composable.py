@@ -83,7 +83,8 @@ from caom2pipe import caom_composable as cc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import composable, cfht_name, metadata
-import test_main_app, cfht_mocks
+import test_main_app
+import cfht_mocks
 
 TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
 

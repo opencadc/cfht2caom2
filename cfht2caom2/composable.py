@@ -71,12 +71,12 @@ import logging
 import sys
 import traceback
 
-from caom2pipe import client_composable as cc
+from caom2pipe import client_composable as clc
+from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
-from cfht2caom2 import data_source
 
 
 META_VISITORS = [cleanup_augmentation]
@@ -88,7 +88,7 @@ CFHT_BOOKMARK = 'cfht_timestamp'
 def _run_state():
     config = mc.Config()
     config.get_executors()
-    clients = cc.ClientCollection(config)
+    clients = clc.ClientCollection(config)
     builder = cfht_builder.CFHTBuilder(
         clients.data_client,
         config.archive,
@@ -97,9 +97,7 @@ def _run_state():
     )
     source = None
     if config.use_local_files:
-        source = data_source.CFHTUseLocalFilesDataSource(
-            config, clients.data_client
-        )
+        source = dsc.UseLocalFilesDataSource(config, clients.data_client)
     return rc.run_by_state(
         config=config,
         name_builder=builder,
@@ -135,7 +133,7 @@ def _run_by_builder():
     """
     config = mc.Config()
     config.get_executors()
-    clients = cc.ClientCollection(config)
+    clients = clc.ClientCollection(config)
     builder = cfht_builder.CFHTBuilder(
         clients.data_client,
         config.archive,
@@ -144,9 +142,7 @@ def _run_by_builder():
     )
     source = None
     if config.use_local_files:
-        source = data_source.CFHTUseLocalFilesDataSource(
-            config, clients.data_client
-        )
+        source = dsc.UseLocalFilesDataSource(config, clients.data_client)
     return rc.run_by_todo(
         config,
         builder,
