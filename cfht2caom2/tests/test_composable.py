@@ -146,6 +146,73 @@ def test_run_store(
     ), 'wrong put_file args'
 
 
+@patch('caom2pipe.astro_composable.check_fits')
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
+@patch('caom2pipe.client_composable.CadcTapClient')
+def test_run_store_retry(
+    tap_mock, data_client_mock, repo_client_mock, check_fits_mock
+):
+    test_dir_fqn = os.path.join(
+        test_main_app.TEST_DATA_DIR, 'store_retry_test'
+    )
+    test_failure_fqn = os.path.join(
+        test_main_app.TEST_DATA_DIR,
+        'store_retry_test/failure/1000003f.fits.fz',
+    )
+    test_success_fqn = os.path.join(
+        test_main_app.TEST_DATA_DIR, 'store_retry_test/success'
+    )
+    for ii in [test_failure_fqn, test_success_fqn]:
+        if not os.path.exists(ii):
+            os.mkdir(ii)
+
+    try:
+        getcwd_orig = os.getcwd
+        get_local_orig = data_util.get_local_file_headers
+        os.getcwd = Mock(return_value=test_dir_fqn)
+        repo_client_mock.return_value.read.side_effect = (
+            _mock_repo_read_not_none
+        )
+        data_client_mock.return_value.info.side_effect = (
+            _mock_get_file_info
+        )
+        data_client_mock.return_value.put.side_effect = OSError
+        data_util.get_local_headers_from_fits = Mock(
+            side_effect=_mock_header_read
+        )
+        check_fits_mock.return_value = True
+        try:
+            # execution
+            test_result = composable._run_by_builder()
+            assert test_result == -1, 'all the puts should fail'
+        finally:
+            os.getcwd = getcwd_orig
+            data_util.get_local_file_headers = get_local_orig
+
+        assert data_client_mock.return_value.put.called, 'expect a file put'
+        data_client_mock.return_value.put.assert_called_with(
+            f'{test_dir_fqn}/new', 'ad:CFHT/1000003f.fits.fz', 'default'
+        ), 'wrong put_file args'
+        assert os.path.exists(test_failure_fqn), 'expect failure move'
+        success_content = os.listdir(test_success_fqn)
+        assert len(success_content) == 0, 'should be no success files'
+    finally:
+        if os.path.exists(test_failure_fqn):
+            test_new_fqn = os.path.join(test_dir_fqn, 'new/1000003f.fits.fz')
+            shutil.move(test_failure_fqn, test_new_fqn)
+        for ii in [
+            f'{test_dir_fqn}/logs',
+            f'{test_dir_fqn}/logs_0',
+            f'{test_dir_fqn}/metrics',
+            f'{test_dir_fqn}/rejected',
+        ]:
+            if os.path.exists(ii):
+                for entry in os.scandir(ii):
+                    os.unlink(entry.path)
+                os.rmdir(ii)
+
+
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
@@ -346,6 +413,7 @@ NAXIS2  =                 2048 /
 INSTRUME= 'WIRCam  '           /
 END
 """
+    # TODO return data_util.make_headers_from_string(x)
     delim = '\nEND'
     extensions = [e + delim for e in x.split(delim) if e.strip()]
     headers = [fits.Header.fromstring(e, sep='\n') for e in extensions]

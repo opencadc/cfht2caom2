@@ -1,0 +1,140 @@
+energy_defaults:
+  MegaPrime.FakeBlank:
+    cw: null
+    fwhm: null
+  MegaPrime.filter_name:
+    cw: null
+    fwhm: null
+  MegaPrime.None:
+    cw: 6200.0
+    fwhm: 6000.0
+  MegaPrime.PHG.MP9999:
+    cw: 6200.0
+    fwhm: 6000.0
+  # values from sybase cfht.megaprime_filters
+  MegaPrime.OIII.MP7504:
+    cw: 4158.0
+    fwhm: 175.0
+  MegaPrime.N393.MP1111:
+    cw: 3930.0
+    fwhm: 70.0
+  SITELLE.C1:
+    cw: 437.5
+    fwhm: 105
+  SITELLE.C2:
+    cw: 593.5
+    fwhm: 63
+  SITELLE.C3:
+    cw: 533.5
+    fwhm: 45
+  SITELLE.C4:
+    cw: null
+    fwhm: null
+  SITELLE.SN1:
+    cw: 375
+    fwhm: 20
+  SITELLE.SN2:
+    cw: 500
+    fwhm: 40
+  SITELLE.SN3:
+    cw: 668
+    fwhm: 34
+  Wircam.Blank:
+    cw: null
+    fwhm: null
+  Wircam.FakeBlank:
+    cw: null
+    fwhm: null
+  Wircam.Open:
+    cw: 17000.0
+    fwhm: 14000.0
+  Wircam.None:
+    cw: 17000.0
+    fwhm: 14000.0
+  Wircam.COnar:
+    cw: 23265.0
+    fwhm: 337.0
+filter_repair_lookup:
+  BrG: Brackett_gamma
+  CaHK.MP9303: CaHK
+  CH4Off: CH4_off
+  CH4On: CH4_on
+  CN.MP7803: CN
+  Halpha.MP7604: Halpha_off
+  HaOFF.MP7604: Halpha_off
+  Halpha.MP7605: Halpha_on
+  Ha.MP7605: Halpha_on
+  Halpha.MP9603: Halpha
+  Ha.MP9603: Halpha
+  HaB.MP9603: Halpha
+  Halpha.MP9604: Halpha_Off_2
+  HaOFF.MP9604: Halpha_Off_2
+  J.WC8101: J
+  Ks.WC8302: Ks
+  N393.MP1111: N393.MP1111
+  NB920.MP7902: NB920
+  OIII.MP7504: OIII.MP7504
+  OIII.MP9501: OIII
+  OIII.MP9502: OIII_off
+  OIIIOFF.MP9502: OIII_off
+  PHG.MP9999: PHG.MP9999
+  TiO.MP7701: TiO
+  tio.MP7701: TiO
+  g.MP9401: g
+  g.MP9402: g_sdss
+  gri.MP9605: gri
+  i.MP9701: i1
+  i.MP9702: i
+  i.MP9703: i_sdss
+  r.MP9601: r
+  r.MP9602: r_sdss
+  u.MP9301: u
+  u.MP9302: u_sdss
+  z.MP9801: z
+  z.MP9901: z_sdss
+project_titles:
+  09BC26: 'The Next Generation Virgo Survey -- Infrared: K_s-Band Observations of
+    the Central 4 deg^2'
+  09BP03: NGVS
+  17BT06: IFU Study of Extended AGN Narrow-line Regions at Redshift 0.1-0.2
+  17BT07: Probing a supervoid toward the Cold Spot with weak lensing
+  17BT09: Shape and rotation of Trans-Neptunian Objects
+  20AC04: Spectropolarimetry of very slowly rotating magnetic CP stars
+  20AC07: Chemistry of Stars in the Gaia Sausage and Sequoia Merger Remnants
+  20AC19: Continued Monitoring of the Archetypal Magnetic beta Cep Star xi1 CMa
+  20AC21: Measuring the magnetic field of the Ap star eclipsing binary HD 99458
+  20AC22: 'HD 144941: The first member of a new class of magnetic postmain sequence
+    stars'
+  20AC31: A first systematic study of the magnetic fields of classical Cepheids
+  20AC40: 'lambda Lep: an early Btype rapidly rotating magnetic candidate'
+  20AF02: Measuring Intermediate metallicity Neutron Capture Elements
+  20AF05: Using linear polarimetry to estimate spinorbit angles of transiting planets
+  20AF13: Copy of Exploring the dark sector with Gaias stellar streams
+  20AF16: Characterizing the magnetic fields of earlytype giants and supergiants
+  20AF98: Copy of Exploring the dark sector with Gaias stellar streams
+  20AH36: Probing Circumstellar Debris from Rocky Planet Formation around a Young
+    Star
+  20AH96: Probing Circumstellar Debris from Rocky Planet Formation around a Young
+    Star
+  20AS04: Deep investigation of the LAMOST Nenhanced metalpoor field giants
+  20AS19: Revealing the origin of rprocess elements from the renhanced stars
+  20AS20: The followup observation to the extremely lithiumrich dwarfs from LAMOST
+program_titles:
+  SLS:
+  - 19BP40
+  - 20AP40
+  - 20BP40
+  - 21AP40
+value_repair:
+  Observation.target_position.coordsys:
+    - FKS
+    - FK5
+  Chunk.position.coordsys:
+    - FKS
+    - FK5
+  Observation.target_position.equinox:
+    - 200.0
+    - 2000.0
+  Chunk.position.equinox:
+    - 200.0
+    - 2000.0
