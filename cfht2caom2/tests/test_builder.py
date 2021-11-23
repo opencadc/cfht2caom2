@@ -69,6 +69,7 @@
 
 import os
 
+from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import CFHTBuilder, metadata
 
@@ -76,8 +77,10 @@ from mock import patch, ANY
 import cfht_mocks
 
 
+@patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.client_composable.StorageClientWrapper', autospec=True)
-def test_cfht_builder(client_mock):
+def test_cfht_builder(client_mock, util_headers_mock):
+    util_headers_mock.side_effect = ac.make_headers_from_file
     test_config = mc.Config()
     test_config.use_local_files = True
     test_subject = CFHTBuilder(
@@ -96,7 +99,7 @@ def test_cfht_builder(client_mock):
 
     test_fqn = os.path.join(
         cfht_mocks.TEST_DATA_DIR,
-        'composable_test/test_files/2359320p.fits',
+        'composable_test/test_files/2281792p.fits.fz',
     )
 
     test_result = test_subject.build(test_fqn)
@@ -104,7 +107,7 @@ def test_cfht_builder(client_mock):
     assert test_result.file_name == os.path.basename(
         test_fqn
     ), 'wrong local file name'
-    assert test_result.instrument == metadata.Inst.SITELLE
+    assert test_result.instrument == metadata.Inst.WIRCAM
     assert not client_mock.get_head.called, 'should not use client'
 
     client_mock.get_head.side_effect = cfht_mocks._mock_get_head
@@ -122,5 +125,5 @@ def test_cfht_builder(client_mock):
     ), 'wrong remote file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
     assert client_mock.get_head.called, 'should use client'
-    test_uri = 'ad:CFHT/2359320p.fits'
+    test_uri = 'ad:CFHT/2281792p.fits.fz'
     client_mock.get_head.assert_called_with(test_uri), 'wrong get head param'

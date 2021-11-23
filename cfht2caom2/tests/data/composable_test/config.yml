@@ -53,13 +53,13 @@ collection: CFHT
 # CADC service execution metrics
 #
 observe_execution: True
-observable_directory: /usr/src/app/cfht2caom2/tests/data/composable_test/metrics
+observable_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test/metrics
 # 
 # if the pipeline for the collection tracks known failures, that occurs
 # in this location
 # 
 rejected_file_name: rejected.yml
-rejected_directory: /usr/src/app/cfht2caom2/tests/data/composable_test/rejected
+rejected_directory: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/composable_test/rejected
 #
 # for information that needs to be persisted between pipeline 
 # invocations, defaults to 'state.yml', and is found in 'working_directory'
