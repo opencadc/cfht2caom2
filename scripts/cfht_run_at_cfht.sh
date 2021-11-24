@@ -7,7 +7,7 @@ IMAGE="cfht_build"
 # cp $HOME/.ssl/data/makanaproxy.pem ./ || exit $?
 
 echo "Run image ${IMAGE}"
-docker run --init --rm --mount "type=bind,src=${PWD},dst=/usr/src/app" --mount "type=bind,src=/data/makana,dst=/data" ${IMAGE} ${COLLECTION}_run_state
+docker run --init --rm --mount "type=bind,src=${PWD},dst=/usr/src/app" --mount "type=bind,src=/data/makana,dst=/data" --user $(id -u):$(id -g) -e HOME=/usr/src/app ${IMAGE} ${COLLECTION}_run_state
 
 date
 exit 0

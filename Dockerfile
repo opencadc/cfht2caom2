@@ -54,5 +54,9 @@ RUN pip install git+https://github.com/${PIPE_REPO}/cfht2caom2@${PIPE_BRANCH}#eg
 
 WORKDIR /usr/src/app
 
+RUN useradd --create-home --shell /bin/bash cadcops
+USER cadcops
+
+
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
