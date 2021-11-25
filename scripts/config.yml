@@ -69,7 +69,7 @@ progress_file_name: progress.txt
 #
 # ad stream value - sorry
 # set stream to 'default', if using TaskType STORE or PULL
-stream: default
+stream: raw
 archive: CFHT
 collection: CFHT
 #
@@ -108,6 +108,4 @@ task_types:
   - ingest
   - modify
 features:
-  supports_composite: False
-  use_file_names: True
-  use_urls: False
+  supports_latest_client: False
