@@ -86,18 +86,19 @@ from caom2pipe import caom_composable as cc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import composable, cfht_name, metadata
-import test_main_app
+import test_fits2caom2_augmentation
 import cfht_mocks
 
-TEST_DIR = f'{test_main_app.TEST_DATA_DIR}/composable_test'
+TEST_DIR = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/composable_test'
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 def test_run_by_builder(
-    repo_mock, access_mock, util_headers_mock, fits_mock
+    repo_mock, access_mock, util_headers_mock, fits_mock, cache_mock
 ):
     util_headers_mock.side_effect = ac.make_headers_from_file
     # files are valid FITS
@@ -127,14 +128,17 @@ def test_run_by_builder(
         _cleanup(TEST_DIR)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store(
-    tap_mock, data_client_mock, repo_client_mock, check_fits_mock
+    tap_mock, data_client_mock, repo_client_mock, check_fits_mock, cache_mock
 ):
-    test_dir_fqn = os.path.join(test_main_app.TEST_DATA_DIR, 'store_test')
+    test_dir_fqn = os.path.join(
+        test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_test'
+    )
     getcwd_orig = os.getcwd
     get_local_orig = data_util.get_local_file_headers
     os.getcwd = Mock(return_value=test_dir_fqn)
@@ -160,22 +164,23 @@ def test_run_store(
     ), 'wrong put_file args'
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store_retry(
-    tap_mock, data_client_mock, repo_client_mock, check_fits_mock
+    tap_mock, data_client_mock, repo_client_mock, check_fits_mock, cache_mock
 ):
     test_dir_fqn = os.path.join(
-        test_main_app.TEST_DATA_DIR, 'store_retry_test'
+        test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_retry_test'
     )
     test_failure_dir = os.path.join(
-        test_main_app.TEST_DATA_DIR,
+        test_fits2caom2_augmentation.TEST_DATA_DIR,
         'store_retry_test/failure',
     )
     test_success_dir = os.path.join(
-        test_main_app.TEST_DATA_DIR, 'store_retry_test/success'
+        test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_retry_test/success'
     )
     for ii in [test_failure_dir, test_success_dir]:
         if not os.path.exists(ii):
@@ -220,6 +225,7 @@ def test_run_store_retry(
         _cleanup(test_dir_fqn)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
@@ -231,8 +237,13 @@ def test_run_store_retry(
 )
 @patch('caom2pipe.execute_composable.OrganizeExecutes.do_one')
 def test_run_state(
-    run_mock, tap_mock, data_client_mock, tap_client_mock, repo_mock,
-    util_headers_mock
+    run_mock,
+    tap_mock,
+    data_client_mock,
+    tap_client_mock,
+    repo_mock,
+    util_headers_mock,
+    cache_mock,
 ):
     try:
         util_headers_mock.side_effect = ac.make_headers_from_file
@@ -275,10 +286,13 @@ def test_run_state(
         _cleanup(TEST_DIR)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
-def test_run_by_builder_hdf5_first(data_mock, tap_mock, repo_mock):
+def test_run_by_builder_hdf5_first(
+    data_mock, tap_mock, repo_mock, cache_mock
+):
     # create a new observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service
     #
@@ -286,7 +300,7 @@ def test_run_by_builder_hdf5_first(data_mock, tap_mock, repo_mock):
     # there's no need for credentials, or CADC library clients
 
     test_obs_id = '2384125p'
-    test_dir = f'{test_main_app.TEST_DATA_DIR}/hdf5_test'
+    test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
     fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
     hdf5_fqn = f'{test_dir}/2384125z.hdf5'
     actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
@@ -301,20 +315,22 @@ def test_run_by_builder_hdf5_first(data_mock, tap_mock, repo_mock):
     # make sure expected files are present
     if not os.path.exists(hdf5_fqn):
         shutil.copy(
-            f'{test_main_app.TEST_DATA_DIR}/multi_plane/2384125z.hdf5',
+            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
+            f'multi_plane/2384125z.hdf5',
             hdf5_fqn,
         )
 
     _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 def test_run_by_builder_hdf5_added_to_existing(
-    data_mock, tap_mock, repo_mock, fits_check_mock, header_mock
+    data_mock, tap_mock, repo_mock, fits_check_mock, header_mock, cache_mock
 ):
     try:
         warnings.simplefilter('ignore', category=AstropyUserWarning)
@@ -326,7 +342,7 @@ def test_run_by_builder_hdf5_added_to_existing(
         # 'p' metadata gets duplicated correctly
 
         test_obs_id = '2384125p'
-        test_dir = f'{test_main_app.TEST_DATA_DIR}/hdf5_test'
+        test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
         hdf5_fqn = f'{test_dir}/2384125z.hdf5'
         fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
         actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
@@ -340,7 +356,7 @@ def test_run_by_builder_hdf5_added_to_existing(
             shutil.copy(expected_hdf5_only_fqn, actual_fqn)
         if not os.path.exists(fits_fqn):
             shutil.copy(
-                f'{test_main_app.TEST_DATA_DIR}/multi_plane/'
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
                 f'{test_obs_id}.fits.header',
                 fits_fqn,
             )

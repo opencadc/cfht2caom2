@@ -82,9 +82,9 @@ def test_cleanup_augmentation():
     )
     assert len(test_obs.planes) == 3, 'initial conditions failed'
     kwargs = {}
-    test_result = cleanup_augmentation.visit(test_obs, **kwargs)
-    assert test_result is not None, 'expect a result'
-    assert test_result.get('planes') is not None, 'expect a plane count'
-    assert test_result.get('planes') == 2, 'wrong number of planes removed'
+    test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
+    # assert test_result is not None, 'expect a result'
+    # assert test_result.get('planes') is not None, 'expect a plane count'
+    # assert test_result.get('planes') == 2, 'wrong number of planes removed'
     assert len(test_obs.planes) == 1, 'post-test conditions failed'
     assert '1927963p' in test_obs.planes.keys(), 'wrong plane deleted'

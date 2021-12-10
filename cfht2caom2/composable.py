@@ -75,11 +75,12 @@ from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from caom2pipe import run_composable as rc
-from cfht2caom2 import cfht_builder, main_app, cleanup_augmentation
+from cfht2caom2 import cfht_builder, cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
+from cfht2caom2 import fits2caom2_augmentation
 
 
-META_VISITORS = [cleanup_augmentation]
+META_VISITORS = [fits2caom2_augmentation, cleanup_augmentation]
 DATA_VISITORS = [espadons_energy_augmentation, preview_augmentation]
 
 CFHT_BOOKMARK = 'cfht_timestamp'

@@ -98,9 +98,10 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, local_headers_mock, test_name):
+def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     logging.getLogger('Fits2caom2Visitor').setLevel(logging.DEBUG)
@@ -109,6 +110,8 @@ def test_visitor(vo_mock, local_headers_mock, test_name):
     # but during testing want to use headers and built-in Python file
     # operations
     local_headers_mock.side_effect = _local_headers
+    # cache_mock there so there are no update cache calls - so the tests
+    # work without a network connection
     storage_name = CFHTName(
         file_name=basename(test_name).replace('.header', ''),
         instrument=_identify_inst_mock(None, test_name),
@@ -150,17 +153,14 @@ def _identify_inst_mock(ignore_headers, uri):
     lookup = {
             md.Inst.MEGAPRIME: [
                         '2452990p',
-                        '979412b',
-                        '979412o',
-                        '979412p',
+                        '979412',
                         '1927963f',
                         '1927963o',
                         '1927963p',
                         '675258o',
                         '2003A.frpts.z.36.00',
                         '02Bm05.scatter.g.36.00',
-                        '1257365o',
-                        '1257365p',
+                        '1257365',
                         '02AE10.bias.0.36.00',
                         '11Bm04.flat.z.36.02',
                         '2463796o',
