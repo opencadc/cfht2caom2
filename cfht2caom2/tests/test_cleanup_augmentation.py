@@ -70,12 +70,15 @@
 from os import path
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cleanup_augmentation
-import test_main_app
+import test_fits2caom2_augmentation
 
 
 def test_cleanup_augmentation():
     test_obs = mc.read_obs_from_file(
-        path.join(test_main_app.TEST_DATA_DIR, 'visit_obs_start_cleanup.xml')
+        path.join(
+            test_fits2caom2_augmentation.TEST_DATA_DIR,
+            'visit_obs_start_cleanup.xml',
+        )
     )
     assert len(test_obs.planes) == 3, 'initial conditions failed'
     kwargs = {}

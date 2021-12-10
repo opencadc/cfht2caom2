@@ -169,7 +169,7 @@ class CFHTName(mc.StorageName):
             self._suffix = None
         self._destination_uris = [
             mc.build_uri(
-                   COLLECTION, basename(ii).replace('header', ''), scheme
+                   COLLECTION, basename(ii).replace('.header', ''), scheme
             )
             for ii in self._source_names
         ]

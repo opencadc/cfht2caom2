@@ -101,7 +101,6 @@ def _run_state():
     return rc.run_by_state(
         config=config,
         name_builder=builder,
-        command_name=main_app.APPLICATION,
         bookmark_name=CFHT_BOOKMARK,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
@@ -146,7 +145,6 @@ def _run_by_builder():
     return rc.run_by_todo(
         config,
         builder,
-        command_name=main_app.APPLICATION,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,

@@ -70,7 +70,7 @@
 from mock import patch
 from cfht2caom2 import metadata as md
 
-import test_main_app
+import test_fits2caom2_augmentation
 
 
 @patch('caom2pipe.manage_composable.query_endpoint')
@@ -158,7 +158,8 @@ def _mock_query(url):
     response = Object()
     if url == 'http://www.cfht.hawaii.edu/en/science/QSO/2020A/':
         with open(
-            f'{test_main_app.TEST_DATA_DIR}/programs/2020a_index.htm'
+            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}'
+            f'/programs/2020a_index.htm'
         ) as f:
             response.text = f.read()
     elif url == (
@@ -166,7 +167,8 @@ def _mock_query(url):
         'qso_prog_ESP_2020A.html'
     ):
         with open(
-            f'{test_main_app.TEST_DATA_DIR}/programs/espadons_2020a.htm'
+            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}'
+            f'/programs/espadons_2020a.htm'
         ) as f:
             response.text = f.read()
     else:
