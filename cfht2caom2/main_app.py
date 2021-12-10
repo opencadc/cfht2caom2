@@ -174,23 +174,16 @@ SF 12-04-21
 
 """
 
-import importlib
 import logging
-import sys
-import traceback
 
 from caom2 import ObservationIntentType, ProductType
-from caom2utils import ObsBlueprint, get_gen_proc_arg_parser, gen_proc
 from caom2pipe import astro_composable as ac
-from caom2pipe import client_composable
 from caom2pipe import manage_composable as mc
 
-from cfht2caom2 import cfht_builder as cb
-from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
 
-__all__ = ['cfht_main_app', 'to_caom2', 'APPLICATION']
+__all__ = ['APPLICATION']
 
 
 APPLICATION = 'cfht2caom2'
@@ -223,24 +216,24 @@ def accumulate_bp(bp, cfht_name):
         bp.configure_energy_axis(4)
     bp.configure_observable_axis(6)
 
-    bp.set('Observation.intent', 'get_obs_intent(header)')
+    bp.set('Observation.intent', 'get_obs_intent()')
 
     meta_producer = mc.get_version(APPLICATION)
     bp.set('Observation.metaProducer', meta_producer)
-    bp.set('Observation.metaRelease', 'get_meta_release(header)')
+    bp.set('Observation.metaRelease', 'get_meta_release()')
 
-    bp.set('Observation.sequenceNumber', 'get_obs_sequence_number(params)')
-    bp.set('Observation.type', 'get_obs_type(header)')
+    bp.set('Observation.sequenceNumber', 'get_obs_sequence_number()')
+    bp.set('Observation.type', 'get_obs_type()')
 
     bp.set_default('Observation.algorithm.name', None)
 
     bp.set(
         'Observation.environment.elevation',
-        'get_environment_elevation(header)',
+        'get_environment_elevation()',
     )
     bp.set(
         'Observation.environment.humidity',
-        'get_obs_environment_humidity(header)',
+        'get_obs_environment_humidity()',
     )
 
     # title is select title from runid_title where proposal_id = 'runid'
@@ -249,16 +242,16 @@ def accumulate_bp(bp, cfht_name):
     bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
     bp.clear('Observation.proposal.pi')
     bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
-    bp.set('Observation.proposal.project', 'get_proposal_project(header)')
-    bp.set('Observation.proposal.title', 'get_proposal_title(header)')
+    bp.set('Observation.proposal.project', 'get_proposal_project()')
+    bp.set('Observation.proposal.title', 'get_proposal_title()')
 
     bp.set('Observation.instrument.name', cfht_name.instrument.value)
     bp.set(
         'Observation.instrument.keywords',
-        'get_instrument_keywords(header)',
+        'get_instrument_keywords()',
     )
 
-    bp.set('Observation.target.standard', 'get_target_standard(params)')
+    bp.set('Observation.target.standard', 'get_target_standard()')
 
     bp.clear('Observation.target_position.coordsys')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'OBJRADEC')
@@ -267,11 +260,11 @@ def accumulate_bp(bp, cfht_name):
     bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQUIN')
     bp.set(
         'Observation.target_position.point.cval1',
-        'get_target_position_cval1(params)',
+        'get_target_position_cval1()',
     )
     bp.set(
         'Observation.target_position.point.cval2',
-        'get_target_position_cval2(params)',
+        'get_target_position_cval2()',
     )
 
     bp.set('Observation.telescope.name', 'CFHT 3.6m')
@@ -280,24 +273,24 @@ def accumulate_bp(bp, cfht_name):
     bp.set('Observation.telescope.geoLocationY', y)
     bp.set('Observation.telescope.geoLocationZ', z)
 
-    bp.set('Plane.dataProductType', 'get_plane_data_product_type(params)')
-    bp.set('Plane.calibrationLevel', 'get_calibration_level(params)')
-    bp.set('Plane.dataRelease', 'get_plane_data_release(header)')
-    bp.set('Plane.metaRelease', 'get_meta_release(header)')
+    bp.set('Plane.dataProductType', 'get_plane_data_product_type()')
+    bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+    bp.set('Plane.dataRelease', 'get_plane_data_release()')
+    bp.set('Plane.metaRelease', 'get_meta_release()')
 
     bp.set(
         'Plane.provenance.lastExecuted',
-        'get_provenance_last_executed(header)',
+        'get_provenance_last_executed()',
     )
     bp.set('Plane.metaProducer', meta_producer)
     bp.set_default('Plane.provenance.producer', 'CFHT')
     bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
     bp.clear('Plane.provenance.runID')
     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
-    bp.set('Plane.provenance.version', 'get_provenance_version(header)')
+    bp.set('Plane.provenance.version', 'get_provenance_version()')
 
     bp.set('Artifact.metaProducer', meta_producer)
-    bp.set('Artifact.productType', 'get_product_type(params)')
+    bp.set('Artifact.productType', 'get_product_type()')
     bp.set('Artifact.releaseType', 'data')
 
     bp.set('Chunk.metaProducer', meta_producer)
@@ -309,31 +302,31 @@ def accumulate_bp(bp, cfht_name):
     if cfht_name.instrument not in [
         md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM
     ]:
-        bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype(header)')
-        bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit(header)')
+        bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype()')
+        bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit()')
         bp.set('Chunk.energy.axis.error.rnder', 1.0)
         bp.set('Chunk.energy.axis.error.syser', 1.0)
         bp.set(
             'Chunk.energy.axis.function.delta',
-            'get_energy_function_delta(params)',
+            'get_energy_function_delta()',
         )
         bp.set(
             'Chunk.energy.axis.function.naxis',
-            'get_energy_function_naxis(params)',
+            'get_energy_function_naxis()',
         )
         bp.set(
             'Chunk.energy.axis.function.refCoord.pix',
-            'get_energy_function_pix(params)',
+            'get_energy_function_pix()',
         )
         bp.set(
             'Chunk.energy.axis.function.refCoord.val',
-            'get_energy_function_val(params)',
+            'get_energy_function_val()',
         )
         bp.clear('Chunk.energy.bandpassName')
         bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
         bp.set(
             'Chunk.energy.resolvingPower',
-            'get_energy_resolving_power(params)',
+            'get_energy_resolving_power()',
         )
         bp.set('Chunk.energy.specsys', 'TOPOCENT')
         bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
@@ -351,8 +344,8 @@ def accumulate_bp(bp, cfht_name):
     bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
 
     if cfht_name.suffix != 'g':
-        bp.set('Chunk.time.exposure', 'get_exptime(params)')
-        bp.set('Chunk.time.resolution', 'get_exptime(params)')
+        bp.set('Chunk.time.exposure', 'get_exptime()')
+        bp.set('Chunk.time.resolution', 'get_exptime()')
         bp.set('Chunk.time.timesys', 'UTC')
         bp.set('Chunk.time.axis.axis.ctype', 'TIME')
         bp.set('Chunk.time.axis.axis.cunit', 'd')
@@ -365,20 +358,20 @@ def accumulate_bp(bp, cfht_name):
     if cfht_name.is_simple and not cfht_name.is_master_cal:
         bp.set(
             'Chunk.time.axis.function.delta',
-            'get_time_refcoord_delta_simple(params)',
+            'get_time_refcoord_delta_simple()',
         )
         bp.set(
             'Chunk.time.axis.function.refCoord.val',
-            'get_time_refcoord_val_simple(header)',
+            'get_time_refcoord_val_simple()',
         )
     else:
         bp.set(
             'Chunk.time.axis.function.delta',
-            'get_time_refcoord_delta_derived(header)',
+            'get_time_refcoord_delta_derived()',
         )
         bp.set(
             'Chunk.time.axis.function.refCoord.val',
-            'get_time_refcoord_val_derived(header)',
+            'get_time_refcoord_val_derived()',
         )
     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
@@ -402,34 +395,34 @@ def _accumulate_espadons_bp(bp, cfht_name):
     """
     logging.debug('Begin _accumulate_espadons_bp.')
 
-    # bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+    # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     bp.set(
         'Plane.provenance.keywords',
-        'get_espadons_provenance_keywords(params)',
+        'get_espadons_provenance_keywords()',
     )
     bp.set(
         'Plane.provenance.lastExecuted',
-        'get_espadons_provenance_last_executed(header)',
+        'get_espadons_provenance_last_executed()',
     )
-    bp.set('Plane.provenance.name', 'get_espadons_provenance_name(header)')
+    bp.set('Plane.provenance.name', 'get_espadons_provenance_name()')
     bp.set(
         'Plane.provenance.project',
-        'get_espadons_provenance_project(header)',
+        'get_espadons_provenance_project()',
     )
     bp.set(
         'Plane.provenance.reference',
-        'get_espadons_provenance_reference(header)',
+        'get_espadons_provenance_reference()',
     )
     bp.set(
         'Plane.provenance.version',
-        'get_espadons_provenance_version(header)',
+        'get_espadons_provenance_version()',
     )
 
     bp.set(
         'Chunk.energy.resolvingPower',
-        'get_espadons_energy_resolving_power(params)',
+        'get_espadons_energy_resolving_power()',
     )
 
     # constants from caom2espadons.config
@@ -458,15 +451,15 @@ def _accumulate_espadons_bp(bp, cfht_name):
 
     bp.set(
         'Chunk.time.axis.function.delta',
-        'get_espadons_time_refcoord_delta(params)',
+        'get_espadons_time_refcoord_delta()',
     )
     bp.set(
         'Chunk.time.axis.function.refCoord.val',
-        'get_espadons_time_refcoord_val(params)',
+        'get_espadons_time_refcoord_val()',
     )
 
-    bp.set('Chunk.time.exposure', 'get_espadons_exptime(params)')
-    bp.set('Chunk.time.resolution', 'get_espadons_exptime(params)')
+    bp.set('Chunk.time.exposure', 'get_espadons_exptime()')
+    bp.set('Chunk.time.resolution', 'get_espadons_exptime()')
 
     if cfht_name.suffix == 'p':
         bp.configure_polarization_axis(6)
@@ -477,7 +470,7 @@ def _accumulate_espadons_bp(bp, cfht_name):
         bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
         bp.set(
             'Chunk.polarization.axis.function.refCoord.val',
-            'get_polarization_function_val(header)',
+            'get_polarization_function_val()',
         )
 
     logging.debug('Done _accumulate_espadons_bp.')
@@ -491,7 +484,7 @@ def _accumulate_mega_bp(bp, cfht_name):
 
     bp.set(
         'Plane.provenance.lastExecuted',
-        'get_mega_provenance_last_executed(header)',
+        'get_mega_provenance_last_executed()',
     )
     bp.set_default('Plane.provenance.name', 'ELIXIR')
     bp.set_default(
@@ -511,24 +504,24 @@ def _accumulate_sitelle_bp(bp, cfht_name):
     if cfht_name.suffix == 'v':
         bp.set('Observation.intent', ObservationIntentType.SCIENCE)
         bp.set('Observation.sequenceNumber', cfht_name.product_id[:-1])
-        bp.set('Plane.dataRelease', 'get_sitelle_v_plane_data_release(header)')
+        bp.set('Plane.dataRelease', 'get_sitelle_v_plane_data_release()')
         bp.clear('Plane.provenance.version')
         bp.add_fits_attribute('Plane.provenance.version', 'PROGRAM')
         bp.set('Artifact.productType', ProductType.SCIENCE)
-    bp.set('Plane.dataProductType', 'get_sitelle_plane_data_product_type(uri)')
+    bp.set('Plane.dataProductType', 'get_sitelle_plane_data_product_type()')
     bp.set_default('Plane.provenance.name', 'ORBS')
     bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
 
     bp.set(
         'Chunk.energy.resolvingPower',
-        'get_sitelle_energy_resolving_power(params)',
+        'get_sitelle_energy_resolving_power()',
     )
 
     bp.set(
         'Chunk.time.axis.function.delta',
-        'get_sitelle_time_refcoord_delta(params)',
+        'get_sitelle_time_refcoord_delta()',
     )
-    bp.set('Chunk.time.axis.function.refCoord.val', '_get_mjd_start(header)')
+    bp.set('Chunk.time.axis.function.refCoord.val', '_get_mjd_start()')
 
     logging.debug('End _accumulate_sitelle_bp.')
 
@@ -537,20 +530,20 @@ def _accumulate_spirou_bp(bp, cfht_name):
     """Configure the SPIRou-specific ObsBlueprint at the CAOM model
     Observation level.
     """
-    bp.set('Observation.target.targetID', '_get_gaia_target_id(header)')
+    bp.set('Observation.target.targetID', '_get_gaia_target_id()')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
     if cfht_name.suffix == 'r':
         pass
     elif cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
-        bp.set('Plane.provenance.name', 'get_spirou_provenance_name(header)')
+        bp.set('Plane.provenance.name', 'get_spirou_provenance_name()')
         bp.set(
             'Plane.provenance.reference',
             'http://www.cfht.hawaii.edu/Instruments/SPIRou/',
         )
         bp.set(
             'Plane.provenance.version',
-            'get_spirou_provenance_version(header)',
+            'get_spirou_provenance_version()',
         )
     else:
         bp.set('Plane.provenance.name', 'DRS')
@@ -597,12 +590,12 @@ def _accumulate_spirou_bp(bp, cfht_name):
     bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
     bp.set(
         'Chunk.position.axis.function.refCoord.coord1.val',
-        'get_ra_deg_from_0th_header(header)',
+        'get_ra_deg_from_0th_header()',
     )
     bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
     bp.set(
         'Chunk.position.axis.function.refCoord.coord2.val',
-        'get_dec_deg_from_0th_header(header)',
+        'get_dec_deg_from_0th_header()',
     )
     bp.set('Chunk.position.axis.function.cd11', -0.00035833)
     bp.set('Chunk.position.axis.function.cd12', 0.0)
@@ -611,24 +604,24 @@ def _accumulate_spirou_bp(bp, cfht_name):
 
     bp.set(
         'Chunk.position.coordsys',
-        'get_position_coordsys_from_0th_header(header)',
+        'get_position_coordsys_from_0th_header()',
     )
     bp.set(
         'Chunk.position.equinox',
-        'get_position_equinox_from_0th_header(header)',
+        'get_position_equinox_from_0th_header()',
     )
 
     if cfht_name.suffix not in ['g', 'p']:
         bp.set(
             'Chunk.time.axis.function.delta',
-            'get_spirou_time_refcoord_delta(params)',
+            'get_spirou_time_refcoord_delta()',
         )
         bp.set(
             'Chunk.time.axis.function.naxis',
-            'get_spirou_time_refcoord_naxis(params)',
+            'get_spirou_time_refcoord_naxis()',
         )
-        bp.set('Chunk.time.exposure', 'get_spirou_exptime(params)')
-        bp.set('Chunk.time.resolution', 'get_spirou_resolution(params)')
+        bp.set('Chunk.time.exposure', 'get_spirou_exptime()')
+        bp.set('Chunk.time.resolution', 'get_spirou_resolution()')
 
     if cfht_name.suffix == 'p':
         bp.configure_polarization_axis(7)
@@ -643,9 +636,9 @@ def _accumulate_wircam_bp(bp, cfht_name):
     Observation level.
     """
     logging.debug('Begin _accumulate_wircam_bp.')
-    bp.set('Observation.type', 'get_wircam_obs_type(params)')
+    bp.set('Observation.type', 'get_wircam_obs_type()')
 
-    bp.set('Plane.provenance.keywords', 'get_wircam_provenance_keywords(uri)')
+    bp.set('Plane.provenance.keywords', 'get_wircam_provenance_keywords()')
     bp.set_default('Plane.provenance.name', 'IIWI')
     bp.set_default(
         'Plane.provenance.reference',
@@ -657,100 +650,8 @@ def _accumulate_wircam_bp(bp, cfht_name):
     logging.debug('Done _accumulate_wircam_bp.')
 
 
-def _identify_instrument(uri, cfht_builder):
-    logging.debug(f'Begin _identify_instrument for uri {uri}.')
-    storage_name = cfht_builder.build(mc.CaomName(uri).file_name)
-    logging.debug(
-        f'End _identify_instrument for uri {uri} instrument is '
-        f'{storage_name.instrument}.'
-    )
-    return storage_name.instrument
-
-
-def _build_blueprints(storage_names):
-    """This application relies on the caom2utils fits2caom2 ObsBlueprint
-    definition for mapping FITS file values to CAOM model element
-    attributes. This method builds the DRAO-ST blueprint for a single
-    artifact.
-
-    The blueprint handles the mapping of values with cardinality of 1:1
-    between the blueprint entries and the model attributes.
-
-    :param storage_names list of CFHTName instances for the files to be
-        processed."""
-    module = importlib.import_module(__name__)
-    blueprints = {}
-    for storage_name in storage_names:
-        blueprint = ObsBlueprint(module=module)
-        if not mc.StorageName.is_preview(
-            storage_name.file_uri
-        ) and not mc.StorageName.is_hdf5(storage_name.file_uri):
-            accumulate_bp(blueprint, storage_name.file_uri)
-        blueprints[storage_name.file_uri] = blueprint
-    return blueprints
-
-
-def _get_storage_names(args, cfht_builder):
-    result = []
-    if args.local:
-        for ii in args.local:
-            storage_name = cfht_builder.build(ii)
-            result.append(storage_name)
-    elif args.lineage:
-        for ii in args.lineage:
-            ignore_product_id, uri = mc.decompose_lineage(ii)
-            ignore_scheme, ignore_path, file_name = mc.decompose_uri(uri)
-            storage_name = cfht_builder.build(file_name)
-            result.append(storage_name)
-    else:
-        raise mc.CadcException(f'Could not define uri from these args {args}')
-    return result
-
-
 def _get_keyword(lookup, headers):
     result = headers[0].get(lookup)
     if result is None:
         result = headers[1].get(lookup)
     return result
-
-
-def _cfht_args_parser():
-    args = get_gen_proc_arg_parser().parse_args()
-    if args.not_connected:
-        # stop attempts to connect to SVO
-        md.filter_cache.connected = False
-    return args
-
-
-def to_caom2():
-    """
-    This function is called by pipeline execution. It must have this name.
-    """
-    args = _cfht_args_parser()
-    config = mc.Config()
-    config.get_executors()
-    clients = client_composable.ClientCollection(config)
-    cfht_builder = cb.CFHTBuilder(
-        clients.data_client, config.archive, config.use_local_files
-    )
-    storage_names = _get_storage_names(args, cfht_builder)
-    cn.cfht_names = {}
-    for storage_name in storage_names:
-        cn.cfht_names[storage_name.file_uri] = storage_name
-    blueprints = _build_blueprints(storage_names)
-    result = gen_proc(args, blueprints)
-    return result
-
-
-def cfht_main_app():
-    """External application."""
-    args = _cfht_args_parser()
-    try:
-        result = to_caom2()
-        logging.debug(f'Done {APPLICATION} processing.')
-        sys.exit(result)
-    except Exception as e:
-        logging.error(f'Failed {APPLICATION} execution for {args}.')
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
