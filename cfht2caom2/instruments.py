@@ -2328,22 +2328,22 @@ class InstrumentBlueprint:
                 # replicate the plane-level information from the p plane to the
                 # z plane
                 p_plane = observation.planes[observation.observation_id]
-                temp = self._cfht_name.file_name.replace('.hdf5', '.fits.fz')
+                temp = self._cfht_name.file_uri.replace('.hdf5', '.fits.fz')
                 if temp.count('z') == 1:
                     # uri looks like: ad:CFHT/2384125p.fits.fz
                     p_artifact_key = temp
                 else:
                     p_artifact_key = temp.replace('z', 'p', 1)
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._cfht_name.file_name.replace('z', 'p', 1).replace(
+                    p_artifact_key = self._cfht_name.file_uri.replace('z', 'p', 1).replace(
                         '.hdf5', '.fits'
                     )
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = self._cfht_name.file_name.replace('z', 'p', 1).replace(
+                        p_artifact_key = self._cfht_name.file_uri.replace('z', 'p', 1).replace(
                             '.hdf5', '.fits.gz'
                         )
                         if p_artifact_key not in p_plane.artifacts.keys():
-                            p_artifact_key = self._cfht_name.file_name.replace('z', 'p', 1).replace(
+                            p_artifact_key = self._cfht_name.file_uri.replace('z', 'p', 1).replace(
                                 '.hdf5', '.fits.header'
                             )
                             if p_artifact_key not in p_plane.artifacts.keys():
