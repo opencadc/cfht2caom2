@@ -67,12 +67,11 @@
 # ***********************************************************************
 
 import logging
-import os
 
 from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import main_app
+from cfht2caom2 import instruments
 from cfht2caom2 import metadata as md
 
 
@@ -93,15 +92,17 @@ def visit(observation, **kwargs):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if storage_name.file_uri == artifact.uri:
-                    count += _do_energy(artifact, science_fqn, storage_name)
+                    count += _do_energy(
+                        artifact, science_fqn, storage_name, observation
+                    )
         logging.info(
             f'Completed ESPaDOnS energy augmentation for '
             f'{observation.observation_id}.'
         )
-    return {'chunks': count}
+    return observation
 
 
-def _do_energy(artifact, science_fqn, cfht_name):
+def _do_energy(artifact, science_fqn, cfht_name, observation):
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -135,11 +136,10 @@ def _do_energy(artifact, science_fqn, cfht_name):
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
     coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
-    params = {
-        'header': hdus[0].header,
-        'uri': artifact.uri,
-    }
-    resolving_power = main_app.get_espadons_energy_resolving_power(params)
+    espadons = instruments.Espadons(
+        [hdus[0].header], 0, cfht_name, observation
+    )
+    resolving_power = espadons._get_espadons_energy_resolving_power()
     chunk = artifact.parts['0'].chunks[0]
     chunk.energy = SpectralWCS(
         coord_axis,

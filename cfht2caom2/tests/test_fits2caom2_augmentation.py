@@ -69,7 +69,10 @@
 
 import glob
 import logging
+import warnings
 
+from astropy.utils.exceptions import AstropyUserWarning
+from astropy.wcs import FITSFixedWarning
 from mock import patch
 from os.path import basename, dirname, join, realpath
 
@@ -79,10 +82,10 @@ from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from caom2pipe import reader_composable as rdc
+from caom2utils import data_util
 from cfht2caom2 import CFHTName
 from cfht2caom2 import fits2caom2_augmentation
-
-import test_main_app
+from cfht2caom2 import metadata as md
 
 
 THIS_DIR = dirname(realpath(__file__))
@@ -98,33 +101,38 @@ def pytest_generate_tests(metafunc):
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_visitor(vo_mock, local_headers_mock, test_name):
-    # logging.getLogger('CFHTName').setLevel(logging.DEBUG)
+    warnings.simplefilter('ignore', category=AstropyUserWarning)
+    warnings.simplefilter('ignore', category=FITSFixedWarning)
+    logging.getLogger('Fits2caom2Visitor').setLevel(logging.DEBUG)
     vo_mock.side_effect = _vo_mock
     # during cfht2caom2 operation, want to use astropy on FITS files
     # but during testing want to use headers and built-in Python file
     # operations
-    local_headers_mock.side_effect = test_main_app._local_headers
+    local_headers_mock.side_effect = _local_headers
     storage_name = CFHTName(
         file_name=basename(test_name).replace('.header', ''),
-        instrument=test_main_app._identify_inst_mock(None, test_name),
+        instrument=_identify_inst_mock(None, test_name),
         source_names=[test_name],
     )
     file_info = FileInfo(
         id=storage_name.file_uri, file_type='application/fits'
     )
     headers = ac.make_headers_from_file(test_name)
+    metadata_reader = rdc.FileMetadataReader()
+    metadata_reader._headers = {storage_name.file_uri: headers}
+    metadata_reader._file_info = {storage_name.file_uri: file_info}
     kwargs = {
         'storage_name': storage_name,
-        'file_metadata': {
-            storage_name.file_uri: rdc.FileMetadata(headers, file_info),
-        },
+        'metadata_reader': metadata_reader,
     }
     observation = None
     observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    expected_fqn = (
-        f'{TEST_DATA_DIR}/single_plane/{storage_name.obs_id}.expected.xml'
-    )
+    _compare(observation, storage_name.obs_id, 'single_plane')
+
+
+def _compare(observation, obs_id, dir_name):
+    expected_fqn = f'{TEST_DATA_DIR}/{dir_name}/{obs_id}.expected.xml'
     expected = mc.read_obs_from_file(expected_fqn)
     compare_result = get_differences(expected, observation)
     if compare_result is not None:
@@ -136,6 +144,119 @@ def test_visitor(vo_mock, local_headers_mock, test_name):
             f'{compare_text}'
         )
         raise AssertionError(msg)
+
+
+def _identify_inst_mock(ignore_headers, uri):
+    lookup = {
+            md.Inst.MEGAPRIME: [
+                        '2452990p',
+                        '979412b',
+                        '979412o',
+                        '979412p',
+                        '1927963f',
+                        '1927963o',
+                        '1927963p',
+                        '675258o',
+                        '2003A.frpts.z.36.00',
+                        '02Bm05.scatter.g.36.00',
+                        '1257365o',
+                        '1257365p',
+                        '02AE10.bias.0.36.00',
+                        '11Bm04.flat.z.36.02',
+                        '2463796o',
+                        '676000',
+                        '1013337',
+                        '2463857',
+                        '2004B.mask',
+                        '19Bm03.bias',
+                        '718955',
+                        '07Bm06.flat',
+                        '2463854',
+                        '03Am02.dark',
+                        '1000003',
+                        '03Am05.fringe',
+                        '1265044',
+                    ],
+               md.Inst.ESPADONS: [
+                        '2460606',
+                        '769448b',
+                        '1605366x',
+                        '881395a',
+                        '2238502i',
+                        '2554967',
+                        '781920',
+                        '945987',
+                        '1001063b',
+                        '1001836x',
+                        '1003681',
+                        '1219059',
+                        '1883829c',
+                        '2460602a',
+                        '760296f',
+                        '881162d',
+                        '979339',
+                        '2460503p',
+                    ],
+               md.Inst.SPIROU: [
+                        '2401727a',
+                        '2401712f',
+                        '2401728c',
+                        '2401734',
+                        '2401710d',
+                        '2513728g',
+                        '2515996g',
+                        '2455409p',
+                        '2602045r',
+                    ],
+                md.Inst.WIRCAM: [
+                        '840066',
+                        '1019191',
+                        '786586',
+                        '1694261',
+                        '787191',
+                        '982871',
+                        '1979958',
+                        '2281792p',
+                        '2157095o',
+                        'weight',
+                        '2281792',
+                        '1681594',
+                        '981337',
+                        'master',
+                        '1706150',
+                        '1758254',
+                        '2462928',
+                        '1151210',
+                        'hotpix',
+                        '1007126',
+                        'dark_003s_',
+                    ],
+            }
+    result = md.Inst.SITELLE
+    for key, value in lookup.items():
+        for entry in value:
+            if entry in uri:
+                result = key
+                break
+        if result is not md.Inst.SITELLE:
+            break
+    return result
+
+
+def _local_headers(fqn):
+    logging.error(fqn)
+    from urllib.parse import urlparse
+    from astropy.io import fits
+    file_uri = urlparse(fqn)
+    try:
+        fits_header = open(file_uri.path).read()
+        headers = data_util.make_headers_from_string(fits_header)
+    except UnicodeDecodeError:
+        hdulist = fits.open(fqn, memmap=True, lazy_load_hdus=True)
+        hdulist.verify('fix')
+        hdulist.close()
+        headers = [h.header for h in hdulist]
+    return headers
 
 
 def _vo_mock(url):

@@ -60,6 +60,7 @@
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentLength>711017</caom2:contentLength>
           <caom2:parts>
             <caom2:part caom2:id="41c9cb89-04f4-4a24-a6f0-d88885b191cd">
               <caom2:name>0</caom2:name>
@@ -555,6 +556,7 @@
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentLength>145880</caom2:contentLength>
           <caom2:contentChecksum>md5:e2a70089ebd2563454b939815864a11e</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="00000000-0000-0000-5522-013d41d79af9" caom2:lastModified="2013-03-06T22:34:49.623" caom2:maxLastModified="2013-03-06T22:34:49.623" caom2:metaChecksum="md5:32a7689d24b3128cd10b1f45a46639e7" caom2:accMetaChecksum="md5:0d0c2fac3d98b0e967e18890f7aed60a">
@@ -994,6 +996,7 @@
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentLength>178280</caom2:contentLength>
           <caom2:contentChecksum>md5:3dd29135d9f12abbce0b1e1a4f10d4da</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="00000000-0000-0000-4d27-013d159bde1b" caom2:lastModified="2013-02-26T08:26:17.627" caom2:maxLastModified="2013-02-26T08:26:17.627" caom2:metaChecksum="md5:e303e053995657f686a8fd8e4a0fa8ed" caom2:accMetaChecksum="md5:e4ce3875566bbe5180a467dd79d8ef1f">

@@ -69,6 +69,8 @@
 
 import logging
 
+from os.path import basename
+
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import metadata as md
 
@@ -114,7 +116,7 @@ class CFHTName(mc.StorageName):
         # works, since the file_name element will have all extensions,
         # including the .fz | .gz | '' to indicate compression type
         if obs_id is None:
-            super(CFHTName, self).__init__(
+            super().__init__(
                 None,
                 COLLECTION,
                 CFHTName.CFHT_NAME_PATTERN,
@@ -152,7 +154,7 @@ class CFHTName(mc.StorageName):
                     if self.is_derived_sitelle:
                         self.obs_id = self.obs_id.replace(self._suffix, 'p')
         else:
-            super(CFHTName, self).__init__(
+            super().__init__(
                 obs_id,
                 COLLECTION,
                 CFHTName.CFHT_NAME_PATTERN,
@@ -165,27 +167,30 @@ class CFHTName(mc.StorageName):
             self._file_name = None
             self._file_id = None
             self._suffix = None
+        self._destination_uris = [
+            mc.build_uri(
+                   COLLECTION, basename(ii).replace('header', ''), scheme
+            )
+            for ii in self._source_names
+        ]
         self._logger = logging.getLogger(self.__class__.__name__)
         self._logger.debug(self)
 
     def __str__(self):
         return (
             f'\n'
-            f'  instrument: {self.instrument}\n'
-            f'      obs_id: {self.obs_id}\n'
-            f'     file_id: {self.file_id}\n'
-            f'   file_name: {self.file_name}\n'
-            f'source_names: {self.source_names}\n'
-            f'    file_uri: {self.file_uri}\n'
-            f'     lineage: {self.lineage}\n'
+            f'      instrument: {self.instrument}\n'
+            f'          obs_id: {self.obs_id}\n'
+            f'         file_id: {self.file_id}\n'
+            f'       file_name: {self.file_name}\n'
+            f'    source_names: {self.source_names}\n'
+            f'destination_uris: {self.destination_uris}\n'
+            f'        file_uri: {self.file_uri}\n'
+            f'      product_id: {self.product_id}\n'
         )
 
     def is_valid(self):
         return True
-
-    @property
-    def destination_uris(self):
-        return [self.file_uri]
 
     @property
     def file_id(self):
@@ -201,6 +206,10 @@ class CFHTName(mc.StorageName):
     def file_name(self, value):
         """The file name."""
         self._file_name = value
+
+    @property
+    def file_uri(self):
+        return mc.build_uri(COLLECTION, self._file_name, self.scheme)
 
     @property
     def instrument(self):

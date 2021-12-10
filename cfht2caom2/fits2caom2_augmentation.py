@@ -80,26 +80,41 @@ class Fits2caom2Visitor:
     def __init__(self, observation, **kwargs):
         self._observation = observation
         self._storage_name = kwargs.get('storage_name')
-        self._file_metadata = kwargs.get('file_metadata')
+        self._metadata_reader = kwargs.get('metadata_reader')
         self._cadc_client = kwargs.get('cadc_client')
         self._dump_config = False
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def visit(self):
-        for uri, file_metadata in self._file_metadata.items():
+        for uri, file_info in self._metadata_reader.file_info.items():
+            self._logger.debug(f'Begin observation augmentation for {uri}.')
             instrument_data = instruments.instrument_blueprint_factory(
-                file_metadata.headers, self._storage_name
+                self._metadata_reader.headers.get(uri), self._storage_name
             )
             blueprint = ObsBlueprint(instantiated_class=instrument_data)
-            main_app.accumulate_bp(blueprint, self._storage_name)
-
-            if len(file_metadata.headers) == 0:
-                parser = GenericParser(blueprint, uri)
+            if 'hdf5' in uri:
+                blueprint.set('Artifact.productType', 'science')
             else:
-                parser = FitsParser(file_metadata.headers, blueprint, uri)
+                main_app.accumulate_bp(blueprint, self._storage_name)
+
+            if len(self._metadata_reader.headers.get(uri)) == 0:
+                self._logger.debug(f'Use a GenericParser for {uri}')
+                parser = GenericParser(
+                    obs_blueprint=blueprint,
+                    logging_name=uri,
+                    uri=uri,
+                )
+            else:
+                self._logger.debug(f'Use a FitsParser for {uri}')
+                parser = FitsParser(
+                    src=self._metadata_reader.headers.get(uri),
+                    obs_blueprint=blueprint,
+                    uri=uri,
+                )
+                parser.logging_name = uri
 
             if self._dump_config:
-                print(f'Blueprint for {uri}: {blueprint}')
+                self._logger.info(f'Blueprint for {uri}: {blueprint}')
 
             if self._observation is None:
                 if blueprint._get('DerivedObservation.members') is None:
@@ -125,7 +140,7 @@ class Fits2caom2Visitor:
 
             self._observation = instrument_data.update(
                 self._observation,
-                file_metadata.file_info,
+                file_info,
                 self._cadc_client,
             )
         return self._observation

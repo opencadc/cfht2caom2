@@ -1410,7 +1410,7 @@ class InstrumentBlueprint:
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
         if self._cfht_name.instrument is md.Inst.SITELLE:
             if self._cfht_name.suffix == 'p':
-                num_steps = self._headers[ext].get('STEPNB')
+                num_steps = self._headers[ext].get('STEPNB', 1)
                 exptime = exptime * num_steps
         # units are seconds
         if exptime is None:
@@ -1741,8 +1741,8 @@ class InstrumentBlueprint:
         # owned by a plane, as that is how it gets displayed in the search
         # results. The planes must also contain plane-level metadata for the
         # search to find. Plane-level metadata is only calculated for science
-        # or calibration artifacts, so any file types that might conceivably be
-        # auxiliary product types are labeled as calibration, so that
+        # or calibration artifacts, so any file types that might conceivably
+        # be auxiliary product types are labeled as calibration, so that
         # plane-level metadata is calculated.
         #
         # Confirm the goal is find-ability in conversation with CW, SF on
@@ -2277,14 +2277,16 @@ class InstrumentBlueprint:
                     main_app.accumulate_bp(bp, self._cfht_name)
                     # TODO this is not a long-term implementation
                     # re-read the headers from disk, because the first pass
-                    # through caom2gen will have modified the header content based
-                    # on the original blueprint the execution goes through and
-                    # sets the CDELT4 value, then from that sets the CD4_4 value.
-                    # Then the second time through, the CD4_4 value update is
-                    # expressly NOT done, because the CD4_4 value is already set
-                    # from the first pass-through - need to figure out a way to
-                    # fix this .... sigh
+                    # through caom2gen will have modified the header content
+                    # based on the original blueprint the execution goes
+                    # through and sets the CDELT4 value, then from that sets
+                    # the CD4_4 value. Then the second time through, the CD4_4
+                    # value update is expressly NOT done, because the CD4_4
+                    # value is already set from the first pass-through - need
+                    # to figure out a way to fix this .... sigh
                     from caom2pipe import translate_composable as tc
+                    previous_headers = self._headers
+                    self._headers = unmodified_headers[1:]
                     tc.add_headers_to_obs_by_blueprint(
                         observation,
                         unmodified_headers[1:],
@@ -2292,6 +2294,7 @@ class InstrumentBlueprint:
                         self._cfht_name.file_uri,
                         self._cfht_name.product_id,
                     )
+                    self._headers = previous_headers
                 else:
                     logging.debug(
                         f'Cannot reset the header/blueprint relationship for '
@@ -2306,8 +2309,8 @@ class InstrumentBlueprint:
         logging.debug(
             f'Begin _update_sitelle_plane for {observation.observation_id}'
         )
-        # if the 'p' plane exists, the observation id is the same as the plane id,
-        # so copy the metadata to the 'z' plane
+        # if the 'p' plane exists, the observation id is the same as the
+        # plane id, so copy the metadata to the 'z' plane
         z_plane_key = observation.observation_id.replace('p', 'z')
         temp_z_uri = self._cfht_name.file_uri.replace('p', 'z', 1)
         z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
@@ -2325,22 +2328,22 @@ class InstrumentBlueprint:
                 # replicate the plane-level information from the p plane to the
                 # z plane
                 p_plane = observation.planes[observation.observation_id]
-                temp = self._cfht_name.file_.replace('.hdf5', '.fits.fz')
+                temp = self._cfht_name.file_name.replace('.hdf5', '.fits.fz')
                 if temp.count('z') == 1:
                     # uri looks like: ad:CFHT/2384125p.fits.fz
                     p_artifact_key = temp
                 else:
                     p_artifact_key = temp.replace('z', 'p', 1)
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._cfht_name.file_.replace('z', 'p', 1).replace(
+                    p_artifact_key = self._cfht_name.file_name.replace('z', 'p', 1).replace(
                         '.hdf5', '.fits'
                     )
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = self._cfht_name.file_.replace('z', 'p', 1).replace(
+                        p_artifact_key = self._cfht_name.file_name.replace('z', 'p', 1).replace(
                             '.hdf5', '.fits.gz'
                         )
                         if p_artifact_key not in p_plane.artifacts.keys():
-                            p_artifact_key = self._cfht_name.file_.replace('z', 'p', 1).replace(
+                            p_artifact_key = self._cfht_name.file_name.replace('z', 'p', 1).replace(
                                 '.hdf5', '.fits.header'
                             )
                             if p_artifact_key not in p_plane.artifacts.keys():
