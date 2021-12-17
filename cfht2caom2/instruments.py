@@ -86,6 +86,7 @@ from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
+from cfht2caom2 import cfht_builder
 
 __all__ = [
     'factory',
@@ -639,7 +640,7 @@ class Sitelle(InstrumentType):
         obs_ra = header.get('RA_DEG')
         obs_dec = header.get('DEC_DEG')
         if obs_ra is None or obs_dec is None:
-            logging.error(
+            self._logger.error(
                 'RA_DEG {obs_ra} DEC_DEG {obs_dec} for {obs_id} are not set.'
             )
             return
@@ -1278,6 +1279,7 @@ class InstrumentBlueprint:
     def __init__(self, headers, storage_name):
         self._headers = headers
         self._cfht_name = storage_name
+        self._logger = logging.getLogger(self.__class__.__name__)
 
     def get_plane_data_product_type(self, ext):
         # caom2wircam.default
@@ -1399,7 +1401,7 @@ class InstrumentBlueprint:
     def get_environment_elevation(self, ext):
         elevation = mc.to_float(self._headers[ext].get('TELALT'))
         if elevation is not None and not (0.0 <= elevation <= 90.0):
-            logging.info(
+            self._logger.info(
                 f'Setting elevation to None for '
                 f'{self._get_filename(ext)} because the value is {elevation}.'
             )
@@ -1601,7 +1603,7 @@ class InstrumentBlueprint:
     def get_obs_environment_humidity(self, ext):
         result = self._headers[ext].get('RELHUMID')
         if result is not None and result < 0.0:
-            logging.warning(f'RELHUMID invalid value {result}.')
+            self._logger.warning(f'RELHUMID invalid value {result}.')
             result = None
         return result
 
@@ -1688,7 +1690,7 @@ class InstrumentBlueprint:
                         if result is None:
                             result = self._headers[ext].get('TVSTART')
                     if result is None:
-                        logging.warning(
+                        self._logger.warning(
                             f'REL_DATE not in header. Derive from RUNID '
                             f'{run_id}.'
                         )
@@ -1838,7 +1840,7 @@ class InstrumentBlueprint:
         else:
             result = self._headers[ext].get('DARKTIME')
         if result is None:
-            logging.warning(f'No Time WCS refcoord.delta value for '
+            self._logger.warning(f'No Time WCS refcoord.delta value for '
                             f'{self._cfht_name.file_uri}.'
             )
         return result
@@ -1865,7 +1867,7 @@ class InstrumentBlueprint:
         else:
             result = self.get_spirou_exptime(ext)
         if result is None:
-            logging.warning(
+            self._logger.warning(
                 f'No Time WCS resolution value for {self._cfht_name.file_uri}.'
             )
         return result
@@ -1880,7 +1882,7 @@ class InstrumentBlueprint:
         else:
             temp = self._headers[ext].get('DARKTIME')
         if temp is None:
-            logging.warning(
+            self._logger.warning(
                 f'No Time WCS refcoord.delta value for '
                 f'{self._cfht_name.file_uri}.'
             )
@@ -1894,7 +1896,7 @@ class InstrumentBlueprint:
         if self._cfht_name.suffix == 'r':
             result = self._headers[ext].get('NREADS')
         if result is None:
-            logging.warning(
+            self._logger.warning(
                 f'No Time WCS refcoord.naxis value for '
                 f'{self._cfht_name.file_uri}.'
             )
@@ -1976,7 +1978,7 @@ class InstrumentBlueprint:
                 dt_str = self._headers[ext].get('DATE')
         mjd_obs = ac.get_datetime(dt_str)
         if mjd_obs is None:
-            logging.warning(
+            self._logger.warning(
                 f'Chunk.time.axis.function.refCoord.val is None for '
                 f'{self._get_filename(ext)}'
             )
@@ -2073,7 +2075,7 @@ class InstrumentBlueprint:
                 # seb 4:01 PM
                 # this is a flat. i have the impression in this case you can
                 # ignore the ra/dec stuff
-                logging.warning(
+                self._logger.warning(
                     f'OBSRADEC is GAPPT for {self._get_filename(ext)}'
                 )
             else:
@@ -2091,7 +2093,7 @@ class InstrumentBlueprint:
                 # caom2IngestMegacam.py, l392
                 # caom2IngestWircamdetrend.py, l314
                 # caom2IngestEspadons.py, l522
-                logging.warning(
+                self._logger.warning(
                     f'Setting RUNID to default 17BE for {self._headers[ext].get("FILENAME")}.'
                 )
                 run_id = '17BE'
@@ -2175,7 +2177,7 @@ class InstrumentBlueprint:
                         file_name=str(catalog_id),
                     )
                 else:
-                    logging.warning(f'Unexpected GAIADR value {catalog_dr}.')
+                    self._logger.warning(f'Unexpected GAIADR value {catalog_dr}.')
             else:
                 bits = catalog_id.split()
                 if len(bits) == 3:
@@ -2185,7 +2187,7 @@ class InstrumentBlueprint:
                         file_name=bits[2],
                     )
                 else:
-                    logging.warning(f'Unexpected GAIAID value {catalog_id}.')
+                    self._logger.warning(f'Unexpected GAIAID value {catalog_id}.')
         return result
 
     def _update_observation_metadata(self, observation, data_client):
@@ -2225,7 +2227,7 @@ class InstrumentBlueprint:
 
         # check for files with primary headers that have NO information
         # - e.g. 2445848a
-        logging.debug(
+        self._logger.debug(
             f'Begin _update_observation_metadata for '
             f'{self._cfht_name.file_name}'
         )
@@ -2250,7 +2252,7 @@ class InstrumentBlueprint:
                 if len(self._headers) > 1:
                     idx = 1
 
-                    logging.warning(
+                    self._logger.warning(
                         f'Resetting the header/blueprint relationship for '
                         f'{self._cfht_name.file_name} in '
                         f'{observation.observation_id}'
@@ -2296,131 +2298,23 @@ class InstrumentBlueprint:
                     )
                     self._headers = previous_headers
                 else:
-                    logging.debug(
+                    self._logger.debug(
                         f'Cannot reset the header/blueprint relationship for '
                         f'{self._cfht_name.file_name} in '
                         f'{observation.observation_id}'
                     )
 
-        logging.debug(f'End _update_observation_metadata.')
+        self._logger.debug(f'End _update_observation_metadata.')
         return idx
 
     def _update_sitelle_plane(self, observation):
-        logging.debug(
-            f'Begin _update_sitelle_plane for {observation.observation_id}'
-        )
-        # if the 'p' plane exists, the observation id is the same as the
-        # plane id, so copy the metadata to the 'z' plane
-        z_plane_key = observation.observation_id.replace('p', 'z')
-        temp_z_uri = self._cfht_name.file_uri.replace('p', 'z', 1)
-        z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
-
-        # fix the plane-level information for the z plane
-        if z_plane_key in observation.planes.keys():
-            z_plane = observation.planes[z_plane_key]
-            z_plane.data_product_type = DataProductType.CUBE
-            z_plane.calibration_level = CalibrationLevel.CALIBRATED
-            z_plane.meta_producer = mc.get_version('cfht2caom2')
-            observation.meta_producer = z_plane.meta_producer
-            z_plane.artifacts[z_artifact_key].meta_producer = z_plane.meta_producer
-
-            if observation.observation_id in observation.planes.keys():
-                # replicate the plane-level information from the p plane to the
-                # z plane
-                p_plane = observation.planes[observation.observation_id]
-                temp = self._cfht_name.file_uri.replace('.hdf5', '.fits.fz')
-                if temp.count('z') == 1:
-                    # uri looks like: ad:CFHT/2384125p.fits.fz
-                    p_artifact_key = temp
-                else:
-                    p_artifact_key = temp.replace('z', 'p', 1)
-                if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._cfht_name.file_uri.replace('z', 'p', 1).replace(
-                        '.hdf5', '.fits'
-                    )
-                    if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = self._cfht_name.file_uri.replace('z', 'p', 1).replace(
-                            '.hdf5', '.fits.gz'
-                        )
-                        if p_artifact_key not in p_plane.artifacts.keys():
-                            p_artifact_key = self._cfht_name.file_uri.replace('z', 'p', 1).replace(
-                                '.hdf5', '.fits.header'
-                            )
-                            if p_artifact_key not in p_plane.artifacts.keys():
-                                raise mc.CadcException(
-                                    f'Unexpected extension name pattern for '
-                                    f'artifact URI {p_artifact_key} in '
-                                    f'{observation.observation_id}.'
-                                )
-                features = mc.Features()
-                features.supports_latest_caom = True
-                for part in p_plane.artifacts[p_artifact_key].parts.values():
-                    z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
-                    for chunk in part.chunks:
-                        z_plane.artifacts[z_artifact_key].parts[
-                            part.name
-                        ].chunks.append(cc.copy_chunk(chunk, features))
-                z_plane.artifacts[
-                    z_artifact_key
-                ].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
-                z_plane.provenance = p_plane.provenance
-                z_plane.calibration_level = p_plane.calibration_level
-                z_plane.data_product_type = p_plane.data_product_type
-                z_plane.data_release = p_plane.data_release
-                z_plane.meta_producer = p_plane.meta_producer
-                z_plane.meta_release = p_plane.meta_release
-
-        logging.debug('End _update_sitelle_plane')
+        pass
 
     def _update_wircam_plane(self, observation):
-        logging.debug(
-            f'Begin _update_wircam_plane for {observation.observation_id}'
-        )
-        # for some 'y' files, that don't have enough metadata on their own,
-        # if the 'p' plane exists, and the 'y' plane exists,
-        # copy the metadata to the 'y' plane, because the 'y' file
-        # will not have enough metadata to fill these things in alone
-        copy_to_key = self._cfht_name.product_id
-        copy_to_artifact_key = self._cfht_name.file_uri
-        if self._cfht_name.suffix == 'p':
-            copy_to_key = self._cfht_name.product_id.replace('p', 'y')
-            copy_to_artifact_key = self._cfht_name.file_uri.replace('p', 'y', 1)
+        pass
 
-        copy_from_key = self._cfht_name.product_id
-        copy_from_artifact_key = self._cfht_name.file_uri
-        if self._cfht_name.suffix == 'y':
-            copy_from_key = self._cfht_name.product_id.replace('y', 'p')
-            copy_from_artifact_key = self._cfht_name.file_uri.replace('y', 'p', 1)
-
-        if (
-                copy_to_key in observation.planes.keys()
-                and copy_from_key in observation.planes.keys()
-        ):
-            copy_to_plane = observation.planes[copy_to_key]
-            copy_from_plane = observation.planes[copy_from_key]
-            if (
-                    copy_from_artifact_key in copy_from_plane.artifacts.keys() and
-                    copy_to_artifact_key in copy_to_plane.artifacts.keys()
-            ):
-                copy_from_artifact = copy_from_plane.artifacts[
-                    copy_from_artifact_key
-                ]
-                copy_to_artifact = copy_to_plane.artifacts[copy_to_artifact_key]
-                if copy_from_plane.provenance is not None:
-                    copy_to_plane.provenance = cc.copy_provenance(
-                        copy_from_plane.provenance
-                    )
-                    # set to None, because caom2IngestWircam.py sets only for
-                    # 'p', 's' files: l1064, l1092
-                    while len(copy_to_plane.provenance.keywords) > 0:
-                        copy_to_plane.provenance.keywords.pop()
-                InstrumentBlueprint._semi_deep_copy_plane(
-                    copy_from_plane,
-                    copy_to_plane,
-                    copy_from_artifact,
-                    copy_to_artifact,
-                )
-        logging.debug('End _update_wircam_plane')
+    def _update_plane_post(self, observation):
+        pass
 
     def update(self, observation, file_info, data_client):
         """Called to fill multiple CAOM model elements and/or attributes, must
@@ -2435,19 +2329,19 @@ class InstrumentBlueprint:
         :param data_client StorageClientWrapper instance
 
         :param **kwargs Everything else."""
-        logging.debug('Begin update.')
+        self._logger.debug('Begin update.')
 
         ingesting_hdf5 = False
 
         if self._cfht_name.suffix == 'z':
             ingesting_hdf5 = True
-            logging.info(
+            self._logger.info(
                 f'Ingesting the hdf5 plane for {observation.observation_id}'
             )
 
         if self._cfht_name.instrument is md.Inst.MEGACAM:
-            # need the 'megacam' for the filter lookup at SVO, but there is only
-            # a 'MegaPrime' instrument in the CAOM collection at CADC
+            # need the 'megacam' for the filter lookup at SVO, but there is
+            # only a 'MegaPrime' instrument in the CAOM collection at CADC
             # see e.g. 2003A.frpts.z.36.00
             observation.instrument = cc.copy_instrument(
                 observation.instrument, md.Inst.MEGAPRIME.value
@@ -2458,12 +2352,12 @@ class InstrumentBlueprint:
             if not isinstance(observation, DerivedObservation):
                 observation = cc.change_to_composite(observation, 'scan')
             self._update_sitelle_plane(observation)
-            logging.debug('Done hdf5 update.')
+            self._logger.debug('Done hdf5 update.')
             return observation
 
         is_derived, derived_type = self._is_derived(observation.observation_id)
         if is_derived and not isinstance(observation, DerivedObservation):
-            logging.info(
+            self._logger.info(
                 f'{observation.observation_id} will be changed to a Derived '
                 f'Observation.'
             )
@@ -2475,7 +2369,10 @@ class InstrumentBlueprint:
                     algorithm_name = 'scan'
             observation = cc.change_to_composite(observation, algorithm_name)
 
-        if self._cfht_name.instrument is md.Inst.SITELLE and self._cfht_name.suffix == 'v':
+        if (
+            self._cfht_name.instrument is md.Inst.SITELLE
+            and self._cfht_name.suffix == 'v'
+        ):
             idx = 0
         else:
             idx = self._update_observation_metadata(observation, data_client)
@@ -2549,24 +2446,18 @@ class InstrumentBlueprint:
             x.update_plane()
             # this is here, because the bits that are being copied have been
             # created/modified by the update_chunk call
-            if (
-                    self._cfht_name.instrument is md.Inst.SITELLE
-                    and self._cfht_name.suffix == 'p'
-            ):
-                self._update_sitelle_plane(observation)
+            self._update_sitelle_plane(observation)
 
         # relies on update_plane_provenance being called
         if isinstance(observation, DerivedObservation):
             cc.update_observation_members(observation)
 
-        if (
-                self._cfht_name.suffix in ['p', 'y']
-                and self._cfht_name.instrument is md.Inst.WIRCAM
-        ):
-            # complete the ingestion of the missing bits of a sky construct file
-            self._update_wircam_plane(observation)
+        self._update_plane_post(observation)
+        # this is here, because the bits that are being copied have been
+        # created/modified by the update_chunk call
+        # self._update_sitelle_plane(observation)
 
-        logging.debug('Done update.')
+        self._logger.debug('Done update.')
         return observation
 
     def _is_derived(self, obs_id):
@@ -2578,7 +2469,7 @@ class InstrumentBlueprint:
         else:
             file_type = self._headers[0].get('FILETYPE')
             if file_type is not None and 'alibrat' in file_type:
-                logging.info(
+                self._logger.info(
                     f'Treating {obs_id} with filetype {file_type} as derived. '
                 )
                 result = True
@@ -2597,7 +2488,9 @@ class InstrumentBlueprint:
         return result, derived_type
 
     @staticmethod
-    def _semi_deep_copy_plane(from_plane, to_plane, from_artifact, to_artifact):
+    def _semi_deep_copy_plane(
+        from_plane, to_plane, from_artifact, to_artifact
+    ):
         to_plane.calibration_level = from_plane.calibration_level
         to_plane.data_product_type = from_plane.data_product_type
         to_plane.data_release = from_plane.data_release
@@ -2606,7 +2499,9 @@ class InstrumentBlueprint:
         for part in from_artifact.parts.values():
             to_artifact.parts.add(cc.copy_part(part))
             for chunk in part.chunks:
-                to_artifact.parts[part.name].chunks.append(cc.copy_chunk(chunk))
+                to_artifact.parts[part.name].chunks.append(
+                    cc.copy_chunk(chunk)
+                )
 
 
 def _repair_comment_provenance_value(value, obs_id):
@@ -2677,5 +2572,166 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
+class SitelleInstrumentBlueprint(InstrumentBlueprint):
+
+    def __init__(self, headers, storage_name):
+        super().__init__(headers, storage_name)
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def _update_sitelle_plane(self, observation):
+        self._logger.debug(
+            f'Begin _update_sitelle_plane for {observation.observation_id}'
+        )
+        if self._cfht_name.suffix not in ['p', 'z']:
+            return
+
+        # if the 'p' plane exists, the observation id is the same as the
+        # plane id, so copy the metadata to the 'z' plane
+        z_plane_key = observation.observation_id.replace('p', 'z')
+        temp_z_uri = self._cfht_name.file_uri.replace('p', 'z', 1)
+        z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
+
+        # fix the plane-level information for the z plane
+        if z_plane_key in observation.planes.keys():
+            z_plane = observation.planes[z_plane_key]
+            z_plane.data_product_type = DataProductType.CUBE
+            z_plane.calibration_level = CalibrationLevel.CALIBRATED
+            z_plane.meta_producer = mc.get_version('cfht2caom2')
+            observation.meta_producer = z_plane.meta_producer
+            z_plane.artifacts[z_artifact_key].meta_producer = (
+                z_plane.meta_producer
+            )
+
+            if observation.observation_id in observation.planes.keys():
+                logging.error('get here?????????')
+                # replicate the plane-level information from the p plane to the
+                # z plane
+                p_plane = observation.planes[observation.observation_id]
+                temp = self._cfht_name.file_uri.replace('.hdf5', '.fits.fz')
+                if temp.count('z') == 1:
+                    # uri looks like: ad:CFHT/2384125p.fits.fz
+                    p_artifact_key = temp
+                else:
+                    p_artifact_key = temp.replace('z', 'p', 1)
+                if p_artifact_key not in p_plane.artifacts.keys():
+                    p_artifact_key = self._cfht_name.file_uri.replace(
+                        'z', 'p', 1
+                    ).replace(
+                        '.hdf5', '.fits'
+                    )
+                    if p_artifact_key not in p_plane.artifacts.keys():
+                        p_artifact_key = self._cfht_name.file_uri.replace(
+                            'z', 'p', 1
+                        ).replace(
+                            '.hdf5', '.fits.gz'
+                        )
+                        if p_artifact_key not in p_plane.artifacts.keys():
+                            p_artifact_key = self._cfht_name.file_uri.replace(
+                                'z', 'p', 1
+                            ).replace(
+                                '.hdf5', '.fits.header'
+                            )
+                            if p_artifact_key not in p_plane.artifacts.keys():
+                                raise mc.CadcException(
+                                    f'Unexpected extension name pattern for '
+                                    f'artifact URI {p_artifact_key} in '
+                                    f'{observation.observation_id}.'
+                                )
+                features = mc.Features()
+                features.supports_latest_caom = True
+                for part in p_plane.artifacts[p_artifact_key].parts.values():
+                    z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
+                    for chunk in part.chunks:
+                        z_plane.artifacts[z_artifact_key].parts[
+                            part.name
+                        ].chunks.append(cc.copy_chunk(chunk, features))
+                z_plane.artifacts[
+                    z_artifact_key
+                ].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
+                z_plane.provenance = p_plane.provenance
+                z_plane.calibration_level = p_plane.calibration_level
+                z_plane.data_product_type = p_plane.data_product_type
+                z_plane.data_release = p_plane.data_release
+                z_plane.meta_producer = p_plane.meta_producer
+                z_plane.meta_release = p_plane.meta_release
+
+        self._logger.debug('End _update_sitelle_plane')
+
+
+class WircamInstrumentBlueprint(InstrumentBlueprint):
+
+    def __init__(self, headers, storage_name):
+        super().__init__(headers, storage_name)
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def _update_plane_post(self, observation):
+        # complete the ingestion of the missing bits of a sky construct file
+        self._logger.debug(
+            f'Begin _update_wircam_plane for {observation.observation_id}'
+        )
+        if self._cfht_name.suffix not in ['p', 'y']:
+            return
+
+        # for some 'y' files, that don't have enough metadata on their own,
+        # if the 'p' plane exists, and the 'y' plane exists,
+        # copy the metadata to the 'y' plane, because the 'y' file
+        # will not have enough metadata to fill these things in alone
+        copy_to_key = self._cfht_name.product_id
+        copy_to_artifact_key = self._cfht_name.file_uri
+        if self._cfht_name.suffix == 'p':
+            copy_to_key = self._cfht_name.product_id.replace('p', 'y')
+            copy_to_artifact_key = self._cfht_name.file_uri.replace(
+                'p', 'y', 1
+            )
+
+        copy_from_key = self._cfht_name.product_id
+        copy_from_artifact_key = self._cfht_name.file_uri
+        if self._cfht_name.suffix == 'y':
+            copy_from_key = self._cfht_name.product_id.replace('y', 'p')
+            copy_from_artifact_key = self._cfht_name.file_uri.replace(
+                'y', 'p', 1
+            )
+
+        if (
+                copy_to_key in observation.planes.keys()
+                and copy_from_key in observation.planes.keys()
+        ):
+            copy_to_plane = observation.planes[copy_to_key]
+            copy_from_plane = observation.planes[copy_from_key]
+            if (
+                copy_from_artifact_key in copy_from_plane.artifacts.keys()
+                and copy_to_artifact_key in copy_to_plane.artifacts.keys()
+            ):
+                copy_from_artifact = copy_from_plane.artifacts[
+                    copy_from_artifact_key
+                ]
+                copy_to_artifact = copy_to_plane.artifacts[
+                    copy_to_artifact_key
+                ]
+                if copy_from_plane.provenance is not None:
+                    copy_to_plane.provenance = cc.copy_provenance(
+                        copy_from_plane.provenance
+                    )
+                    # set to None, because caom2IngestWircam.py sets only for
+                    # 'p', 's' files: l1064, l1092
+                    while len(copy_to_plane.provenance.keywords) > 0:
+                        copy_to_plane.provenance.keywords.pop()
+                InstrumentBlueprint._semi_deep_copy_plane(
+                    copy_from_plane,
+                    copy_to_plane,
+                    copy_from_artifact,
+                    copy_to_artifact,
+                )
+        self._logger.debug('End _update_wircam_plane')
+
+
 def instrument_blueprint_factory(headers, storage_name):
-    return InstrumentBlueprint(headers, storage_name)
+    instrument = cfht_builder.CFHTBuilder.get_instrument(
+        headers, storage_name.file_name
+    )
+    if instrument is md.Inst.WIRCAM:
+        return WircamInstrumentBlueprint(headers, storage_name)
+    elif instrument is md.Inst.SITELLE:
+        return SitelleInstrumentBlueprint(headers, storage_name)
+    else:
+        return InstrumentBlueprint(headers, storage_name)
