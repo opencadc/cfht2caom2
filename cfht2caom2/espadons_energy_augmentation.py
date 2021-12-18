@@ -92,9 +92,7 @@ def visit(observation, **kwargs):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if storage_name.file_uri == artifact.uri:
-                    count += _do_energy(
-                        artifact, science_fqn, storage_name, observation
-                    )
+                    count += _do_energy(artifact, science_fqn, storage_name)
         logging.info(
             f'Completed ESPaDOnS energy augmentation for '
             f'{observation.observation_id}.'
@@ -102,7 +100,7 @@ def visit(observation, **kwargs):
     return observation
 
 
-def _do_energy(artifact, science_fqn, cfht_name, observation):
+def _do_energy(artifact, science_fqn, cfht_name):
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -136,10 +134,9 @@ def _do_energy(artifact, science_fqn, cfht_name, observation):
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
     coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
-    espadons = instruments.Espadons(
-        [hdus[0].header], 0, cfht_name, observation
-    )
-    resolving_power = espadons._get_espadons_energy_resolving_power()
+    espadons = instruments.Espadons([hdus[0].header], cfht_name)
+    espadons.extension = 0
+    resolving_power = espadons.get_energy_resolving_power(0)
     chunk = artifact.parts['0'].chunks[0]
     chunk.energy = SpectralWCS(
         coord_axis,

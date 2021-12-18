@@ -104,7 +104,42 @@ class ProvenanceType(Enum):
     UNDEFINED = 'UNDEFINED'  # hdf5 file support
 
 
+class CFHTValueRepair(mc.ValueRepairCache):
+
+    VALUE_REPAIR = {
+        'observation.type': {
+            'FRPTS': 'FRINGE',
+            'scatter': 'FLAT',
+        },
+        # CW
+        # If no or "open" filter then set filter name to
+        # null
+        'chunk.energy.bandpass_name': {
+            'NONE': 'none',
+            'Open': 'none',
+        },
+        # PD 08-04-20
+        # the correct way to express "inverse meter" is
+        # either  m**-1 or m^-1
+        #
+        # we support both exponentiations but convert ^
+        # to ** so I guess at that time we thought ** was
+        # the more common style.
+        'chunk.energy.axis.axis.cunit': {
+            '1 / m': 'm**-1',
+        }
+    }
+
+    def __init__(self):
+        self._value_repair = CFHTValueRepair.VALUE_REPAIR
+        self._key = None
+        self._values = None
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+
 class InstrumentType:
+    value_repair = CFHTValueRepair()
+
     def __init__(self, headers, cfht_name):
         # keep because of MegaCam/MegaPrime
         self._name = cfht_name.instrument.value
@@ -156,29 +191,6 @@ class InstrumentType:
     @plane.setter
     def plane(self, value):
         self._plane = value
-
-    def clean_up_energy(self):
-        if self._chunk.energy is not None:
-            if self._chunk.energy.bandpass_name in ['NONE', 'Open']:
-                # CW
-                # If no or "open" filter then set filter name to
-                # null
-                self._chunk.energy.bandpass_name = None
-
-            if (
-                self._chunk.energy.axis is not None
-                and self._chunk.energy.axis.axis is not None
-                and self._chunk.energy.axis.axis.ctype is not None
-            ):
-                # PD 08-04-20
-                # the correct way to express "inverse meter" is
-                # either  m**-1 or m^-1
-                #
-                # we support both exponentiations but convert ^
-                # to ** so I guess at that time we thought ** was
-                # the more common style.
-                if self._chunk.energy.axis.axis.cunit == '1 / m':
-                    self._chunk.energy.axis.axis.cunit = 'm**-1'
 
     def get_filter_md(self, filter_name):
         filter_md = md.filter_cache.get_svo_filter(self._name, filter_name)
@@ -415,17 +427,13 @@ class InstrumentType:
     def get_energy_ctype(self, ext):
         result = None
         if self._has_energy(ext):
-            result = self._headers[ext].get('CTYPE3')
-            if result is None:
-                result = 'WAVE'
+            result = self._headers[ext].get('CTYPE3', 'WAVE')
         return result
 
     def get_energy_cunit(self, ext):
         result = None
         if self._has_energy(ext):
-            result = self._headers[ext].get('CUNIT3')
-            if result is None:
-                result = 'Angstrom'
+            result = self._headers[ext].get('CUNIT3', 'Angstrom')
         return result
 
     def get_energy_function_delta(self, ext):
@@ -548,14 +556,14 @@ class InstrumentType:
         # "calibration" phot & astr std & acquisitions/align are calibration.
         # from caom2IngestWircam.py, l731
         result = ObservationIntentType.CALIBRATION
-        obs_type = self._get_obstype(ext)
+        obs_type = self.get_obs_type(ext)
         if obs_type is None:
             # no 'OBSTYPE' keyword, so fits2caom2 will set the value to
             # science
             result = None
         elif obs_type == 'OBJECT':
             run_id = self._get_run_id(ext)
-            if run_id[3].lower() != 'q':
+            if run_id is not None and run_id[3].lower() != 'q':
                 result = ObservationIntentType.SCIENCE
         return result
 
@@ -581,13 +589,7 @@ class InstrumentType:
         return result
 
     def get_obs_type(self, ext):
-        result = self._get_obstype(ext)
-        if result is not None:
-            if result == 'FRPTS':
-                result = 'FRINGE'
-            elif result == 'scatter':
-                result = 'FLAT'
-        return result
+        return self._headers[ext].get('OBSTYPE')
 
     def get_plane_data_release(self, ext):
         # order set from:
@@ -721,7 +723,7 @@ class InstrumentType:
         return dec
 
     def get_target_standard(self, ext):
-        obs_type = self._get_obstype(ext)
+        obs_type = self.get_obs_type(ext)
         run_id = self._get_run_id(ext)
         result = None
         if run_id is not None:
@@ -828,9 +830,6 @@ class InstrumentType:
             mjd_obs = mjd_obs.value
         return mjd_obs
 
-    def _get_obstype(self, ext):
-        return self._headers[ext].get('OBSTYPE')
-
     def _get_ra_dec(self, ext):
         obj_ra = self._headers[ext].get('OBJRA')
         obj_dec = self._headers[ext].get('OBJDEC')
@@ -888,7 +887,7 @@ class InstrumentType:
         return dp_result, pt_result
 
     def _has_energy(self, ext):
-        obs_type = self._get_obstype(ext)
+        obs_type = self.get_obs_type(ext)
         # from conversation with CW, SF
         # also from caom2IngestEspadons.py, l393, despite an existing example
         # with energy information
@@ -1216,6 +1215,7 @@ class InstrumentType:
         # created/modified by the update_chunk call
         # self._update_sitelle_plane(observation)
 
+        InstrumentType.value_repair.repair(observation)
         self._logger.debug('Done update.')
         return observation
 
@@ -1264,7 +1264,6 @@ class InstrumentType:
         pass
 
     def update_chunk(self):
-        self.clean_up_energy()
         self.update_observable()
         self.update_polarization()
         self.update_time()
@@ -1573,25 +1572,6 @@ class Espadons(InstrumentType):
                 mjd_obs = mjd_obs.value
         return mjd_obs
 
-    def _get_espadons_energy_resolving_power(self):
-        instmode = self._headers[self._extension].get('INSTMODE')
-        if instmode is None or 'R=' not in instmode:
-            # CW - Default if resolving power value not in header
-            # caom2IngestEspadons.py, l377
-            result = 65000.0
-        else:
-            # CW - This string is already in instrument keywords but also
-            # need to extract resolving power from it:
-            # 'Spectroscopy, star only, R=80,000'
-            temp = instmode.split('R=')
-            values = temp[1].split(',')
-            if len(values) == 1:
-                result = values[0]
-            else:
-                result = f'{values[0]}{values[1]}'
-            result = mc.to_float(result)
-        return result
-
     def make_axes_consistent(self):
         if not (
             self._chunk.naxis is not None and self._chunk.position is None
@@ -1626,7 +1606,7 @@ class Espadons(InstrumentType):
                 cc.reset_position(self._chunk)
 
     def update_energy(self):
-        self._logger.debug(f'Begin _update_energy_espadons for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin update_energy for {self._cfht_name.obs_id}')
         if (
             self._cfht_name.suffix
             in [
@@ -1659,7 +1639,7 @@ class Espadons(InstrumentType):
             ref_coord_2 = RefCoord(1.5, crval1 + float(naxis1) * cdelt1)
             coord_range = CoordRange1D(ref_coord_1, ref_coord_2)
             coord_axis = CoordAxis1D(axis=axis, range=coord_range)
-            resolving_power = self._get_espadons_energy_resolving_power()
+            resolving_power = self.get_energy_resolving_power(self.extension)
             self._chunk.energy = SpectralWCS(
                 coord_axis,
                 specsys='TOPOCENT',
@@ -1667,10 +1647,12 @@ class Espadons(InstrumentType):
                 resolving_power=resolving_power,
             )
             self._chunk.energy_axis = 1
-        self._logger.debug(f'End _update_energy_espadons for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End update_energy for {self._cfht_name.obs_id}')
 
     def update_observable(self):
-        self._logger.debug(f'Begin _update_observable for {self._cfht_name.obs_id}')
+        self._logger.debug(
+            f'Begin update_observable for {self._cfht_name.obs_id}'
+        )
         if self._cfht_name.suffix in ['i', 'p']:
             # caom2IngestEspadons.py, l828
             # CW Set up observable axes, row 1 is wavelength, row 2 is
@@ -1700,7 +1682,9 @@ class Espadons(InstrumentType):
                     )
                     new_chunk._id = Chunk._gen_id()
                     self.part.chunks.append(new_chunk)
-        self._logger.debug(f'End _update_observable for {self._cfht_name.obs_id}')
+        self._logger.debug(
+            f'End _update_observable for {self._cfht_name.obs_id}'
+        )
 
     def update_observation(self):
         super(Espadons, self).update_observation()
@@ -2634,7 +2618,7 @@ class Wircam(InstrumentType):
         return result
 
     def get_obs_type(self, ext):
-        result = self._get_obstype(ext)
+        result = super().get_obs_type(ext)
         # caom2IngestWircamdetrend.py, l369
         if 'weight' in self._cfht_name.file_uri:
             result = 'WEIGHT'
@@ -2793,9 +2777,6 @@ class Wircam(InstrumentType):
             self._chunk.energy.ssyssrc = 'TOPOCENT'
             # values from caom2megacam.default, caom2megacamdetrend.default
             self._chunk.energy.axis.error = CoordError(1.0, 1.0)
-
-    # def update_observation(self):
-    #     if self._cfht_name.suffix in ['p', 'y']:
 
     def update_plane(self):
         super(Wircam, self).update_plane()
@@ -3106,8 +3087,7 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
-def factory(headers, cfht_name,
-):
+def factory(headers, cfht_name):
     if cfht_name.instrument is md.Inst.ESPADONS:
         temp = Espadons(headers, cfht_name)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
