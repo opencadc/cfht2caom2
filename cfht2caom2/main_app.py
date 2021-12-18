@@ -398,32 +398,11 @@ def _accumulate_espadons_bp(bp, cfht_name):
     # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
     bp.add_fits_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
-    bp.set(
-        'Plane.provenance.keywords',
-        'get_espadons_provenance_keywords()',
-    )
-    bp.set(
-        'Plane.provenance.lastExecuted',
-        'get_espadons_provenance_last_executed()',
-    )
-    bp.set('Plane.provenance.name', 'get_espadons_provenance_name()')
-    bp.set(
-        'Plane.provenance.project',
-        'get_espadons_provenance_project()',
-    )
-    bp.set(
-        'Plane.provenance.reference',
-        'get_espadons_provenance_reference()',
-    )
-    bp.set(
-        'Plane.provenance.version',
-        'get_espadons_provenance_version()',
-    )
-
-    bp.set(
-        'Chunk.energy.resolvingPower',
-        'get_espadons_energy_resolving_power()',
-    )
+    bp.set('Plane.provenance.keywords', 'get_provenance_keywords()')
+    bp.set('Plane.provenance.name', 'get_provenance_name()')
+    bp.set('Plane.provenance.project', 'get_provenance_project()')
+    bp.set('Plane.provenance.reference', 'get_provenance_reference()')
+    bp.set('Plane.provenance.version', 'get_provenance_version()')
 
     # constants from caom2espadons.config
     bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
@@ -449,17 +428,8 @@ def _accumulate_espadons_bp(bp, cfht_name):
 
     bp.add_fits_attribute('Chunk.position.equinox', 'EQUINOX')
 
-    bp.set(
-        'Chunk.time.axis.function.delta',
-        'get_espadons_time_refcoord_delta()',
-    )
-    bp.set(
-        'Chunk.time.axis.function.refCoord.val',
-        'get_espadons_time_refcoord_val()',
-    )
-
-    bp.set('Chunk.time.exposure', 'get_espadons_exptime()')
-    bp.set('Chunk.time.resolution', 'get_espadons_exptime()')
+    bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
+    bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()')
 
     if cfht_name.suffix == 'p':
         bp.configure_polarization_axis(6)
@@ -482,10 +452,6 @@ def _accumulate_mega_bp(bp, cfht_name):
     """
     logging.debug('Begin _accumulate_mega_bp.')
 
-    bp.set(
-        'Plane.provenance.lastExecuted',
-        'get_mega_provenance_last_executed()',
-    )
     bp.set_default('Plane.provenance.name', 'ELIXIR')
     bp.set_default(
         'Plane.provenance.reference',
@@ -504,22 +470,14 @@ def _accumulate_sitelle_bp(bp, cfht_name):
     if cfht_name.suffix == 'v':
         bp.set('Observation.intent', ObservationIntentType.SCIENCE)
         bp.set('Observation.sequenceNumber', cfht_name.product_id[:-1])
-        bp.set('Plane.dataRelease', 'get_sitelle_v_plane_data_release()')
         bp.clear('Plane.provenance.version')
         bp.add_fits_attribute('Plane.provenance.version', 'PROGRAM')
         bp.set('Artifact.productType', ProductType.SCIENCE)
-    bp.set('Plane.dataProductType', 'get_sitelle_plane_data_product_type()')
     bp.set_default('Plane.provenance.name', 'ORBS')
     bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
 
     bp.set(
-        'Chunk.energy.resolvingPower',
-        'get_sitelle_energy_resolving_power()',
-    )
-
-    bp.set(
-        'Chunk.time.axis.function.delta',
-        'get_sitelle_time_refcoord_delta()',
+        'Chunk.time.axis.function.delta', 'get_time_refcoord_delta()'
     )
     bp.set('Chunk.time.axis.function.refCoord.val', '_get_mjd_start()')
 
@@ -536,14 +494,14 @@ def _accumulate_spirou_bp(bp, cfht_name):
     if cfht_name.suffix == 'r':
         pass
     elif cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
-        bp.set('Plane.provenance.name', 'get_spirou_provenance_name()')
+        bp.set('Plane.provenance.name', 'get_provenance_name()')
         bp.set(
             'Plane.provenance.reference',
             'http://www.cfht.hawaii.edu/Instruments/SPIRou/',
         )
         bp.set(
             'Plane.provenance.version',
-            'get_spirou_provenance_version()',
+            'get_provenance_version()',
         )
     else:
         bp.set('Plane.provenance.name', 'DRS')
@@ -613,15 +571,12 @@ def _accumulate_spirou_bp(bp, cfht_name):
 
     if cfht_name.suffix not in ['g', 'p']:
         bp.set(
-            'Chunk.time.axis.function.delta',
-            'get_spirou_time_refcoord_delta()',
+            'Chunk.time.axis.function.delta', 'get_time_refcoord_delta()'
         )
         bp.set(
-            'Chunk.time.axis.function.naxis',
-            'get_spirou_time_refcoord_naxis()',
+            'Chunk.time.axis.function.naxis', 'get_time_refcoord_naxis()'
         )
-        bp.set('Chunk.time.exposure', 'get_spirou_exptime()')
-        bp.set('Chunk.time.resolution', 'get_spirou_resolution()')
+        bp.set('Chunk.time.resolution', 'get_time_resolution()')
 
     if cfht_name.suffix == 'p':
         bp.configure_polarization_axis(7)
@@ -636,16 +591,15 @@ def _accumulate_wircam_bp(bp, cfht_name):
     Observation level.
     """
     logging.debug('Begin _accumulate_wircam_bp.')
-    bp.set('Observation.type', 'get_wircam_obs_type()')
 
-    bp.set('Plane.provenance.keywords', 'get_wircam_provenance_keywords()')
+    bp.set('Plane.provenance.keywords', 'get_provenance_keywords()')
     bp.set_default('Plane.provenance.name', 'IIWI')
     bp.set_default(
         'Plane.provenance.reference',
         'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam',
     )
 
-    bp.set('Chunk.energy.bandpassName', 'get_wircam_bandpass_name(header)')
+    bp.set('Chunk.energy.bandpassName', 'get_bandpass_name(header)')
 
     logging.debug('Done _accumulate_wircam_bp.')
 

@@ -84,6 +84,7 @@ from caom2utils.fits2caom2 import WcsParser
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
+from caom2pipe import translate_composable as tc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 from cfht2caom2 import cfht_builder
@@ -94,6 +95,8 @@ __all__ = [
     'instrument_factory',
     'InstrumentType',
 ]
+
+APPLICATION = 'cfht2caom2'
 
 
 class ProvenanceType(Enum):
@@ -1281,14 +1284,208 @@ class InstrumentBlueprint:
         self._cfht_name = storage_name
         self._logger = logging.getLogger(self.__class__.__name__)
 
+    # def accumulate_bp(self, bp, cfht_name):
+    #     """Configure the telescope-specific ObsBlueprint at the CAOM model
+    #     Observation level.
+    #
+    #     This code captures the portion of the TDM->CAOM model mapping, where
+    #     the relationship is one or many elements of the TDM are required to set
+    #     individual elements of the CAOM model. If the mapping cardinality is 1:1
+    #     generally, use add_fits_attribute. If the mapping cardinality is n:1 use
+    #     the set method to reference a function call.
+    #     """
+    #     self._logger.debug('Begin accumulate_bp.')
+    #     bp.configure_position_axes((1, 2))
+    #     if not (
+    #             cfht_name.suffix == 'p' and cfht_name.instrument == md.Inst.SPIROU
+    #     ):
+    #         # TODO if instrument == SITELLE and suffix == 'p', energy_axis == 3
+    #         # it will remove all the if instrument == sitelle and suffix = 'p'
+    #         # in the get_energy_* functions
+    #         bp.configure_time_axis(3)
+    #     if cfht_name.has_energy:
+    #         bp.configure_energy_axis(4)
+    #     bp.configure_observable_axis(6)
+    #
+    #     bp.set('Observation.intent', 'get_obs_intent()')
+    #
+    #     meta_producer = mc.get_version(APPLICATION)
+    #     bp.set('Observation.metaProducer', meta_producer)
+    #     bp.set('Observation.metaRelease', 'get_meta_release()')
+    #
+    #     bp.set('Observation.sequenceNumber', 'get_obs_sequence_number()')
+    #     bp.set('Observation.type', 'get_obs_type()')
+    #
+    #     bp.set_default('Observation.algorithm.name', None)
+    #
+    #     bp.set(
+    #         'Observation.environment.elevation',
+    #         'get_environment_elevation()',
+    #     )
+    #     bp.set(
+    #         'Observation.environment.humidity',
+    #         'get_obs_environment_humidity()',
+    #     )
+    #
+    #     # title is select title from runid_title where proposal_id = 'runid'
+    #     # this obtained from cache.yml now
+    #     bp.clear('Observation.proposal.id')
+    #     bp.add_fits_attribute('Observation.proposal.id', 'RUNID')
+    #     bp.clear('Observation.proposal.pi')
+    #     bp.add_fits_attribute('Observation.proposal.pi', 'PI_NAME')
+    #     bp.set('Observation.proposal.project', 'get_proposal_project()')
+    #     bp.set('Observation.proposal.title', 'get_proposal_title()')
+    #
+    #     bp.set('Observation.instrument.name', cfht_name.instrument.value)
+    #     bp.set(
+    #         'Observation.instrument.keywords',
+    #         'get_instrument_keywords()',
+    #     )
+    #
+    #     bp.set('Observation.target.standard', 'get_target_standard()')
+    #
+    #     bp.clear('Observation.target_position.coordsys')
+    #     bp.add_fits_attribute('Observation.target_position.coordsys', 'OBJRADEC')
+    #     bp.clear('Observation.target_position.equinox')
+    #     bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQN')
+    #     bp.add_fits_attribute('Observation.target_position.equinox', 'OBJEQUIN')
+    #     bp.set(
+    #         'Observation.target_position.point.cval1',
+    #         'get_target_position_cval1()',
+    #     )
+    #     bp.set(
+    #         'Observation.target_position.point.cval2',
+    #         'get_target_position_cval2()',
+    #     )
+    #
+    #     bp.set('Observation.telescope.name', 'CFHT 3.6m')
+    #     x, y, z = ac.get_geocentric_location('cfht')
+    #     bp.set('Observation.telescope.geoLocationX', x)
+    #     bp.set('Observation.telescope.geoLocationY', y)
+    #     bp.set('Observation.telescope.geoLocationZ', z)
+    #
+    #     bp.set('Plane.dataProductType', 'get_plane_data_product_type()')
+    #     bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+    #     bp.set('Plane.dataRelease', 'get_plane_data_release()')
+    #     bp.set('Plane.metaRelease', 'get_meta_release()')
+    #
+    #     bp.set(
+    #         'Plane.provenance.lastExecuted',
+    #         'get_provenance_last_executed()',
+    #     )
+    #     bp.set('Plane.metaProducer', meta_producer)
+    #     bp.set_default('Plane.provenance.producer', 'CFHT')
+    #     bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
+    #     bp.clear('Plane.provenance.runID')
+    #     bp.add_fits_attribute('Plane.provenance.runID', 'CRUNID')
+    #     bp.set('Plane.provenance.version', 'get_provenance_version()')
+    #
+    #     bp.set('Artifact.metaProducer', meta_producer)
+    #     bp.set('Artifact.productType', 'get_product_type()')
+    #     bp.set('Artifact.releaseType', 'data')
+    #
+    #     bp.set('Chunk.metaProducer', meta_producer)
+    #     # hard-coded values from:
+    #     # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
+    #     # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
+    #     #
+    #     # Gemini is all range, make Mega* range too, and WIRCam too
+    #     if cfht_name.instrument not in [
+    #         md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM
+    #     ]:
+    #         bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype()')
+    #         bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit()')
+    #         bp.set('Chunk.energy.axis.error.rnder', 1.0)
+    #         bp.set('Chunk.energy.axis.error.syser', 1.0)
+    #         bp.set(
+    #             'Chunk.energy.axis.function.delta',
+    #             'get_energy_function_delta()',
+    #         )
+    #         bp.set(
+    #             'Chunk.energy.axis.function.naxis',
+    #             'get_energy_function_naxis()',
+    #         )
+    #         bp.set(
+    #             'Chunk.energy.axis.function.refCoord.pix',
+    #             'get_energy_function_pix()',
+    #         )
+    #         bp.set(
+    #             'Chunk.energy.axis.function.refCoord.val',
+    #             'get_energy_function_val()',
+    #         )
+    #         bp.clear('Chunk.energy.bandpassName')
+    #         bp.add_fits_attribute('Chunk.energy.bandpassName', 'FILTER')
+    #         bp.set(
+    #             'Chunk.energy.resolvingPower',
+    #             'get_energy_resolving_power()',
+    #         )
+    #         bp.set('Chunk.energy.specsys', 'TOPOCENT')
+    #         bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
+    #         bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
+    #
+    #     bp.set('Chunk.position.axis.axis1.cunit', 'deg')
+    #     bp.set('Chunk.position.axis.axis2.cunit', 'deg')
+    #
+    #     bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
+    #     bp.set('Chunk.position.axis.error1.syser', 0.0000278)
+    #     bp.set('Chunk.position.axis.error2.rnder', 0.0000278)
+    #     bp.set('Chunk.position.axis.error2.syser', 0.0000278)
+    #
+    #     bp.clear('Chunk.position.coordsys')
+    #     bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
+    #
+    #     if cfht_name.suffix != 'g':
+    #         bp.set('Chunk.time.exposure', 'get_exptime()')
+    #         bp.set('Chunk.time.resolution', 'get_exptime()')
+    #         bp.set('Chunk.time.timesys', 'UTC')
+    #         bp.set('Chunk.time.axis.axis.ctype', 'TIME')
+    #         bp.set('Chunk.time.axis.axis.cunit', 'd')
+    #         bp.set('Chunk.time.axis.error.rnder', 0.0000001)
+    #         bp.set('Chunk.time.axis.error.syser', 0.0000001)
+    #         bp.set('Chunk.time.axis.function.naxis', 1)
+    #
+    #     # TODO - this is really really wrong that is_simple is not sufficient
+    #     # to make the distinction between the appropriate implementations.
+    #     if cfht_name.is_simple and not cfht_name.is_master_cal:
+    #         bp.set(
+    #             'Chunk.time.axis.function.delta',
+    #             'get_time_refcoord_delta_simple()',
+    #         )
+    #         bp.set(
+    #             'Chunk.time.axis.function.refCoord.val',
+    #             'get_time_refcoord_val_simple()',
+    #         )
+    #     else:
+    #         bp.set(
+    #             'Chunk.time.axis.function.delta',
+    #             'get_time_refcoord_delta_derived()',
+    #         )
+    #         bp.set(
+    #             'Chunk.time.axis.function.refCoord.val',
+    #             'get_time_refcoord_val_derived()',
+    #         )
+    #     bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
+    #
+    #     if cfht_name.instrument is md.Inst.ESPADONS:
+    #         _accumulate_espadons_bp(bp, cfht_name)
+    #     elif cfht_name.instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+    #         _accumulate_mega_bp(bp, cfht_name)
+    #     elif cfht_name.instrument is md.Inst.SITELLE:
+    #         _accumulate_sitelle_bp(bp, cfht_name)
+    #     elif cfht_name.instrument is md.Inst.SPIROU:
+    #         _accumulate_spirou_bp(bp, cfht_name)
+    #     elif cfht_name.instrument is md.Inst.WIRCAM:
+    #         _accumulate_wircam_bp(bp, cfht_name)
+    #
+    #     logging.debug('Done accumulate_bp.')
+
     def get_plane_data_product_type(self, ext):
         # caom2wircam.default
         # caom2wircamdetrend.default
-        result = DataProductType.IMAGE
-        # caom2spirou.default
-        if self._cfht_name.instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
-            result = DataProductType.SPECTRUM
-        return result
+        return DataProductType.IMAGE
+
+    def get_bandpass_name(self, ext):
+        pass
 
     def get_calibration_level(self, ext):
         result = CalibrationLevel.CALIBRATED
@@ -1322,70 +1519,26 @@ class InstrumentBlueprint:
     def get_energy_function_delta(self, ext):
         result = None
         if self._has_energy(ext):
-            if self._is_espadons_energy():
-                # caom2IngestEspadons.py l639
-                result = 0.0031764
-            elif self._cfht_name.instrument is md.Inst.SITELLE:
-                # caom2IngestSitelle.py l590
-                if self._cfht_name.suffix == 'p':
-                    result = self._headers[ext].get('CDELT3')
-                else:
-                    # units in file are nm, units in blueprint are Angstroms
-                    result = 10.0 * mc.to_float(
-                        self._headers[ext].get('FILTERBW')
-                    )
-            else:
-                filter_name = self._headers[ext].get('FILTER')
-                temp, ignore = self._get_filter_md(filter_name)
-                result = ac.FilterMetadataCache.get_fwhm(temp)
+            filter_name = self._headers[ext].get('FILTER')
+            temp, ignore = self._get_filter_md(filter_name)
+            result = ac.FilterMetadataCache.get_fwhm(temp)
         return result
 
     def get_energy_function_naxis(self, ext):
-        result = 1.0
-        if self._is_espadons_energy():
-            # caom2IngestEspadons.py l636
-            result = 213542
-        elif self._cfht_name.instrument is md.Inst.SITELLE:
-            if self._cfht_name.suffix == 'p':
-                result = self._headers[ext].get('NAXIS3', 1.0)
-            else:
-                result = 1.0
-        return result
+        return 1.0
 
     def get_energy_function_pix(self, ext):
         result = None
         if self._has_energy(ext):
             result = 1.0
-            if self._is_espadons_energy():
-                # caom2IngestEspadons.py l637
-                result = 0.5
-            elif self._cfht_name.instrument is md.Inst.SITELLE:
-                # caom2IngestSitelle.py l590
-                if self._cfht_name.suffix == 'p':
-                    result = self._headers[ext].get('CRPIX3', 0.5)
-                else:
-                    result = 0.5
         return result
 
     def get_energy_function_val(self, ext):
         result = None
         if self._has_energy(ext):
-            if self._is_espadons_energy():
-                # caom2IngestEspadons.py l638
-                result = 370.0
-            elif self._cfht_name.instrument is md.Inst.SITELLE:
-                # caom2IngestSitelle.py l590
-                if self._cfht_name.suffix == 'p':
-                    result = self._headers[ext].get('CRVAL3')
-                else:
-                    # units in file are nm, units in blueprint are Angstroms
-                    result = 10.0 * mc.to_float(
-                        self._headers[ext].get('FILTERLB')
-                    )
-            else:
-                filter_name = self._headers[ext].get('FILTER')
-                temp, ignore = self._get_filter_md(filter_name)
-                result = ac.FilterMetadataCache.get_central_wavelength(temp)
+            filter_name = self._headers[ext].get('FILTER')
+            temp, ignore = self._get_filter_md(filter_name)
+            result = ac.FilterMetadataCache.get_central_wavelength(temp)
         return result
 
     def get_energy_resolving_power(self, ext):
@@ -1410,10 +1563,6 @@ class InstrumentBlueprint:
 
     def get_exptime(self, ext):
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
-        if self._cfht_name.instrument is md.Inst.SITELLE:
-            if self._cfht_name.suffix == 'p':
-                num_steps = self._headers[ext].get('STEPNB', 1)
-                exptime = exptime * num_steps
         # units are seconds
         if exptime is None:
             if self._cfht_name.is_simple:
@@ -1421,141 +1570,23 @@ class InstrumentBlueprint:
                 exptime = 0.0
         return exptime
 
-    def get_espadons_energy_resolving_power(self, ext):
-        result = None
-        if self._has_energy(ext):
-            instmode = self._headers[ext].get('INSTMODE')
-            if instmode is None or 'R=' not in instmode:
-                # CW - Default if resolving power value not in header
-                # caom2IngestEspadons.py, l377
-                result = 65000.0
-            else:
-                # CW - This string is already in instrument keywords but also
-                # need to extract resolving power from it:
-                # 'Spectroscopy, star only, R=80,000'
-                temp = instmode.split('R=')
-                values = temp[1].split(',')
-                if len(values) == 1:
-                    result = values[0]
-                else:
-                    result = f'{values[0]}{values[1]}'
-                result = mc.to_float(result)
-        return result
+    def get_provenance_keywords(self, ext):
+        pass
 
-    def get_espadons_exptime(self, ext):
-        exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
-        if self._cfht_name.suffix == 'p':
-            # caom2IngestEspadons.py, l406
-            exptime = 0.0
-            polar_seq = mc.to_int(self._headers[ext].get('POLARSEQ'))
-            for ii in range(1, polar_seq + 1):
-                exptime += mc.to_float(self._headers[ext].get(f'EXPTIME{ii}'))
-        # units are seconds
-        if exptime is None:
-            if self._cfht_name.is_simple:
-                # caom2IngestMegacaomdetrend.py, l438
-                exptime = 0.0
-        return exptime
+    def get_provenance_name(self, ext):
+        pass
 
-    def get_espadons_provenance_keywords(self, ext):
-        result = None
-        if self._cfht_name.suffix in ['i', 'p']:
-            temp = self._headers[ext].get('REDUCTIO')
-            if temp is not None:
-                result = f'reduction={temp}'
-        return result
+    def get_provenance_project(self, ext):
+        pass
 
-    def get_espadons_provenance_last_executed(self, ext):
-        result = None
-        comments = self._headers[ext].get('COMMENT')
-        if comments is not None:
-            for comment in comments:
-                if 'Upena processing date:' in comment:
-                    result = comment.split('Upena processing date: ')[1]
-                    # format like Fri Mar 13 22:51:55 HST 2009, which default
-                    # code doesn't understand
-                    result = mc.make_time(result)
-                    break
-                elif 'opera-' in comment:
-                    result = comment.split('opera-')[1].split(' build date')[0]
-                    break
-        return result
+    def get_provenance_reference(self, ext):
+        pass
 
-    def get_espadons_provenance_name(self, ext):
-        result = 'TCS'  # ESPaDOnS
-        comments = self._headers[ext].get('COMMENT')
-        if comments is not None:
-            for comment in comments:
-                if 'Upena' in comment:
-                    result = 'UPENA'
-                    break
-                elif 'opera-' in comment:
-                    result = 'OPERA'
-                    break
-        return result
+    def get_time_refcoord_delta(self, ext):
+        pass
 
-    def get_espadons_provenance_project(self, ext):
-        result = 'STANDARD PIPELINE'
-        if self.get_espadons_provenance_name(ext) == 'TCS':
-            result = None
-        return result
-
-    def get_espadons_provenance_reference(self, ext):
-        result = (
-            'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/'
-        )
-        temp = self.get_espadons_provenance_name(ext)
-        if temp == 'UPENA':
-            result = 'http://www.cfht.hawaii.edu/Instruments/Upena/'
-        return result
-
-    def get_espadons_provenance_version(self, ext):
-        result = None
-        comments = self._headers[ext].get('COMMENT')
-        if comments is not None:
-            for comment in comments:
-                if 'Upena version' in comment:
-                    result = comment.split('Upena version')[1]
-                    break
-                elif 'opera-' in comment and 'build date' in comment:
-                    result = comment.split(' build date')[0]
-                    break
-        return result
-
-    def get_espadons_time_refcoord_delta(self, ext):
-        exptime = self.get_espadons_exptime(ext)
-        return exptime / 86400.0  # units are d
-
-    def get_espadons_time_refcoord_val(self, ext):
-        if self._cfht_name.suffix == 'p':
-            mjd_start1 = self._headers[ext].get('MJDSTART1')
-            mjd_date1 = self._headers[ext].get('MJDATE1')
-            mjd_obs = None
-            if mjd_start1 is not None or mjd_date1 is not None:
-                # caom2IngestEspadons.py, l406
-                if mjd_start1 is not None:
-                    mjd_obs = mjd_start1
-                else:
-                    mjd_obs = mjd_date1
-        else:
-            mjd_obs = self._get_mjd_obs(ext)
-            if mjd_obs is None:
-                date_obs = self._headers[ext].get('DATE-OBS')
-                time_obs = self._headers[ext].get('TIME-OBS')
-                if (
-                        date_obs is None
-                        or time_obs is None
-                        or date_obs == '1970-01-01'
-                        or date_obs == '1970-00-01'
-                ):
-                    hst_time = self._headers[ext].get('HSTTIME)')
-                    # fmt 'Mon Nov 27 15:58:17 HST 2006'
-                    mjd_obs = ac.get_datetime(hst_time)
-                else:
-                    mjd_obs_str = f'{date_obs}T{time_obs}'
-                    mjd_obs = ac.get_datetime(mjd_obs_str)
-                mjd_obs = mjd_obs.value
-        return mjd_obs
+    def get_time_refcoord_val(self, ext):
+        pass
 
     def get_instrument_keywords(self, ext):
         inst_mode = self._headers[ext].get('INSTMODE')
@@ -1572,14 +1603,6 @@ class InstrumentBlueprint:
         result = ','.join(filter(None, (inst_mode, sit_step, sit_steps)))
         if 'Unknown' in result:
             result = 'Unknown'
-        return result
-
-    def get_mega_provenance_last_executed(self, ext):
-        result = self.get_provenance_last_executed(ext)
-        if result is None:
-            result = self._headers[ext].get('DATEPROC')
-            if result is not None:
-                result = mc.make_time(result)
         return result
 
     def get_meta_release(self, ext):
@@ -1703,18 +1726,6 @@ class InstrumentBlueprint:
                             result = f'{rel_year}-02-28T00:00:00'
         return result
 
-    def get_sitelle_v_plane_data_release(self, ext):
-        # REL_DATE not in header, RUN_ID not in header, derive from DATE-OBS
-        result = None
-        rel_date = self._headers[ext].get(
-            'REL_DATE', self._headers[ext].get('DATE-OBS')
-        )
-        if rel_date is not None:
-            rel_date_dt = mc.make_time(rel_date)
-            # add approximately 13 months
-            result = rel_date_dt + timedelta(days=13 * 30)
-        return result
-
     def get_polarization_function_val(self, ext):
         lookup = {'I': 1, 'Q': 2, 'U': 3, 'V': 4, 'W': 5}
         result = 6
@@ -1789,131 +1800,12 @@ class InstrumentBlueprint:
     def get_ra_deg_from_0th_header(self, ext):
         return self._headers[ext].get('RA_DEG')
 
-    def get_sitelle_energy_resolving_power(self, ext):
-        result = None
-        if self._has_energy(ext):
-            # from caom2IngestSitelle.py, l555+
-            sitresol = self._headers[ext].get('SITRESOL')
-            if sitresol is not None and sitresol > 0.0:
-                result = sitresol
-            if result is None:
-                result = 1.0
-                if self._cfht_name.suffix in ['a', 'c', 'f', 'o', 'x']:
-                    # from caom2IngestSitelle.py, l596
-                    crval3 = mc.to_float(self._headers[ext].get('FILTERLB'))
-                    cdelt3 = mc.to_float(self._headers[ext].get('FILTERBW'))
-                    if crval3 is not None and cdelt3 is not None:
-                        result = crval3 / cdelt3
-        return result
-
-    def get_sitelle_plane_data_product_type(self, ext):
-        result = DataProductType.IMAGE
-        if self._cfht_name.is_derived_sitelle:
-            result = DataProductType.CUBE
-        return result
-
-    def get_sitelle_time_refcoord_delta(self, ext):
-        if self._cfht_name.suffix == 'p':
-            delta = None
-            mjd_start = self._get_mjd_start(ext)
-            mjd_end = mc.to_float(self._headers[ext].get('MJDEND'))
-            # caom2IngestSitelle.py, l704
-            if mjd_start is not None and mjd_end is not None:
-                delta = mjd_end - mjd_start
-            else:
-                exp_time = self._headers[ext].get('EXPTIME')
-                if exp_time is None:
-                    delta = mjd_start
-        else:
-            exp_time = mc.to_float(self._headers[ext].get('EXPTIME'))
-            if exp_time is None:
-                exp_time = mc.to_float(self._headers[ext].get('DARKTIME'))
-            delta = exp_time / 86400.0
-        return delta
-
-    def get_spirou_exptime(self, ext):
-        # caom2IngestSpirou.py, l530+
-        if self._cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
-            result = self._headers[ext].get('EXPTIME')
-        elif self._cfht_name.suffix == 'p':
-            result = self._headers[ext].get('TOTETIME')
-        else:
-            result = self._headers[ext].get('DARKTIME')
-        if result is None:
-            self._logger.warning(f'No Time WCS refcoord.delta value for '
-                            f'{self._cfht_name.file_uri}.'
-            )
-        return result
-
-    def get_spirou_provenance_name(self, ext):
-        result = None
-        temp = self._headers[ext].get('RAMPSWV')
-        if temp is not None:
-            result = temp.split(' v')[0]
-        return result
-
-    def get_spirou_provenance_version(self, ext):
-        result = None
-        temp = self._headers[ext].get('RAMPSWV')
-        if temp is not None:
-            result = temp.split(' v')[1]
-        return result
-
-    def get_spirou_resolution(self, ext):
-        # caom2IngestSpirou.py, l530+
-        result = self.get_spirou_time_refcoord_delta(ext)
-        if self._cfht_name.suffix == 'r':
-            result = result * (24.0 * 3600.0)
-        else:
-            result = self.get_spirou_exptime(ext)
-        if result is None:
-            self._logger.warning(
-                f'No Time WCS resolution value for {self._cfht_name.file_uri}.'
-            )
-        return result
-
-    def get_spirou_time_refcoord_delta(self, ext):
-        # caom2IngestSpirou.py, l530+
-        result = None
-        if self._cfht_name.suffix == 'r':
-            temp = self._headers[ext].get('FRMTIME')
-        elif self._cfht_name.suffix == 'p':
-            temp = self._headers[ext].get('TOTETIME')
-        else:
-            temp = self._headers[ext].get('DARKTIME')
-        if temp is None:
-            self._logger.warning(
-                f'No Time WCS refcoord.delta value for '
-                f'{self._cfht_name.file_uri}.'
-            )
-        else:
-            result = temp / (24.0 * 3600.0)
-        return result
-
-    def get_spirou_time_refcoord_naxis(self, ext):
-        # caom2IngestSpirou.py, l557
-        result = 1.0
-        if self._cfht_name.suffix == 'r':
-            result = self._headers[ext].get('NREADS')
-        if result is None:
-            self._logger.warning(
-                f'No Time WCS refcoord.naxis value for '
-                f'{self._cfht_name.file_uri}.'
-            )
-        return result
-
     def get_target_position_cval1(self, ext):
         ra, ignore_dec = self._get_ra_dec(ext)
-        if ra is None:
-            if self._cfht_name.instrument is md.Inst.ESPADONS:
-                ra = self._headers[ext].get('RA_DEG')
         return ra
 
     def get_target_position_cval2(self, ext):
         ignore_ra, dec = self._get_ra_dec(ext)
-        if dec is None:
-            if self._cfht_name.instrument is md.Inst.ESPADONS:
-                dec = self._headers[ext].get('DEC_DEG')
         return dec
 
     def get_target_standard(self, ext):
@@ -1931,9 +1823,9 @@ class InstrumentBlueprint:
                         result = False
                 else:
                     if (
-                            'flat' in obj_name
-                            or 'focus' in obj_name
-                            or 'zenith' in obj_name
+                        'flat' in obj_name
+                        or 'focus' in obj_name
+                        or 'zenith' in obj_name
                     ):
                         result = False
                     else:
@@ -1997,42 +1889,8 @@ class InstrumentBlueprint:
             result = result.value
         return result
 
-    def get_wircam_bandpass_name(self, ext):
-        wheel_a = self._headers[ext].get('WHEELADE')
-        wheel_b = self._headers[ext].get('WHEELBDE')
-        result = None
-        if wheel_a == 'Open' and wheel_b != 'Open':
-            result = wheel_b
-        elif wheel_b == 'Open' and wheel_a != 'Open':
-            result = wheel_a
-        elif wheel_a == 'Open' and wheel_b == 'Open':
-            result = 'Open'
-        return result
-
-    def get_wircam_obs_type(self, ext):
-        result = self._get_obstype(ext)
-        # caom2IngestWircamdetrend.py, l369
-        if 'weight' in self._cfht_name.file_uri:
-            result = 'WEIGHT'
-        elif(
-            'badpix' in self._cfht_name.file_uri
-            or 'hotpix' in self._cfht_name.file_uri
-            or 'deadpix' in self._cfht_name.file_uri
-        ):
-            result = 'BPM'
-        elif self._cfht_name.suffix == 'g' and result is None:
-            result = 'GUIDE'
-        return result
-
-    def get_wircam_provenance_keywords(self, ext):
-        result = None
-        if self._cfht_name.suffix in ['p', 's']:
-            # caom2IngestWircam.py, l1063
-            if self._cfht_name.suffix == 'p':
-                result = 'skysubtraction=yes'
-            else:
-                result = 'skysubtraction=no'
-        return result
+    def get_time_resolution(self, ext):
+        pass
 
     def _get_filename(self, ext):
         return self._headers[ext].get('FILENAME')
@@ -2069,7 +1927,11 @@ class InstrumentBlueprint:
             obj_ra_dec = obj_ra_dec.lower()
         ra = None
         dec = None
-        if obj_ra is not None and obj_dec is not None and obj_ra_dec is not None:
+        if (
+            obj_ra is not None
+            and obj_dec is not None
+            and obj_ra_dec is not None
+        ):
             if obj_ra_dec == 'gappt' or obj_ra_dec == 'null':
                 # SF 18-12-19
                 # seb 4:01 PM
@@ -2094,7 +1956,8 @@ class InstrumentBlueprint:
                 # caom2IngestWircamdetrend.py, l314
                 # caom2IngestEspadons.py, l522
                 self._logger.warning(
-                    f'Setting RUNID to default 17BE for {self._headers[ext].get("FILENAME")}.'
+                    f'Setting RUNID to default 17BE for '
+                    f'{self._headers[ext].get("FILENAME")}.'
                 )
                 run_id = '17BE'
             else:
@@ -2118,15 +1981,6 @@ class InstrumentBlueprint:
         # also from caom2IngestEspadons.py, l393, despite an existing example
         # with energy information
         return obs_type not in ['BIAS', 'DARK']
-
-    def _is_espadons_energy(self):
-        result = False
-        if self._cfht_name.instrument is md.Inst.ESPADONS:
-            if self._cfht_name.suffix in [
-                'a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x'
-            ]:
-                result = True
-        return result
 
     def _get_filter_md(self, filter_name):
         filter_md = md.filter_cache.get_svo_filter(
@@ -2237,17 +2091,17 @@ class InstrumentBlueprint:
             run_id = self._headers[0].get('CRUNID')
             # xor
             if (
-                    run_id is None
-                    and not (
+                run_id is None
+                and not (
                     self._cfht_name.instrument is md.Inst.SPIROU
                     and self._cfht_name.suffix == 'g'
-            )
+                )
             ) or (
-                    run_id is not None
-                    and (
-                            self._cfht_name.instrument is md.Inst.SPIROU
-                            and self._cfht_name.suffix == 'g'
-                    )
+                run_id is not None
+                and (
+                    self._cfht_name.instrument is md.Inst.SPIROU
+                    and self._cfht_name.suffix == 'g'
+                )
             ):
                 if len(self._headers) > 1:
                     idx = 1
@@ -2286,7 +2140,6 @@ class InstrumentBlueprint:
                     # value update is expressly NOT done, because the CD4_4
                     # value is already set from the first pass-through - need
                     # to figure out a way to fix this .... sigh
-                    from caom2pipe import translate_composable as tc
                     previous_headers = self._headers
                     self._headers = unmodified_headers[1:]
                     tc.add_headers_to_obs_by_blueprint(
@@ -2477,14 +2330,6 @@ class InstrumentBlueprint:
         if not result and not self._cfht_name.is_simple:
             result = True
             derived_type = ProvenanceType.FILENAME
-        if self._cfht_name.is_derived_sitelle and self._cfht_name.suffix == 'z':
-            result = True
-            derived_type = ProvenanceType.UNDEFINED
-        if self._cfht_name.instrument is md.Inst.MEGAPRIME and self._cfht_name.suffix == 'p':
-            # 'p' files are processed and do have IMCMB inputs, but they are
-            # additional planes on SimpleObservations, not Derived. See header
-            # discussion.
-            result = False
         return result, derived_type
 
     @staticmethod
@@ -2572,11 +2417,351 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
-class SitelleInstrumentBlueprint(InstrumentBlueprint):
+class EspadonsBlueprint(InstrumentBlueprint):
 
     def __init__(self, headers, storage_name):
         super().__init__(headers, storage_name)
         self._logger = logging.getLogger(self.__class__.__name__)
+
+    def _is_espadons_energy(self):
+        result = False
+        if self._cfht_name.suffix in [
+            'a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x'
+        ]:
+            result = True
+        return result
+
+    def get_energy_function_delta(self, ext):
+        result = None
+        if self._is_espadons_energy():
+            # caom2IngestEspadons.py l639
+            result = 0.0031764
+        return result
+
+    def get_energy_function_naxis(self, ext):
+        result = 1.0
+        if self._is_espadons_energy():
+            # caom2IngestEspadons.py l636
+            result = 213542
+        return result
+
+    def get_energy_function_pix(self, ext):
+        result = None
+        if self._has_energy(ext) and self._is_espadons_energy():
+            # caom2IngestEspadons.py l637
+            result = 0.5
+        return result
+
+    def get_energy_function_val(self, ext):
+        result = None
+        if self._has_energy(ext) and self._is_espadons_energy():
+            # caom2IngestEspadons.py l638
+            result = 370.0
+        return result
+
+    def get_energy_resolving_power(self, ext):
+        result = None
+        if self._has_energy(ext):
+            instmode = self._headers[ext].get('INSTMODE')
+            if instmode is None or 'R=' not in instmode:
+                # CW - Default if resolving power value not in header
+                # caom2IngestEspadons.py, l377
+                result = 65000.0
+            else:
+                # CW - This string is already in instrument keywords but also
+                # need to extract resolving power from it:
+                # 'Spectroscopy, star only, R=80,000'
+                temp = instmode.split('R=')
+                values = temp[1].split(',')
+                if len(values) == 1:
+                    result = values[0]
+                else:
+                    result = f'{values[0]}{values[1]}'
+                result = mc.to_float(result)
+        return result
+
+    def get_exptime(self, ext):
+        exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
+        if self._cfht_name.suffix == 'p':
+            # caom2IngestEspadons.py, l406
+            exptime = 0.0
+            polar_seq = mc.to_int(self._headers[ext].get('POLARSEQ'))
+            for ii in range(1, polar_seq + 1):
+                exptime += mc.to_float(self._headers[ext].get(f'EXPTIME{ii}'))
+        # units are seconds
+        if exptime is None:
+            if self._cfht_name.is_simple:
+                # caom2IngestMegacaomdetrend.py, l438
+                exptime = 0.0
+        return exptime
+
+    def get_plane_data_product_type(self, ext):
+        return DataProductType.SPECTRUM
+
+    def get_provenance_keywords(self, ext):
+        result = None
+        if self._cfht_name.suffix in ['i', 'p']:
+            temp = self._headers[ext].get('REDUCTIO')
+            if temp is not None:
+                result = f'reduction={temp}'
+        return result
+
+    def get_provenance_last_executed(self, ext):
+        result = None
+        comments = self._headers[ext].get('COMMENT')
+        if comments is not None:
+            for comment in comments:
+                if 'Upena processing date:' in comment:
+                    result = comment.split('Upena processing date: ')[1]
+                    # format like Fri Mar 13 22:51:55 HST 2009, which default
+                    # code doesn't understand
+                    result = mc.make_time(result)
+                    break
+                elif 'opera-' in comment:
+                    result = comment.split('opera-')[1].split(' build date')[0]
+                    break
+        return result
+
+    def get_provenance_name(self, ext):
+        result = 'TCS'  # ESPaDOnS
+        comments = self._headers[ext].get('COMMENT')
+        if comments is not None:
+            for comment in comments:
+                if 'Upena' in comment:
+                    result = 'UPENA'
+                    break
+                elif 'opera-' in comment:
+                    result = 'OPERA'
+                    break
+        return result
+
+    def get_provenance_project(self, ext):
+        result = 'STANDARD PIPELINE'
+        if self.get_provenance_name(ext) == 'TCS':
+            result = None
+        return result
+
+    def get_provenance_reference(self, ext):
+        result = (
+            'http://www.cfht.hawaii.edu/Instruments/Spectroscopy/Espadons/'
+        )
+        temp = self.get_provenance_name(ext)
+        if temp == 'UPENA':
+            result = 'http://www.cfht.hawaii.edu/Instruments/Upena/'
+        return result
+
+    def get_provenance_version(self, ext):
+        result = None
+        comments = self._headers[ext].get('COMMENT')
+        if comments is not None:
+            for comment in comments:
+                if 'Upena version' in comment:
+                    result = comment.split('Upena version')[1]
+                    break
+                elif 'opera-' in comment and 'build date' in comment:
+                    result = comment.split(' build date')[0]
+                    break
+        return result
+
+    def get_target_position_cval1(self, ext):
+        ra = super().get_target_position_cval1(ext)
+        if ra is None:
+            ra = self._headers[ext].get('RA_DEG')
+        return ra
+
+    def get_target_position_cval2(self, ext):
+        dec = super().get_target_position_cval2(ext)
+        if dec is None:
+            dec = self._headers[ext].get('DEC_DEG')
+        return dec
+
+    def get_time_refcoord_delta(self, ext):
+        exptime = self.get_exptime(ext)
+        return exptime / 86400.0  # units are d
+
+    def get_time_refcoord_val(self, ext):
+        if self._cfht_name.suffix == 'p':
+            mjd_start1 = self._headers[ext].get('MJDSTART1')
+            mjd_date1 = self._headers[ext].get('MJDATE1')
+            mjd_obs = None
+            if mjd_start1 is not None or mjd_date1 is not None:
+                # caom2IngestEspadons.py, l406
+                if mjd_start1 is not None:
+                    mjd_obs = mjd_start1
+                else:
+                    mjd_obs = mjd_date1
+        else:
+            mjd_obs = self._get_mjd_obs(ext)
+            if mjd_obs is None:
+                date_obs = self._headers[ext].get('DATE-OBS')
+                time_obs = self._headers[ext].get('TIME-OBS')
+                if (
+                        date_obs is None
+                        or time_obs is None
+                        or date_obs == '1970-01-01'
+                        or date_obs == '1970-00-01'
+                ):
+                    hst_time = self._headers[ext].get('HSTTIME)')
+                    # fmt 'Mon Nov 27 15:58:17 HST 2006'
+                    mjd_obs = ac.get_datetime(hst_time)
+                else:
+                    mjd_obs_str = f'{date_obs}T{time_obs}'
+                    mjd_obs = ac.get_datetime(mjd_obs_str)
+                mjd_obs = mjd_obs.value
+        return mjd_obs
+
+
+class MegaBlueprint(InstrumentBlueprint):
+
+    def __init__(self, headers, storage_name):
+        super().__init__(headers, storage_name)
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def _is_derived(self, obs_id):
+        if self._cfht_name.suffix == 'p':
+            # 'p' files are processed and do have IMCMB inputs, but they are
+            # additional planes on SimpleObservations, not Derived. See header
+            # discussion.
+            result = False
+            derived_type = ''
+        else:
+            result, derived_type = super()._is_derived(obs_id)
+        return result, derived_type
+
+    def get_provenance_last_executed(self, ext):
+        result = super().get_provenance_last_executed(ext)
+        if result is None:
+            result = self._headers[ext].get('DATEPROC')
+            if result is not None:
+                result = mc.make_time(result)
+        return result
+
+
+class SitelleBlueprint(InstrumentBlueprint):
+
+    def __init__(self, headers, storage_name):
+        super().__init__(headers, storage_name)
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def _is_derived(self, obs_id):
+        if self._cfht_name.suffix == 'z':
+            result = True
+            derived_type = ProvenanceType.UNDEFINED
+        else:
+            result, derived_type = super()._is_derived(obs_id)
+        return result, derived_type
+
+    def get_energy_function_delta(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # caom2IngestSitelle.py l590
+            if self._cfht_name.suffix == 'p':
+                result = self._headers[ext].get('CDELT3')
+            else:
+                # units in file are nm, units in blueprint are Angstroms
+                result = 10.0 * mc.to_float(
+                    self._headers[ext].get('FILTERBW')
+                )
+        return result
+
+    def get_energy_function_naxis(self, ext):
+        result = 1.0
+        if self._cfht_name.suffix == 'p':
+            result = self._headers[ext].get('NAXIS3', 1.0)
+        return result
+
+    def get_energy_function_pix(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # caom2IngestSitelle.py l590
+            if self._cfht_name.suffix == 'p':
+                result = self._headers[ext].get('CRPIX3', 0.5)
+            else:
+                result = 0.5
+        return result
+
+    def get_energy_function_val(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # caom2IngestSitelle.py l590
+            if self._cfht_name.suffix == 'p':
+                result = self._headers[ext].get('CRVAL3')
+            else:
+                # units in file are nm, units in blueprint are Angstroms
+                result = 10.0 * mc.to_float(
+                    self._headers[ext].get('FILTERLB')
+                )
+        return result
+
+    def get_energy_resolving_power(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # from caom2IngestSitelle.py, l555+
+            sitresol = self._headers[ext].get('SITRESOL')
+            if sitresol is not None and sitresol > 0.0:
+                result = sitresol
+            if result is None:
+                result = 1.0
+                if self._cfht_name.suffix in ['a', 'c', 'f', 'o', 'x']:
+                    # from caom2IngestSitelle.py, l596
+                    crval3 = mc.to_float(self._headers[ext].get('FILTERLB'))
+                    cdelt3 = mc.to_float(self._headers[ext].get('FILTERBW'))
+                    if crval3 is not None and cdelt3 is not None:
+                        result = crval3 / cdelt3
+        return result
+
+    def get_exptime(self, ext):
+        exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
+        if self._cfht_name.suffix == 'p':
+            num_steps = self._headers[ext].get('STEPNB', 1)
+            exptime = exptime * num_steps
+        # units are seconds
+        if exptime is None:
+            if self._cfht_name.is_simple:
+                # caom2IngestMegacaomdetrend.py, l438
+                exptime = 0.0
+        return exptime
+
+    def get_plane_data_product_type(self, ext):
+        result = DataProductType.IMAGE
+        if self._cfht_name.is_derived_sitelle:
+            result = DataProductType.CUBE
+        return result
+
+    def get_plane_data_release(self, ext):
+        if self._cfht_name.suffix == 'v':
+            # REL_DATE not in header, RUN_ID not in header, derive from
+            # DATE-OBS
+            result = None
+            rel_date = self._headers[ext].get(
+                'REL_DATE', self._headers[ext].get('DATE-OBS')
+            )
+            if rel_date is not None:
+                rel_date_dt = mc.make_time(rel_date)
+                # add approximately 13 months
+                result = rel_date_dt + timedelta(days=13 * 30)
+        else:
+            result = super().get_plane_data_release(ext)
+        return result
+
+    def get_time_refcoord_delta(self, ext):
+        if self._cfht_name.suffix == 'p':
+            delta = None
+            mjd_start = self._get_mjd_start(ext)
+            mjd_end = mc.to_float(self._headers[ext].get('MJDEND'))
+            # caom2IngestSitelle.py, l704
+            if mjd_start is not None and mjd_end is not None:
+                delta = mjd_end - mjd_start
+            else:
+                exp_time = self._headers[ext].get('EXPTIME')
+                if exp_time is None:
+                    delta = mjd_start
+        else:
+            exp_time = mc.to_float(self._headers[ext].get('EXPTIME'))
+            if exp_time is None:
+                exp_time = mc.to_float(self._headers[ext].get('DARKTIME'))
+            delta = exp_time / 86400.0
+        return delta
 
     def _update_sitelle_plane(self, observation):
         self._logger.debug(
@@ -2658,11 +2843,132 @@ class SitelleInstrumentBlueprint(InstrumentBlueprint):
         self._logger.debug('End _update_sitelle_plane')
 
 
-class WircamInstrumentBlueprint(InstrumentBlueprint):
+class SpirouBlueprint(InstrumentBlueprint):
 
     def __init__(self, headers, storage_name):
         super().__init__(headers, storage_name)
         self._logger = logging.getLogger(self.__class__.__name__)
+
+    def get_exptime(self, ext):
+        if self._cfht_name.suffix in ['g']:
+            result = super().get_exptime(ext)
+        # caom2IngestSpirou.py, l530+
+        elif self._cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
+            result = self._headers[ext].get('EXPTIME')
+        elif self._cfht_name.suffix == 'p':
+            result = self._headers[ext].get('TOTETIME')
+        else:
+            result = self._headers[ext].get('DARKTIME')
+        if result is None:
+            self._logger.warning(f'No Time WCS refcoord.delta value for '
+                                 f'{self._cfht_name.file_uri}.'
+            )
+        return result
+
+    def get_plane_data_product_type(self, ext):
+        # caom2spirou.default
+        return DataProductType.SPECTRUM
+
+    def get_provenance_name(self, ext):
+        result = None
+        temp = self._headers[ext].get('RAMPSWV')
+        if temp is not None:
+            result = temp.split(' v')[0]
+        return result
+
+    def get_provenance_version(self, ext):
+        result = None
+        temp = self._headers[ext].get('RAMPSWV')
+        if temp is not None:
+            result = temp.split(' v')[1]
+        return result
+
+    def get_time_refcoord_delta(self, ext):
+        # caom2IngestSpirou.py, l530+
+        result = None
+        if self._cfht_name.suffix == 'r':
+            temp = self._headers[ext].get('FRMTIME')
+        elif self._cfht_name.suffix == 'p':
+            temp = self._headers[ext].get('TOTETIME')
+        else:
+            temp = self._headers[ext].get('DARKTIME')
+        if temp is None:
+            self._logger.warning(
+                f'No Time WCS refcoord.delta value for '
+                f'{self._cfht_name.file_uri}.'
+            )
+        else:
+            result = temp / (24.0 * 3600.0)
+        return result
+
+    def get_time_refcoord_naxis(self, ext):
+        # caom2IngestSpirou.py, l557
+        result = 1.0
+        if self._cfht_name.suffix == 'r':
+            result = self._headers[ext].get('NREADS')
+        if result is None:
+            self._logger.warning(
+                f'No Time WCS refcoord.naxis value for '
+                f'{self._cfht_name.file_uri}.'
+            )
+        return result
+
+    def get_time_resolution(self, ext):
+        # caom2IngestSpirou.py, l530+
+        result = self.get_time_refcoord_delta(ext)
+        if self._cfht_name.suffix == 'r':
+            result = result * (24.0 * 3600.0)
+        else:
+            result = self.get_exptime(ext)
+        if result is None:
+            self._logger.warning(
+                f'No Time WCS resolution value for {self._cfht_name.file_uri}.'
+            )
+        return result
+
+
+class WircamBlueprint(InstrumentBlueprint):
+
+    def __init__(self, headers, storage_name):
+        super().__init__(headers, storage_name)
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def get_bandpass_name(self, ext):
+        wheel_a = self._headers[ext].get('WHEELADE')
+        wheel_b = self._headers[ext].get('WHEELBDE')
+        result = None
+        if wheel_a == 'Open' and wheel_b != 'Open':
+            result = wheel_b
+        elif wheel_b == 'Open' and wheel_a != 'Open':
+            result = wheel_a
+        elif wheel_a == 'Open' and wheel_b == 'Open':
+            result = 'Open'
+        return result
+
+    def get_obs_type(self, ext):
+        result = self._get_obstype(ext)
+        # caom2IngestWircamdetrend.py, l369
+        if 'weight' in self._cfht_name.file_uri:
+            result = 'WEIGHT'
+        elif(
+                'badpix' in self._cfht_name.file_uri
+                or 'hotpix' in self._cfht_name.file_uri
+                or 'deadpix' in self._cfht_name.file_uri
+        ):
+            result = 'BPM'
+        elif self._cfht_name.suffix == 'g' and result is None:
+            result = 'GUIDE'
+        return result
+
+    def get_provenance_keywords(self, ext):
+        result = None
+        if self._cfht_name.suffix in ['p', 's']:
+            # caom2IngestWircam.py, l1063
+            if self._cfht_name.suffix == 'p':
+                result = 'skysubtraction=yes'
+            else:
+                result = 'skysubtraction=no'
+        return result
 
     def _update_plane_post(self, observation):
         # complete the ingestion of the missing bits of a sky construct file
@@ -2730,8 +3036,14 @@ def instrument_blueprint_factory(headers, storage_name):
         headers, storage_name.file_name
     )
     if instrument is md.Inst.WIRCAM:
-        return WircamInstrumentBlueprint(headers, storage_name)
+        return WircamBlueprint(headers, storage_name)
     elif instrument is md.Inst.SITELLE:
-        return SitelleInstrumentBlueprint(headers, storage_name)
+        return SitelleBlueprint(headers, storage_name)
+    elif instrument is md.Inst.SPIROU:
+        return SpirouBlueprint(headers, storage_name)
+    elif instrument is md.Inst.ESPADONS:
+        return EspadonsBlueprint(headers, storage_name)
+    elif instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
+        return MegaBlueprint(headers, storage_name)
     else:
         return InstrumentBlueprint(headers, storage_name)
