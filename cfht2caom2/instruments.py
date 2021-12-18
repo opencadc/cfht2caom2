@@ -1209,12 +1209,7 @@ class InstrumentType:
         # relies on update_plane_provenance being called
         if isinstance(observation, DerivedObservation):
             cc.update_observation_members(observation)
-
         self._update_plane_post(observation)
-        # this is here, because the bits that are being copied have been
-        # created/modified by the update_chunk call
-        # self._update_sitelle_plane(observation)
-
         InstrumentType.value_repair.repair(observation)
         self._logger.debug('Done update.')
         return observation
@@ -2777,6 +2772,34 @@ class Wircam(InstrumentType):
             self._chunk.energy.ssyssrc = 'TOPOCENT'
             # values from caom2megacam.default, caom2megacamdetrend.default
             self._chunk.energy.axis.error = CoordError(1.0, 1.0)
+
+    def update_observation(self):
+        self._logger.debug('Begin update_observation.')
+        super().update_observation()
+        # ensure the order of ingestion doesn't change the outcome
+        # at the observation level between 'o' and 'g' files
+        if (
+            self._cfht_name.suffix in ['g', 'o']
+            and self._observation.type == 'GUIDE'
+            and self._observation.intent is ObservationIntentType.CALIBRATION
+        ):
+            g_plane_key = self._cfht_name.product_id.replace('o', 'g')
+            o_plane_key = self._cfht_name.product_id.replace('g', 'o')
+            if (
+                g_plane_key in self._observation.planes.keys()
+                and o_plane_key in self._observation.planes.keys()
+            ):
+                o_artifact_key = self._cfht_name.file_uri.replace('g', 'o')
+                # undo what the 'g' file did at the Observation level
+                o_plane = self._observation.planes[o_plane_key]
+                o_artifact = o_plane.artifacts[o_artifact_key]
+                if o_artifact.product_type == ProductType.SCIENCE:
+                    self._logger.info(
+                        'Changing type to OBJECT, intent to SCIENCE'
+                    )
+                    self._observation.type = 'OBJECT'
+                    self._observation.intent = ObservationIntentType.SCIENCE
+        self._logger.debug('End update_observation.')
 
     def update_plane(self):
         super(Wircam, self).update_plane()
