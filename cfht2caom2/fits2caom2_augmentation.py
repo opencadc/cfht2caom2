@@ -73,7 +73,7 @@ from importlib import import_module
 
 from caom2 import SimpleObservation, DerivedObservation, Algorithm
 from caom2utils import ObsBlueprint, GenericParser, FitsParser
-from cfht2caom2 import instruments, main_app
+from cfht2caom2 import instruments
 
 
 class Fits2caom2Visitor:
@@ -95,7 +95,7 @@ class Fits2caom2Visitor:
             if 'hdf5' in uri:
                 blueprint.set('Artifact.productType', 'science')
             else:
-                main_app.accumulate_bp(blueprint, self._storage_name)
+                instrument_data.accumulate_bp(blueprint)
 
             if len(self._metadata_reader.headers.get(uri)) == 0:
                 self._logger.debug(f'Use a GenericParser for {uri}')
