@@ -69,8 +69,6 @@
 
 import logging
 
-from importlib import import_module
-
 from caom2 import SimpleObservation, DerivedObservation, Algorithm
 from caom2utils import ObsBlueprint, GenericParser, FitsParser
 from cfht2caom2 import instruments
@@ -88,7 +86,7 @@ class Fits2caom2Visitor:
     def visit(self):
         for uri, file_info in self._metadata_reader.file_info.items():
             self._logger.debug(f'Begin observation augmentation for {uri}.')
-            instrument_data = instruments.instrument_blueprint_factory(
+            instrument_data = instruments.factory(
                 self._metadata_reader.headers.get(uri), self._storage_name
             )
             blueprint = ObsBlueprint(instantiated_class=instrument_data)
