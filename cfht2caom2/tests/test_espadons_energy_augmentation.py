@@ -73,13 +73,18 @@ from cfht2caom2 import espadons_energy_augmentation
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
-import test_main_app
+import test_fits2caom2_augmentation
+
+TEST_FILES_DIR = '/test_files'
 
 
 def test_visit():
     product_id = '2460606i'
     f_name = f'{product_id}.fits.gz'
-    obs_fqn = f'{test_main_app.TEST_DATA_DIR}/multi_plane/2460606.expected.xml'
+    obs_fqn = (
+        f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
+        f'multi_plane/2460606.expected.xml'
+    )
     obs = mc.read_obs_from_file(obs_fqn)
 
     # pre-conditions
@@ -91,18 +96,16 @@ def test_visit():
     test_storage_name = cn.CFHTName(
         file_name=f_name, instrument=md.Inst.ESPADONS
     )
-    test_storage_name.source_names = [
-        join(test_main_app.TEST_FILES_DIR, f_name),
-    ]
+    test_storage_name.source_names = [join(TEST_FILES_DIR, f_name)]
     kwargs = {
         'storage_name': test_storage_name,
-        'working_directory': test_main_app.TEST_FILES_DIR,
+        'working_directory': TEST_FILES_DIR,
     }
     cn.cfht_names[uri] = test_storage_name
 
-    test_result = espadons_energy_augmentation.visit(obs, **kwargs)
-    assert test_result is not None, 'expect a result'
-    assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
+    test_obs = espadons_energy_augmentation.visit(obs, **kwargs)
+    assert test_obs is not None, 'expect a result'
+    # assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
     test_reference = obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
     assert test_reference is not None, 'expect to assign'
     assert test_reference.energy is not None, 'expect to assign energy'

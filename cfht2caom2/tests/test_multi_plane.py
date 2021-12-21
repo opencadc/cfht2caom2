@@ -67,14 +67,17 @@
 # ***********************************************************************
 #
 
-import os
-import sys
+import warnings
 
-from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name, main_app, metadata
+from astropy.utils.exceptions import AstropyUserWarning
+from astropy.wcs import FITSFixedWarning
+from caom2pipe import reader_composable as rdc
+from cfht2caom2 import cfht_name
+from cfht2caom2 import fits2caom2_augmentation
 
 from mock import patch
-import test_main_app
+import test_fits2caom2_augmentation
+
 
 # structured by observation id, list of file ids that make up a multi-plane
 # observation
@@ -94,7 +97,7 @@ LOOKUP = {
     ],
     '979412': ['979412o.fits', '979412p.fits'],
     '1257365': ['1257365o.fits', '1257365p.fits'],
-    '840066': ['840066g.fits', '840066o.fits'],
+    '840066': ['840066o.fits', '840066g.fits'],
     # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
     #             '1927963p.fits.fz'],
     # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
@@ -120,100 +123,51 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize('test_name', obs_id_list)
 
 
-@patch('caom2utils.data_util.get_local_headers_from_fits')
-@patch('cfht2caom2.main_app.data_util.StorageClientWrapper')
-@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('cfht2caom2.main_app._identify_instrument')
-@patch('caom2utils.data_util.StorageClientWrapper')
+@patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_multi_plane(
-    svofps_mock,
-    data_client_mock,
-    inst_mock,
-    cache_mock,
-    access_mock,
-    second_mock,
-    local_headers_mock,
-    test_name,
-):
-    # cache_mock there so there are no update cache calls - so the tests
-    # work without a network connection
-    access_mock.return_value = 'https://localhost'
-    metadata.filter_cache.connected = True
-    inst_mock.side_effect = test_main_app._identify_inst_mock
-    obs_id = test_name
-    lineage = _get_lineage(obs_id)
-    actual_fqn = '{}/{}/{}.actual.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id
-    )
-
-    local = _get_local(test_name)
-    plugin = test_main_app.PLUGIN
-
-    if os.path.exists(actual_fqn):
-        os.remove(actual_fqn)
-
-    data_client_mock.return_value.info.side_effect = (
-        test_main_app._get_file_info
-    )
-    second_mock.return_value.info.side_effect = test_main_app._get_file_info
-    svofps_mock.side_effect = test_main_app._vo_mock
+def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
+    warnings.simplefilter('ignore', category=AstropyUserWarning)
+    warnings.simplefilter('ignore', category=FITSFixedWarning)
+    vo_mock.side_effect = test_fits2caom2_augmentation._vo_mock
     # during cfht2caom2 operation, want to use astropy on FITS files
     # but during testing want to use headers and built-in Python file
     # operations
-    local_headers_mock.side_effect = test_main_app._local_headers
-
-    # cannot use the --not_connected parameter in this test, because the
-    # svo filter numbers will be wrong, thus the Spectral WCS will be wrong
-    # as well
-    sys.argv = (
-        f'{main_app.APPLICATION} --quiet --no_validate --observation '
-        f'{cfht_name.COLLECTION} {test_name} --local {local} --plugin '
-        f'{plugin} --module {plugin} --out {actual_fqn} --lineage '
-        f'{lineage} --resource-id ivo://cadc.nrc.ca/test'
-    ).split()
-    print(sys.argv)
-    main_app.to_caom2()
-    expected_fqn = '{}/{}/{}.expected.xml'.format(
-        test_main_app.TEST_DATA_DIR, DIR_NAME, obs_id
+    local_headers_mock.side_effect = (
+        test_fits2caom2_augmentation._local_headers
     )
-    compare_result = mc.compare_observations(actual_fqn, expected_fqn)
-    if compare_result is not None:
-        raise AssertionError(compare_result)
-    # assert False  # cause I want to see logging messages
-
-
-def _get_lineage(obs_id):
-    result = ''
-    for ii in LOOKUP[obs_id]:
-        fits = mc.get_lineage(
-            cfht_name.ARCHIVE,
-            cfht_name.CFHTName.remove_extensions(ii),
-            ii,
+    # cache_mock there so there are no update cache calls - so the tests
+    # work without a network connection
+    observation = None
+    for f_name in LOOKUP[test_name]:
+        if 'hdf5' in f_name:
+            source_names = [
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
+                f'{f_name}'
+            ]
+        else:
+            source_names = [
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
+                f'{f_name}.header'
+            ]
+        storage_name = cfht_name.CFHTName(
+            file_name=f_name,
+            instrument=test_fits2caom2_augmentation._identify_inst_mock(
+                None, test_name
+            ),
+            source_names=source_names,
         )
-        result = f'{result } {fits}'
-    return result
-
-
-def _get_local(obs_id):
-    result = ''
-    root = f'{test_main_app.TEST_DATA_DIR}/{DIR_NAME}'
-    if '979339' in obs_id:
-        result = (
-            f'{test_main_app.TEST_FILES_DIR}/979339i.fits '
-            f'{root}/979339o.fits.header'
+        metadata_reader = rdc.FileMetadataReader()
+        metadata_reader.set(storage_name)
+        metadata_reader.file_info[storage_name.file_uri].file_type = (
+            'application/fits'
         )
-    elif '2384125p' in obs_id:
-        # result = f'{root}/2384125p.fits.header ' \
-        #          f'{root}/2384125v.fits.header' \
-        #          f'{root}/2384125z.hdf5'
-        # result = f'{root}/2384125z.hdf5'
-        result = f'{root}/2384125p.fits.header {root}/2384125z.hdf5'
-    else:
-        for ii in LOOKUP[obs_id]:
-            result = (
-                f'{result} {root}/'
-                f'{cfht_name.CFHTName.remove_extensions(ii)}.fits.header'
-            )
-    return result
+        kwargs = {
+            'storage_name': storage_name,
+            'metadata_reader': metadata_reader,
+        }
+        observation = fits2caom2_augmentation.visit(observation, **kwargs)
+
+    test_fits2caom2_augmentation._compare(
+        observation, test_name, 'multi_plane'
+    )
