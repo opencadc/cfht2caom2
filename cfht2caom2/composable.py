@@ -103,7 +103,7 @@ def _common_init():
     )
     source = None
     if config.use_local_files:
-        source = dsc.UseLocalFilesDataSource(
+        source = dsc.LocalFilesDataSource(
             config, clients.data_client, reader
         )
     return config, clients, reader, builder, source
