@@ -72,7 +72,6 @@ import os
 
 from urllib.parse import urlparse
 
-from caom2utils import data_util
 from caom2pipe import name_builder_composable as nbc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
@@ -85,13 +84,13 @@ __all__ = ['CFHTBuilder']
 class CFHTBuilder(nbc.StorageNameBuilder):
     def __init__(
         self,
-        data_client,
         archive,
         use_local_files,
+        metadata_reader,
         supports_latest_client=False,
     ):
         super(CFHTBuilder, self).__init__()
-        self._data_client = data_client
+        self._metadata_reader = metadata_reader
         self._archive = archive
         self._use_local_files = use_local_files
         self._supports_latest_client = supports_latest_client
@@ -106,16 +105,17 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
+        uri = mc.build_uri(
+            self._archive, os.path.basename(urlparse(entry).path)
+        ).replace('.header', '')
+        storage_name = mc.StorageName()
+        storage_name.source_names = [entry]
+        storage_name.destination_uris = [uri]
+        self._metadata_reader.set(storage_name)
         if mc.StorageName.is_hdf5(entry):
             instrument = md.Inst.SITELLE
         else:
-            if self._use_local_files:
-                headers = data_util.get_local_headers_from_fits(entry)
-            else:
-                uri = mc.build_uri(
-                    cn.ARCHIVE, os.path.basename(urlparse(entry).path)
-                )
-                headers = self._data_client.get_head(uri)
+            headers = self._metadata_reader.headers.get(uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
         scheme = 'cadc' if self._supports_latest_client else 'ad'
         result = cn.CFHTName(

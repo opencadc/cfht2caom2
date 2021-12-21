@@ -1073,9 +1073,6 @@ class InstrumentType:
     def _update_sitelle_plane(self, observation):
         pass
 
-    def _update_wircam_plane(self, observation):
-        pass
-
     def _update_plane_post(self, observation):
         pass
 
@@ -2640,7 +2637,7 @@ class Wircam(InstrumentType):
     def _update_plane_post(self, observation):
         # complete the ingestion of the missing bits of a sky construct file
         self._logger.debug(
-            f'Begin _update_wircam_plane for {observation.observation_id}'
+            f'Begin _update_plane_post for {observation.observation_id}'
         )
         if self._cfht_name.suffix not in ['p', 'y']:
             return
@@ -2695,7 +2692,7 @@ class Wircam(InstrumentType):
                     copy_from_artifact,
                     copy_to_artifact,
                 )
-        self._logger.debug('End _update_wircam_plane')
+        self._logger.debug('End _update_plane_post')
 
     def make_axes_consistent(self):
         # position axis check is to determine if naxis should

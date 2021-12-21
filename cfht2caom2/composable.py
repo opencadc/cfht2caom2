@@ -74,6 +74,7 @@ import traceback
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
+from caom2pipe import reader_composable as rdc
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
@@ -86,19 +87,30 @@ DATA_VISITORS = [espadons_energy_augmentation, preview_augmentation]
 CFHT_BOOKMARK = 'cfht_timestamp'
 
 
-def _run_state():
+def _common_init():
     config = mc.Config()
     config.get_executors()
     clients = clc.ClientCollection(config)
+    if config.use_local_files:
+        reader = rdc.FileMetadataReader()
+    else:
+        reader = rdc.StorageClientReader(clients.data_client)
     builder = cfht_builder.CFHTBuilder(
-        clients.data_client,
         config.archive,
         config.use_local_files,
+        reader,
         config.features.supports_latest_client,
     )
     source = None
     if config.use_local_files:
-        source = dsc.UseLocalFilesDataSource(config, clients.data_client)
+        source = dsc.UseLocalFilesDataSource(
+            config, clients.data_client, reader
+        )
+    return config, clients, reader, builder, source
+
+
+def _run_state():
+    config, clients, reader, builder, source = _common_init()
     return rc.run_by_state(
         config=config,
         name_builder=builder,
@@ -107,6 +119,7 @@ def _run_state():
         data_visitors=DATA_VISITORS,
         clients=clients,
         source=source,
+        metadata_reader=reader,
     )
 
 
@@ -131,18 +144,7 @@ def _run_by_builder():
     :return 0 if successful, -1 if there's any sort of failure. Return status
         is used by airflow for task instance management and reporting.
     """
-    config = mc.Config()
-    config.get_executors()
-    clients = clc.ClientCollection(config)
-    builder = cfht_builder.CFHTBuilder(
-        clients.data_client,
-        config.archive,
-        config.use_local_files,
-        config.features.supports_latest_client,
-    )
-    source = None
-    if config.use_local_files:
-        source = dsc.UseLocalFilesDataSource(config, clients.data_client)
+    config, clients, reader, builder, source = _common_init()
     return rc.run_by_todo(
         config,
         builder,
@@ -150,6 +152,7 @@ def _run_by_builder():
         data_visitors=DATA_VISITORS,
         clients=clients,
         source=source,
+        metadata_reader=reader,
     )
 
 

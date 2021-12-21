@@ -66,7 +66,7 @@
 #
 # ***********************************************************************
 #
-
+import logging
 import os
 import shutil
 import warnings
@@ -109,10 +109,9 @@ def test_run_by_builder(
         os.mkdir(test_fqn)
     try:
         access_mock.return_value = 'https://localhost'
-        # should attempt to run LocalMetaCreate
+        # should attempt to run MetaVisit
         repo_mock.return_value.read.side_effect = _mock_repo_read
         repo_mock.return_value.create.side_effect = Mock()
-        repo_mock.return_value.update.side_effect = _mock_repo_update
         getcwd_orig = os.getcwd
         os.getcwd = Mock(return_value=TEST_DIR)
         try:
@@ -128,13 +127,15 @@ def test_run_by_builder(
         _cleanup(TEST_DIR)
 
 
+@patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store(
-    tap_mock, data_client_mock, repo_client_mock, check_fits_mock, cache_mock
+    tap_mock, data_client_mock, repo_client_mock, check_fits_mock, cache_mock,
+        headers_mock,
 ):
     test_dir_fqn = os.path.join(
         test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_test'
@@ -146,9 +147,7 @@ def test_run_store(
     data_client_mock.return_value.info.side_effect = (
         _mock_get_file_info
     )
-    data_util.get_local_headers_from_fits = Mock(
-        side_effect=_mock_header_read
-    )
+    headers_mock.side_effect = ac.make_headers_from_file
     check_fits_mock.return_value = True
     try:
         # execution

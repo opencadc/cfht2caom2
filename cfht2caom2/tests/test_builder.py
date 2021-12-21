@@ -73,20 +73,26 @@ from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import CFHTBuilder, metadata
 
-from mock import patch, ANY
+from mock import Mock, patch, ANY
 import cfht_mocks
 
 
-@patch('caom2utils.data_util.get_local_headers_from_fits')
-@patch('caom2pipe.client_composable.StorageClientWrapper', autospec=True)
-def test_cfht_builder(client_mock, util_headers_mock):
-    util_headers_mock.side_effect = ac.make_headers_from_file
+test_fqn = os.path.join(
+    cfht_mocks.TEST_DATA_DIR,
+    'composable_test/test_files/2281792p.fits.fz',
+)
+
+
+def test_cfht_builder():
+    headers_mock = Mock(autospec=True)
+    headers_mock.headers.get.side_effect = _mock_get
     test_config = mc.Config()
     test_config.use_local_files = True
+    test_config.archive = 'CFHT'
     test_subject = CFHTBuilder(
-        client_mock,
         test_config.archive,
         test_config.use_local_files,
+        headers_mock,
     )
     assert test_subject is not None, 'ctor failure'
 
@@ -97,25 +103,18 @@ def test_cfht_builder(client_mock, util_headers_mock):
         test_result.instrument == metadata.Inst.SITELLE
     ), 'wrong hdf5 instrument'
 
-    test_fqn = os.path.join(
-        cfht_mocks.TEST_DATA_DIR,
-        'composable_test/test_files/2281792p.fits.fz',
-    )
-
     test_result = test_subject.build(test_fqn)
     assert test_result is not None, 'local fits file failed'
     assert test_result.file_name == os.path.basename(
         test_fqn
     ), 'wrong local file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
-    assert not client_mock.get_head.called, 'should not use client'
 
-    client_mock.get_head.side_effect = cfht_mocks._mock_get_head
     test_config.use_local_files = False
     test_subject = CFHTBuilder(
-        client_mock,
         test_config.archive,
         test_config.use_local_files,
+        headers_mock,
     )
     assert test_subject is not None, 'ctor failure 2'
     test_result = test_subject.build(test_fqn)
@@ -124,6 +123,13 @@ def test_cfht_builder(client_mock, util_headers_mock):
         test_fqn
     ), 'wrong remote file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
-    assert client_mock.get_head.called, 'should use client'
     test_uri = 'ad:CFHT/2281792p.fits.fz'
-    client_mock.get_head.assert_called_with(test_uri), 'wrong get head param'
+    assert headers_mock.set.called, 'set should be called'
+    args, kwargs = headers_mock.set.call_args
+    assert isinstance(args[0], mc.StorageName), 'wrong param type'
+    assert args[0].source_names[0] == test_fqn, 'wrong file name'
+    assert args[0].destination_uris[0] == test_uri, 'wrong uri'
+
+
+def _mock_get(uri):
+    return ac.make_headers_from_file(test_fqn)
