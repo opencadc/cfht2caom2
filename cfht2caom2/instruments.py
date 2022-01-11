@@ -2697,8 +2697,9 @@ class Wircam(InstrumentType):
     def make_axes_consistent(self):
         # position axis check is to determine if naxis should
         # be set
+        # 'y' is auxOverride l345 caom2IngestWircam.py
         if (
-            self._cfht_name.suffix in ['d', 'f', 'g', 'o']
+            self._cfht_name.suffix in ['d', 'f', 'g', 'o', 'y']
             and self._chunk.position is None
         ):
             # PD - 17-01-20
