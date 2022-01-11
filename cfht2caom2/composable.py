@@ -104,7 +104,10 @@ def _common_init():
     source = None
     if config.use_local_files:
         source = dsc.LocalFilesDataSource(
-            config, clients.data_client, reader
+            config,
+            clients.data_client,
+            reader,
+            recursive=config.recurse_data_sources,
         )
     return config, clients, reader, builder, source
 
