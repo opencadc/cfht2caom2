@@ -128,6 +128,11 @@ class CFHTPreview(mc.PreviewVisitor):
                 count = self._do_spirou_bintable()
             else:
                 count = self._do_spirou_intensity_spectrum()
+        elif (
+            self._instrument is md.Inst.WIRCAM
+            and self._storage_name.suffix == 'y'
+        ):
+            count = 0
         else:
             count = self._do_ds9_prev(obs_id)
         self._logger.debug('End generate_plots')
