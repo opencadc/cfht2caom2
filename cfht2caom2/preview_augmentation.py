@@ -410,7 +410,7 @@ class CFHTPreview(mc.PreviewVisitor):
                     )
 
                 slice_cmd = (
-                    f'fitscopy {self._storage_name.file_name}[*][*,*,1:1,1:1] '
+                    f'fitscopy {self._science_fqn}[*][*,*,1:1,1:1] '
                     f'{temp_science_f_name}'
                 )
                 self._exec_cmd_chdir(temp_science_f_name, slice_cmd)
@@ -426,7 +426,7 @@ class CFHTPreview(mc.PreviewVisitor):
                     '.fits', '_zoom.fits'
                 )
                 slice_cmd = (
-                    f'fitscopy {self._storage_name.file_name}[4][*,*,1:1] '
+                    f'fitscopy {self._science_fqn}[4][*,*,1:1] '
                     f'{zoom_science_f_name}'
                 )
                 self._exec_cmd_chdir(zoom_science_f_name, slice_cmd)
