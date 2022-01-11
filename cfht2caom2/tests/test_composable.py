@@ -277,9 +277,6 @@ def test_run_state(
         assert test_storage.file_name == test_f_name, 'wrong file name'
         assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
         assert test_storage.url is None, 'wrong url'
-        assert (
-            test_storage.lineage == f'{test_obs_id}p/ad:CFHT/{test_f_name}'
-        ), 'wrong lineage'
         assert test_storage.external_urls is None, 'wrong external urls'
     finally:
         _cleanup(TEST_DIR)
