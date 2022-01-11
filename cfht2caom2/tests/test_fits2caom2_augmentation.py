@@ -230,6 +230,7 @@ def _identify_inst_mock(ignore_headers, uri):
                         'hotpix',
                         '1007126',
                         'dark_003s_',
+                        '2661571',
                     ],
             }
     result = md.Inst.SITELLE
