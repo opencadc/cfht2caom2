@@ -564,15 +564,16 @@ class CFHTPreview(mc.PreviewVisitor):
             mosaic_param=mosaic_param,
             scale_param=scale_param,
         )
-        CFHTPreview._gen_square(self._zoom_fqn)
-        if count == 3:
-            self.add_preview(
-                self._storage_name.zoom_uri,
-                self._storage_name.zoom,
-                ProductType.PREVIEW,
-                ReleaseType.DATA,
-            )
-            self.add_to_delete(self._zoom_fqn)
+        if os.path.exists(self._zoom_fqn):
+            CFHTPreview._gen_square(self._zoom_fqn)
+            if count == 3:
+                self.add_preview(
+                    self._storage_name.zoom_uri,
+                    self._storage_name.zoom,
+                    ProductType.PREVIEW,
+                    ReleaseType.DATA,
+                )
+                self.add_to_delete(self._zoom_fqn)
         return count
 
     def _do_spirou_bintable(self):
@@ -742,7 +743,10 @@ class CFHTPreview(mc.PreviewVisitor):
         new_im = Image.new('RGB', (extent, extent), (255, 255, 255, 0))
         new_im.paste(
             im,
-            (int((extent - im.size[0]) / 2), int((extent - im.size[1]) / 2)),
+            (
+                int((extent - im.size[0]) / 2),
+                int((extent - im.size[1]) / 2),
+            ),
         )
         new_im.save(f_name)
 
