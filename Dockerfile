@@ -42,12 +42,6 @@ ARG OPENCADC_REPO=opencadc
 ARG PIPE_BRANCH=master
 ARG PIPE_REPO=opencadc
 
-RUN git clone https://github.com/opencadc/cadctools.git && \
-    cd cadctools && \
-    pip install ./cadcutils && \
-    pip install ./cadcdata && \
-    cd ..
-
 RUN pip install git+https://github.com/${OPENCADC_REPO}/caom2pipe@${OPENCADC_BRANCH}#egg=caom2pipe
 
 RUN pip install git+https://github.com/${PIPE_REPO}/cfht2caom2@${PIPE_BRANCH}#egg=cfht2caom2

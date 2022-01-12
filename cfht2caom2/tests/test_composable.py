@@ -66,15 +66,17 @@
 #
 # ***********************************************************************
 #
-import logging
+
 import os
 import shutil
 import warnings
 
 from astropy.io import fits
 from astropy.utils.exceptions import AstropyUserWarning
+from collections import deque
 from datetime import datetime
 from hashlib import md5
+from tempfile import TemporaryDirectory
 
 from mock import Mock, patch
 
@@ -87,7 +89,6 @@ from caom2pipe import data_source_composable as dsc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import composable, cfht_name, metadata
 import test_fits2caom2_augmentation
-import cfht_mocks
 
 TEST_DIR = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/composable_test'
 
@@ -226,9 +227,6 @@ def test_run_store_retry(
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.CadcTapClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch(
     'caom2pipe.data_source_composable.ListDirTimeBoxDataSource.'
     'get_time_box_work',
@@ -237,23 +235,14 @@ def test_run_store_retry(
 @patch('caom2pipe.execute_composable.OrganizeExecutes.do_one')
 def test_run_state(
     run_mock,
-    tap_mock,
-    data_client_mock,
-    tap_client_mock,
-    repo_mock,
+    get_work_mock,
     util_headers_mock,
     cache_mock,
 ):
     try:
         util_headers_mock.side_effect = ac.make_headers_from_file
         run_mock.return_value = 0
-        tap_mock.side_effect = _mock_dir_listing
-        data_client_mock.return_value.get_head.side_effect = (
-            cfht_mocks._mock_get_head
-        )
-        data_client_mock.return_value.info.side_effect = (
-            _mock_get_file_info
-        )
+        get_work_mock.side_effect = _mock_dir_listing
         getcwd_orig = os.getcwd
         os.getcwd = Mock(return_value=TEST_DIR)
 
@@ -278,6 +267,7 @@ def test_run_state(
         assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
         assert test_storage.url is None, 'wrong url'
         assert test_storage.external_urls is None, 'wrong external urls'
+        assert test_storage.file_uri == f'ad:CFHT/{test_f_name}', 'wrong uri'
     finally:
         _cleanup(TEST_DIR)
 
@@ -364,6 +354,83 @@ def test_run_by_builder_hdf5_added_to_existing(
         _common_execution(test_dir, actual_fqn, expected_fqn)
     finally:
         _cleanup(test_dir)
+
+
+@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
+@patch('caom2pipe.execute_composable.CaomExecute._caom2_store')
+@patch('caom2pipe.execute_composable.CaomExecute._visit_meta')
+@patch('caom2pipe.data_source_composable.TodoFileDataSource.get_work')
+@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.StorageClientWrapper')
+def test_run_ingest(
+        data_client_mock,
+        repo_client_mock,
+        data_source_mock,
+        meta_visit_mock,
+        caom2_store_mock,
+        access_url_mock,
+):
+    access_url_mock.return_value = 'https://localhost:8080'
+    temp_deque = deque()
+    test_f_name = '1319558w.fits.fz'
+    temp_deque.append(test_f_name)
+    data_source_mock.return_value = temp_deque
+    repo_client_mock.return_value.read.return_value = None
+    data_client_mock.return_value.get_head.return_value = [
+        {'INSTRUME': 'WIRCam'},
+    ]
+
+    data_client_mock.return_value.info.return_value = FileInfo(
+        id=test_f_name,
+        file_type='application/fits',
+        md5sum='abcdef',
+    )
+
+    cwd = os.getcwd()
+    with TemporaryDirectory() as tmp_dir_name:
+        os.chdir(tmp_dir_name)
+        test_config = mc.Config()
+        test_config.working_directory = tmp_dir_name
+        test_config.task_types = [mc.TaskType.INGEST]
+        test_config.logging_level = 'INFO'
+        test_config.collection = 'CFHT'
+        test_config.proxy_file_name = 'cadcproxy.pem'
+        test_config.proxy_fqn = f'{tmp_dir_name}/cadcproxy.pem'
+        test_config.features.supports_latest_client = False
+        test_config.use_local_files = False
+        mc.Config.write_to_file(test_config)
+        with open(test_config.proxy_fqn, 'w') as f:
+            f.write('test content')
+        getcwd_orig = os.getcwd
+        os.getcwd = Mock(return_value=tmp_dir_name)
+        try:
+            test_result = composable._run_by_builder()
+            assert test_result is not None, 'expect result'
+            assert test_result == 0, 'expect success'
+            assert repo_client_mock.return_value.read.called, 'read called'
+            assert data_client_mock.return_value.info.called, 'info'
+            assert (
+                data_client_mock.return_value.info.call_count == 1
+            ), 'wrong number of info calls'
+            data_client_mock.return_value.info.assert_called_with(
+                f'ad:CFHT/{test_f_name}',
+            )
+            assert (
+                data_client_mock.return_value.get_head.called
+            ), 'get_head should be called'
+            assert (
+                data_client_mock.return_value.get_head.call_count == 1
+            ), 'wrong number of get_heads'
+            data_client_mock.return_value.get_head.assert_called_with(
+                f'ad:CFHT/{test_f_name}',
+            )
+            assert meta_visit_mock.called, '_visit_meta call'
+            assert meta_visit_mock.call_count == 1, '_visit_meta call count'
+            assert caom2_store_mock.called, '_caom2_store call'
+            assert caom2_store_mock.call_count == 1, '_caom2_store call count'
+        finally:
+            os.getcwd = getcwd_orig
+            os.chdir(cwd)
 
 
 def _cleanup(test_dir_fqn):
