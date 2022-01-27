@@ -67,83 +67,17 @@
 # ***********************************************************************
 #
 
-import logging
-
-from caom2 import SimpleObservation, DerivedObservation, Algorithm
-from caom2utils import ObsBlueprint, GenericParser, FitsParser
+from caom2pipe import caom_composable as cc
 from cfht2caom2 import instruments
 
 
-class Fits2caom2Visitor:
+class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
     def __init__(self, observation, **kwargs):
-        self._observation = observation
-        self._storage_name = kwargs.get('storage_name')
-        self._metadata_reader = kwargs.get('metadata_reader')
-        self._cadc_client = kwargs.get('cadc_client')
-        self._dump_config = False
-        self._logger = logging.getLogger(self.__class__.__name__)
+        super().__init__(observation, **kwargs)
 
-    def visit(self):
-        for uri, file_info in self._metadata_reader.file_info.items():
-            self._logger.debug(f'Begin observation augmentation for {uri}.')
-            instrument_data = instruments.factory(
-                self._metadata_reader.headers.get(uri), self._storage_name
-            )
-            blueprint = ObsBlueprint(instantiated_class=instrument_data)
-            if 'hdf5' in uri:
-                blueprint.set('Artifact.productType', 'science')
-            else:
-                instrument_data.accumulate_bp(blueprint)
-
-            if len(self._metadata_reader.headers.get(uri)) == 0:
-                self._logger.debug(f'Use a GenericParser for {uri}')
-                parser = GenericParser(
-                    obs_blueprint=blueprint,
-                    logging_name=uri,
-                    uri=uri,
-                )
-            else:
-                self._logger.debug(f'Use a FitsParser for {uri}')
-                parser = FitsParser(
-                    src=self._metadata_reader.headers.get(uri),
-                    obs_blueprint=blueprint,
-                    uri=uri,
-                )
-                parser.logging_name = uri
-
-            if self._dump_config:
-                self._logger.info(f'Blueprint for {uri}: {blueprint}')
-
-            if self._observation is None:
-                if blueprint._get('DerivedObservation.members') is None:
-                    self._logger.debug('Build a SimpleObservation')
-                    self._observation = SimpleObservation(
-                        collection=self._storage_name.collection,
-                        observation_id=self._storage_name.obs_id,
-                        algorithm=Algorithm('exposure'),
-                    )
-                else:
-                    self._logger.debug('Build a DerivedObservation')
-                    self._observation = DerivedObservation(
-                        collection=self._storage_name.collection,
-                        observation_id=self._storage_name.obs_id,
-                        algorithm=Algorithm('composite'),
-                    )
-
-            parser.augment_observation(
-                observation=self._observation,
-                artifact_uri=uri,
-                product_id=self._storage_name.product_id,
-            )
-
-            self._observation = instrument_data.update(
-                self._observation,
-                file_info,
-                self._cadc_client,
-            )
-        return self._observation
+    def _get_mapping(self, headers):
+        return instruments.factory(headers, self._storage_name)
 
 
 def visit(observation, **kwargs):
-    s = Fits2caom2Visitor(observation, **kwargs)
-    return s.visit()
+    return CFHTFits2caom2Visitor(observation, **kwargs).visit()
