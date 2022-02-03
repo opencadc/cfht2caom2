@@ -80,7 +80,7 @@ from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
 from caom2 import TemporalWCS, CoordAxis1D, CoordFunction1D, CoordError
 from caom2 import CalibrationLevel, ProductType, ObservationIntentType
 from caom2 import DerivedObservation, TypedList
-from caom2utils.fits2caom2 import WcsParser
+from caom2utils.fits2caom2 import WcsParser, update_artifact_meta
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
@@ -137,13 +137,14 @@ class CFHTValueRepair(mc.ValueRepairCache):
         self._logger = logging.getLogger(self.__class__.__name__)
 
 
-class InstrumentType:
+class InstrumentType(cc.TelescopeMapping):
     value_repair = CFHTValueRepair()
 
     def __init__(self, headers, cfht_name):
+        super().__init__(cfht_name, headers)
         # keep because of MegaCam/MegaPrime
         self._name = cfht_name.instrument.value
-        self._cfht_name = cfht_name
+        self._storage_name = cfht_name
         self._headers = headers
         self._chunk = None
         self._observation = None
@@ -198,7 +199,7 @@ class InstrumentType:
             # want to stop ingestion if the filter name is not expected
             raise mc.CadcException(
                 f'Could not find filter metadata for {filter_name} in '
-                f'{self._cfht_name.file_uri}.'
+                f'{self._storage_name.file_uri}.'
             )
         # CW - 15-05-20
         # some flats like this have filter names like ‘i’, instead of
@@ -216,7 +217,7 @@ class InstrumentType:
             updated_filter_name = filter_name
         return filter_md, updated_filter_name
 
-    def accumulate_bp(self, bp):
+    def accumulate_blueprint(self, bp):
         """Configure the telescope-specific ObsBlueprint at the CAOM model
         Observation level.
 
@@ -226,17 +227,18 @@ class InstrumentType:
         generally, use add_fits_attribute. If the mapping cardinality is n:1 use
         the set method to reference a function call.
         """
-        self._logger.debug('Begin accumulate_bp.')
+        self._logger.debug('Begin accumulate_blueprint.')
+        super().accumulate_blueprint(bp, APPLICATION)
         bp.configure_position_axes((1, 2))
         if not (
-                self._cfht_name.suffix == 'p' and
-                self._cfht_name.instrument == md.Inst.SPIROU
+            self._storage_name.suffix == 'p' and
+            self._storage_name.instrument == md.Inst.SPIROU
         ):
             # TODO if instrument == SITELLE and suffix == 'p', energy_axis == 3
             # it will remove all the if instrument == sitelle and suffix = 'p'
             # in the get_energy_* functions
             bp.configure_time_axis(3)
-        if self._cfht_name.has_energy:
+        if self._storage_name.has_energy:
             bp.configure_energy_axis(4)
         bp.configure_observable_axis(6)
 
@@ -269,7 +271,7 @@ class InstrumentType:
         bp.set('Observation.proposal.project', 'get_proposal_project()')
         bp.set('Observation.proposal.title', 'get_proposal_title()')
 
-        bp.set('Observation.instrument.name', self._cfht_name.instrument.value)
+        bp.set('Observation.instrument.name', self._storage_name.instrument.value)
         bp.set(
             'Observation.instrument.keywords',
             'get_instrument_keywords()',
@@ -327,7 +329,7 @@ class InstrumentType:
         # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
         #
         # Gemini is all range, make Mega* range too, and WIRCam too
-        if self._cfht_name.instrument not in [
+        if self._storage_name.instrument not in [
             md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM
         ]:
             bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype()')
@@ -371,7 +373,7 @@ class InstrumentType:
         bp.clear('Chunk.position.coordsys')
         bp.add_fits_attribute('Chunk.position.coordsys', 'RADECSYS')
 
-        if self._cfht_name.suffix != 'g':
+        if self._storage_name.suffix != 'g':
             bp.set('Chunk.time.exposure', 'get_exptime()')
             bp.set('Chunk.time.resolution', 'get_exptime()')
             bp.set('Chunk.time.timesys', 'UTC')
@@ -383,7 +385,7 @@ class InstrumentType:
 
         # TODO - this is really really wrong that is_simple is not sufficient
         # to make the distinction between the appropriate implementations.
-        if self._cfht_name.is_simple and not self._cfht_name.is_master_cal:
+        if self._storage_name.is_simple and not self._storage_name.is_master_cal:
             bp.set(
                 'Chunk.time.axis.function.delta',
                 'get_time_refcoord_delta_simple()',
@@ -414,9 +416,9 @@ class InstrumentType:
     def get_calibration_level(self, ext):
         result = CalibrationLevel.CALIBRATED
         if (
-                self._cfht_name.is_simple
-                and not self._cfht_name.simple_by_suffix
-                and not self._cfht_name.is_master_cal
+                self._storage_name.is_simple
+                and not self._storage_name.simple_by_suffix
+                and not self._storage_name.is_master_cal
         ):
             result = CalibrationLevel.RAW_STANDARD
         return result
@@ -485,7 +487,7 @@ class InstrumentType:
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
         # units are seconds
         if exptime is None:
-            if self._cfht_name.is_simple:
+            if self._storage_name.is_simple:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
         return exptime
@@ -578,14 +580,14 @@ class InstrumentType:
         # number, not the 'EXPNUM' keyword as in the originating
         # caom2Ingest*.py scripts.
         if (
-                self._cfht_name.is_simple
-                and not self._cfht_name.is_master_cal
+                self._storage_name.is_simple
+                and not self._storage_name.is_master_cal
         ) or (
-                self._cfht_name.instrument
-                in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
-                and self._cfht_name.suffix == 'p'
+            self._storage_name.instrument
+            in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
+            and self._storage_name.suffix == 'p'
         ):
-            result = self._cfht_name.file_id[:-1]
+            result = self._storage_name.file_id[:-1]
         return result
 
     def get_obs_type(self, ext):
@@ -659,7 +661,7 @@ class InstrumentType:
         obs_type = self.get_obs_intent(ext)
         if obs_type == ObservationIntentType.CALIBRATION:
             result = ProductType.CALIBRATION
-        if self._cfht_name.suffix in ['g', 'm', 'w', 'y']:
+        if self._storage_name.suffix in ['g', 'm', 'w', 'y']:
             result = ProductType.CALIBRATION
 
         # The goal is to make all file types easily findable by archive users,
@@ -730,7 +732,7 @@ class InstrumentType:
             run_id_type = run_id[3].lower()
             if run_id_type == 'q' and obs_type == 'OBJECT':
                 obj_name = self._headers[ext].get('OBJECT').lower()
-                if self._cfht_name.instrument is md.Inst.SITELLE:
+                if self._storage_name.instrument is md.Inst.SITELLE:
                     if 'std' in obj_name:
                         result = True
                     else:
@@ -881,7 +883,7 @@ class InstrumentType:
         obs_type = self.get_obs_intent(ext)
         if obs_type == ObservationIntentType.CALIBRATION:
             pt_result = ProductType.CALIBRATION
-        if self._cfht_name.suffix in ['m', 'w', 'y']:
+        if self._storage_name.suffix in ['m', 'w', 'y']:
             dp_result = DataProductType.AUXILIARY
             pt_result = ProductType.AUXILIARY
         return dp_result, pt_result
@@ -895,15 +897,15 @@ class InstrumentType:
 
     def _get_filter_md(self, filter_name):
         filter_md = md.filter_cache.get_svo_filter(
-            self._cfht_name.instrument, filter_name
+            self._storage_name.instrument, filter_name
         )
         if not md.filter_cache.is_cached(
-                self._cfht_name.instrument, filter_name
+                self._storage_name.instrument, filter_name
         ):
             # want to stop ingestion if the filter name is not expected
             raise mc.CadcException(
                 f'Could not find filter metadata for {filter_name} in '
-                f'{self._cfht_name.file_uri}.'
+                f'{self._storage_name.file_uri}.'
             )
         # CW - 15-05-20
         # some flats like this have filter names like ‘i’, instead of
@@ -981,7 +983,7 @@ class InstrumentType:
         #   and need to be accessible as extension 0 for the observation, plane,
         #   artifact
         # - so then - do I need the blueprint before it's been modified?
-        #   maybe instead of storing the blueprint I just call accumulate_bp?
+        #   maybe instead of storing the blueprint I just call accumulate_blueprint?
 
         # and I'm back trying to figure out how to undo the doing ...
         # the first time through, the CD4_4 value is set from CDELT4,
@@ -994,7 +996,7 @@ class InstrumentType:
         # - e.g. 2445848a
         self._logger.debug(
             f'Begin _update_observation_metadata for '
-            f'{self._cfht_name.file_name}'
+            f'{self._storage_name.file_name}'
         )
         idx = 0
         run_id = self._headers[0].get('RUNID')
@@ -1004,14 +1006,14 @@ class InstrumentType:
             if (
                     run_id is None
                     and not (
-                    self._cfht_name.instrument is md.Inst.SPIROU
-                    and self._cfht_name.suffix == 'g'
+                self._storage_name.instrument is md.Inst.SPIROU
+                and self._storage_name.suffix == 'g'
             )
             ) or (
                     run_id is not None
                     and (
-                            self._cfht_name.instrument is md.Inst.SPIROU
-                            and self._cfht_name.suffix == 'g'
+                        self._storage_name.instrument is md.Inst.SPIROU
+                        and self._storage_name.suffix == 'g'
                     )
             ):
                 if len(self._headers) > 1:
@@ -1019,28 +1021,28 @@ class InstrumentType:
 
                     self._logger.warning(
                         f'Resetting the header/blueprint relationship for '
-                        f'{self._cfht_name.file_name} in '
+                        f'{self._storage_name.file_name} in '
                         f'{observation.observation_id}'
                     )
-                    if os.path.exists(self._cfht_name.source_names[0]):
-                        uri = self._cfht_name.file_uri
+                    if os.path.exists(self._storage_name.source_names[0]):
+                        uri = self._storage_name.file_uri
                         # this is the fits2caom2 implementation, which returns
                         # a list structure
                         from caom2utils import data_util
                         unmodified_headers = (
                             data_util.get_local_headers_from_fits(
-                                self._cfht_name.source_names[0]
+                                self._storage_name.source_names[0]
                             )
                         )
                     else:
                         # this is the fits2caom2 implementation, which returns
                         # a list structure
                         unmodified_headers = data_client.get_head(
-                            self._cfht_name.file_uri
+                            self._storage_name.file_uri
                         )
                     from caom2utils import ObsBlueprint
                     bp = ObsBlueprint(instantiated_class=self)
-                    self.accumulate_bp(bp)
+                    self.accumulate_blueprint(bp)
                     # TODO this is not a long-term implementation
                     # re-read the headers from disk, because the first pass
                     # through caom2gen will have modified the header content
@@ -1056,14 +1058,14 @@ class InstrumentType:
                         observation,
                         unmodified_headers[1:],
                         bp,
-                        self._cfht_name.file_uri,
-                        self._cfht_name.product_id,
+                        self._storage_name.file_uri,
+                        self._storage_name.product_id,
                     )
                     self._headers = previous_headers
                 else:
                     self._logger.debug(
                         f'Cannot reset the header/blueprint relationship for '
-                        f'{self._cfht_name.file_name} in '
+                        f'{self._storage_name.file_name} in '
                         f'{observation.observation_id}'
                     )
 
@@ -1093,13 +1095,13 @@ class InstrumentType:
 
         ingesting_hdf5 = False
 
-        if self._cfht_name.suffix == 'z':
+        if self._storage_name.suffix == 'z':
             ingesting_hdf5 = True
             self._logger.info(
                 f'Ingesting the hdf5 plane for {observation.observation_id}'
             )
 
-        if self._cfht_name.instrument is md.Inst.MEGACAM:
+        if self._storage_name.instrument is md.Inst.MEGACAM:
             # need the 'megacam' for the filter lookup at SVO, but there is
             # only a 'MegaPrime' instrument in the CAOM collection at CADC
             # see e.g. 2003A.frpts.z.36.00
@@ -1123,15 +1125,15 @@ class InstrumentType:
             )
             algorithm_name = 'master_detrend'
             if observation.observation_id[-1] == 'p':
-                if self._cfht_name.has_polarization:
+                if self._storage_name.has_polarization:
                     algorithm_name = 'polarization'
                 else:
                     algorithm_name = 'scan'
             observation = cc.change_to_composite(observation, algorithm_name)
 
         if (
-                self._cfht_name.instrument is md.Inst.SITELLE
-                and self._cfht_name.suffix == 'v'
+            self._storage_name.instrument is md.Inst.SITELLE
+            and self._storage_name.suffix == 'v'
         ):
             idx = 0
         else:
@@ -1140,16 +1142,15 @@ class InstrumentType:
         self.extension = idx
         self.update_observation()
         for plane in observation.planes.values():
-            if plane.product_id != self._cfht_name.product_id:
+            if plane.product_id != self._storage_name.product_id:
                 # do only the work for the applicable plane
                 continue
 
             self.plane = plane
             for artifact in plane.artifacts.values():
-                if artifact.uri != self._cfht_name.file_uri:
+                if artifact.uri != self._storage_name.file_uri:
                     continue
-                from caom2utils import fits2caom2
-                fits2caom2.update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, file_info)
                 if self.get_calibration_level(idx) == CalibrationLevel.RAW_STANDARD:
                     time_delta = self.get_time_refcoord_delta_simple(idx)
                 else:
@@ -1157,8 +1158,8 @@ class InstrumentType:
 
                 for part in artifact.parts.values():
                     if (
-                            self._cfht_name.instrument is md.Inst.SPIROU
-                            and self._cfht_name.suffix == 's'
+                        self._storage_name.instrument is md.Inst.SPIROU
+                        and self._storage_name.suffix == 's'
                     ):
                         part.chunks = TypedList(
                             Chunk,
@@ -1225,7 +1226,7 @@ class InstrumentType:
                 )
                 result = True
                 derived_type = ProvenanceType.COMMENT
-        if not result and not self._cfht_name.is_simple:
+        if not result and not self._storage_name.is_simple:
             result = True
             derived_type = ProvenanceType.FILENAME
         return result, derived_type
@@ -1288,19 +1289,17 @@ class InstrumentType:
 
     def _update_plane_provenance(self):
         self._logger.debug(
-            f'Begin _update_plane_provenance for {self._cfht_name.obs_id}'
+            f'Begin _update_plane_provenance for {self._storage_name.obs_id}'
         )
         obs_uri_ignore, plane_uri = cc.make_plane_uri(
-            self._cfht_name.obs_id, f'{self._cfht_name.obs_id}o', cn.COLLECTION
+            self._storage_name.obs_id,
+            f'{self._storage_name.obs_id}o',
+            cn.COLLECTION,
         )
-        # obs_member_str = mc.CaomName.make_obs_uri_from_obs_id(
-        #     cn.COLLECTION, obs_id
-        # )
-        # obs_member = ObservationURI(obs_member_str)
-        # plane_uri = PlaneURI.get_plane_uri(
-        #     obs_member, f'{self._cfht_name.obs_id}{self._cfht_name.suffix}')
         self.plane.provenance.inputs.add(plane_uri)
-        self._logger.debug(f'End _update_plane_provenance for {self._cfht_name.obs_id}')
+        self._logger.debug(
+            f'End _update_plane_provenance for {self._storage_name.obs_id}'
+        )
 
     def update_polarization(self):
         pass
@@ -1319,17 +1318,17 @@ class Espadons(InstrumentType):
 
     def _is_espadons_energy(self):
         result = False
-        if self._cfht_name.suffix in [
+        if self._storage_name.suffix in [
             'a', 'b', 'c', 'd', 'f', 'i', 'o', 'p', 'x'
         ]:
             result = True
         return result
 
-    def accumulate_bp(self, bp):
+    def accumulate_blueprint(self, bp):
         """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        super().accumulate_bp(bp)
+        super().accumulate_blueprint(bp)
 
         # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.add_fits_attribute(
@@ -1371,7 +1370,7 @@ class Espadons(InstrumentType):
             'Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()'
         )
 
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             bp.configure_polarization_axis(6)
             # caom2IngestEspadons.py, l209, lTODO
             bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
@@ -1383,7 +1382,7 @@ class Espadons(InstrumentType):
                 'get_polarization_function_val()',
             )
 
-        self._logger.debug('Done accumulate_bp.')
+        self._logger.debug('Done accumulate_blueprint.')
 
     def get_energy_function_delta(self, ext):
         result = None
@@ -1436,7 +1435,7 @@ class Espadons(InstrumentType):
 
     def get_exptime(self, ext):
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             # caom2IngestEspadons.py, l406
             exptime = 0.0
             polar_seq = mc.to_int(self._headers[ext].get('POLARSEQ'))
@@ -1444,7 +1443,7 @@ class Espadons(InstrumentType):
                 exptime += mc.to_float(self._headers[ext].get(f'EXPTIME{ii}'))
         # units are seconds
         if exptime is None:
-            if self._cfht_name.is_simple:
+            if self._storage_name.is_simple:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
         return exptime
@@ -1454,7 +1453,7 @@ class Espadons(InstrumentType):
 
     def get_provenance_keywords(self, ext):
         result = None
-        if self._cfht_name.suffix in ['i', 'p']:
+        if self._storage_name.suffix in ['i', 'p']:
             temp = self._headers[ext].get('REDUCTIO')
             if temp is not None:
                 result = f'reduction={temp}'
@@ -1534,7 +1533,7 @@ class Espadons(InstrumentType):
         return exptime / 86400.0  # units are d
 
     def get_time_refcoord_val(self, ext):
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             mjd_start1 = self._headers[ext].get('MJDSTART1')
             mjd_date1 = self._headers[ext].get('MJDATE1')
             mjd_obs = None
@@ -1590,7 +1589,7 @@ class Espadons(InstrumentType):
             # with missing spatial indicator keywords
             radecsys = self._headers[self._extension].get('RADECSYS')
             if not (
-                self._cfht_name.suffix in ['a', 'i', 'o', 'p']
+                self._storage_name.suffix in ['a', 'i', 'o', 'p']
                 and (radecsys is None or radecsys.lower() != 'null')
                 and self._headers[self._extension].get('RA_DEG') is not None
                 and self._headers[self._extension].get('DEC_DEG') is not None
@@ -1598,9 +1597,9 @@ class Espadons(InstrumentType):
                 cc.reset_position(self._chunk)
 
     def update_energy(self):
-        self._logger.debug(f'Begin update_energy for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin update_energy for {self._storage_name.obs_id}')
         if (
-            self._cfht_name.suffix
+            self._storage_name.suffix
             in [
                 'b',
                 'd',
@@ -1615,7 +1614,7 @@ class Espadons(InstrumentType):
             # Ignore energy wcs if some type of calibration file
             return
 
-        if self._cfht_name.suffix in ['a', 'c', 'f', 'o', 'x']:
+        if self._storage_name.suffix in ['a', 'c', 'f', 'o', 'x']:
             from caom2 import Axis, RefCoord, CoordRange1D, CoordAxis1D
             from caom2 import SpectralWCS
 
@@ -1639,13 +1638,13 @@ class Espadons(InstrumentType):
                 resolving_power=resolving_power,
             )
             self._chunk.energy_axis = 1
-        self._logger.debug(f'End update_energy for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End update_energy for {self._storage_name.obs_id}')
 
     def update_observable(self):
         self._logger.debug(
-            f'Begin update_observable for {self._cfht_name.obs_id}'
+            f'Begin update_observable for {self._storage_name.obs_id}'
         )
-        if self._cfht_name.suffix in ['i', 'p']:
+        if self._storage_name.suffix in ['i', 'p']:
             # caom2IngestEspadons.py, l828
             # CW Set up observable axes, row 1 is wavelength, row 2 is
             # normalized flux, row 3 ('p' only) is Stokes spectrum
@@ -1662,7 +1661,7 @@ class Espadons(InstrumentType):
                 self._chunk.observable_axis = 2
 
                 if (
-                    self._cfht_name.suffix == 'p'
+                    self._storage_name.suffix == 'p'
                     and len(self.part.chunks) == 1
                 ):
                     # caom2IngestEspadons.py, l863
@@ -1675,7 +1674,7 @@ class Espadons(InstrumentType):
                     new_chunk._id = Chunk._gen_id()
                     self.part.chunks.append(new_chunk)
         self._logger.debug(
-            f'End _update_observable for {self._cfht_name.obs_id}'
+            f'End _update_observable for {self._storage_name.obs_id}'
         )
 
     def update_observation(self):
@@ -1699,7 +1698,7 @@ class Espadons(InstrumentType):
     def update_plane(self):
         super(Espadons, self).update_plane()
         # caom2IngestEspadons.py, l714
-        if self._cfht_name.suffix == 'i':
+        if self._storage_name.suffix == 'i':
             self._update_plane_provenance()
 
     def update_position(self):
@@ -1734,20 +1733,20 @@ class Mega(InstrumentType):
             filter_name = self._headers[self._extension + 1].get('FILTER')
         self._filter_name = filter_name
 
-    def accumulate_bp(self, bp):
+    def accumulate_blueprint(self, bp):
         """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        super().accumulate_bp(bp)
+        super().accumulate_blueprint(bp)
         bp.set_default('Plane.provenance.name', 'ELIXIR')
         bp.set_default(
             'Plane.provenance.reference',
             'http://www.cfht.hawaii.edu/Instruments/Elixir/',
         )
-        self._logger.debug('Done accumulate_bp.')
+        self._logger.debug('Done accumulate_blueprint.')
 
     def _is_derived(self, obs_id):
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             # 'p' files are processed and do have IMCMB inputs, but they are
             # additional planes on SimpleObservations, not Derived. See header
             # discussion.
@@ -1781,7 +1780,7 @@ class Mega(InstrumentType):
             self._filter_name is None
             or self._filter_name in ['Open', 'NONE']
             or ac.FilterMetadataCache.get_fwhm(filter_md) is None
-            or self._cfht_name.suffix in ['b', 'l', 'd']
+            or self._storage_name.suffix in ['b', 'l', 'd']
             or self._observation.type in ['DARK']
         ):
             cc.reset_energy(self._chunk)
@@ -1791,12 +1790,12 @@ class Mega(InstrumentType):
         # Ignore position wcs if a calibration file (except 'x'
         # type calibration) and/or position info not in header
         # or binned 8x8
-        ccdbin = self._headers[self._extension].get('CCBIN1')
+        ccdbin = self._headers[self._extension].get('CCDBIN1')
         radecsys = self._headers[self._extension].get('RADECSYS')
         ctype1 = self._headers[self._extension].get('CTYPE1')
         if (
-            self._cfht_name.suffix in ['b', 'l', 'd', 'f']
-            or ccdbin == 8
+            self._storage_name.suffix in ['b', 'l', 'd', 'f']
+            or (ccdbin is not None and ccdbin == 8)
             or radecsys is None
             or ctype1 is None
             # TODO - figure out if this should be called
@@ -1812,7 +1811,7 @@ class Mega(InstrumentType):
             self._filter_name is None
             or self._filter_name in ['Open', 'NONE']
             or ac.FilterMetadataCache.get_fwhm(filter_md) is None
-            or self._cfht_name.suffix in ['b', 'l', 'd']
+            or self._storage_name.suffix in ['b', 'l', 'd']
             or self._observation.type in ['DARK']
         ):
             cc.build_chunk_energy_range(
@@ -1829,7 +1828,7 @@ class Mega(InstrumentType):
     def update_plane(self):
         super(Mega, self).update_plane()
         # caom2IngestMegacam.py, l142
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             self._update_plane_provenance()
 
 
@@ -1839,26 +1838,30 @@ class Sitelle(InstrumentType):
         super().__init__(headers, cfht_name)
 
     def _is_derived(self, obs_id):
-        if self._cfht_name.suffix == 'z':
+        if self._storage_name.suffix == 'z':
             result = True
             derived_type = ProvenanceType.UNDEFINED
         else:
             result, derived_type = super()._is_derived(obs_id)
         return result, derived_type
 
-    def accumulate_bp(self, bp):
+    def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        super().accumulate_bp(bp)
-        if self._cfht_name.suffix == 'v':
+        super().accumulate_blueprint(bp)
+        if self._storage_name.suffix == 'v':
             bp.set('Observation.intent', ObservationIntentType.SCIENCE)
             bp.set(
-                'Observation.sequenceNumber', self._cfht_name.product_id[:-1]
+                'Observation.sequenceNumber', self._storage_name.product_id[:-1]
             )
             bp.clear('Plane.provenance.version')
             bp.add_fits_attribute('Plane.provenance.version', 'PROGRAM')
             bp.set('Artifact.productType', ProductType.SCIENCE)
+
+        if self._storage_name.suffix == 'z':
+            bp.set('Artifact.productType', ProductType.SCIENCE)
+
         bp.set_default('Plane.provenance.name', 'ORBS')
         bp.set_default('Plane.provenance.reference', 'http://ascl.net/1409.007')
 
@@ -1866,13 +1869,13 @@ class Sitelle(InstrumentType):
             'Chunk.time.axis.function.delta', 'get_time_refcoord_delta()'
         )
         bp.set('Chunk.time.axis.function.refCoord.val', '_get_mjd_start()')
-        self._logger.debug('End accumulate_bp.')
+        self._logger.debug('End accumulate_blueprint.')
 
     def get_energy_function_delta(self, ext):
         result = None
         if self._has_energy(ext):
             # caom2IngestSitelle.py l590
-            if self._cfht_name.suffix == 'p':
+            if self._storage_name.suffix == 'p':
                 result = self._headers[ext].get('CDELT3')
             else:
                 # units in file are nm, units in blueprint are Angstroms
@@ -1883,7 +1886,7 @@ class Sitelle(InstrumentType):
 
     def get_energy_function_naxis(self, ext):
         result = 1.0
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             result = self._headers[ext].get('NAXIS3', 1.0)
         return result
 
@@ -1891,7 +1894,7 @@ class Sitelle(InstrumentType):
         result = None
         if self._has_energy(ext):
             # caom2IngestSitelle.py l590
-            if self._cfht_name.suffix == 'p':
+            if self._storage_name.suffix == 'p':
                 result = self._headers[ext].get('CRPIX3', 0.5)
             else:
                 result = 0.5
@@ -1901,7 +1904,7 @@ class Sitelle(InstrumentType):
         result = None
         if self._has_energy(ext):
             # caom2IngestSitelle.py l590
-            if self._cfht_name.suffix == 'p':
+            if self._storage_name.suffix == 'p':
                 result = self._headers[ext].get('CRVAL3')
             else:
                 # units in file are nm, units in blueprint are Angstroms
@@ -1919,7 +1922,7 @@ class Sitelle(InstrumentType):
                 result = sitresol
             if result is None:
                 result = 1.0
-                if self._cfht_name.suffix in ['a', 'c', 'f', 'o', 'x']:
+                if self._storage_name.suffix in ['a', 'c', 'f', 'o', 'x']:
                     # from caom2IngestSitelle.py, l596
                     crval3 = mc.to_float(self._headers[ext].get('FILTERLB'))
                     cdelt3 = mc.to_float(self._headers[ext].get('FILTERBW'))
@@ -1929,24 +1932,24 @@ class Sitelle(InstrumentType):
 
     def get_exptime(self, ext):
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             num_steps = self._headers[ext].get('STEPNB', 1)
             exptime = exptime * num_steps
         # units are seconds
         if exptime is None:
-            if self._cfht_name.is_simple:
+            if self._storage_name.is_simple:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
         return exptime
 
     def get_plane_data_product_type(self, ext):
         result = DataProductType.IMAGE
-        if self._cfht_name.is_derived_sitelle:
+        if self._storage_name.is_derived_sitelle:
             result = DataProductType.CUBE
         return result
 
     def get_plane_data_release(self, ext):
-        if self._cfht_name.suffix == 'v':
+        if self._storage_name.suffix == 'v':
             # REL_DATE not in header, RUN_ID not in header, derive from
             # DATE-OBS
             result = None
@@ -1962,7 +1965,7 @@ class Sitelle(InstrumentType):
         return result
 
     def get_time_refcoord_delta(self, ext):
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             delta = None
             mjd_start = self._get_mjd_start(ext)
             mjd_end = mc.to_float(self._headers[ext].get('MJDEND'))
@@ -1984,13 +1987,13 @@ class Sitelle(InstrumentType):
         self._logger.debug(
             f'Begin _update_sitelle_plane for {observation.observation_id}'
         )
-        if self._cfht_name.suffix not in ['p', 'z']:
+        if self._storage_name.suffix not in ['p', 'z']:
             return
 
         # if the 'p' plane exists, the observation id is the same as the
         # plane id, so copy the metadata to the 'z' plane
         z_plane_key = observation.observation_id.replace('p', 'z')
-        temp_z_uri = self._cfht_name.file_uri.replace('p', 'z', 1)
+        temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
         z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
 
         # fix the plane-level information for the z plane
@@ -2005,30 +2008,29 @@ class Sitelle(InstrumentType):
             )
 
             if observation.observation_id in observation.planes.keys():
-                logging.error('get here?????????')
                 # replicate the plane-level information from the p plane to the
                 # z plane
                 p_plane = observation.planes[observation.observation_id]
-                temp = self._cfht_name.file_uri.replace('.hdf5', '.fits.fz')
+                temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
                 if temp.count('z') == 1:
                     # uri looks like: ad:CFHT/2384125p.fits.fz
                     p_artifact_key = temp
                 else:
                     p_artifact_key = temp.replace('z', 'p', 1)
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._cfht_name.file_uri.replace(
+                    p_artifact_key = self._storage_name.file_uri.replace(
                         'z', 'p', 1
                     ).replace(
                         '.hdf5', '.fits'
                     )
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = self._cfht_name.file_uri.replace(
+                        p_artifact_key = self._storage_name.file_uri.replace(
                             'z', 'p', 1
                         ).replace(
                             '.hdf5', '.fits.gz'
                         )
                         if p_artifact_key not in p_plane.artifacts.keys():
-                            p_artifact_key = self._cfht_name.file_uri.replace(
+                            p_artifact_key = self._storage_name.file_uri.replace(
                                 'z', 'p', 1
                             ).replace(
                                 '.hdf5', '.fits.header'
@@ -2062,7 +2064,7 @@ class Sitelle(InstrumentType):
     def make_axes_consistent(self):
         self._chunk.time_axis = None
         if (
-            self._cfht_name.suffix in ['a', 'o', 'x']
+            self._storage_name.suffix in ['a', 'o', 'x']
             and self._chunk.position is None
             and self._chunk.naxis is not None
             and self._chunk.naxis == 3
@@ -2088,23 +2090,23 @@ class Sitelle(InstrumentType):
             else:
                 self._chunk.energy_axis = 3
 
-        if self._cfht_name.suffix == 'v':
+        if self._storage_name.suffix == 'v':
             cc.reset_energy(self._chunk)
 
     def update_position(self):
         if (
-            self._cfht_name.suffix in ['a', 'o', 'x']
+            self._storage_name.suffix in ['a', 'o', 'x']
             and self._chunk.position is None
         ):
             self._update_range_position()
 
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             if self._chunk.position.axis.function is None:
                 self._update_function_position()
 
     def _update_function_position(self):
         self._logger.debug(
-            f'Begin update_position_function for {self._cfht_name.obs_id}'
+            f'Begin update_position_function for {self._storage_name.obs_id}'
         )
         header = self._headers[self._extension]
         cd1_1 = header.get('CD1_1')
@@ -2131,14 +2133,14 @@ class Sitelle(InstrumentType):
                 header['CD2_1'] = cd2_1
                 header['CD2_2'] = cd2_2
 
-        wcs_parser = WcsParser(header, self._cfht_name.obs_id, self._extension)
+        wcs_parser = WcsParser(header, self._storage_name.obs_id, self._extension)
         if self._chunk is None:
             self._chunk = Chunk()
         wcs_parser.augment_position(self._chunk)
-        self._logger.debug(f'End update_function_position for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End update_function_position for {self._storage_name.obs_id}')
 
     def _update_range_position(self):
-        self._logger.debug(f'Begin _update_position for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin _update_position for {self._storage_name.obs_id}')
         # from caom2IngestSitelle.py l894
         header = self._headers[self._extension]
         obs_ra = header.get('RA_DEG')
@@ -2176,7 +2178,7 @@ class Sitelle(InstrumentType):
         self._chunk.position = position
         self._chunk.position_axis_1 = 1
         self._chunk.position_axis_2 = 2
-        self._logger.debug(f'End _update_position for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End _update_position for {self._storage_name.obs_id}')
 
 
 class Spirou(InstrumentType):
@@ -2195,19 +2197,19 @@ class Spirou(InstrumentType):
         self._extension = value
         self._header = self._headers[value]
 
-    def accumulate_bp(self, bp):
+    def accumulate_blueprint(self, bp):
         """Configure the SPIRou-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        super().accumulate_bp(bp)
+        super().accumulate_blueprint(bp)
         bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.add_fits_attribute(
             'Observation.target_position.coordsys', 'RADECSYS'
         )
 
-        if self._cfht_name.suffix == 'r':
+        if self._storage_name.suffix == 'r':
             pass
-        elif self._cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
+        elif self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
             bp.set('Plane.provenance.name', 'get_provenance_name()')
             bp.set(
                 'Plane.provenance.reference',
@@ -2283,7 +2285,7 @@ class Spirou(InstrumentType):
             'get_position_equinox_from_0th_header()',
         )
 
-        if self._cfht_name.suffix not in ['g', 'p']:
+        if self._storage_name.suffix not in ['g', 'p']:
             bp.set(
                 'Chunk.time.axis.function.delta', 'get_time_refcoord_delta()'
             )
@@ -2292,7 +2294,7 @@ class Spirou(InstrumentType):
             )
             bp.set('Chunk.time.resolution', 'get_time_resolution()')
 
-        if self._cfht_name.suffix == 'p':
+        if self._storage_name.suffix == 'p':
             bp.configure_polarization_axis(7)
             bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
             bp.set('Chunk.polarization.axis.function.naxis', 1)
@@ -2300,18 +2302,18 @@ class Spirou(InstrumentType):
             bp.set('Chunk.polarization.axis.function.refCoord.pix', 1.0)
 
     def get_exptime(self, ext):
-        if self._cfht_name.suffix in ['g']:
+        if self._storage_name.suffix in ['g']:
             result = super().get_exptime(ext)
         # caom2IngestSpirou.py, l530+
-        elif self._cfht_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
+        elif self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
             result = self._headers[ext].get('EXPTIME')
-        elif self._cfht_name.suffix == 'p':
+        elif self._storage_name.suffix == 'p':
             result = self._headers[ext].get('TOTETIME')
         else:
             result = self._headers[ext].get('DARKTIME')
         if result is None:
             self._logger.warning(f'No Time WCS refcoord.delta value for '
-                                 f'{self._cfht_name.file_uri}.'
+                                 f'{self._storage_name.file_uri}.'
             )
         return result
 
@@ -2336,16 +2338,16 @@ class Spirou(InstrumentType):
     def get_time_refcoord_delta(self, ext):
         # caom2IngestSpirou.py, l530+
         result = None
-        if self._cfht_name.suffix == 'r':
+        if self._storage_name.suffix == 'r':
             temp = self._headers[ext].get('FRMTIME')
-        elif self._cfht_name.suffix == 'p':
+        elif self._storage_name.suffix == 'p':
             temp = self._headers[ext].get('TOTETIME')
         else:
             temp = self._headers[ext].get('DARKTIME')
         if temp is None:
             self._logger.warning(
                 f'No Time WCS refcoord.delta value for '
-                f'{self._cfht_name.file_uri}.'
+                f'{self._storage_name.file_uri}.'
             )
         else:
             result = temp / (24.0 * 3600.0)
@@ -2354,25 +2356,25 @@ class Spirou(InstrumentType):
     def get_time_refcoord_naxis(self, ext):
         # caom2IngestSpirou.py, l557
         result = 1.0
-        if self._cfht_name.suffix == 'r':
+        if self._storage_name.suffix == 'r':
             result = self._headers[ext].get('NREADS')
         if result is None:
             self._logger.warning(
                 f'No Time WCS refcoord.naxis value for '
-                f'{self._cfht_name.file_uri}.'
+                f'{self._storage_name.file_uri}.'
             )
         return result
 
     def get_time_resolution(self, ext):
         # caom2IngestSpirou.py, l530+
         result = self.get_time_refcoord_delta(ext)
-        if self._cfht_name.suffix == 'r':
+        if self._storage_name.suffix == 'r':
             result = result * (24.0 * 3600.0)
         else:
             result = self.get_exptime(ext)
         if result is None:
             self._logger.warning(
-                f'No Time WCS resolution value for {self._cfht_name.file_uri}.'
+                f'No Time WCS resolution value for {self._storage_name.file_uri}.'
             )
         return result
 
@@ -2391,7 +2393,7 @@ class Spirou(InstrumentType):
             self._chunk.position_axis_2 = None
 
     def reset_position(self):
-        self._logger.debug(f'Begin reset_position for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin reset_position for {self._storage_name.obs_id}')
         # from caom2IngestSpirou.py, l499+
         # CW - ignore position wcs if a calibration file
         ra_deg = self._header.get('RA_DEG')
@@ -2403,24 +2405,24 @@ class Spirou(InstrumentType):
             and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
         ):
             cc.reset_position(self._chunk)
-        self._logger.debug(f'End reset_position for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End reset_position for {self._storage_name.obs_id}')
 
     def update_observation(self):
         super(Spirou, self).update_observation()
-        if self._cfht_name.suffix != 'r':
+        if self._storage_name.suffix != 'r':
             cc.rename_parts(self._observation, self._headers)
 
     def update_plane(self):
         super(Spirou, self).update_plane()
         # caom2IngestSpirou.py, l584
-        if self._cfht_name.suffix in ['e', 's', 't']:
+        if self._storage_name.suffix in ['e', 's', 't']:
             self._update_plane_provenance()
-        elif self._cfht_name.suffix == 'g':
+        elif self._storage_name.suffix == 'g':
             self.plane.data_product_type = DataProductType.IMAGE
 
     def update_polarization(self):
-        self._logger.debug(f'End update_polarization for {self._cfht_name.obs_id}')
-        if self._cfht_name.suffix == 'p':
+        self._logger.debug(f'End update_polarization for {self._storage_name.obs_id}')
+        if self._storage_name.suffix == 'p':
             header = None
             for h in self._headers:
                 if h.get('EXTNAME') == self.part.name:
@@ -2431,7 +2433,7 @@ class Spirou(InstrumentType):
             if stokes_param is None:
                 self._logger.warning(
                     f'No STOKES value for HDU {self.part.name} in '
-                    f'{self._cfht_name.obs_id}. No polarization.'
+                    f'{self._storage_name.obs_id}. No polarization.'
                 )
                 self._chunk.polarization = None
                 self._chunk.polarization_axis = None
@@ -2467,16 +2469,16 @@ class Spirou(InstrumentType):
             self._chunk.energy_axis = None
             self._chunk.time_axis = None
             self._chunk.polarization_axis = None
-        self._logger.debug(f'End update_polarization for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End update_polarization for {self._storage_name.obs_id}')
 
     def update_time(self):
-        if self._cfht_name.suffix == 'g':
+        if self._storage_name.suffix == 'g':
             self._update_time_g()
-        elif self._cfht_name.suffix == 'p':
+        elif self._storage_name.suffix == 'p':
             self._update_time_p()
 
     def _update_time_g(self):
-        self._logger.debug(f'Begin update_time for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin update_time for {self._storage_name.obs_id}')
         # construct TemporalWCS for 'g' files from the CAOM2 pieces
         # because the structure of 'g' files is so varied, it's not
         # possible to hand over even part of the construction to the
@@ -2517,7 +2519,7 @@ class Spirou(InstrumentType):
         e_time = mc.get_keyword(self._headers, 'ETIME')
         if e_time is None:
             self._logger.warning(
-                f'No exposure found for {self._cfht_name.file_name}. '
+                f'No exposure found for {self._storage_name.file_name}. '
                 f'No Temporal WCS.'
             )
         else:
@@ -2527,10 +2529,10 @@ class Spirou(InstrumentType):
             self._chunk.time.axis.function = CoordFunction1D(
                 naxis=time_naxis, delta=time_delta, ref_coord=ref_coord
             )
-        self._logger.debug(f'End _update_time_g for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End _update_time_g for {self._storage_name.obs_id}')
 
     def _update_time_p(self):
-        self._logger.debug(f'Begin _update_time_p for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin _update_time_p for {self._storage_name.obs_id}')
         # TOTETIME is not in all the HDUs, so copy it from the HDUs that have
         # it, and use it everywhere - this matches existing CFHT SPIRou 'p'
         # behaviour
@@ -2561,18 +2563,18 @@ class Spirou(InstrumentType):
 
         if self._chunk.time is None:
             self._logger.warning(
-                f'No chunk time metadata for {self._cfht_name.obs_id}, part '
+                f'No chunk time metadata for {self._storage_name.obs_id}, part '
                 f'{self.part.name}.'
             )
         elif tot_e_time is None:
             self._logger.warning(
-                f'Cannot find time metadata for {self._cfht_name.obs_id}, part '
+                f'Cannot find time metadata for {self._storage_name.obs_id}, part '
                 f'{self.part.name}.'
             )
         else:
             self._chunk.time.exposure = tot_e_time
             self._chunk.time.resolution = tot_e_time
-        self._logger.debug(f'End _update_time_p for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End _update_time_p for {self._storage_name.obs_id}')
 
 
 class Wircam(InstrumentType):
@@ -2580,11 +2582,11 @@ class Wircam(InstrumentType):
     def __init__(self, headers, cfht_name):
         super().__init__(headers, cfht_name)
 
-    def accumulate_bp(self, bp):
+    def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        super().accumulate_bp(bp)
+        super().accumulate_blueprint(bp)
 
         bp.set('Plane.provenance.keywords', 'get_provenance_keywords()')
         bp.set_default('Plane.provenance.name', 'IIWI')
@@ -2595,7 +2597,7 @@ class Wircam(InstrumentType):
 
         bp.set('Chunk.energy.bandpassName', 'get_bandpass_name(header)')
 
-        self._logger.debug('Done accumulate_bp.')
+        self._logger.debug('Done accumulate_blueprint.')
 
     def get_bandpass_name(self, ext):
         wheel_a = self._headers[ext].get('WHEELADE')
@@ -2612,23 +2614,23 @@ class Wircam(InstrumentType):
     def get_obs_type(self, ext):
         result = super().get_obs_type(ext)
         # caom2IngestWircamdetrend.py, l369
-        if 'weight' in self._cfht_name.file_uri:
+        if 'weight' in self._storage_name.file_uri:
             result = 'WEIGHT'
         elif(
-                'badpix' in self._cfht_name.file_uri
-                or 'hotpix' in self._cfht_name.file_uri
-                or 'deadpix' in self._cfht_name.file_uri
+                'badpix' in self._storage_name.file_uri
+                or 'hotpix' in self._storage_name.file_uri
+                or 'deadpix' in self._storage_name.file_uri
         ):
             result = 'BPM'
-        elif self._cfht_name.suffix == 'g' and result is None:
+        elif self._storage_name.suffix == 'g' and result is None:
             result = 'GUIDE'
         return result
 
     def get_provenance_keywords(self, ext):
         result = None
-        if self._cfht_name.suffix in ['p', 's']:
+        if self._storage_name.suffix in ['p', 's']:
             # caom2IngestWircam.py, l1063
-            if self._cfht_name.suffix == 'p':
+            if self._storage_name.suffix == 'p':
                 result = 'skysubtraction=yes'
             else:
                 result = 'skysubtraction=no'
@@ -2639,26 +2641,26 @@ class Wircam(InstrumentType):
         self._logger.debug(
             f'Begin _update_plane_post for {observation.observation_id}'
         )
-        if self._cfht_name.suffix not in ['p', 'y']:
+        if self._storage_name.suffix not in ['p', 'y']:
             return
 
         # for some 'y' files, that don't have enough metadata on their own,
         # if the 'p' plane exists, and the 'y' plane exists,
         # copy the metadata to the 'y' plane, because the 'y' file
         # will not have enough metadata to fill these things in alone
-        copy_to_key = self._cfht_name.product_id
-        copy_to_artifact_key = self._cfht_name.file_uri
-        if self._cfht_name.suffix == 'p':
-            copy_to_key = self._cfht_name.product_id.replace('p', 'y')
-            copy_to_artifact_key = self._cfht_name.file_uri.replace(
+        copy_to_key = self._storage_name.product_id
+        copy_to_artifact_key = self._storage_name.file_uri
+        if self._storage_name.suffix == 'p':
+            copy_to_key = self._storage_name.product_id.replace('p', 'y')
+            copy_to_artifact_key = self._storage_name.file_uri.replace(
                 'p', 'y', 1
             )
 
-        copy_from_key = self._cfht_name.product_id
-        copy_from_artifact_key = self._cfht_name.file_uri
-        if self._cfht_name.suffix == 'y':
-            copy_from_key = self._cfht_name.product_id.replace('y', 'p')
-            copy_from_artifact_key = self._cfht_name.file_uri.replace(
+        copy_from_key = self._storage_name.product_id
+        copy_from_artifact_key = self._storage_name.file_uri
+        if self._storage_name.suffix == 'y':
+            copy_from_key = self._storage_name.product_id.replace('y', 'p')
+            copy_from_artifact_key = self._storage_name.file_uri.replace(
                 'y', 'p', 1
             )
 
@@ -2699,7 +2701,7 @@ class Wircam(InstrumentType):
         # be set
         # 'y' is auxOverride l345 caom2IngestWircam.py
         if (
-            self._cfht_name.suffix in ['d', 'f', 'g', 'o', 'y']
+            self._storage_name.suffix in ['d', 'f', 'g', 'o', 'y']
             and self._chunk.position is None
         ):
             # PD - 17-01-20
@@ -2731,7 +2733,7 @@ class Wircam(InstrumentType):
             self._chunk.energy_axis = None
 
     def reset_energy(self):
-        if self._cfht_name.suffix == 'g':
+        if self._storage_name.suffix == 'g':
             temp_bandpass_name = self._headers[self._extension].get('FILTER')
             if temp_bandpass_name == 'FakeBlank':
                 cc.reset_energy(self._chunk)
@@ -2746,7 +2748,7 @@ class Wircam(InstrumentType):
             self._chunk.energy_axis = None
             self._chunk.time_axis = None
 
-        if self._cfht_name.suffix in ['f'] or self._observation.type in [
+        if self._storage_name.suffix in ['f'] or self._observation.type in [
             'BPM',
             'DARK',
             'FLAT',
@@ -2777,17 +2779,17 @@ class Wircam(InstrumentType):
         # ensure the order of ingestion doesn't change the outcome
         # at the observation level between 'o' and 'g' files
         if (
-            self._cfht_name.suffix in ['g', 'o']
+            self._storage_name.suffix in ['g', 'o']
             and self._observation.type == 'GUIDE'
             and self._observation.intent is ObservationIntentType.CALIBRATION
         ):
-            g_plane_key = self._cfht_name.product_id.replace('o', 'g')
-            o_plane_key = self._cfht_name.product_id.replace('g', 'o')
+            g_plane_key = self._storage_name.product_id.replace('o', 'g')
+            o_plane_key = self._storage_name.product_id.replace('g', 'o')
             if (
                 g_plane_key in self._observation.planes.keys()
                 and o_plane_key in self._observation.planes.keys()
             ):
-                o_artifact_key = self._cfht_name.file_uri.replace('g', 'o')
+                o_artifact_key = self._storage_name.file_uri.replace('g', 'o')
                 # undo what the 'g' file did at the Observation level
                 o_plane = self._observation.planes[o_plane_key]
                 o_artifact = o_plane.artifacts[o_artifact_key]
@@ -2804,18 +2806,18 @@ class Wircam(InstrumentType):
         # caom2IngestWircam.py, l193
         # CW 09-01-20
         # Only the 'o' is input
-        if self._cfht_name.suffix in ['p', 's']:
+        if self._storage_name.suffix in ['p', 's']:
             self._update_plane_provenance()
 
     def update_position(self):
-        if self._cfht_name.suffix == 'g':
+        if self._storage_name.suffix == 'g':
             self._update_position_g()
-        elif self._cfht_name.suffix == 'o':
+        elif self._storage_name.suffix == 'o':
             self._update_position_o()
 
     def _update_position_g(self):
         """'g' file position handling."""
-        self._logger.debug(f'Begin _update_position_g for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin _update_position_g for {self._storage_name.obs_id}')
         header = self._headers[self._extension]
         obj_name = header.get('OBJNAME')
         part_index = mc.to_int(self.part.name)
@@ -2828,7 +2830,7 @@ class Wircam(InstrumentType):
             # ingestion to the service.
             self._logger.warning(
                 f'obj_name is {obj_name}. part_num is {part_index} No '
-                f'position for {self._cfht_name.obs_id}'
+                f'position for {self._storage_name.obs_id}'
             )
             cc.reset_position(self._chunk)
             return
@@ -2846,7 +2848,7 @@ class Wircam(InstrumentType):
         if cd1_1 is None or cd2_2 is None:
             self._logger.warning(
                 f'cd1_1 is {cd1_1}, cd2_2 is {cd2_2}, part_index is '
-                f'{part_index}. No position for this part for {self._cfht_name.obs_id}.'
+                f'{part_index}. No position for this part for {self._storage_name.obs_id}.'
             )
             cc.reset_position(self._chunk)
             return
@@ -2882,7 +2884,7 @@ class Wircam(InstrumentType):
         if naxis_2 is None:
             naxis_2 = header.get('ZNAXIS2')
 
-        if mc.to_float(self._cfht_name.obs_id) < 980000:
+        if mc.to_float(self._storage_name.obs_id) < 980000:
             cr_val2 *= 15.0
 
         # caom2IngestWircam.py, l367
@@ -2897,7 +2899,7 @@ class Wircam(InstrumentType):
         header['CD2_1'] = 0.0
         header['CD2_2'] = cd2_2
 
-        wcs_parser = WcsParser(header, self._cfht_name.obs_id, self._extension)
+        wcs_parser = WcsParser(header, self._storage_name.obs_id, self._extension)
         if self._chunk is None:
             self._chunk = Chunk()
         wcs_parser.augment_position(self._chunk)
@@ -2905,10 +2907,10 @@ class Wircam(InstrumentType):
             self._chunk.naxis = 2
             self._chunk.position_axis_1 = 1
             self._chunk.position_axis_2 = 2
-        self._logger.debug(f'End _update_position_g for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End _update_position_g for {self._storage_name.obs_id}')
 
     def _update_position_o(self):
-        self._logger.debug(f'Begin _update_position_o for {self._cfht_name.obs_id}')
+        self._logger.debug(f'Begin _update_position_o for {self._storage_name.obs_id}')
         part_index = mc.to_int(self.part.name)
         header = self._headers[part_index]
         ra_deg = header.get('RA_DEG')
@@ -2919,7 +2921,7 @@ class Wircam(InstrumentType):
             and dec_deg is not None
         ):
             self._logger.info(
-                f'Adding position information for {self._cfht_name.obs_id}'
+                f'Adding position information for {self._storage_name.obs_id}'
             )
             header['CTYPE1'] = 'RA---TAN'
             header['CTYPE2'] = 'DEC--TAN'
@@ -2927,7 +2929,7 @@ class Wircam(InstrumentType):
             header['CUNIT2'] = 'deg'
             header['CRVAL1'] = ra_deg
             header['CRVAL2'] = dec_deg
-            wcs_parser = WcsParser(header, self._cfht_name.obs_id, self._extension)
+            wcs_parser = WcsParser(header, self._storage_name.obs_id, self._extension)
             if self._chunk is None:
                 self._chunk = Chunk()
             wcs_parser.augment_position(self._chunk)
@@ -2937,8 +2939,8 @@ class Wircam(InstrumentType):
         self._logger.debug(f'End _update_position_o')
 
     def update_time(self):
-        self._logger.debug(f'Begin _update_time for {self._cfht_name.obs_id}')
-        if self._cfht_name.suffix == 'g':
+        self._logger.debug(f'Begin _update_time for {self._storage_name.obs_id}')
+        if self._storage_name.suffix == 'g':
             # construct TemporalWCS for 'g' files from the CAOM2 pieces
             # because the structure of 'g' files is so varied, it's not
             # possible to hand over even part of the construction to the
@@ -3030,14 +3032,14 @@ class Wircam(InstrumentType):
         # on function execution, because it affects NAXIS, not ZNAXIS - sigh
         if (
             self._observation.type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT']
-            and self._cfht_name.suffix != 'g'
+            and self._storage_name.suffix != 'g'
         ):
             n_exp = self._headers[self._extension].get('NEXP')
             if n_exp is not None:
                 # caom2IngestWircam.py, l843
                 self._chunk.time.axis.function.naxis = mc.to_int(n_exp)
 
-        self._logger.debug(f'End _update_time for {self._cfht_name.obs_id}')
+        self._logger.debug(f'End _update_time for {self._storage_name.obs_id}')
 
 
 def _repair_comment_provenance_value(value, obs_id):

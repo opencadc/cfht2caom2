@@ -128,6 +128,12 @@ def test_preview_augment():
             '2401734v.fits',
         ],
         'visit_obs_start_2hdus_mega.xml': ['1821271p.fits.fz'],
+        'visit_obs_start_wircam_unzipped.xml': ['1334021f.fits'],
+        'visit_obs_start_wircam_gz.xml': ['2615124g.fits.gz'],
+        'visit_obs_start_scatter.xml': ['04Am01.scatter.r.36.00.fits.fz'],
+        'visit_obs_start_mega_few_hdus.xml': ['1805750p.fits.fz'],
+        'visit_obs_start_spirou_p.xml': ['2446341p.fits'],
+        'visit_obs_start_wircam_fits.xml': ['1334131g.fits'],
     }
 
     test_checksums = {
@@ -218,7 +224,7 @@ def test_preview_augment():
         )
         if 'wircam' in key:
             instrument = md.Inst.WIRCAM
-        elif 'mega' in key:
+        elif 'mega' in key or 'scatter' in key:
             instrument = md.Inst.MEGACAM
         elif 'sitelle' in key:
             instrument = md.Inst.SITELLE

@@ -74,6 +74,8 @@ from astropy.wcs import FITSFixedWarning
 from caom2pipe import reader_composable as rdc
 from cfht2caom2 import cfht_name
 from cfht2caom2 import fits2caom2_augmentation
+from os import unlink
+from os.path import exists
 
 from mock import patch
 import test_fits2caom2_augmentation
@@ -166,6 +168,13 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,
         }
+        actual_fqn = (
+            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
+            f'{storage_name.obs_id}.actual.xml'
+        )
+        if exists(actual_fqn):
+            unlink(actual_fqn)
+
         observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
     test_fits2caom2_augmentation._compare(
