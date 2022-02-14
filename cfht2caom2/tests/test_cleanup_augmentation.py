@@ -69,7 +69,7 @@
 
 from os import path
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cleanup_augmentation
+from cfht2caom2 import cleanup_augmentation, cfht_name
 import test_fits2caom2_augmentation
 
 
@@ -81,11 +81,9 @@ def test_cleanup_augmentation():
         )
     )
     assert len(test_obs.planes) == 3, 'initial conditions failed'
-    kwargs = {}
+    storage_name = cfht_name.CFHTName(file_name='abc.fits.fz')
+    kwargs = {'storage_name': storage_name}
     test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
-    # assert test_result is not None, 'expect a result'
-    # assert test_result.get('planes') is not None, 'expect a plane count'
-    # assert test_result.get('planes') == 2, 'wrong number of planes removed'
     assert len(test_obs.planes) == 1, 'post-test conditions failed'
     assert '1927963p' in test_obs.planes.keys(), 'wrong plane deleted'
 
@@ -98,15 +96,19 @@ def test_cleanup_augmentation_bad_artifact_uris():
         )
     )
     assert len(test_obs.planes) == 2, 'initial conditions failed'
-    test_plane_1 = test_obs.planes['2255229o']
-    test_plane_2 = test_obs.planes['2255229p']
+    f1 = '2255229o.fits.fz'
+    f2 = '2255229p.fits.fz'
+    test_plane_1 = test_obs.planes[f1.split('.')[0]]
+    test_plane_2 = test_obs.planes[f2.split('.')[0]]
     assert len(test_plane_1.artifacts) == 7, 'plane 1 initial conditions failed'
     assert len(test_plane_2.artifacts) == 7, 'plane 2 initial conditions failed'
-    kwargs = {}
-    test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
-    # assert test_result is not None, 'expect a result'
-    # assert test_result.get('planes') is not None, 'expect a plane count'
-    # assert test_result.get('planes') == 2, 'wrong number of planes removed'
+
+    for f_name in [f1, f2]:
+        storage_name = cfht_name.CFHTName(file_name=f_name)
+        kwargs = {'storage_name': storage_name}
+        test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
     assert len(test_obs.planes) == 2, 'post-test conditions failed'
     assert len(test_plane_1.artifacts) == 4, 'plane 1 post conditions failed'
     assert len(test_plane_2.artifacts) == 4, 'plane 2 post conditions failed'
+    assert 'ad:CFHT/2255229p_preview_256.jpg' in test_plane_2.artifacts.keys()
+    assert 'ad:CFHT/2255229o_preview_256.jpg' in test_plane_1.artifacts.keys()

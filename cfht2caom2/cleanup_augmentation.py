@@ -94,6 +94,12 @@ def visit(observation, **kwargs):
         ):
             delete_list.append(plane.product_id)
 
+        if storage_name.product_id != plane.product_id:
+            continue
+
+        # prior to cfht2caom2, artifact URIs were named after the observation
+        # ID, with cfht2caom2 they're named after the product ID - clean up the
+        # obsolete ones
         if (
             (instrument is md.Inst.ESPADONS and storage_name.suffix == 'i'
              and len(plane.artifacts) > 3)
@@ -104,6 +110,8 @@ def visit(observation, **kwargs):
             or (len(plane.artifacts) > 4)
         ):
             for artifact in plane.artifacts.values():
+                if '.jpg' not in artifact.uri:
+                    continue
                 if f':CFHT/{storage_name.product_id}_' not in artifact.uri:
                     artifact_delete_list.append(artifact.uri)
 
