@@ -88,3 +88,25 @@ def test_cleanup_augmentation():
     # assert test_result.get('planes') == 2, 'wrong number of planes removed'
     assert len(test_obs.planes) == 1, 'post-test conditions failed'
     assert '1927963p' in test_obs.planes.keys(), 'wrong plane deleted'
+
+
+def test_cleanup_augmentation_bad_artifact_uris():
+    test_obs = mc.read_obs_from_file(
+        path.join(
+            test_fits2caom2_augmentation.TEST_DATA_DIR,
+            'visit_obs_duplicate_uris_cleanup.xml',
+        )
+    )
+    assert len(test_obs.planes) == 2, 'initial conditions failed'
+    test_plane_1 = test_obs.planes['2255229o']
+    test_plane_2 = test_obs.planes['2255229p']
+    assert len(test_plane_1.artifacts) == 7, 'plane 1 initial conditions failed'
+    assert len(test_plane_2.artifacts) == 7, 'plane 2 initial conditions failed'
+    kwargs = {}
+    test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
+    # assert test_result is not None, 'expect a result'
+    # assert test_result.get('planes') is not None, 'expect a plane count'
+    # assert test_result.get('planes') == 2, 'wrong number of planes removed'
+    assert len(test_obs.planes) == 2, 'post-test conditions failed'
+    assert len(test_plane_1.artifacts) == 4, 'plane 1 post conditions failed'
+    assert len(test_plane_2.artifacts) == 4, 'plane 2 post conditions failed'

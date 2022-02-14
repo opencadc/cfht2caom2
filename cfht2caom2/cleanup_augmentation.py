@@ -77,18 +77,35 @@ from cfht2caom2 import metadata as md
 def visit(observation, **kwargs):
     mc.check_param(observation, Observation)
 
+    storage_name = kwargs.get('storage_name')
+
     count = 0
+    artifact_count = 0
     delete_list = []
+    artifact_delete_list = []
+    instrument = md.Inst(observation.instrument.name)
     for plane in observation.planes.values():
         if plane.product_id.endswith('og'):
             delete_list.append(plane.product_id)
         if (
             plane.product_id[-1:] in ['b', 'd', 'f', 'x']
             and observation.observation_id != plane.product_id
-            and md.Inst(observation.instrument.name)
-            in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]
+            and instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]
         ):
             delete_list.append(plane.product_id)
+
+        if (
+            (instrument is md.Inst.ESPADONS and storage_name.suffix == 'i'
+             and len(plane.artifacts) > 3)
+            or
+            (instrument is md.Inst.SPIROU
+             and storage_name.suffix in ['e', 'p', 's', 't', 'v']
+             and len(plane.artifacts) > 3)
+            or (len(plane.artifacts) > 4)
+        ):
+            for artifact in plane.artifacts.values():
+                if f':CFHT/{storage_name.product_id}_' not in artifact.uri:
+                    artifact_delete_list.append(artifact.uri)
 
     for entry in delete_list:
         logging.info(
@@ -97,8 +114,14 @@ def visit(observation, **kwargs):
         count += 1
         observation.planes.pop(entry)
 
+    for entry in artifact_delete_list:
+        artifact_count += 1
+        for plane in observation.planes.values():
+            plane.artifacts.pop(entry)
+
     logging.info(
         f'Completed cleanup augmentation for {observation.observation_id}. '
-        f'Remove {count} planes from the observation.'
+        f'Remove {count} planes and {artifact_count} artifacts from the '
+        f'observation.'
     )
     return observation
