@@ -81,8 +81,10 @@ from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
 
 
-META_VISITORS = [fits2caom2_augmentation, cleanup_augmentation]
-DATA_VISITORS = [espadons_energy_augmentation, preview_augmentation]
+META_VISITORS = [fits2caom2_augmentation]
+DATA_VISITORS = [
+    espadons_energy_augmentation, preview_augmentation, cleanup_augmentation
+]
 
 CFHT_BOOKMARK = 'cfht_timestamp'
 
