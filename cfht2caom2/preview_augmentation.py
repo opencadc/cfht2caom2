@@ -151,24 +151,36 @@ class CFHTPreview(mc.PreviewVisitor):
             ext = 1
             ignore = espadons[1].header.get('OBJECT')
 
-        bzero = espadons[ext].header.get('BZERO')
-        bscale = espadons[ext].header.get('BSCALE')
+        hdr = espadons[ext].header.copy()
+        bzero = hdr.get('BZERO')
+        bscale = hdr.get('BSCALE')
 
         if bzero is not None and bzero > 0.0:
+            data_0 = espadons[ext].data[0].copy()
+            data_1 = espadons[ext].data[1].copy()
             # wavelength array (nm)
-            sw = bscale * (espadons[ext].data[0]) - bzero
+            # sw = bscale * (espadons[ext].data[0]) - bzero
+            sw = bscale * (data_0) - bzero
             # intensity array (normalized)
-            si = bscale * (espadons[ext].data[1]) - bzero
+            si = bscale * (data_1) - bzero
             if self._storage_name.suffix == 'p':
                 # Stokes array
-                sp = bscale * (espadons[ext].data[2]) - bzero
+                data_2 = espadons[ext].data[2].copy()
+                # sp = bscale * (espadons[ext].data[2]) - bzero
+                sp = bscale * (data_2) - bzero
         else:
-            sw = espadons[ext].data[0]  # wavelength array (nm)
-            si = espadons[ext].data[1]  # intensity array (normalized)
+            # sw = espadons[ext].data[0]  # wavelength array (nm)
+            # si = espadons[ext].data[1]  # intensity array (normalized)
+            # if self._storage_name.suffix == 'p':
+            #     sp = espadons[ext].data[2]  # Stokes array
+            sw = espadons[ext].data[0].copy()
+            si = espadons[ext].data[1].copy()
             if self._storage_name.suffix == 'p':
-                sp = espadons[ext].data[2]  # Stokes array
+                sp = espadons[ext].data[2].copy()
 
         espadons.close(self._science_fqn)
+        del espadons[0].data
+        del espadons
         self._logger.debug(f'{espadons[ext].shape}, {sw}, {si}')
 
         npix = sw.shape[0]
