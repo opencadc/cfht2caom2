@@ -68,6 +68,7 @@
 
 import logging
 
+from astropy.io import fits
 from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
@@ -129,22 +130,17 @@ def _do_energy(artifact, science_fqn, cfht_name):
 
     # read in the complete fits file, including the data
     logging.info(f'Reading ESPaDOnS energy data from {science_fqn}.')
-    from astropy.io import fits
-    from psutil import Process
-    # with fits.open(science_fqn) as hdus:
     hdus = fits.open(science_fqn, memmap=True, lazy_load_hdus=False)
     if hdus[0].data is not None:
         wave = hdus[0].data[0, :].copy()
-        # wave = hdus[0].data[0, :]
     else:
         wave = hdus[1].data[0, :].copy()
-        # wave = hdus[1].data[0, :]
     hdr = hdus[0].header.copy()
     hdus.close()
     del hdus[0].data
     del hdus
     axis = Axis('WAVE', 'nm')
-    coord_bounds = ac.build_chunk_energy_bounds(wave, axis)
+    coord_bounds = ac.build_chunk_energy_bounds(wave)
     coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
     espadons = instruments.Espadons([hdr], cfht_name)
     espadons.extension = 0
@@ -170,6 +166,4 @@ def _do_energy(artifact, science_fqn, cfht_name):
         chunk.custom_axis = None
         if cfht_name.suffix != 'p':
             chunk.polarization_axis = None
-    # logging.error(Process().memory_info())
     return 1
-

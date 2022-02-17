@@ -159,29 +159,23 @@ class CFHTPreview(mc.PreviewVisitor):
             data_0 = espadons[ext].data[0].copy()
             data_1 = espadons[ext].data[1].copy()
             # wavelength array (nm)
-            # sw = bscale * (espadons[ext].data[0]) - bzero
-            sw = bscale * (data_0) - bzero
+            sw = bscale * data_0 - bzero
             # intensity array (normalized)
-            si = bscale * (data_1) - bzero
+            si = bscale * data_1 - bzero
             if self._storage_name.suffix == 'p':
                 # Stokes array
                 data_2 = espadons[ext].data[2].copy()
-                # sp = bscale * (espadons[ext].data[2]) - bzero
-                sp = bscale * (data_2) - bzero
+                sp = bscale * data_2 - bzero
         else:
-            # sw = espadons[ext].data[0]  # wavelength array (nm)
-            # si = espadons[ext].data[1]  # intensity array (normalized)
-            # if self._storage_name.suffix == 'p':
-            #     sp = espadons[ext].data[2]  # Stokes array
-            sw = espadons[ext].data[0].copy()
-            si = espadons[ext].data[1].copy()
+            sw = espadons[ext].data[0].copy()  # wavelength array (nm)
+            si = espadons[ext].data[1].copy()  # intensity array (normalized)
             if self._storage_name.suffix == 'p':
-                sp = espadons[ext].data[2].copy()
+                sp = espadons[ext].data[2].copy()  # Stokes array
 
         espadons.close(self._science_fqn)
         del espadons[0].data
         del espadons
-        self._logger.debug(f'{espadons[ext].shape}, {sw}, {si}')
+        self._logger.debug(f'{sw.shape} {sw}, {si}')
 
         npix = sw.shape[0]
 
@@ -606,15 +600,15 @@ class CFHTPreview(mc.PreviewVisitor):
         # Polarization scale factor
 
         if self._storage_name.suffix in ['e', 't']:
-            sw2d = spirou['WaveAB'].data  # wavelength array (nm)
-            si2d = spirou['FluxAB'].data  # intensity array (normalized)
+            sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
+            si2d = spirou['FluxAB'].data.copy()  # intensity array (normalized)
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
 
         if self._storage_name.suffix == 'p':
-            sw2d = spirou['WaveAB'].data  # wavelength array (nm)
-            si2d = spirou['StokesI'].data  # intensity array (normalized)
-            sp2d = spirou['Pol'].data  # Pol Stokes array
+            sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
+            si2d = spirou['StokesI'].data.copy()  # intensity array (normalized)
+            sp2d = spirou['Pol'].data.copy()  # Pol Stokes array
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
             sp = np.ravel(sp2d)
@@ -622,10 +616,15 @@ class CFHTPreview(mc.PreviewVisitor):
 
         if self._storage_name.suffix == 's':
             # using uniform wavelength bins
-            sw = spirou[1].data.field(0)
-            si = spirou[1].data.field(1)
+            sw = spirou[1].data.copy().field(0)
+            si = spirou[1].data.copy().field(1)
 
         spirou.close(self._science_fqn)
+        # astropy says
+        # https://docs.astropy.org/en/stable/io/
+        # fits/index.html#working-with-large-files
+        del spirou[0].data
+        del spirou
         npix = sw.shape[0]
 
         swa = 10.0 * sw
@@ -790,7 +789,11 @@ class CFHTPreview(mc.PreviewVisitor):
 
         # Make a RGB colour image if it's a calibrated 3D cube
         # scan through cube to look for strongest lines
-        data = sitelle[0].data
+        data = sitelle[0].data.copy()
+        head = sitelle[0].header
+        sitelle.close(self._science_fqn)
+        del sitelle[0].data
+        del sitelle
         self._logger.debug(f'{data.shape}, {data.size}')
 
         # trim off ends to make 2048x2048
@@ -845,8 +848,6 @@ class CFHTPreview(mc.PreviewVisitor):
 
         w = np.where(meanbgsubvswavenumber > 0.0)
         self._logger.debug(f'{w[0]}')
-
-        head = sitelle[0].header
 
         head['NAXIS1'] = 1024
         head['NAXIS2'] = 1024
@@ -906,7 +907,6 @@ class CFHTPreview(mc.PreviewVisitor):
         os.system("pwd")
         del data
         del datanolines
-        sitelle.close(self._science_fqn)
 
         self._create_rgb(
             'imageline1size1024.fits',
