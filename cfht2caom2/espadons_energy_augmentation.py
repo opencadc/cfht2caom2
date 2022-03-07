@@ -133,11 +133,12 @@ def _do_energy(artifact, science_fqn, cfht_name):
     hdus = fits.open(science_fqn, memmap=True, lazy_load_hdus=False)
     if hdus[0].data is not None:
         wave = hdus[0].data[0, :].copy()
+        del hdus[0].data
     else:
         wave = hdus[1].data[0, :].copy()
+        del hdus[1].data
     hdr = hdus[0].header.copy()
     hdus.close()
-    del hdus[0].data
     del hdus
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave)
