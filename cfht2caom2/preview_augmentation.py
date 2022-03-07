@@ -165,18 +165,17 @@ class CFHTPreview(mc.PreviewVisitor):
             if self._storage_name.suffix == 'p':
                 # Stokes array
                 data_2 = espadons[ext].data[2].copy()
-                del espadons[2].data
+                del espadons[ext].data
                 sp = bscale * data_2 - bzero
         else:
             sw = espadons[ext].data[0].copy()  # wavelength array (nm)
             si = espadons[ext].data[1].copy()  # intensity array (normalized)
             if self._storage_name.suffix == 'p':
                 sp = espadons[ext].data[2].copy()  # Stokes array
-                del espadons[2].data
+                del espadons[ext].data
 
         espadons.close(self._science_fqn)
-        del espadons[0].data
-        del espadons[1].data
+        del espadons[ext].data
         del espadons
         self._logger.debug(f'{sw.shape} {sw}, {si}')
 
