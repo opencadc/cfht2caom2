@@ -165,15 +165,18 @@ class CFHTPreview(mc.PreviewVisitor):
             if self._storage_name.suffix == 'p':
                 # Stokes array
                 data_2 = espadons[ext].data[2].copy()
+                del espadons[2].data
                 sp = bscale * data_2 - bzero
         else:
             sw = espadons[ext].data[0].copy()  # wavelength array (nm)
             si = espadons[ext].data[1].copy()  # intensity array (normalized)
             if self._storage_name.suffix == 'p':
                 sp = espadons[ext].data[2].copy()  # Stokes array
+                del espadons[2].data
 
         espadons.close(self._science_fqn)
         del espadons[0].data
+        del espadons[1].data
         del espadons
         self._logger.debug(f'{sw.shape} {sw}, {si}')
 
@@ -602,6 +605,8 @@ class CFHTPreview(mc.PreviewVisitor):
         if self._storage_name.suffix in ['e', 't']:
             sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
             si2d = spirou['FluxAB'].data.copy()  # intensity array (normalized)
+            del spirou('WaveAB').data
+            del spirou('FluxAB').data
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
 
@@ -609,6 +614,9 @@ class CFHTPreview(mc.PreviewVisitor):
             sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
             si2d = spirou['StokesI'].data.copy()  # intensity array (normalized)
             sp2d = spirou['Pol'].data.copy()  # Pol Stokes array
+            del spirou('WaveAB').data
+            del spirou('StokesI').data
+            del spirou('Pol').data
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
             sp = np.ravel(sp2d)
@@ -618,12 +626,12 @@ class CFHTPreview(mc.PreviewVisitor):
             # using uniform wavelength bins
             sw = spirou[1].data.copy().field(0)
             si = spirou[1].data.copy().field(1)
+            del spirou[1].data
 
         spirou.close(self._science_fqn)
         # astropy says
         # https://docs.astropy.org/en/stable/io/
         # fits/index.html#working-with-large-files
-        del spirou[0].data
         del spirou
         npix = sw.shape[0]
 
