@@ -604,8 +604,8 @@ class CFHTPreview(mc.PreviewVisitor):
         if self._storage_name.suffix in ['e', 't']:
             sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
             si2d = spirou['FluxAB'].data.copy()  # intensity array (normalized)
-            del spirou('WaveAB').data
-            del spirou('FluxAB').data
+            del spirou['WaveAB'].data
+            del spirou['FluxAB'].data
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
 
@@ -613,9 +613,9 @@ class CFHTPreview(mc.PreviewVisitor):
             sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
             si2d = spirou['StokesI'].data.copy()  # intensity array (normalized)
             sp2d = spirou['Pol'].data.copy()  # Pol Stokes array
-            del spirou('WaveAB').data
-            del spirou('StokesI').data
-            del spirou('Pol').data
+            del spirou['WaveAB'].data
+            del spirou['StokesI'].data
+            del spirou['Pol'].data
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
             sp = np.ravel(sp2d)
