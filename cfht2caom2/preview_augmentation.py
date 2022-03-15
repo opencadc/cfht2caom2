@@ -227,6 +227,7 @@ class CFHTPreview(mc.PreviewVisitor):
             ProductType.PREVIEW,
             ReleaseType.DATA,
         )
+        fig.close()
         self.add_to_delete(self._preview_fqn)
         count = 1
         count += self._gen_thumbnail()
@@ -594,6 +595,7 @@ class CFHTPreview(mc.PreviewVisitor):
         plt.xlabel('Radial Velocity (km/s)')
         plt.ylabel('Weighted mean echelle order')
         plt.savefig(self._preview_fqn, format='jpg')
+        plt.close()
         return self._save_figure()
 
     def _do_spirou_intensity_spectrum(self):
@@ -671,6 +673,7 @@ class CFHTPreview(mc.PreviewVisitor):
         )
         plt.tight_layout()
         plt.savefig(self._preview_fqn, format='jpg')
+        plt.close()
         return self._save_figure()
 
     def _exec_cmd_chdir(self, temp_file, cmd):
@@ -779,6 +782,7 @@ class CFHTPreview(mc.PreviewVisitor):
             )
             if thumb is not None:
                 count = 1
+            thumb.clf()
         else:
             self._logger.warning(
                 f'Could not find {self._preview_fqn} for thumbnail '
