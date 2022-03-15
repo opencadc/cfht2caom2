@@ -227,7 +227,6 @@ class CFHTPreview(mc.PreviewVisitor):
             ProductType.PREVIEW,
             ReleaseType.DATA,
         )
-        fig.close()
         self.add_to_delete(self._preview_fqn)
         count = 1
         count += self._gen_thumbnail()
