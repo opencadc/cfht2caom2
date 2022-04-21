@@ -128,6 +128,7 @@ def test_run_by_builder(
         _cleanup(TEST_DIR)
 
 
+@patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fits')
@@ -135,9 +136,15 @@ def test_run_by_builder(
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store(
-    tap_mock, data_client_mock, repo_client_mock, check_fits_mock, cache_mock,
-        headers_mock,
+    tap_mock,
+    data_client_mock,
+    repo_client_mock,
+    check_fits_mock,
+    cache_mock,
+    headers_mock,
+    compression_mock,
 ):
+    compression_mock.side_effect = _mock_fix_compression
     test_dir_fqn = os.path.join(
         test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_test'
     )
@@ -164,14 +171,21 @@ def test_run_store(
     ), 'wrong put_file args'
 
 
+@patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fits')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
 def test_run_store_retry(
-    tap_mock, data_client_mock, repo_client_mock, check_fits_mock, cache_mock
+    tap_mock,
+    data_client_mock,
+    repo_client_mock,
+    check_fits_mock,
+    cache_mock,
+    compression_mock,
 ):
+    compression_mock.side_effect = _mock_fix_compression
     test_dir_fqn = os.path.join(
         test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_retry_test'
     )
@@ -225,6 +239,7 @@ def test_run_store_retry(
         _cleanup(test_dir_fqn)
 
 
+@patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch(
@@ -238,6 +253,7 @@ def test_run_state(
     get_work_mock,
     util_headers_mock,
     cache_mock,
+    clients_mock,
 ):
     try:
         util_headers_mock.side_effect = ac.make_headers_from_file
@@ -264,9 +280,6 @@ def test_run_state(
             test_storage.obs_id == test_obs_id
         ), f'wrong obs id {test_storage.obs_id}'
         assert test_storage.file_name == test_f_name, 'wrong file name'
-        assert test_storage.fname_on_disk == test_f_name, 'wrong fname on disk'
-        assert test_storage.url is None, 'wrong url'
-        assert test_storage.external_urls is None, 'wrong external urls'
         assert test_storage.file_uri == f'ad:CFHT/{test_f_name}', 'wrong uri'
     finally:
         _cleanup(TEST_DIR)
@@ -318,6 +331,7 @@ def test_run_by_builder_hdf5_first(
 def test_run_by_builder_hdf5_added_to_existing(
     data_mock, tap_mock, repo_mock, fits_check_mock, header_mock, cache_mock
 ):
+    test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
     try:
         warnings.simplefilter('ignore', category=AstropyUserWarning)
         fits_check_mock.return_value = True
@@ -328,7 +342,6 @@ def test_run_by_builder_hdf5_added_to_existing(
         # 'p' metadata gets duplicated correctly
 
         test_obs_id = '2384125p'
-        test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
         hdf5_fqn = f'{test_dir}/2384125z.hdf5'
         fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
         actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
@@ -540,3 +553,7 @@ END
     extensions = [e + delim for e in x.split(delim) if e.strip()]
     headers = [fits.Header.fromstring(e, sep='\n') for e in extensions]
     return headers
+
+
+def _mock_fix_compression(fqn):
+    return fqn

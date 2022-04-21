@@ -67,6 +67,114 @@
 # ***********************************************************************
 #
 
+"""
+CFHT Cardinality:
+
+CW - 02-01-20
+The CADC page describing file types:
+http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/cfht/extensions.html
+
+For Espadons, Sitelle and Spirou there are derived observations made up from
+several exposures. These derived observations are given the ‘p’ ending to
+distinguish them from the simple observations that are based on a single
+exposure.
+
+For WIRcam, based on the CAOM model the o and g are included as separate
+artifacts of the same plane because they correspond to different groups of
+raw pixels on the detector. This has caused much trouble for the need to
+connect them in etransfer. For SPIRou we did some combining of file types
+within a plane e.g. ‘v’ within ‘e’, and CFHT say they would prefer to keep
+them separate so we should do that.
+
+
+Conversation with CW/SF 02-01-19:
+- SITELLE - has hdf5 files, but there is currently no way of extracting WCS
+            information from them
+          - there will be (eventually) a fits file for every hdf5 file
+          - copy the fits wcs to the hdf5 wcs, depending on the order of
+            arrival of the files
+- SPIROU - no hdf5 files, but there are two file types that have binary table
+           extensions that won't support cut-outs
+- WIRCam - no hdf5 files
+         - 'g' are cubes of guide window(s)
+- 'p' files:
+    - MegaCam/WIRCam - 'p' is a processed file that is an additional plane to
+            a SimpleObservation
+    - SITELLE - 'p' is processed + Derived - a different observation
+    - SPIROU/Espadons - 'p' is polarized + Derived, a different observation
+    - there are other processed files for single exposures
+    - users want 'p' files
+
+- conclusion - one plane / file, because users want to see one row / file in
+  the query results
+
+  JJK - slack - 01-04-20
+  CFHT files are independent, in that, for example, a user does not require a
+  'p' file to understand the content of a 'b' file. Given this independence,
+  it is acceptable to map one plane / file.
+
+  SF - slack - 02-04-20
+  - MegaCam - the logic should be probably be 2 planes: p and o for science.
+            - all cfht exposures are sorted by EXPNUM if i understand their
+            data acquisition. b,f,d,x should be 1 plane observations.
+            - my assumption is that the b,f,d,x have no reason to have a
+            processed equivalent.
+
+  Typical science with the actual data - more or less what Elixir does:
+    - do something like: p = (o - <b>) / ( <f - <b> > )
+    - where <x> is the average of a bunch of x frames
+
+
+CFHT Energy:
+
+slack - 08-01-20
+- PD - Well, espadons is a special case because using bounds allows one to
+define "tiles" and then the SODA cutout service can extract the subset of
+tiles that overlap the desired region. That's the best that can be done
+because it is not possible to create a CoordFunction1D to say what the
+wavelength of each pixel is
+- PD - Bounds provides more detail than range and enables a crude tile-based
+cutout operation later. If the coverage had significant gaps (eg SCUBA or
+-SCUBA2 from JCMT) then the extra detail in bounds would enable better
+discovery (as the gaps would be captured in the plane metadata). In the case
+of espadons I don't think the gaps are significant (iirc, espadons is an
+eschelle spectrograph but I don't recall whether the discontinuity between
+eschelle was a small gap or an overlap)
+- PD - So: bounds provides more detail and it can in principle improve data
+discovery (if gaps) and enable extraction of subsections of the spectrum via
+the SODA service. Espadons was one of the use cases that justified having
+bounds there
+- SF - ok now that is clearer, i think we need the information that is
+contained in bounds, gaps need to be captured. so keep bounds. if you decide
+to remove range, then advanced users would have to dig in the info to
+understand range is first and last bounds if i understand correctly.
+
+
+CFHT WCS:
+- CW - 28-04-20
+- These raw SITELLE observations have a weird data format where 2048x2048
+  images from the two interferometer arms (which are images of the same single
+  field) are stitched together into a single 2048x4100ish image. So there is
+  no contiguous wcs describing the raw data and in any case nobody wants to
+  cut out of it.
+
+SITELLE 'v' files:
+- SF - 02-07-20
+- the v files are not raw, they were derived from others, and the data
+  reduction pipeline - based on orbs - probably did not do proper header
+  copy/paste
+- so ok to assume sequence number (RUN_ID, which is not in 'v' headers)
+  == observationID minus suffix
+
+SF 22-12-20
+- as a general rule, fix typos from header metadata in CAOM2 records
+
+SF 12-04-21
+- SPIRou 'r' files are 'ramp' files, and should be 'RAW' for caom2:
+  https://www.cfht.hawaii.edu/Instruments/SPIRou/FileStructure.php
+
+"""
+
 import copy
 import logging
 import math

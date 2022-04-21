@@ -70,6 +70,7 @@
 import logging
 
 from os.path import basename
+from urllib.parse import urlparse
 
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import metadata as md
@@ -107,72 +108,21 @@ class CFHTName(mc.StorageName):
         obs_id=None,
         file_name=None,
         instrument=None,
-        ad_uri=None,
-        entry=None,
         source_names=[],
-        scheme='ad',
     ):
         # set compression to an empty string so the file uri method still
         # works, since the file_name element will have all extensions,
         # including the .fz | .gz | '' to indicate compression type
-        if obs_id is None:
-            super().__init__(
-                None,
-                COLLECTION,
-                CFHTName.CFHT_NAME_PATTERN,
-                file_name,
-                compression='',
-                entry=entry,
-                source_names=source_names,
-                scheme=scheme,
-            )
-            self._instrument = md.Inst(instrument)
-            if ad_uri is not None and file_name is None:
-                file_name = mc.CaomName(ad_uri).file_name
-            self._file_name = file_name.replace('.header', '')
-            self._file_id = CFHTName.remove_extensions(file_name)
-            self._suffix = self._file_id[-1]
-            if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
-                # SF - slack - 02-04-20
-                # - MegaCam - the logic should be probably be 2 planes: p
-                # and o for science. - all cfht exposures are sorted by EXPNUM
-                # if i understand their data acquisition. b,f,d,x should be 1
-                # plane observations. - my assumption is that the b,f,d,x have
-                # no reason to have a processed equivalent.
-                if (
-                    self._suffix in ['b', 'd', 'f', 'x']
-                    or self._suffix.isnumeric()
-                ):
-                    self._obs_id = self._file_id
-                else:
-                    self._obs_id = self._file_id[:-1]
-            else:
-                if self.is_simple and not self.is_master_cal:
-                    self.obs_id = self._file_id[:-1]
-                else:
-                    self.obs_id = self._file_id
-                    if self.is_derived_sitelle:
-                        self.obs_id = self.obs_id.replace(self._suffix, 'p')
-        else:
-            super().__init__(
-                obs_id,
-                COLLECTION,
-                CFHTName.CFHT_NAME_PATTERN,
-                compression='',
-                scheme=scheme,
-            )
-            self.obs_id = obs_id
-            self._instrument = None
-            self._file_id = None
-            self._file_name = None
-            self._file_id = None
-            self._suffix = None
-        self._destination_uris = [
-            mc.build_uri(
-                   COLLECTION, basename(ii).replace('.header', ''), scheme
-            )
-            for ii in self._source_names
-        ]
+        self._instrument = md.Inst(instrument)
+        self._file_id = None
+        self._file_name = None
+        self._obs_id = None
+        self._suffix = None
+        super().__init__(
+            obs_id=obs_id,
+            file_name=file_name.replace('.header', ''),
+            source_names=source_names
+        )
         self._logger = logging.getLogger(self.__class__.__name__)
         self._logger.debug(self)
 
@@ -331,6 +281,41 @@ class CFHTName(mc.StorageName):
     @property
     def suffix(self):
         return self._suffix
+
+    def set_destination_uris(self):
+        # this is only required until CFHT decompression is added in
+        for entry in self._source_names:
+            temp = urlparse(entry)
+            self._destination_uris.append(
+                self._get_uri(basename(temp.path)).replace('.header', '')
+            )
+
+    def set_file_id(self):
+        self._file_id = CFHTName.remove_extensions(self._file_name)
+        self._suffix = self._file_id[-1]
+
+    def set_obs_id(self):
+        if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
+            # SF - slack - 02-04-20
+            # - MegaCam - the logic should be probably be 2 planes: p
+            # and o for science. - all cfht exposures are sorted by EXPNUM
+            # if i understand their data acquisition. b,f,d,x should be 1
+            # plane observations. - my assumption is that the b,f,d,x have
+            # no reason to have a processed equivalent.
+            if (
+                self._suffix in ['b', 'd', 'f', 'x']
+                or self._suffix.isnumeric()
+            ):
+                self._obs_id = self._file_id
+            else:
+                self._obs_id = self._file_id[:-1]
+        else:
+            if self.is_simple and not self.is_master_cal:
+                self._obs_id = self._file_id[:-1]
+            else:
+                self._obs_id = self._file_id
+                if self.is_derived_sitelle:
+                    self._obs_id = self._obs_id.replace(self._suffix, 'p')
 
     @staticmethod
     def remove_extensions(name):

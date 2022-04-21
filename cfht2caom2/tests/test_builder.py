@@ -70,8 +70,8 @@
 import os
 
 from caom2pipe import astro_composable as ac
-from caom2pipe import manage_composable as mc
-from cfht2caom2 import CFHTBuilder, metadata
+from caom2pipe.manage_composable import Config, StorageName
+from cfht2caom2 import CFHTBuilder, COLLECTION, metadata
 
 from mock import Mock, patch, ANY
 import cfht_mocks
@@ -84,51 +84,59 @@ test_fqn = os.path.join(
 
 
 def test_cfht_builder():
-    headers_mock = Mock(autospec=True)
-    headers_mock.headers.get.side_effect = _mock_get
-    test_config = mc.Config()
-    test_config.use_local_files = True
-    test_config.archive = 'CFHT'
-    test_subject = CFHTBuilder(
-        test_config.archive,
-        test_config.use_local_files,
-        headers_mock,
-    )
-    assert test_subject is not None, 'ctor failure'
+    original_scheme = StorageName.scheme
+    original_collection = StorageName.collection
+    try:
+        StorageName.scheme = 'ad'
+        StorageName.collection = COLLECTION
+        headers_mock = Mock(autospec=True)
+        headers_mock.headers.get.side_effect = _mock_get
+        test_config = Config()
+        test_config.use_local_files = True
+        test_config.archive = 'CFHT'
+        test_subject = CFHTBuilder(
+            test_config.archive,
+            test_config.use_local_files,
+            headers_mock,
+        )
+        assert test_subject is not None, 'ctor failure'
 
-    test_result = test_subject.build('123p.hdf5')
-    assert test_result is not None, 'expect a result'
-    assert test_result.file_name == '123p.hdf5', 'wrong local hdf5 name'
-    assert (
-        test_result.instrument == metadata.Inst.SITELLE
-    ), 'wrong hdf5 instrument'
+        test_result = test_subject.build('123p.hdf5')
+        assert test_result is not None, 'expect a result'
+        assert test_result.file_name == '123p.hdf5', 'wrong local hdf5 name'
+        assert (
+            test_result.instrument == metadata.Inst.SITELLE
+        ), 'wrong hdf5 instrument'
 
-    test_result = test_subject.build(test_fqn)
-    assert test_result is not None, 'local fits file failed'
-    assert test_result.file_name == os.path.basename(
-        test_fqn
-    ), 'wrong local file name'
-    assert test_result.instrument == metadata.Inst.WIRCAM
+        test_result = test_subject.build(test_fqn)
+        assert test_result is not None, 'local fits file failed'
+        assert test_result.file_name == os.path.basename(
+            test_fqn
+        ), 'wrong local file name'
+        assert test_result.instrument == metadata.Inst.WIRCAM
 
-    test_config.use_local_files = False
-    test_subject = CFHTBuilder(
-        test_config.archive,
-        test_config.use_local_files,
-        headers_mock,
-    )
-    assert test_subject is not None, 'ctor failure 2'
-    test_result = test_subject.build(test_fqn)
-    assert test_result is not None, 'remote fits file failed'
-    assert test_result.file_name == os.path.basename(
-        test_fqn
-    ), 'wrong remote file name'
-    assert test_result.instrument == metadata.Inst.WIRCAM
-    test_uri = 'ad:CFHT/2281792p.fits.fz'
-    assert headers_mock.set.called, 'set should be called'
-    args, kwargs = headers_mock.set.call_args
-    assert isinstance(args[0], mc.StorageName), 'wrong param type'
-    assert args[0].source_names[0] == test_fqn, 'wrong file name'
-    assert args[0].destination_uris[0] == test_uri, 'wrong uri'
+        test_config.use_local_files = False
+        test_subject = CFHTBuilder(
+            test_config.archive,
+            test_config.use_local_files,
+            headers_mock,
+        )
+        assert test_subject is not None, 'ctor failure 2'
+        test_result = test_subject.build(test_fqn)
+        assert test_result is not None, 'remote fits file failed'
+        assert test_result.file_name == os.path.basename(
+            test_fqn
+        ), 'wrong remote file name'
+        assert test_result.instrument == metadata.Inst.WIRCAM
+        test_uri = 'ad:CFHT/2281792p.fits.fz'
+        assert headers_mock.set.called, 'set should be called'
+        args, kwargs = headers_mock.set.call_args
+        assert isinstance(args[0], StorageName), 'wrong param type'
+        assert args[0].source_names[0] == test_fqn, 'wrong file name'
+        assert args[0].destination_uris[0] == test_uri, 'wrong uri'
+    finally:
+        StorageName.scheme = original_scheme
+        StorageName.collection = original_collection
 
 
 def _mock_get(uri):
