@@ -133,6 +133,7 @@ def test_preview_augment():
         'visit_obs_start_scatter.xml': ['04Am01.scatter.r.36.00.fits.fz'],
         'visit_obs_start_mega_few_hdus.xml': ['1805750p.fits.fz'],
         'visit_obs_start_spirou_p.xml': ['2446341p.fits'],
+        'visit_obs_start_spirou_p2.xml': ['2630033p.fits'],
         'visit_obs_start_wircam_fits.xml': ['1334131g.fits'],
     }
 

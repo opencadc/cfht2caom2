@@ -73,7 +73,7 @@ import traceback
 
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
-from caom2pipe import manage_composable as mc
+from caom2pipe.manage_composable import Config, StorageName
 from caom2pipe import reader_composable as rdc
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, cleanup_augmentation
@@ -90,8 +90,12 @@ CFHT_BOOKMARK = 'cfht_timestamp'
 
 
 def _common_init():
-    config = mc.Config()
+    config = Config()
     config.get_executors()
+    StorageName.collection = config.collection
+    StorageName.scheme = (
+        'cadc' if config.features.supports_latest_client else 'ad'
+    )
     clients = clc.ClientCollection(config)
     if config.use_local_files:
         reader = rdc.FileMetadataReader()

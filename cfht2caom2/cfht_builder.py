@@ -70,8 +70,6 @@
 import logging
 import os
 
-from urllib.parse import urlparse
-
 from caom2pipe import name_builder_composable as nbc
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cfht_name as cn
@@ -105,25 +103,23 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
-        uri = mc.build_uri(
-            self._archive, os.path.basename(urlparse(entry).path)
-        ).replace('.header', '')
-        storage_name = mc.StorageName()
-        storage_name.source_names = [entry]
-        storage_name.destination_uris = [uri]
-        self._metadata_reader.set(storage_name)
         if mc.StorageName.is_hdf5(entry):
             instrument = md.Inst.SITELLE
         else:
+            file_name = os.path.basename(entry).replace('.header', '')
+            # the separate construction of file name for the uri supports
+            # unit testing
+            uri = mc.build_uri(self._archive, os.path.basename(entry))
+            storage_name = mc.StorageName(
+                file_name=file_name, source_names=[entry]
+            )
+            self._metadata_reader.set(storage_name)
             headers = self._metadata_reader.headers.get(uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
-        scheme = 'cadc' if self._supports_latest_client else 'ad'
         result = cn.CFHTName(
             file_name=os.path.basename(entry),
             source_names=[entry],
             instrument=instrument,
-            entry=entry,
-            scheme=scheme,
         )
         self._logger.debug('End build.')
         return result
