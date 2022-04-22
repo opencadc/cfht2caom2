@@ -1,16 +1,43 @@
-FROM opencadc/astropy-4:3.9-slim
+FROM debian:buster-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update --no-install-recommends && apt-get dist-upgrade -y && \
-   apt-get install -y \
-   xvfb \
-   git \
-   python3-astropy \
-   python3-pip \
-   python3-tz \
-   python3-yaml \
-   saods9 && \
-   rm -rf /var/lib/apt/lists/ /tmp/* /var/tmp/*
+ADD https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tgz /usr/local/src/
+
+RUN apt-get update --no-install-recommends \
+    && apt-get install -y \
+        gcc \
+        g++ \
+        git \
+        libc6-dev \
+        libgdbm-dev \
+        libncursesw5-dev \
+        libreadline-gplv2-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libbz2-dev \
+        libffi-dev \
+        libtool \
+        make \
+        saods9 \
+        tk-dev \
+        xvfb \
+        zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/ /tmp/* /var/tmp/*
+
+RUN cd /usr/local/src \
+    && tar zxvf Python-3.9.10.tgz \
+    && cd Python-3.9.10 \
+    && ./configure --enable-optimizations --prefix=/usr/local \
+    && make \
+    && make install \
+    && ln -s /usr/local/bin/python3 /usr/local/bin/python \
+    && ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+
+RUN pip install --no-cache-dir wheel
+
+RUN pip install --no-cache-dir "astropy<5" \
+    && pip install pytz \
+    && pip install pyyaml
 
 WORKDIR /usr/src/app
 
