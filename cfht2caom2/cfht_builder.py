@@ -109,12 +109,11 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             file_name = os.path.basename(entry).replace('.header', '')
             # the separate construction of file name for the uri supports
             # unit testing
-            uri = mc.build_uri(self._archive, os.path.basename(entry))
             storage_name = mc.StorageName(
                 file_name=file_name, source_names=[entry]
             )
             self._metadata_reader.set(storage_name)
-            headers = self._metadata_reader.headers.get(uri)
+            headers = self._metadata_reader.headers.get(storage_name.file_uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
         result = cn.CFHTName(
             file_name=os.path.basename(entry),

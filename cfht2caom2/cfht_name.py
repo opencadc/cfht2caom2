@@ -143,32 +143,14 @@ class CFHTName(mc.StorageName):
         return True
 
     @property
-    def file_id(self):
-        """The file id - no extensions."""
-        return self._file_id
-
-    @property
-    def file_name(self):
-        """The file name."""
-        return self._file_name
-
-    @file_name.setter
-    def file_name(self, value):
-        """The file name."""
-        self._file_name = value
-
-    @property
     def file_uri(self):
-        return mc.build_uri(COLLECTION, self._file_name, self.scheme)
+        """The CADC Storage URI for the file."""
+        # this is only required until CFHT decompression is added in
+        return self._get_uri(self._file_name)
 
     @property
     def instrument(self):
         return self._instrument
-
-    @property
-    def product_id(self):
-        result = self._file_id
-        return result
 
     @property
     def prev(self):
