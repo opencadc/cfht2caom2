@@ -106,7 +106,9 @@ def test_visit():
     test_obs = espadons_energy_augmentation.visit(obs, **kwargs)
     assert test_obs is not None, 'expect a result'
     # assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
-    test_reference = obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
+    test_reference = (
+        obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
+    )
     assert test_reference is not None, 'expect to assign'
     assert test_reference.energy is not None, 'expect to assign energy'
     assert test_reference.naxis == 2, 'wrong naxis'

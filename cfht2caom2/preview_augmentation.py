@@ -405,16 +405,22 @@ class CFHTPreview(mc.PreviewVisitor):
                 )
                 # TODO - fix this
                 if self._storage_name.file_name.endswith('.fz'):
-                    temp_science_f_name = self._storage_name.file_name.replace(
-                        '.fz', '_slice.fz'
+                    temp_science_f_name = (
+                        self._storage_name.file_name.replace(
+                            '.fz', '_slice.fz'
+                        )
                     )
                 elif self._storage_name.file_name.endswith('.gz'):
-                    temp_science_f_name = self._storage_name.file_name.replace(
-                        '.gz', '_slice.gz'
+                    temp_science_f_name = (
+                        self._storage_name.file_name.replace(
+                            '.gz', '_slice.gz'
+                        )
                     )
                 else:
-                    temp_science_f_name = self._storage_name.file_name.replace(
-                        '.fits', '_slice.fits'
+                    temp_science_f_name = (
+                        self._storage_name.file_name.replace(
+                            '.fits', '_slice.fits'
+                        )
                     )
 
                 slice_cmd = (
@@ -438,7 +444,9 @@ class CFHTPreview(mc.PreviewVisitor):
                     f'{zoom_science_f_name}'
                 )
                 self._exec_cmd_chdir(zoom_science_f_name, slice_cmd)
-                zoom_science_fqn = f'{self._working_dir}/{zoom_science_f_name}'
+                zoom_science_fqn = (
+                    f'{self._working_dir}/{zoom_science_f_name}'
+                )
                 delete_list.append(zoom_science_fqn)
 
         elif self._instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]:
@@ -604,7 +612,9 @@ class CFHTPreview(mc.PreviewVisitor):
 
         if self._storage_name.suffix in ['e', 't']:
             sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
-            si2d = spirou['FluxAB'].data.copy()  # intensity array (normalized)
+            si2d = spirou[
+                'FluxAB'
+            ].data.copy()  # intensity array (normalized)
             del spirou['WaveAB'].data
             del spirou['FluxAB'].data
             sw = np.ravel(sw2d)
@@ -612,7 +622,9 @@ class CFHTPreview(mc.PreviewVisitor):
 
         if self._storage_name.suffix == 'p':
             sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
-            si2d = spirou['StokesI'].data.copy()  # intensity array (normalized)
+            si2d = spirou[
+                'StokesI'
+            ].data.copy()  # intensity array (normalized)
             sp2d = spirou['Pol'].data.copy()  # Pol Stokes array
             del spirou['WaveAB'].data
             del spirou['StokesI'].data

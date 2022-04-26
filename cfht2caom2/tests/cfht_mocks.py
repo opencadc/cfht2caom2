@@ -76,9 +76,7 @@ SINGLE_PLANE_DIR = os.path.join(TEST_DATA_DIR, 'single_plane')
 TEST_FILES_DIR = '/test_files'
 
 
-def _mock_get_head(
-    uri_ignore
-):
+def _mock_get_head(uri_ignore):
     hdr1 = fits.Header()
     hdr1['SIMPLE'] = 'T'
     hdr1['BITPIX'] = -32

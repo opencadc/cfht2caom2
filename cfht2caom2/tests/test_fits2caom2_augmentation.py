@@ -80,10 +80,11 @@ from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
 from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
-from caom2pipe import manage_composable as mc
+from caom2pipe.manage_composable import StorageName, read_obs_from_file
+from caom2pipe.manage_composable import write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
-from cfht2caom2 import CFHTName
+from cfht2caom2 import CFHTName, COLLECTION
 from cfht2caom2 import fits2caom2_augmentation
 from cfht2caom2 import metadata as md
 
@@ -111,36 +112,44 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
     local_headers_mock.side_effect = _local_headers
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
-    storage_name = CFHTName(
-        file_name=basename(test_name).replace('.header', ''),
-        instrument=_identify_inst_mock(None, test_name),
-        source_names=[test_name],
-    )
-    file_info = FileInfo(
-        id=storage_name.file_uri, file_type='application/fits'
-    )
-    headers = ac.make_headers_from_file(test_name)
-    metadata_reader = rdc.FileMetadataReader()
-    metadata_reader._headers = {storage_name.file_uri: headers}
-    metadata_reader._file_info = {storage_name.file_uri: file_info}
-    kwargs = {
-        'storage_name': storage_name,
-        'metadata_reader': metadata_reader,
-    }
-    observation = None
-    observation = fits2caom2_augmentation.visit(observation, **kwargs)
+    original_scheme = StorageName.scheme
+    original_collection = StorageName.collection
+    try:
+        StorageName.scheme = 'ad'
+        StorageName.collection = COLLECTION
+        storage_name = CFHTName(
+            file_name=basename(test_name).replace('.header', ''),
+            instrument=_identify_inst_mock(None, test_name),
+            source_names=[test_name],
+        )
+        file_info = FileInfo(
+            id=storage_name.file_uri, file_type='application/fits'
+        )
+        headers = ac.make_headers_from_file(test_name)
+        metadata_reader = rdc.FileMetadataReader()
+        metadata_reader._headers = {storage_name.file_uri: headers}
+        metadata_reader._file_info = {storage_name.file_uri: file_info}
+        kwargs = {
+            'storage_name': storage_name,
+            'metadata_reader': metadata_reader,
+        }
+        observation = None
+        observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    _compare(observation, storage_name.obs_id, 'single_plane')
-    # assert False
+        _compare(observation, storage_name.obs_id, 'single_plane')
+        # assert False
+    finally:
+        StorageName.scheme = original_scheme
+        StorageName.collection = original_collection
 
 
 def _compare(observation, obs_id, dir_name):
     expected_fqn = f'{TEST_DATA_DIR}/{dir_name}/{obs_id}.expected.xml'
-    expected = mc.read_obs_from_file(expected_fqn)
+    expected = read_obs_from_file(expected_fqn)
     compare_result = get_differences(expected, observation)
     if compare_result is not None:
         actual_fqn = expected_fqn.replace('expected', 'actual')
-        mc.write_obs_to_file(observation, actual_fqn)
+        write_obs_to_file(observation, actual_fqn)
         compare_text = '\n'.join([r for r in compare_result])
         msg = (
             f'Differences found in observation {expected.observation_id}\n'
@@ -249,6 +258,7 @@ def _local_headers(fqn):
     logging.error(fqn)
     from urllib.parse import urlparse
     from astropy.io import fits
+
     file_uri = urlparse(fqn)
     try:
         fits_header = open(file_uri.path).read()

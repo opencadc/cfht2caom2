@@ -100,8 +100,12 @@ def test_cleanup_augmentation_bad_artifact_uris():
     f2 = '2255229p.fits.fz'
     test_plane_1 = test_obs.planes[f1.split('.')[0]]
     test_plane_2 = test_obs.planes[f2.split('.')[0]]
-    assert len(test_plane_1.artifacts) == 7, 'plane 1 initial conditions failed'
-    assert len(test_plane_2.artifacts) == 7, 'plane 2 initial conditions failed'
+    assert (
+        len(test_plane_1.artifacts) == 7
+    ), 'plane 1 initial conditions failed'
+    assert (
+        len(test_plane_2.artifacts) == 7
+    ), 'plane 2 initial conditions failed'
 
     for f_name in [f1, f2]:
         storage_name = cfht_name.CFHTName(file_name=f_name)

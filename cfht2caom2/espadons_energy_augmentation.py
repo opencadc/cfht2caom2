@@ -86,10 +86,14 @@ def visit(observation, **kwargs):
 
     science_fqn = storage_name.get_file_fqn(working_dir)
     count = 0
-    if storage_name.instrument is md.Inst.ESPADONS and storage_name.suffix in [
-        'i',
-        'p',
-    ]:
+    if (
+        storage_name.instrument is md.Inst.ESPADONS
+        and storage_name.suffix
+        in [
+            'i',
+            'p',
+        ]
+    ):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if storage_name.file_uri == artifact.uri:
