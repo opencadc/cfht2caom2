@@ -121,7 +121,7 @@ class CFHTName(mc.StorageName):
         super().__init__(
             obs_id=obs_id,
             file_name=file_name.replace('.header', ''),
-            source_names=source_names
+            source_names=source_names,
         )
         self._logger = logging.getLogger(self.__class__.__name__)
         self._logger.debug(self)
@@ -187,7 +187,8 @@ class CFHTName(mc.StorageName):
     @property
     def has_energy(self):
         return not (
-            self._instrument is md.Inst.ESPADONS and self._suffix in ['i', 'p']
+            self._instrument is md.Inst.ESPADONS
+            and self._suffix in ['i', 'p']
         )
 
     @property

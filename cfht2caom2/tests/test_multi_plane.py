@@ -161,9 +161,9 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
         )
         metadata_reader = rdc.FileMetadataReader()
         metadata_reader.set(storage_name)
-        metadata_reader.file_info[storage_name.file_uri].file_type = (
-            'application/fits'
-        )
+        metadata_reader.file_info[
+            storage_name.file_uri
+        ].file_type = 'application/fits'
         kwargs = {
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,

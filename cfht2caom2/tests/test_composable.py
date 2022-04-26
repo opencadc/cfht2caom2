@@ -152,9 +152,7 @@ def test_run_store(
     get_local_orig = data_util.get_local_file_headers
     os.getcwd = Mock(return_value=test_dir_fqn)
     repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
-    data_client_mock.return_value.info.side_effect = (
-        _mock_get_file_info
-    )
+    data_client_mock.return_value.info.side_effect = _mock_get_file_info
     headers_mock.side_effect = ac.make_headers_from_file
     check_fits_mock.return_value = True
     try:
@@ -209,9 +207,7 @@ def test_run_store_retry(
         repo_client_mock.return_value.read.side_effect = (
             _mock_repo_read_not_none
         )
-        data_client_mock.return_value.info.side_effect = (
-            _mock_get_file_info
-        )
+        data_client_mock.return_value.info.side_effect = _mock_get_file_info
         data_client_mock.return_value.put.side_effect = OSError
         data_util.get_local_headers_from_fits = Mock(
             side_effect=_mock_header_read
@@ -275,7 +271,9 @@ def test_run_state(
         assert run_mock.called, 'should have been called'
         args, kwargs = run_mock.call_args
         test_storage = args[0]
-        assert isinstance(test_storage, cfht_name.CFHTName), type(test_storage)
+        assert isinstance(test_storage, cfht_name.CFHTName), type(
+            test_storage
+        )
         assert (
             test_storage.obs_id == test_obs_id
         ), f'wrong obs id {test_storage.obs_id}'
@@ -376,12 +374,12 @@ def test_run_by_builder_hdf5_added_to_existing(
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 def test_run_ingest(
-        data_client_mock,
-        repo_client_mock,
-        data_source_mock,
-        meta_visit_mock,
-        caom2_store_mock,
-        access_url_mock,
+    data_client_mock,
+    repo_client_mock,
+    data_source_mock,
+    meta_visit_mock,
+    caom2_store_mock,
+    access_url_mock,
 ):
     access_url_mock.return_value = 'https://localhost:8080'
     temp_deque = deque()
@@ -510,9 +508,7 @@ def _mock_get_file_info(file_id):
             size=10290,
             md5sum='md5:{}'.format(md5('-37'.encode()).hexdigest()),
             file_type='image/jpeg',
-            lastmod=datetime(
-                year=2019, month=3, day=4, hour=19, minute=5
-            ),
+            lastmod=datetime(year=2019, month=3, day=4, hour=19, minute=5),
         )
     else:
         return FileInfo(
@@ -520,9 +516,7 @@ def _mock_get_file_info(file_id):
             size=665345,
             md5sum='md5:a347f2754ff2fd4b6209e7566637efad',
             file_type='application/fits',
-            lastmod=datetime(
-                year=2019, month=3, day=4, hour=19, minute=5
-            ),
+            lastmod=datetime(year=2019, month=3, day=4, hour=19, minute=5),
         )
 
 

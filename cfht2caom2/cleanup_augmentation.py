@@ -101,12 +101,16 @@ def visit(observation, **kwargs):
         # ID, with cfht2caom2 they're named after the product ID - clean up the
         # obsolete ones
         if (
-            (instrument is md.Inst.ESPADONS and storage_name.suffix == 'i'
-             and len(plane.artifacts) > 3)
-            or
-            (instrument is md.Inst.SPIROU
-             and storage_name.suffix in ['e', 'p', 's', 't', 'v']
-             and len(plane.artifacts) > 3)
+            (
+                instrument is md.Inst.ESPADONS
+                and storage_name.suffix == 'i'
+                and len(plane.artifacts) > 3
+            )
+            or (
+                instrument is md.Inst.SPIROU
+                and storage_name.suffix in ['e', 'p', 's', 't', 'v']
+                and len(plane.artifacts) > 3
+            )
             or (len(plane.artifacts) > 4)
         ):
             for artifact in plane.artifacts.values():

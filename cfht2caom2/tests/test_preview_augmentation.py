@@ -80,7 +80,9 @@ from caom2pipe import manage_composable as mc
 import test_fits2caom2_augmentation
 
 TEST_FILES_DIR = '/test_files'
-REJECTED_FILE = os.path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'rejected.yml')
+REJECTED_FILE = os.path.join(
+    test_fits2caom2_augmentation.TEST_DATA_DIR, 'rejected.yml'
+)
 
 
 def test_preview_augment():
@@ -245,11 +247,13 @@ def test_preview_augment():
             if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
                 check_number = 3
             assert (
-                len(obs.planes[test_name.product_id].artifacts) == check_number
+                len(obs.planes[test_name.product_id].artifacts)
+                == check_number
             ), f'initial condition {f_name}'
 
             try:
                 from datetime import datetime
+
                 start_ts = datetime.utcnow().timestamp()
                 test_result = preview_augmentation.visit(obs, **kwargs)
                 end_ts = datetime.utcnow().timestamp()
