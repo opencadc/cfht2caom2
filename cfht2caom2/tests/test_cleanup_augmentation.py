@@ -69,7 +69,7 @@
 
 from os import path
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cleanup_augmentation, cfht_name
+from cfht2caom2 import cleanup_augmentation, cfht_name, Inst
 import test_fits2caom2_augmentation
 
 
@@ -116,3 +116,20 @@ def test_cleanup_augmentation_bad_artifact_uris():
     assert len(test_plane_2.artifacts) == 4, 'plane 2 post conditions failed'
     assert 'ad:CFHT/2255229p_preview_256.jpg' in test_plane_2.artifacts.keys()
     assert 'ad:CFHT/2255229o_preview_256.jpg' in test_plane_1.artifacts.keys()
+
+
+def test_cleanup_edge_case():
+    test_obs = mc.read_obs_from_file(
+        path.join(
+            test_fits2caom2_augmentation.TEST_DATA_DIR,
+            'visit_obs_edge_case_cleanup.xml',
+        )
+    )
+    storage_name = cfht_name.CFHTName(
+        file_name='2014318p.fits.fz', instrument=Inst.WIRCAM
+    )
+    kwargs = {'storage_name': storage_name}
+    test_plane = test_obs.planes[storage_name.product_id]
+    assert len(test_plane.artifacts) == 7, 'initial condition'
+    test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
+    assert len(test_plane.artifacts) == 4, 'post condition'

@@ -1431,11 +1431,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>279.984583333</caom2:val>
+                            <caom2:val>279.9845833333333</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>63.207166667</caom2:val>
+                            <caom2:val>63.20716666666667</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-8.3333333e-05</caom2:cd11>
@@ -1533,11 +1533,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>279.812916667</caom2:val>
+                            <caom2:val>279.8129166666666</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>63.088055556</caom2:val>
+                            <caom2:val>63.08805555555556</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-8.3333333e-05</caom2:cd11>
@@ -1635,11 +1635,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>280.372916667</caom2:val>
+                            <caom2:val>280.3729166666666</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>63.070833333</caom2:val>
+                            <caom2:val>63.07083333333334</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-8.3333333e-05</caom2:cd11>
@@ -1741,7 +1741,7 @@
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>7.0</caom2:pix>
-                            <caom2:val>63.301055556</caom2:val>
+                            <caom2:val>63.30105555555555</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-8.3333333e-05</caom2:cd11>
