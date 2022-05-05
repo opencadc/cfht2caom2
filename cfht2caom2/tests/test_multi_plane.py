@@ -71,8 +71,9 @@ import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
+from caom2pipe.manage_composable import StorageName
 from caom2pipe import reader_composable as rdc
-from cfht2caom2 import cfht_name
+from cfht2caom2 import cfht_name, COLLECTION
 from cfht2caom2 import fits2caom2_augmentation
 from os import unlink
 from os.path import exists
@@ -140,43 +141,51 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
     )
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
-    observation = None
-    for f_name in LOOKUP[test_name]:
-        if 'hdf5' in f_name:
-            source_names = [
+    original_scheme = StorageName.scheme
+    original_collection = StorageName.collection
+    try:
+        StorageName.scheme = 'ad'
+        StorageName.collection = COLLECTION
+        observation = None
+        for f_name in LOOKUP[test_name]:
+            if 'hdf5' in f_name:
+                source_names = [
+                    f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
+                    f'{f_name}'
+                ]
+            else:
+                source_names = [
+                    f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
+                    f'{f_name}.header'
+                ]
+            storage_name = cfht_name.CFHTName(
+                file_name=f_name,
+                instrument=test_fits2caom2_augmentation._identify_inst_mock(
+                    None, test_name
+                ),
+                source_names=source_names,
+            )
+            metadata_reader = rdc.FileMetadataReader()
+            metadata_reader.set(storage_name)
+            metadata_reader.file_info[
+                storage_name.file_uri
+            ].file_type = 'application/fits'
+            kwargs = {
+                'storage_name': storage_name,
+                'metadata_reader': metadata_reader,
+            }
+            actual_fqn = (
                 f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-                f'{f_name}'
-            ]
-        else:
-            source_names = [
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-                f'{f_name}.header'
-            ]
-        storage_name = cfht_name.CFHTName(
-            file_name=f_name,
-            instrument=test_fits2caom2_augmentation._identify_inst_mock(
-                None, test_name
-            ),
-            source_names=source_names,
-        )
-        metadata_reader = rdc.FileMetadataReader()
-        metadata_reader.set(storage_name)
-        metadata_reader.file_info[
-            storage_name.file_uri
-        ].file_type = 'application/fits'
-        kwargs = {
-            'storage_name': storage_name,
-            'metadata_reader': metadata_reader,
-        }
-        actual_fqn = (
-            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-            f'{storage_name.obs_id}.actual.xml'
-        )
-        if exists(actual_fqn):
-            unlink(actual_fqn)
+                f'{storage_name.obs_id}.actual.xml'
+            )
+            if exists(actual_fqn):
+                unlink(actual_fqn)
 
-        observation = fits2caom2_augmentation.visit(observation, **kwargs)
+            observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    test_fits2caom2_augmentation._compare(
-        observation, test_name, 'multi_plane'
-    )
+        test_fits2caom2_augmentation._compare(
+            observation, test_name, 'multi_plane'
+        )
+    finally:
+        StorageName.scheme = original_scheme
+        StorageName.collection = original_collection

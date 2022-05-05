@@ -69,6 +69,7 @@
 
 import logging
 
+from collections import defaultdict
 from caom2 import Observation
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import metadata as md
@@ -82,7 +83,7 @@ def visit(observation, **kwargs):
     count = 0
     artifact_count = 0
     delete_list = []
-    artifact_delete_list = []
+    artifact_delete_list = defaultdict(list)
     instrument = md.Inst(observation.instrument.name)
     for plane in observation.planes.values():
         if plane.product_id.endswith('og'):
@@ -117,7 +118,7 @@ def visit(observation, **kwargs):
                 if '.jpg' not in artifact.uri:
                     continue
                 if f':CFHT/{storage_name.product_id}_' not in artifact.uri:
-                    artifact_delete_list.append(artifact.uri)
+                    artifact_delete_list[plane.product_id].append(artifact.uri)
 
     for entry in delete_list:
         logging.info(
@@ -126,10 +127,12 @@ def visit(observation, **kwargs):
         count += 1
         observation.planes.pop(entry)
 
-    for entry in artifact_delete_list:
-        artifact_count += 1
+    for product_id, entries in artifact_delete_list.items():
         for plane in observation.planes.values():
-            plane.artifacts.pop(entry)
+            if plane.product_id == product_id:
+                for entry in entries:
+                    artifact_count += 1
+                    plane.artifacts.pop(entry)
 
     logging.info(
         f'Completed cleanup augmentation for {observation.observation_id}. '

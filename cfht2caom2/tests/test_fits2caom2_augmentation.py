@@ -74,7 +74,8 @@ import warnings
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
 from mock import patch
-from os.path import basename, dirname, join, realpath
+from os import unlink
+from os.path import basename, dirname, exists, join, realpath
 
 from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
@@ -147,8 +148,10 @@ def _compare(observation, obs_id, dir_name):
     expected_fqn = f'{TEST_DATA_DIR}/{dir_name}/{obs_id}.expected.xml'
     expected = read_obs_from_file(expected_fqn)
     compare_result = get_differences(expected, observation)
+    actual_fqn = expected_fqn.replace('expected', 'actual')
+    if exists(actual_fqn):
+        unlink(actual_fqn)
     if compare_result is not None:
-        actual_fqn = expected_fqn.replace('expected', 'actual')
         write_obs_to_file(observation, actual_fqn)
         compare_text = '\n'.join([r for r in compare_result])
         msg = (

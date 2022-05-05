@@ -110,9 +110,6 @@ class CFHTName(mc.StorageName):
         instrument=None,
         source_names=[],
     ):
-        # set compression to an empty string so the file uri method still
-        # works, since the file_name element will have all extensions,
-        # including the .fz | .gz | '' to indicate compression type
         self._instrument = md.Inst(instrument)
         self._file_id = None
         self._file_name = None

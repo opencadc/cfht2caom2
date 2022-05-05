@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-40a2-015857817bec" caom2:lastModified="2022-05-05T00:09:42.571" caom2:maxLastModified="2022-05-05T21:01:59.041" caom2:metaChecksum="md5:b882e55e0383351b3b88f96635912948" caom2:accMetaChecksum="md5:3475d820aa2966e246e1beaa4e4aff2a" caom2:metaProducer="cfht2caom2/0.3.7">
+  <caom2:collection>CFHT</caom2:collection>
+  <caom2:observationID>2014318</caom2:observationID>
+  <caom2:metaRelease>2016-11-12T00:00:00.000</caom2:metaRelease>
+  <caom2:sequenceNumber>2014318</caom2:sequenceNumber>
+  <caom2:algorithm>
+    <caom2:name>exposure</caom2:name>
+  </caom2:algorithm>
+  <caom2:type>OBJECT</caom2:type>
+  <caom2:intent>science</caom2:intent>
+  <caom2:proposal>
+    <caom2:id>16BC98</caom2:id>
+    <caom2:pi>Scott Chapman</caom2:pi>
+    <caom2:title>A CFHT WIRCam narrow-band survey for emission line galaxies in the early Universe</caom2:title>
+  </caom2:proposal>
+  <caom2:telescope>
+    <caom2:name>CFHT 3.6m</caom2:name>
+    <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
+    <caom2:geoLocationY>-2493489.8730419013</caom2:geoLocationY>
+    <caom2:geoLocationZ>2151085.1695058867</caom2:geoLocationZ>
+  </caom2:telescope>
+  <caom2:instrument>
+    <caom2:name>WIRCam</caom2:name>
+  </caom2:instrument>
+  <caom2:planes>
+    <caom2:plane caom2:id="dd972263-c931-4450-aca2-470fb43fd78d" caom2:lastModified="2022-02-18T14:59:43.450" caom2:maxLastModified="2022-02-18T14:59:59.496" caom2:metaChecksum="md5:2211051121e72c72397d95536bbe2b5e" caom2:accMetaChecksum="md5:88c24599b800cf59975e6191db2a44c0" caom2:metaProducer="cfht2caom2/0.3.6">
+      <caom2:productID>2014318o</caom2:productID>
+      <caom2:metaRelease>2016-11-12T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2018-02-28T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>image</caom2:dataProductType>
+      <caom2:calibrationLevel>1</caom2:calibrationLevel>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="4712c364-16af-4ff9-b204-96f73fa5445c" caom2:lastModified="2022-02-18T14:59:43.450" caom2:maxLastModified="2022-02-18T14:59:43.450" caom2:metaChecksum="md5:737f35efe3b3024e50124823c5feca34" caom2:accMetaChecksum="md5:715cffaee09e003693cc3d0015883275" caom2:metaProducer="cfht2caom2/0.3.6">
+          <caom2:uri>ad:CFHT/2014318o.fits.fz</caom2:uri>
+          <caom2:productType>science</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="11faabdc-6747-486c-8e9f-afa304b05246" caom2:lastModified="2022-02-18T14:59:59.496" caom2:maxLastModified="2022-02-18T14:59:59.496" caom2:metaChecksum="md5:51ef1eec5fcd3c676db88bf48a2a6d72" caom2:accMetaChecksum="md5:ec1af9a3c0606a4a6f338b0f2c99c477">
+          <caom2:uri>ad:CFHT/2014318o_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="9ee64fd8-406e-4df3-86f2-2dffd6e201fa" caom2:lastModified="2022-02-18T14:59:59.496" caom2:maxLastModified="2022-02-18T14:59:59.496" caom2:metaChecksum="md5:ae322bee5bfc31e92f67fb3428510eff" caom2:accMetaChecksum="md5:992d9ad4e24b605c8150f013c0047889">
+          <caom2:uri>ad:CFHT/2014318o_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="f3904184-f726-4f38-b6c2-2ea228550e76" caom2:lastModified="2022-02-18T14:59:59.496" caom2:maxLastModified="2022-02-18T14:59:59.496" caom2:metaChecksum="md5:a8b3cecc63d2160442e538dc7f923d17" caom2:accMetaChecksum="md5:cbcce80baae5480635d311a84a0a057f">
+          <caom2:uri>ad:CFHT/2014318o_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+    <caom2:plane caom2:id="00000000-0000-0000-780b-0158bd0fd14f" caom2:lastModified="2022-05-05T00:09:42.571" caom2:maxLastModified="2022-05-05T21:01:59.041" caom2:metaChecksum="md5:c91b7c80066255260b2f55af5c1f360c" caom2:accMetaChecksum="md5:a3d8fc245cbf1027dcd079a0fcff310e" caom2:metaProducer="cfht2caom2/0.3.7">
+      <caom2:productID>2014318p</caom2:productID>
+      <caom2:metaRelease>2016-11-12T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2018-02-28T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>image</caom2:dataProductType>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-b6fa-e97255fbcb33" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:cb6f61a111fb49298916559f02925dbe" caom2:accMetaChecksum="md5:1c6fbeadb00bb1ceffc83a7f51638d88">
+          <caom2:uri>ad:CFHT/2014318_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-a302-11102197a0ae" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:b83ad5bad4e2bb5fe0005121846b0e42" caom2:accMetaChecksum="md5:c657f0124aec50babe510126a86355f5">
+          <caom2:uri>ad:CFHT/2014318_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-bc48-73fb34f16ec6" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:7c1ff19345626977cafa3b1b199025ad" caom2:accMetaChecksum="md5:c85d33c76079c69fde348aa926775c73">
+          <caom2:uri>ad:CFHT/2014318_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-b6fa-e97255fbcb33" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:cb6f61a111fb49298916559f02925dbe" caom2:accMetaChecksum="md5:1c6fbeadb00bb1ceffc83a7f51638d88">
+          <caom2:uri>ad:CFHT/2014318p_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-a302-11102197a0ae" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:b83ad5bad4e2bb5fe0005121846b0e42" caom2:accMetaChecksum="md5:c657f0124aec50babe510126a86355f5">
+          <caom2:uri>ad:CFHT/2014318p_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-bc48-73fb34f16ec6" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:7c1ff19345626977cafa3b1b199025ad" caom2:accMetaChecksum="md5:c85d33c76079c69fde348aa926775c73">
+          <caom2:uri>ad:CFHT/2014318p_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-780b-0158bd0fd156" caom2:lastModified="2022-05-05T00:09:42.571" caom2:maxLastModified="2022-05-05T21:01:59.041" caom2:metaChecksum="md5:5347740e7d482814af8f6a7f904e439e" caom2:accMetaChecksum="md5:2c7f7ce6eb4ff45118fc6b653252f3de" caom2:metaProducer="cfht2caom2/0.3.7">
+          <caom2:uri>ad:CFHT/2014318p.fits.fz</caom2:uri>
+          <caom2:productType>science</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+    <caom2:plane caom2:id="00000000-0000-0000-5f6e-0158bc906cae" caom2:lastModified="2017-11-17T13:22:36.310" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:9b8b159c8fb8ca7fa48c1cea213e0831" caom2:accMetaChecksum="md5:070cbe93054d495ea858ae6899313eeb">
+      <caom2:productID>2014318s</caom2:productID>
+      <caom2:metaRelease>2016-11-12T07:39:11.000</caom2:metaRelease>
+      <caom2:dataRelease>2018-02-28T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>image</caom2:dataProductType>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="00000000-0000-0000-b45a-63969e1c42ea" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:f6af332a81f94b304b074c9e3c675ea3" caom2:accMetaChecksum="md5:062b2de8e9e7dd815301a37c56fcc5bb">
+          <caom2:uri>ad:CFHT/2014318_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-8adc-5f6c4bad16a8" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:dd23a1ba2b9689962e8c8f4c344cfe1f" caom2:accMetaChecksum="md5:e86c20e216530b7ddee8e86cfde74048">
+          <caom2:uri>ad:CFHT/2014318_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-a5e6-bb43f2219061" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:f2060ed0401b865993b5c77ce5582ebe" caom2:accMetaChecksum="md5:25f7f086be75efab756ae7887eeba633">
+          <caom2:uri>ad:CFHT/2014318_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="00000000-0000-0000-5f6e-0158bc906cb5" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:4cdf17105225322b4315235b6eed7c8a" caom2:accMetaChecksum="md5:68c8349a9065eb40d82825123838e693">
+          <caom2:uri>ad:CFHT/2014318s.fits.fz</caom2:uri>
+          <caom2:productType>science</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+    <caom2:plane caom2:id="164949b4-b05b-40e0-b689-1634d8a2caa9" caom2:lastModified="2021-03-12T08:21:31.718" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:a2409c7f7b3aef0185bf4d4cef36c92f" caom2:accMetaChecksum="md5:28a996d03a3d380cd311786f3f940d0b" caom2:metaProducer="cfht2caom2/0.3.4">
+      <caom2:productID>2014318w</caom2:productID>
+      <caom2:metaRelease>2016-11-12T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2018-02-28T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>image</caom2:dataProductType>
+      <caom2:calibrationLevel>1</caom2:calibrationLevel>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="47609226-9f5d-426d-a4a4-d97f0b76a11c" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:7615a5556a1cc57b88eaadc8dd22dc1b" caom2:accMetaChecksum="md5:d5f6c6e97f97b580ae8050a15f758f94" caom2:metaProducer="cfht2caom2/0.3.4">
+          <caom2:uri>ad:CFHT/2014318w.fits.fz</caom2:uri>
+          <caom2:productType>calibration</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="059066be-1160-481b-ad65-cfa6f9473a54" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:cff4816e16322768effb4beb4f6a3b59" caom2:accMetaChecksum="md5:a85e293de3cd5a8e69cc318b5104692d">
+          <caom2:uri>ad:CFHT/2014318w_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="02e6290d-587f-489d-86ca-58bfbc92c6ab" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:afafe2a6ab27897ab36a167af2fa57db" caom2:accMetaChecksum="md5:0862cea33bfe6aa15d66b9c937c1e076">
+          <caom2:uri>ad:CFHT/2014318w_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="b2d367fe-69c1-4183-b7c9-ef55380f7e54" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:e079e5e88995156ab98f8ff512379b9f" caom2:accMetaChecksum="md5:5927f921b4837592cf29cac4f21c2c0f">
+          <caom2:uri>ad:CFHT/2014318w_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+    <caom2:plane caom2:id="b0ef62a5-00fd-4f4b-9be3-0ea06a4d0860" caom2:lastModified="2022-05-05T00:09:42.571" caom2:maxLastModified="2022-05-05T21:01:59.041" caom2:metaChecksum="md5:4c8ce9cd5abfac8d6f471df80d608a00" caom2:accMetaChecksum="md5:6adb49e4dcaebf96e4c4bf0496c26c3d" caom2:metaProducer="cfht2caom2/0.3.7">
+      <caom2:productID>2014318y</caom2:productID>
+      <caom2:metaRelease>2016-11-12T00:00:00.000</caom2:metaRelease>
+      <caom2:dataRelease>2018-02-28T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>image</caom2:dataProductType>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="8eaf12cb-7f5c-4729-a7bd-2acfd299beeb" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2022-05-05T21:01:59.041" caom2:metaChecksum="md5:8491bcaabdb47f31729fb6b38b2171e2" caom2:accMetaChecksum="md5:2453925f3a7e4d3d8badb07ed94be3f1" caom2:metaProducer="cfht2caom2/0.3.4">
+          <caom2:uri>ad:CFHT/2014318y.fits.fz</caom2:uri>
+          <caom2:productType>calibration</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="01953762-1ded-4e49-a46c-173366e020ac" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:7101f8d99204e89084126650451737bf" caom2:accMetaChecksum="md5:6a95d8e8fbec9b4d36ea7be013035a68">
+          <caom2:uri>ad:CFHT/2014318y_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="aaf19352-8308-4c63-b19c-4ddfdbd9cb3d" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:3fc9d16f3c136c4a572d93ef5fdec2ac" caom2:accMetaChecksum="md5:07c5970c9bac03f3d3a5aa69c0eaff84">
+          <caom2:uri>ad:CFHT/2014318y_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="73f41752-f5c7-4742-849f-fc5b19d20ac8" caom2:lastModified="2021-09-02T15:58:10.397" caom2:maxLastModified="2021-09-02T15:58:10.397" caom2:metaChecksum="md5:9abdb846f295b704c1e6878b2122f4c8" caom2:accMetaChecksum="md5:23cf7d9f4149e2a5417a536009607eea">
+          <caom2:uri>ad:CFHT/2014318y_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+  </caom2:planes>
+</caom2:Observation>
