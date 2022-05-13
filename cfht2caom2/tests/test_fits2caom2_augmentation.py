@@ -146,9 +146,9 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
 
 def _compare(observation, obs_id, dir_name):
     expected_fqn = f'{TEST_DATA_DIR}/{dir_name}/{obs_id}.expected.xml'
+    actual_fqn = expected_fqn.replace('expected', 'actual')
     expected = read_obs_from_file(expected_fqn)
     compare_result = get_differences(expected, observation)
-    actual_fqn = expected_fqn.replace('expected', 'actual')
     if exists(actual_fqn):
         unlink(actual_fqn)
     if compare_result is not None:
@@ -209,6 +209,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '881162d',
             '979339',
             '2460503p',
+            '963946',
         ],
         md.Inst.SPIROU: [
             '2401727a',
