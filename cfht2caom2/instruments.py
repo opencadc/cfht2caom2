@@ -2290,16 +2290,25 @@ class Sitelle(InstrumentType):
         obs_dec = header.get('DEC_DEG')
         if obs_ra is None or obs_dec is None:
             self._logger.error(
-                'RA_DEG {obs_ra} DEC_DEG {obs_dec} for {obs_id} are not set.'
+                f'RA_DEG {obs_ra} DEC_DEG {obs_dec} for '
+                f'{self._storage_name.obs_id} are not set.'
             )
             return
 
         pix_scale2 = mc.to_float(header.get('PIXSCAL2'))
+        pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
+
+        if pix_scale1 is None or pix_scale2 is None:
+            self._logger.error(
+                f'PIXSCAL1 {pix_scale1} or PIXSCAL2 {pix_scale2} for '
+                f'{self._storage_name.obs_id} are not set.'
+            )
+            return
+
         delta_dec = (1024.0 * pix_scale2) / 3600.0
         obs_dec_bl = obs_dec - delta_dec
         obs_dec_tr = obs_dec + delta_dec
 
-        pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
         # obs_dec_tr == obs_dec_tl
         delta_ra_top = (1024.0 * pix_scale1) / (
             3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
