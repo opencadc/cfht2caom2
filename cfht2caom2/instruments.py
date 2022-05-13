@@ -931,11 +931,14 @@ class InstrumentType(cc.TelescopeMapping):
             date_str = self._headers[ext].get('DATE-OBS')
             if date_str is None:
                 dt_str = self._headers[ext].get('DATE')
-                mjd_obs = ac.get_datetime(dt_str)
+                if dt_str is not None:
+                    mjd_obs = ac.get_datetime(dt_str)
             else:
                 time_str = self._headers[ext].get('TIME-OBS')
                 date_obs = ac.get_datetime(date_str)
-                time_obs = ac.get_datetime(time_str)
+                time_obs = None
+                if time_str is not None:
+                    time_obs = ac.get_datetime(time_str)
                 if time_obs is None:
                     mjd_obs = date_obs
                 else:
@@ -2014,9 +2017,9 @@ class Sitelle(InstrumentType):
                 result = self._headers[ext].get('CDELT3')
             else:
                 # units in file are nm, units in blueprint are Angstroms
-                result = 10.0 * mc.to_float(
-                    self._headers[ext].get('FILTERBW')
-                )
+                filter_bw = mc.to_float(self._headers[ext].get('FILTERBW'))
+                if filter_bw is not None:
+                    result = 10.0 * filter_bw
         return result
 
     def get_energy_function_naxis(self, ext):
@@ -2043,9 +2046,9 @@ class Sitelle(InstrumentType):
                 result = self._headers[ext].get('CRVAL3')
             else:
                 # units in file are nm, units in blueprint are Angstroms
-                result = 10.0 * mc.to_float(
-                    self._headers[ext].get('FILTERLB')
-                )
+                filter_lb = mc.to_float(self._headers[ext].get('FILTERLB'))
+                if filter_lb is not None:
+                    result = 10.0 * filter_lb
         return result
 
     def get_energy_resolving_power(self, ext):
@@ -2100,8 +2103,8 @@ class Sitelle(InstrumentType):
         return result
 
     def get_time_refcoord_delta(self, ext):
+        delta = None
         if self._storage_name.suffix == 'p':
-            delta = None
             mjd_start = self._get_mjd_start(ext)
             mjd_end = mc.to_float(self._headers[ext].get('MJDEND'))
             # caom2IngestSitelle.py, l704
@@ -2115,7 +2118,8 @@ class Sitelle(InstrumentType):
             exp_time = mc.to_float(self._headers[ext].get('EXPTIME'))
             if exp_time is None:
                 exp_time = mc.to_float(self._headers[ext].get('DARKTIME'))
-            delta = exp_time / 86400.0
+            if exp_time is not None:
+                delta = exp_time / 86400.0
         return delta
 
     def _update_sitelle_plane(self, observation):
