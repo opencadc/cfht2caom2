@@ -179,11 +179,14 @@ def run_by_builder():
 
 
 def _run_decompress():
-    """Run decompression for CFHT. This is interim code, hence the
-    location of the DecompressReader class definition."""
+    """
+    Run decompression for CFHT. This is interim code, hence the
+    location of the DecompressReader class definition.
+    """
 
     class DecompressReader(StorageClientReader):
-        """Using the source_names for the set_* implementations means
+        """
+        Using the source_names for the set_* implementations means
         the information can be obtained for the compressed file name, and
         since the header information is required to decide whether or not
         to recompress a file, this is important distinction during
@@ -213,8 +216,8 @@ def _run_decompress():
                         self._headers[entry] = []
             self._logger.debug('End set_headers')
 
-    config, clients, reader, builder, source = _common_init()
-    reader = DecompressReader(clients.data_client)
+    config, clients, reader_ignore, builder, source = _common_init()
+    decompress_reader = DecompressReader(clients.data_client)
 
     return rc.run_by_todo(
         config,
@@ -223,7 +226,7 @@ def _run_decompress():
         data_visitors=DATA_VISITORS,
         clients=clients,
         source=source,
-        metadata_reader=reader,
+        metadata_reader=decompress_reader,
     )
 
 
