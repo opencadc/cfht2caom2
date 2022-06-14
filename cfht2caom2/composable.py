@@ -74,7 +74,7 @@ import traceback
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe.manage_composable import Config, StorageName
-from caom2pipe import reader_composable as rdc
+from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cfht_builder, cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
@@ -100,9 +100,9 @@ def _common_init():
     )
     clients = clc.ClientCollection(config)
     if config.use_local_files:
-        reader = rdc.FileMetadataReader()
+        reader = FileMetadataReader()
     else:
-        reader = rdc.StorageClientReader(clients.data_client)
+        reader = StorageClientReader(clients.data_client)
     builder = cfht_builder.CFHTBuilder(
         config.archive,
         config.use_local_files,
@@ -170,6 +170,66 @@ def _run_by_builder():
 def run_by_builder():
     try:
         result = _run_by_builder()
+        sys.exit(result)
+    except Exception as e:
+        logging.error(e)
+        tb = traceback.format_exc()
+        logging.debug(tb)
+        sys.exit(-1)
+
+
+def _run_decompress():
+    """Run decompression for CFHT. This is interim code, hence the
+    location of the DecompressReader class definition."""
+
+    class DecompressReader(StorageClientReader):
+        """Using the source_names for the set_* implementations means
+        the information can be obtained for the compressed file name, and
+        since the header information is required to decide whether or not
+        to recompress a file, this is important distinction during
+        execution. In the case, the chicken in the compressed file name,
+        and the egg is the "does it need to be recompressed" decision.
+        """
+
+        def __init__(self, client):
+            super().__init__(client)
+
+        def set_file_info(self, storage_name):
+            """Retrieves FileInfo information to memory."""
+            for entry in storage_name.source_names:
+                if entry not in self._file_info.keys():
+                    self._file_info[entry] = self._client.info(entry)
+
+        def set_headers(self, storage_name):
+            """Retrieves the Header information to memory."""
+            self._logger.debug(
+                f'Begin set_headers for {storage_name.file_name}'
+            )
+            for entry in storage_name.source_names:
+                if entry not in self._headers.keys():
+                    if '.fits' in entry:
+                        self._headers[entry] = self._client.get_head(entry)
+                    else:
+                        self._headers[entry] = []
+            self._logger.debug('End set_headers')
+
+    config, clients, reader, builder, source = _common_init()
+    reader = DecompressReader(clients.data_client)
+
+    return rc.run_by_todo(
+        config,
+        builder,
+        meta_visitors=META_VISITORS,
+        data_visitors=DATA_VISITORS,
+        clients=clients,
+        source=source,
+        metadata_reader=reader,
+    )
+
+
+def run_decompress():
+    try:
+        result = _run_decompress()
         sys.exit(result)
     except Exception as e:
         logging.error(e)
