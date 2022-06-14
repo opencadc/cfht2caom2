@@ -217,7 +217,12 @@ def _run_decompress():
             self._logger.debug('End set_headers')
 
     config, clients, reader_ignore, builder_ignore, source = _common_init()
-    decompress_reader = DecompressReader(clients.data_client)
+    # the headers have to come from AD, because SI doesn't do that atm
+    original_feature = config.features.supports_latest_client
+    config.features.supports_latest_client = False
+    ad_reading = clc.ClientCollection(config)
+    decompress_reader = DecompressReader(ad_reading.data_client)
+    config.features.supports_latest_client = original_feature
     builder = cfht_builder.CFHTBuilder(
         config.archive,
         config.use_local_files,
