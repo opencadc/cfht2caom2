@@ -216,8 +216,14 @@ def _run_decompress():
                         self._headers[entry] = []
             self._logger.debug('End set_headers')
 
-    config, clients, reader_ignore, builder, source = _common_init()
+    config, clients, reader_ignore, builder_ignore, source = _common_init()
     decompress_reader = DecompressReader(clients.data_client)
+    builder = cfht_builder.CFHTBuilder(
+        config.archive,
+        config.use_local_files,
+        decompress_reader,
+        config.features.supports_latest_client,
+    )
 
     return rc.run_by_todo(
         config,
