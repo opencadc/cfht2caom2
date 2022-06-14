@@ -9,6 +9,7 @@ RUN apt-get update --no-install-recommends \
         g++ \
         git \
         libc6-dev \
+        libcfitsio-bin \
         libgdbm-dev \
         libncursesw5-dev \
         libreadline-gplv2-dev \

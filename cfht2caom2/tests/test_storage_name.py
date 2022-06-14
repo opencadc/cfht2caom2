@@ -105,7 +105,7 @@ def test_is_valid():
         assert test_subject.obs_id == '2460503p', 'wrong obs id'
         assert test_subject.file_id == '2460503p', 'wrong file id'
         assert (
-            test_subject.file_uri == 'ad:CFHT/2460503p.fits.gz'
+            test_subject.file_uri == 'ad:CFHT/2460503p.fits'
         ), 'wrong uri'
         assert not test_subject.is_simple, 'should be composite'
 
@@ -193,7 +193,9 @@ def test_is_valid():
 
         StorageName.scheme = 'cadc'
         test_subject = CFHTName(
-            file_name='2602045r.fits.fz', instrument='SPIRou'
+            file_name='2602045r.fits.fz',
+            instrument='SPIRou',
+            bitpix=-32,
         )
         assert test_subject.obs_id == '2602045', 'wrong obs id'
         assert test_subject.product_id == '2602045r', 'wrong product id'
@@ -210,6 +212,48 @@ def test_is_valid():
             test_subject.zoom_uri
             == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
         ), 'wrong zoom uri'
+
+        # decompression, no recompression
+        StorageName.scheme = 'cadc'
+        test_subject = CFHTName(
+            file_name='2602045r.fits.gz',
+            instrument='SPIRou',
+            bitpix=-32,
+        )
+        assert (
+            test_subject.file_uri == 'cadc:CFHT/2602045r.fits'
+        ), 'wrong file uri'
+        assert (
+            test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
+        ), 'wrong thumb uri'
+        assert (
+            test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
+        ), 'wrong preview uri'
+        assert (
+            test_subject.zoom_uri
+            == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
+        ), 'wrong zoom uri'
+
+        # decompression plus recompression
+        test_subject = CFHTName(
+            file_name='2602045r.fits.gz',
+            instrument='SPIRou',
+            bitpix=32,
+        )
+        assert (
+            test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
+        ), 'wrong file uri'
+        assert (
+            test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
+        ), 'wrong thumb uri'
+        assert (
+            test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
+        ), 'wrong preview uri'
+        assert (
+            test_subject.zoom_uri
+            == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
+        ), 'wrong zoom uri'
+
     finally:
         StorageName.scheme = original_scheme
         StorageName.collection = original_collection

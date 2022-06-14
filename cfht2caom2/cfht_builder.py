@@ -103,6 +103,7 @@ class CFHTBuilder(nbc.StorageNameBuilder):
 
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
+        bitpix = None
         if mc.StorageName.is_hdf5(entry):
             instrument = md.Inst.SITELLE
         else:
@@ -115,10 +116,12 @@ class CFHTBuilder(nbc.StorageNameBuilder):
             self._metadata_reader.set(storage_name)
             headers = self._metadata_reader.headers.get(storage_name.file_uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
+            bitpix = mc.get_keyword(headers, 'BITPIX')
         result = cn.CFHTName(
             file_name=os.path.basename(entry),
             source_names=[entry],
             instrument=instrument,
+            bitpix=bitpix,
         )
         self._logger.debug('End build.')
         return result

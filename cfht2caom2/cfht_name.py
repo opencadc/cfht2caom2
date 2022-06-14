@@ -109,12 +109,15 @@ class CFHTName(mc.StorageName):
         file_name=None,
         instrument=None,
         source_names=[],
+        bitpix=None,
     ):
         self._instrument = md.Inst(instrument)
         self._file_id = None
         self._file_name = None
         self._obs_id = None
         self._suffix = None
+        # make recompression decisions based on bitpix
+        self._bitpix = bitpix
         super().__init__(
             obs_id=obs_id,
             file_name=file_name.replace('.header', ''),
@@ -127,6 +130,7 @@ class CFHTName(mc.StorageName):
         return (
             f'\n'
             f'      instrument: {self.instrument}\n'
+            f'          bitpix: {self._bitpix}\n'
             f'          obs_id: {self.obs_id}\n'
             f'         file_id: {self.file_id}\n'
             f'       file_name: {self.file_name}\n'
@@ -141,9 +145,26 @@ class CFHTName(mc.StorageName):
 
     @property
     def file_uri(self):
-        """The CADC Storage URI for the file."""
-        # this is only required until CFHT decompression is added in
-        return self._get_uri(self._file_name)
+        """
+        The CADC Storage URI for the file.
+
+        SF - 20-05-22
+        it looks like compression will be:
+        if bitpix==(-32|-64):
+             gunzip file.fits.gz
+        else:
+             imcopy file.fits.gz file.fits.fz[compress]
+
+        """
+        if self._bitpix is None or self._bitpix in [-32, -64]:
+            # if bitpix isn't known, don't use fpack
+            result = self._get_uri(self._file_name).replace('.gz', '')
+        else:
+            self._logger.info(
+                f'{self._file_name} will be recompressed with fpack.'
+            )
+            result = self._get_uri(self._file_name).replace('.gz', '.fz')
+        return result
 
     @property
     def instrument(self):
