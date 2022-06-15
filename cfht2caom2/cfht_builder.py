@@ -114,7 +114,13 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                 file_name=file_name, source_names=[entry]
             )
             self._metadata_reader.set(storage_name)
-            headers = self._metadata_reader.headers.get(storage_name.file_uri)
+            # headers = self._metadata_reader.headers.get(storage_name.file_uri)
+            # TODO - this is only for decompression
+            # I think this will be ok going forward, because the compression
+            # will be either .fz or None, and so the 'get_head' method should
+            # do something for SI => we'll see, since it's part of the
+            # help text.
+            headers = self._metadata_reader.headers.get(entry)
             instrument = CFHTBuilder.get_instrument(headers, entry)
             bitpix = mc.get_keyword(headers, 'BITPIX')
         result = cn.CFHTName(
