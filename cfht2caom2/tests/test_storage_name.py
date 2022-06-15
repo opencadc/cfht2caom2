@@ -203,6 +203,9 @@ def test_is_valid():
             test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
         ), 'wrong file uri'
         assert (
+            test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz'
+        ), 'wrong destination uri'
+        assert (
             test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
         ), 'wrong thumb uri'
         assert (
@@ -224,6 +227,9 @@ def test_is_valid():
             test_subject.file_uri == 'cadc:CFHT/2602045r.fits'
         ), 'wrong file uri'
         assert (
+            test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits'
+        ), 'wrong destination uri'
+        assert (
             test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
         ), 'wrong thumb uri'
         assert (
@@ -239,10 +245,14 @@ def test_is_valid():
             file_name='2602045r.fits.gz',
             instrument='SPIRou',
             bitpix=32,
+            source_names=['2602045r.fits.gz']
         )
         assert (
             test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
         ), 'wrong file uri'
+        assert (
+            test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz'
+        ), 'wrong destination uri'
         assert (
             test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
         ), 'wrong thumb uri'

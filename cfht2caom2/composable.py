@@ -71,14 +71,19 @@ import logging
 import sys
 import traceback
 
+from os.path import basename
+
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
-from caom2pipe.manage_composable import Config, StorageName
+from caom2pipe.manage_composable import Config, get_keyword, StorageName
 from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
 from caom2pipe import run_composable as rc
-from cfht2caom2 import cfht_builder, cleanup_augmentation
+from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
+from cfht2caom2.cfht_builder import CFHTBuilder
+from cfht2caom2.cfht_name import CFHTName
+from cfht2caom2.metadata import Inst
 
 
 META_VISITORS = [fits2caom2_augmentation]
@@ -103,7 +108,7 @@ def _common_init():
         reader = FileMetadataReader()
     else:
         reader = StorageClientReader(clients.data_client)
-    builder = cfht_builder.CFHTBuilder(
+    builder = CFHTBuilder(
         config.archive,
         config.use_local_files,
         reader,
@@ -216,6 +221,54 @@ def _run_decompress():
                         self._headers[entry] = []
             self._logger.debug('End set_headers')
 
+    class DecompressBuilder(CFHTBuilder):
+
+        def __init__(
+            self,
+            archive,
+            use_local_files,
+            metadata_reader,
+            supports_latest_client,
+        ):
+            super().__init__(
+                archive,
+                use_local_files,
+                metadata_reader,
+                supports_latest_client,
+            )
+
+        def build(self, entry):
+            """
+            :param entry an entry is a file name, complete with the appropriate
+            compression extension, that is sufficient to retrieve file header
+            information from CADC's storage system.
+            """
+
+            # retrieve the header information, extract the instrument name
+            self._logger.debug(f'Build a StorageName instance for {entry}.')
+            bitpix = None
+            if StorageName.is_hdf5(entry):
+                instrument = Inst.SITELLE
+            else:
+                file_name = basename(entry).replace('.header', '')
+                # the separate construction of file name for the uri supports
+                # unit testing
+                storage_name = StorageName(
+                    file_name=file_name, source_names=[entry]
+                )
+                self._metadata_reader.set(storage_name)
+                headers = self._metadata_reader.headers.get(entry)
+                instrument = CFHTBuilder.get_instrument(headers, entry)
+                bitpix = get_keyword(headers, 'BITPIX')
+            result = CFHTName(
+                file_name=basename(entry),
+                source_names=[entry],
+                instrument=instrument,
+                bitpix=bitpix,
+            )
+            self._logger.debug('End build.')
+            return result
+
     config, clients, reader_ignore, builder_ignore, source = _common_init()
     # the headers have to come from AD, because SI doesn't do that atm
     original_feature = config.features.supports_latest_client
@@ -223,7 +276,7 @@ def _run_decompress():
     ad_reading = clc.ClientCollection(config)
     decompress_reader = DecompressReader(ad_reading.data_client)
     config.features.supports_latest_client = original_feature
-    builder = cfht_builder.CFHTBuilder(
+    builder = DecompressBuilder(
         config.archive,
         config.use_local_files,
         decompress_reader,
