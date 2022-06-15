@@ -48,7 +48,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-0f55-015d38784d3f" caom2:lastModified="2017-11-22T09:05:11.037" caom2:maxLastModified="2017-11-22T09:05:11.037" caom2:metaChecksum="md5:4c667f0f54f04abc2a547270ed27f8b9" caom2:accMetaChecksum="md5:0ca1132ab5515ad5ad66693e28bb614c" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/mastertwilightflat_BrG_07Aw06_v200.fits</caom2:uri>
+          <caom2:uri>cadc:CFHT/mastertwilightflat_BrG_07Aw06_v200.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

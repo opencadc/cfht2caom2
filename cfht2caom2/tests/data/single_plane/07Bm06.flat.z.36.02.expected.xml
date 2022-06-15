@@ -91,7 +91,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="974bf6db-f1c6-47ea-a6d1-a8fb72670dc1" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/07Bm06.flat.z.36.02.fits</caom2:uri>
+          <caom2:uri>cadc:CFHT/07Bm06.flat.z.36.02.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

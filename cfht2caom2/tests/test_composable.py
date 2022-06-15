@@ -165,7 +165,7 @@ def test_run_store(
 
     assert data_client_mock.return_value.put.called, 'expect a file put'
     data_client_mock.return_value.put.assert_called_with(
-        test_dir_fqn, 'ad:CFHT/1000003f.fits.fz', 'default'
+        test_dir_fqn, 'cadc:CFHT/1000003f.fits.fz', None
     ), 'wrong put_file args'
 
 
@@ -223,7 +223,7 @@ def test_run_store_retry(
 
         assert data_client_mock.return_value.put.called, 'expect a file put'
         data_client_mock.return_value.put.assert_called_with(
-            f'{test_dir_fqn}/new', 'ad:CFHT/1000003f.fits.fz', 'default'
+            f'{test_dir_fqn}/new', 'cadc:CFHT/1000003f.fits.fz', None
         ), 'wrong put_file args'
         assert os.path.exists(test_failure_fqn), 'expect failure move'
         success_content = os.listdir(test_success_dir)
@@ -278,7 +278,7 @@ def test_run_state(
             test_storage.obs_id == test_obs_id
         ), f'wrong obs id {test_storage.obs_id}'
         assert test_storage.file_name == test_f_name, 'wrong file name'
-        assert test_storage.file_uri == f'ad:CFHT/{test_f_name}', 'wrong uri'
+        assert test_storage.file_uri == f'cadc:CFHT/{test_f_name}', 'wrong uri'
     finally:
         _cleanup(TEST_DIR)
 
@@ -407,7 +407,8 @@ def test_run_ingest(
         test_config.collection = 'CFHT'
         test_config.proxy_file_name = 'cadcproxy.pem'
         test_config.proxy_fqn = f'{tmp_dir_name}/cadcproxy.pem'
-        test_config.features.supports_latest_client = False
+        test_config.features.supports_latest_client = True
+        test_config.features.supports_decompression = True
         test_config.use_local_files = False
         mc.Config.write_to_file(test_config)
         with open(test_config.proxy_fqn, 'w') as f:
@@ -424,7 +425,7 @@ def test_run_ingest(
                 data_client_mock.return_value.info.call_count == 1
             ), 'wrong number of info calls'
             data_client_mock.return_value.info.assert_called_with(
-                f'ad:CFHT/{test_f_name}',
+                f'cadc:CFHT/{test_f_name}',
             )
             assert (
                 data_client_mock.return_value.get_head.called
@@ -433,7 +434,7 @@ def test_run_ingest(
                 data_client_mock.return_value.get_head.call_count == 1
             ), 'wrong number of get_heads'
             data_client_mock.return_value.get_head.assert_called_with(
-                f'ad:CFHT/{test_f_name}',
+                f'cadc:CFHT/{test_f_name}',
             )
             assert meta_visit_mock.called, '_visit_meta call'
             assert meta_visit_mock.call_count == 1, '_visit_meta call count'

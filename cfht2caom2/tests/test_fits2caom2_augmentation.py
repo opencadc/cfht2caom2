@@ -116,7 +116,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
     original_scheme = StorageName.scheme
     original_collection = StorageName.collection
     try:
-        StorageName.scheme = 'ad'
+        StorageName.scheme = 'cadc'
         StorageName.collection = COLLECTION
         storage_name = CFHTName(
             file_name=basename(test_name).replace('.header', ''),

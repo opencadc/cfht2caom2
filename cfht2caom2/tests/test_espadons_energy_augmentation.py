@@ -82,7 +82,7 @@ def test_visit():
     orig_collection = mc.StorageName.collection
     orig_scheme = mc.StorageName.scheme
     try:
-        mc.StorageName.scheme = 'ad'
+        mc.StorageName.scheme = 'cadc'
         mc.StorageName.collection = cn.COLLECTION
         product_id = '2460606i'
         f_name = f'{product_id}.fits.gz'
@@ -93,7 +93,7 @@ def test_visit():
         obs = mc.read_obs_from_file(obs_fqn)
 
         # pre-conditions
-        uri = f'ad:CFHT/{product_id}.fits'
+        uri = f'cadc:CFHT/{product_id}.fits'
         assert (
             obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy
             is None
