@@ -589,7 +589,7 @@ class InstrumentType(cc.TelescopeMapping):
         if elevation is not None and not (0.0 <= elevation <= 90.0):
             self._logger.info(
                 f'Setting elevation to None for '
-                f'{self._get_filename(ext)} because the value is {elevation}.'
+                f'{self._storage_name.file_name} because the value is {elevation}.'
             )
             elevation = None
         return elevation
@@ -895,11 +895,13 @@ class InstrumentType(cc.TelescopeMapping):
             dt_str = self._headers[ext].get('REL_DATE')
             if dt_str is None:
                 dt_str = self._headers[ext].get('DATE')
-        mjd_obs = ac.get_datetime(dt_str)
+        mjd_obs = None
+        if dt_str is not None:
+            mjd_obs = ac.get_datetime(dt_str)
         if mjd_obs is None:
             self._logger.warning(
                 f'Chunk.time.axis.function.refCoord.val is None for '
-                f'{self._get_filename(ext)}'
+                f'{self._storage_name.file_name}, extension {ext}'
             )
         else:
             mjd_obs = mjd_obs.value
@@ -912,15 +914,13 @@ class InstrumentType(cc.TelescopeMapping):
             if temp is None:
                 # from caom2IngestMegacam.py, l549
                 temp = self._headers[ext].get('DATE')
-            result = ac.get_datetime(temp)
-            result = result.value
+            if temp is not None:
+                result = ac.get_datetime(temp)
+                result = result.value
         return result
 
     def get_time_resolution(self, ext):
         pass
-
-    def _get_filename(self, ext):
-        return self._headers[ext].get('FILENAME')
 
     def _get_mjd_obs(self, ext):
         return mc.to_float(self._headers[ext].get('MJD-OBS'))
@@ -965,7 +965,7 @@ class InstrumentType(cc.TelescopeMapping):
                 # this is a flat. i have the impression in this case you can
                 # ignore the ra/dec stuff
                 self._logger.warning(
-                    f'OBSRADEC is GAPPT for {self._get_filename(ext)}'
+                    f'OBSRADEC is GAPPT for {self._storage_name.file_name}'
                 )
             else:
                 ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
@@ -1213,7 +1213,7 @@ class InstrumentType(cc.TelescopeMapping):
 
         :param observation A CAOM Observation model instance.
         :param file_info cadcdata.FileInfo instance
-        :param data_client StorageClientWrapper instance
+        :param clients ClientCollection instance
 
         :param **kwargs Everything else."""
         self._logger.debug('Begin update.')
@@ -3163,7 +3163,10 @@ class Wircam(InstrumentType):
                     rnder=0.0000001, syser=0.0000001
                 )
 
-            if self._chunk.time.axis.function is None:
+            if (
+                self._chunk.time.axis.function is None
+                and ref_coord_val is not None
+            ):
                 ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val))
 
                 time_index = part_header.get('ZNAXIS')

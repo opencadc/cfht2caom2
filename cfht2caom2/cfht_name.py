@@ -67,13 +67,11 @@
 # ***********************************************************************
 #
 
-import logging
-
+from logging import getLogger
 from os.path import basename
-from urllib.parse import urlparse
 
-from caom2pipe import manage_composable as mc
-from cfht2caom2 import metadata as md
+from caom2pipe.manage_composable import build_uri, StorageName
+from cfht2caom2.metadata import Inst
 
 
 __all__ = ['CFHTName', 'COLLECTION', 'ARCHIVE']
@@ -92,7 +90,7 @@ ARCHIVE = 'CFHT'
 cfht_names = {}
 
 
-class CFHTName(mc.StorageName):
+class CFHTName(StorageName):
     """Naming rules:
     - support mixed-case file name storage, and mixed-case obs id values
     - support fz and gz files in storage
@@ -111,7 +109,7 @@ class CFHTName(mc.StorageName):
         source_names=[],
         bitpix=None,
     ):
-        self._instrument = md.Inst(instrument)
+        self._instrument = Inst(instrument)
         self._file_id = None
         self._file_name = None
         self._obs_id = None
@@ -123,7 +121,7 @@ class CFHTName(mc.StorageName):
             file_name=file_name.replace('.header', ''),
             source_names=source_names,
         )
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = getLogger(self.__class__.__name__)
         self._logger.debug(self)
 
     def __str__(self):
@@ -140,14 +138,8 @@ class CFHTName(mc.StorageName):
             f'      product_id: {self.product_id}\n'
         )
 
-    def is_valid(self):
-        return True
-
-    @property
-    def file_uri(self):
+    def _get_uri(self, file_name):
         """
-        The CADC Storage URI for the file.
-
         SF - 20-05-22
         it looks like compression will be:
         if bitpix==(-32|-64):
@@ -158,13 +150,32 @@ class CFHTName(mc.StorageName):
         """
         if self._bitpix is None or self._bitpix in [-32, -64]:
             # if bitpix isn't known, don't use fpack
-            result = self._get_uri(self._file_name).replace('.gz', '')
+            result = build_uri(
+                scheme=StorageName.scheme,
+                archive=StorageName.collection,
+                file_name=file_name,
+            ).replace('.gz', '')
         else:
-            self._logger.info(
+            result = build_uri(
+                scheme=StorageName.scheme,
+                archive=StorageName.collection,
+                file_name=file_name,
+            ).replace('.gz', '.fz')
+            self._logger.debug(
                 f'{self._file_name} will be recompressed with fpack.'
             )
-            result = self._get_uri(self._file_name).replace('.gz', '.fz')
-        return result
+        # .header is mostly for test execution
+        return result.replace('.header', '')
+
+    def is_valid(self):
+        return True
+
+    @property
+    def file_uri(self):
+        """
+        The CADC Storage URI for the file.
+        """
+        return self._get_uri(self._file_name)
 
     @property
     def instrument(self):
@@ -205,20 +216,19 @@ class CFHTName(mc.StorageName):
     @property
     def has_energy(self):
         return not (
-            self._instrument is md.Inst.ESPADONS
-            and self._suffix in ['i', 'p']
+            self._instrument is Inst.ESPADONS and self._suffix in ['i', 'p']
         )
 
     @property
     def has_polarization(self):
         return self._suffix in ['p'] and self._instrument in [
-            md.Inst.ESPADONS,
-            md.Inst.SPIROU,
+            Inst.ESPADONS,
+            Inst.SPIROU,
         ]
 
     @property
     def is_derived_sitelle(self):
-        return self._instrument == md.Inst.SITELLE and self._suffix in [
+        return self._instrument == Inst.SITELLE and self._suffix in [
             'p',
             'v',
             'z',
@@ -232,7 +242,7 @@ class CFHTName(mc.StorageName):
         StorageName instance.
         :return:
         """
-        return not mc.StorageName.is_hdf5(self._file_name)
+        return not StorageName.is_hdf5(self._file_name)
 
     @property
     def is_simple(self):
@@ -257,7 +267,7 @@ class CFHTName(mc.StorageName):
             or self.simple_by_suffix
             or self.is_master_cal
             or (
-                self._instrument is md.Inst.SPIROU
+                self._instrument is Inst.SPIROU
                 and self._suffix in ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v']
             )
         ):
@@ -270,12 +280,12 @@ class CFHTName(mc.StorageName):
             (
                 self._suffix in ['p', 's']
                 and self._instrument
-                in [md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM]
+                in [Inst.MEGACAM, Inst.MEGAPRIME, Inst.WIRCAM]
             )
-            or (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS)
+            or (self._suffix == 'i' and self._instrument is Inst.ESPADONS)
             or (
                 self._suffix in ['e', 's', 't', 'v']
-                and self._instrument is md.Inst.SPIROU
+                and self._instrument is Inst.SPIROU
             )
         )
 
@@ -284,26 +294,18 @@ class CFHTName(mc.StorageName):
         return self._suffix
 
     def set_destination_uris(self):
-        def _set_extension(for_entry):
-            temp = basename(urlparse(for_entry).path)
-            if self._bitpix is None or self._bitpix in [-32, -64]:
-                result = self._get_uri(temp).replace('.header', '')
-            else:
-                result = self._get_uri(temp).replace('.gz', '.fz')
-            return result
-
         if len(self._source_names) == 0:
             self._destination_uris.append(self.file_uri)
         else:
             for entry in self._source_names:
-                self._destination_uris.append(_set_extension(entry))
+                self._destination_uris.append(self._get_uri(basename(entry)))
 
     def set_file_id(self):
         self._file_id = CFHTName.remove_extensions(self._file_name)
         self._suffix = self._file_id[-1]
 
     def set_obs_id(self):
-        if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
+        if self._instrument in [Inst.MEGAPRIME, Inst.MEGACAM]:
             # SF - slack - 02-04-20
             # - MegaCam - the logic should be probably be 2 planes: p
             # and o for science. - all cfht exposures are sorted by EXPNUM

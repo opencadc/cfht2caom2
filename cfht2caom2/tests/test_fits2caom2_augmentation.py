@@ -82,7 +82,7 @@ from caom2.diff import get_differences
 from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
 from caom2pipe.manage_composable import StorageName, read_obs_from_file
-from caom2pipe.manage_composable import write_obs_to_file
+from caom2pipe.manage_composable import get_keyword, write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
 from cfht2caom2 import CFHTName, COLLECTION
@@ -134,6 +134,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,
         }
+        storage_name._bitpix = get_keyword(headers, 'BITPIX')
         observation = None
         observation = fits2caom2_augmentation.visit(observation, **kwargs)
 

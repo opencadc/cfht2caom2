@@ -246,7 +246,9 @@ def test_preview_augment():
                 test_name = cfht_name.CFHTName(
                     file_name=f_name, instrument=instrument
                 )
-                test_name.source_names = [os.path.join(TEST_FILES_DIR, f_name)]
+                test_name.source_names = [
+                    os.path.join(TEST_FILES_DIR, f_name)
+                ]
                 kwargs['storage_name'] = test_name
                 check_number = 1
                 if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
@@ -262,7 +264,9 @@ def test_preview_augment():
                     start_ts = datetime.utcnow().timestamp()
                     test_result = preview_augmentation.visit(obs, **kwargs)
                     end_ts = datetime.utcnow().timestamp()
-                    logging.error(f'{f_name} execution time {end_ts - start_ts}')
+                    logging.error(
+                        f'{f_name} execution time {end_ts - start_ts}'
+                    )
                 except Exception as e:
                     logging.error(e)
                     logging.error(traceback.format_exc())
@@ -303,10 +307,15 @@ def test_preview_augment():
                     #        obs.planes[test_name.product_id].artifacts.keys(), \
                     #        f'no preview {p}'
                     if p in obs.planes[test_name.product_id].artifacts.keys():
-                        artifact = obs.planes[test_name.product_id].artifacts[p]
+                        artifact = obs.planes[test_name.product_id].artifacts[
+                            p
+                        ]
                         # because 2359320p_preview_1024 keeps changing ....
                         if artifact.uri in test_checksums:
-                            if artifact.content_checksum.uri != test_checksums[p]:
+                            if (
+                                artifact.content_checksum.uri
+                                != test_checksums[p]
+                            ):
                                 checksum_failures.append(
                                     f'{p} expected {test_checksums[p]} actual '
                                     f'{artifact.content_checksum.uri}'

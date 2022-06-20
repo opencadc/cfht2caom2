@@ -76,7 +76,10 @@ from os.path import basename
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
 from caom2pipe.manage_composable import Config, get_keyword, StorageName
-from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
+from caom2pipe.reader_composable import (
+    FileMetadataReader,
+    StorageClientReader,
+)
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
@@ -222,7 +225,6 @@ def _run_decompress():
             self._logger.debug('End set_headers')
 
     class DecompressBuilder(CFHTBuilder):
-
         def __init__(
             self,
             archive,

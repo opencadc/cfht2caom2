@@ -104,9 +104,7 @@ def test_is_valid():
         )
         assert test_subject.obs_id == '2460503p', 'wrong obs id'
         assert test_subject.file_id == '2460503p', 'wrong file id'
-        assert (
-            test_subject.file_uri == 'ad:CFHT/2460503p.fits'
-        ), 'wrong uri'
+        assert test_subject.file_uri == 'ad:CFHT/2460503p.fits', 'wrong uri'
         assert not test_subject.is_simple, 'should be composite'
 
         test_subject = CFHTName(
@@ -245,7 +243,7 @@ def test_is_valid():
             file_name='2602045r.fits.gz',
             instrument='SPIRou',
             bitpix=32,
-            source_names=['2602045r.fits.gz']
+            source_names=['2602045r.fits.gz'],
         )
         assert (
             test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
