@@ -2403,6 +2403,14 @@ class Spirou(InstrumentType):
         # cdelt6 = 1560.0
         #
         # other values from caom2spirou.default
+        # SF - 21-06-22
+        # https://doi.org/10.1117/12.2312317
+        # In the end, it was decided that a stand-alone, InGaAs array system
+        # was the best alternative for the detector. With a long-pass filter
+        # starting at 0.98 μm, such a system is sensitive over the Y, J, and
+        # H bands and so covers the bulk of the SPIRou wavelength range.
+        #
+        # use [0.98, 2.4], assume flat transmission
         bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
         bp.set('Chunk.energy.axis.axis.cunit', 'nm')
         bp.set('Chunk.energy.axis.function.delta', 1560.0)
