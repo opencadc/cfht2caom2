@@ -114,8 +114,8 @@ def test_cleanup_augmentation_bad_artifact_uris():
     assert len(test_obs.planes) == 2, 'post-test conditions failed'
     assert len(test_plane_1.artifacts) == 4, 'plane 1 post conditions failed'
     assert len(test_plane_2.artifacts) == 4, 'plane 2 post conditions failed'
-    assert 'ad:CFHT/2255229p_preview_256.jpg' in test_plane_2.artifacts.keys()
-    assert 'ad:CFHT/2255229o_preview_256.jpg' in test_plane_1.artifacts.keys()
+    assert 'cadc:CFHT/2255229p_preview_256.jpg' in test_plane_2.artifacts.keys()
+    assert 'cadc:CFHT/2255229o_preview_256.jpg' in test_plane_1.artifacts.keys()
 
 
 def test_cleanup_edge_case():

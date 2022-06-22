@@ -87,7 +87,7 @@ def test_cfht_builder():
     original_scheme = StorageName.scheme
     original_collection = StorageName.collection
     try:
-        StorageName.scheme = 'ad'
+        StorageName.scheme = 'cadc'
         StorageName.collection = COLLECTION
         headers_mock = Mock(autospec=True)
         headers_mock.headers.get.side_effect = _mock_get
@@ -128,7 +128,7 @@ def test_cfht_builder():
             test_fqn
         ), 'wrong remote file name'
         assert test_result.instrument == metadata.Inst.WIRCAM
-        test_uri = 'ad:CFHT/2281792p.fits.fz'
+        test_uri = 'cadc:CFHT/2281792p.fits.fz'
         assert headers_mock.set.called, 'set should be called'
         args, kwargs = headers_mock.set.call_args
         assert isinstance(args[0], StorageName), 'wrong param type'

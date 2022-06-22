@@ -410,12 +410,6 @@ class CFHTPreview(mc.PreviewVisitor):
                             '.fz', '_slice.fz'
                         )
                     )
-                elif self._storage_name.file_name.endswith('.gz'):
-                    temp_science_f_name = (
-                        self._storage_name.file_name.replace(
-                            '.gz', '_slice.gz'
-                        )
-                    )
                 else:
                     temp_science_f_name = (
                         self._storage_name.file_name.replace(

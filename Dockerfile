@@ -42,18 +42,6 @@ RUN pip install --no-cache-dir "astropy<5" \
 
 WORKDIR /usr/src/app
 
-RUN git clone https://github.com/HEASARC/cfitsio && \
-  cd cfitsio && \
-  ./configure --prefix=/usr && \
-  make -j 2 && \
-  make shared && \
-  make install && \
-  make fitscopy && \
-  cp fitscopy /usr/local/bin && \
-  make clean && \
-  mkdir -p /usr/src/app && \
-  cd /usr/src/app
-
 ARG OPENCADC_BRANCH=master
 ARG OPENCADC_REPO=opencadc
 ARG PIPE_BRANCH=master

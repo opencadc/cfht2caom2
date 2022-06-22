@@ -2154,7 +2154,7 @@ class Sitelle(InstrumentType):
                     '.hdf5', '.fits.fz'
                 )
                 if temp.count('z') == 1:
-                    # uri looks like: ad:CFHT/2384125p.fits.fz
+                    # uri looks like: cadc:CFHT/2384125p.fits.fz
                     p_artifact_key = temp
                 else:
                     p_artifact_key = temp.replace('z', 'p', 1)
@@ -2163,21 +2163,17 @@ class Sitelle(InstrumentType):
                         'z', 'p', 1
                     ).replace('.hdf5', '.fits')
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = self._storage_name.file_uri.replace(
-                            'z', 'p', 1
-                        ).replace('.hdf5', '.fits.gz')
+                        p_artifact_key = (
+                            self._storage_name.file_uri.replace(
+                                'z', 'p', 1
+                            ).replace('.hdf5', '.fits.header')
+                        )
                         if p_artifact_key not in p_plane.artifacts.keys():
-                            p_artifact_key = (
-                                self._storage_name.file_uri.replace(
-                                    'z', 'p', 1
-                                ).replace('.hdf5', '.fits.header')
+                            raise mc.CadcException(
+                                f'Unexpected extension name pattern for '
+                                f'artifact URI {p_artifact_key} in '
+                                f'{observation.observation_id}.'
                             )
-                            if p_artifact_key not in p_plane.artifacts.keys():
-                                raise mc.CadcException(
-                                    f'Unexpected extension name pattern for '
-                                    f'artifact URI {p_artifact_key} in '
-                                    f'{observation.observation_id}.'
-                                )
                 features = mc.Features()
                 features.supports_latest_caom = True
                 for part in p_plane.artifacts[p_artifact_key].parts.values():
@@ -2230,6 +2226,25 @@ class Sitelle(InstrumentType):
                 cc.reset_energy(self._chunk)
             else:
                 self._chunk.energy_axis = 3
+
+        if (
+            self._chunk.energy is not None
+            and self._chunk.energy.axis is not None
+            and self.chunk.energy.axis.function is not None
+            and self.chunk.energy.axis.function.ref_coord.val == 0.0
+            and self.chunk.energy.axis.function.ref_coord.pix == 0.5
+            and self._chunk.energy.axis.function.naxis == 1
+            and self._chunk.energy.axis.function.delta == 1e-10
+        ):
+            # stop 2270550c.fits from showing up as being in the Gamma Ray
+            # energy band
+            self._logger.warning(
+                f'Setting energy to None for {self._storage_name.file_name} '
+                f'because the presence of all the default values indicates '
+                f'mis-leading metadata.'
+            )
+            cc.reset_energy(self._chunk)
+
 
         if self._storage_name.suffix == 'v':
             cc.reset_energy(self._chunk)

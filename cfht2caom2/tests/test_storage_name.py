@@ -75,7 +75,7 @@ def test_is_valid():
     original_scheme = StorageName.scheme
     original_collection = StorageName.collection
     try:
-        StorageName.scheme = 'ad'
+        StorageName.scheme = 'cadc'
         StorageName.collection = COLLECTION
         assert CFHTName(file_name='anything', instrument='SITELLE').is_valid()
         test_subject = CFHTName(
@@ -84,7 +84,7 @@ def test_is_valid():
         assert test_subject.obs_id == '2463796', 'wrong obs id'
         assert test_subject.file_id == '2463796o', 'wrong file id'
         assert (
-            test_subject.file_uri == 'ad:CFHT/2463796o.fits.fz'
+            test_subject.file_uri == 'cadc:CFHT/2463796o.fits.fz'
         ), 'wrong uri'
         assert test_subject.source_names == [], 'not local'
         assert test_subject.is_simple, 'should be simple'
@@ -98,13 +98,13 @@ def test_is_valid():
         assert test_subject.file_uri == 'cadc:CFHT/1944968p.fits.fz', 'uri'
         assert not test_subject.is_simple, 'should be composite'
 
-        StorageName.scheme = 'ad'
+        StorageName.scheme = 'cadc'
         test_subject = CFHTName(
             file_name='2460503p.fits.gz', instrument='ESPaDOnS'
         )
         assert test_subject.obs_id == '2460503p', 'wrong obs id'
         assert test_subject.file_id == '2460503p', 'wrong file id'
-        assert test_subject.file_uri == 'ad:CFHT/2460503p.fits', 'wrong uri'
+        assert test_subject.file_uri == 'cadc:CFHT/2460503p.fits', 'wrong uri'
         assert not test_subject.is_simple, 'should be composite'
 
         test_subject = CFHTName(
@@ -114,7 +114,7 @@ def test_is_valid():
         assert test_subject.obs_id == '2452990', 'wrong obs id'
         assert test_subject.file_id == '2452990p', 'wrong file id'
         assert (
-            test_subject.file_uri == 'ad:CFHT/2452990p.fits.fz'
+            test_subject.file_uri == 'cadc:CFHT/2452990p.fits.fz'
         ), 'wrong uri'
         assert test_subject.is_simple, 'should be simple'
 
@@ -124,7 +124,7 @@ def test_is_valid():
         assert not test_subject.simple_by_suffix, 'should be derived'
         assert test_subject.obs_id == '2384125p', 'wrong obs id'
         assert test_subject.file_id == '2384125z', 'wrong file id'
-        assert test_subject.file_uri == 'ad:CFHT/2384125z.hdf5', 'wrong uri'
+        assert test_subject.file_uri == 'cadc:CFHT/2384125z.hdf5', 'wrong uri'
         assert not test_subject.is_simple, 'should be derived'
 
         test_subject = CFHTName(
@@ -134,7 +134,7 @@ def test_is_valid():
         assert test_subject.obs_id == '2384125p', 'wrong obs id'
         assert test_subject.file_id == '2384125p', 'wrong file id'
         assert (
-            test_subject.file_uri == 'ad:CFHT/2384125p.fits.fz'
+            test_subject.file_uri == 'cadc:CFHT/2384125p.fits.fz'
         ), 'wrong uri'
         assert not test_subject.is_simple, 'should be derived'
 
@@ -144,7 +144,7 @@ def test_is_valid():
         assert test_subject.simple_by_suffix, 'should be simple'
         assert test_subject.obs_id == '979412', 'wrong obs id'
         assert test_subject.file_id == '979412p', 'wrong file id'
-        assert test_subject.file_uri == 'ad:CFHT/979412p.fits.fz', 'wrong uri'
+        assert test_subject.file_uri == 'cadc:CFHT/979412p.fits.fz', 'wrong uri'
         assert test_subject.is_simple, 'should be simple'
 
         test_subject = CFHTName(
@@ -155,7 +155,7 @@ def test_is_valid():
         ), 'should not be simple by suffix'
         assert test_subject.obs_id == '979412b', 'wrong obs id'
         assert test_subject.file_id == '979412b', 'wrong file id'
-        assert test_subject.file_uri == 'ad:CFHT/979412b.fits.fz', 'wrong uri'
+        assert test_subject.file_uri == 'cadc:CFHT/979412b.fits.fz', 'wrong uri'
         assert test_subject.is_simple, 'should be simple'
 
         test_subject = CFHTName(
@@ -167,7 +167,7 @@ def test_is_valid():
         assert test_subject.obs_id == '2003A.frpts.z.36.00', 'wrong obs id'
         assert test_subject.file_id == '2003A.frpts.z.36.00', 'wrong file id'
         assert (
-            test_subject.file_uri == 'ad:CFHT/2003A.frpts.z.36.00.fits.fz'
+            test_subject.file_uri == 'cadc:CFHT/2003A.frpts.z.36.00.fits.fz'
         ), 'wrong uri'
         assert not test_subject.is_master_cal, 'should not be master cal'
         assert not test_subject.is_simple, 'should be derived'
@@ -180,7 +180,7 @@ def test_is_valid():
         ), 'should not be simple by suffix'
         assert test_subject.obs_id == '2455409p', 'wrong obs id'
         assert test_subject.file_id == '2455409p', 'wrong file id'
-        assert test_subject.file_uri == 'ad:CFHT/2455409p.fits', 'wrong uri'
+        assert test_subject.file_uri == 'cadc:CFHT/2455409p.fits', 'wrong uri'
         assert not test_subject.is_master_cal, 'should not be master cal'
         assert not test_subject.is_simple, 'should be derived'
 

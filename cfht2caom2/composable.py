@@ -87,6 +87,7 @@ from cfht2caom2 import fits2caom2_augmentation
 from cfht2caom2.cfht_builder import CFHTBuilder
 from cfht2caom2.cfht_name import CFHTName
 from cfht2caom2.metadata import Inst
+from cfht2caom2.instruments import APPLICATION
 
 
 META_VISITORS = [fits2caom2_augmentation]
@@ -139,6 +140,7 @@ def _run_state():
         clients=clients,
         source=source,
         metadata_reader=reader,
+        application=APPLICATION,
     )
 
 
@@ -172,6 +174,7 @@ def _run_by_builder():
         clients=clients,
         source=source,
         metadata_reader=reader,
+        application=APPLICATION,
     )
 
 
