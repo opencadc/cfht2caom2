@@ -106,7 +106,8 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         if mc.StorageName.is_hdf5(entry):
             instrument = md.Inst.SITELLE
         else:
-            file_name = os.path.basename(entry).replace('.header', '')
+            entry = entry.replace('.header', '')
+            file_name = os.path.basename(entry)
             # the separate construction of file name for the uri supports
             # unit testing
             storage_name = mc.StorageName(
