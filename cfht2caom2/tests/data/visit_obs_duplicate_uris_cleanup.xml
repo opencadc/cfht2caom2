@@ -1147,7 +1147,7 @@
       <caom2:polarization/>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-89ed-1d9b6c655479" caom2:lastModified="2022-02-14T17:30:16.925" caom2:maxLastModified="2022-02-14T17:30:16.925" caom2:metaChecksum="md5:bb6e8c08211c381c9f4388040b005829" caom2:accMetaChecksum="md5:4e58d3255e86aa747b77279f9a5f8783">
-          <caom2:uri>ad:CFHT/2255229_preview_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229_preview_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -1156,7 +1156,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-bdc5-b056d90902a6" caom2:lastModified="2022-02-14T17:30:16.925" caom2:maxLastModified="2022-02-14T17:30:16.925" caom2:metaChecksum="md5:da5d17ed030dedae947e064f1aa25c26" caom2:accMetaChecksum="md5:50a78d05d376cafdfe89e9eeb27ba145">
-          <caom2:uri>ad:CFHT/2255229_preview_256.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229_preview_256.jpg</caom2:uri>
           <caom2:productType>thumbnail</caom2:productType>
           <caom2:releaseType>meta</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -1165,7 +1165,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-b36b-cad37ece87f8" caom2:lastModified="2022-02-14T17:30:16.925" caom2:maxLastModified="2022-02-14T17:30:16.925" caom2:metaChecksum="md5:96e99ee96e938b0477fe442e87572adf" caom2:accMetaChecksum="md5:d7e16c0b301684ef90f8f9c0e4952c9a">
-          <caom2:uri>ad:CFHT/2255229_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229_preview_zoom_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -1174,7 +1174,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-0441-0162ed61a225" caom2:lastModified="2021-02-15T09:02:31.833" caom2:maxLastModified="2021-02-15T09:02:31.833" caom2:metaChecksum="md5:e40825b5915790096cf5984357bb93a5" caom2:accMetaChecksum="md5:b339f24350ecf8d3b9b205d42765b389" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2255229o.fits.fz</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229o.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -5308,7 +5308,7 @@
           </caom2:parts>
         </caom2:artifact>
         <caom2:artifact caom2:id="7924e5ea-1d9a-4408-9e6e-822f30cc21d4" caom2:lastModified="2021-02-15T09:03:08.993" caom2:maxLastModified="2021-02-15T09:03:08.993" caom2:metaChecksum="md5:78e3dce3c467979965db04d2a48106af" caom2:accMetaChecksum="md5:24701875560e89359d4b0df5cc69642e">
-          <caom2:uri>ad:CFHT/2255229o_preview_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229o_preview_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -5317,7 +5317,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="ce2e17fb-3849-4f05-9f3f-bf89bc998a63" caom2:lastModified="2021-02-15T09:03:08.993" caom2:maxLastModified="2021-02-15T09:03:08.993" caom2:metaChecksum="md5:06a5794023a9e9a5c02f961ed52fce61" caom2:accMetaChecksum="md5:68d626ab2450ac49451e073bce1c00e8">
-          <caom2:uri>ad:CFHT/2255229o_preview_256.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229o_preview_256.jpg</caom2:uri>
           <caom2:productType>thumbnail</caom2:productType>
           <caom2:releaseType>meta</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -5326,7 +5326,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="380ff11e-6a12-4bf2-869e-ab62c5ef8306" caom2:lastModified="2021-02-15T09:03:08.993" caom2:maxLastModified="2021-02-15T09:03:08.993" caom2:metaChecksum="md5:be0d6bcb23a1c29f7b25c5c0fa02c93c" caom2:accMetaChecksum="md5:564fef48a40d0749d6ba2a2da4310234">
-          <caom2:uri>ad:CFHT/2255229o_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229o_preview_zoom_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -6444,7 +6444,7 @@
       <caom2:polarization/>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-ad13-edf6c52db231" caom2:lastModified="2022-02-14T17:30:16.925" caom2:maxLastModified="2022-02-14T17:30:16.925" caom2:metaChecksum="md5:9087bd3a1d0905c2c07146daa6a80db1" caom2:accMetaChecksum="md5:d5cb3cb64dfe1abfad0c3f75ee8c8433">
-          <caom2:uri>ad:CFHT/2255229_preview_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229_preview_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -6453,7 +6453,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-a9a2-050aa0df186d" caom2:lastModified="2022-02-14T17:30:16.925" caom2:maxLastModified="2022-02-14T17:30:16.925" caom2:metaChecksum="md5:2f755900cc55bbe53a8d3cd28c596dd0" caom2:accMetaChecksum="md5:6d74c2c38ff9c1489033d8a43ea236e1">
-          <caom2:uri>ad:CFHT/2255229_preview_256.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229_preview_256.jpg</caom2:uri>
           <caom2:productType>thumbnail</caom2:productType>
           <caom2:releaseType>meta</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -6462,7 +6462,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-8f76-fba39f2b9c5a" caom2:lastModified="2022-02-14T17:30:16.925" caom2:maxLastModified="2022-02-14T17:30:16.925" caom2:metaChecksum="md5:ef3df590beada2c7bcc84d9d51069bca" caom2:accMetaChecksum="md5:fba2750f0f4950b2b5e5f263aea04035">
-          <caom2:uri>ad:CFHT/2255229_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229_preview_zoom_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -6471,7 +6471,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-a201-016327e78ff0" caom2:lastModified="2021-03-24T14:08:07.759" caom2:maxLastModified="2021-03-24T14:08:07.759" caom2:metaChecksum="md5:73e5c14502ecc1f24d660182c1c84a3b" caom2:accMetaChecksum="md5:cd6c2cf5c4832bec5a7b9c58567d167c" caom2:metaProducer="cfht2caom2/0.3.4">
-          <caom2:uri>ad:CFHT/2255229p.fits.fz</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229p.fits.fz</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
@@ -10605,7 +10605,7 @@
           </caom2:parts>
         </caom2:artifact>
         <caom2:artifact caom2:id="9b2dbb9b-9ff4-4fed-bad7-b888f2d4e0b9" caom2:lastModified="2021-03-24T14:08:44.056" caom2:maxLastModified="2021-03-24T14:08:44.056" caom2:metaChecksum="md5:30febc517a8d702ed1baeaf76c4a8179" caom2:accMetaChecksum="md5:56182543357a8346e5a54d58d2b7074f">
-          <caom2:uri>ad:CFHT/2255229p_preview_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229p_preview_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -10614,7 +10614,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="9acdc6c6-a496-4ed6-9f7f-4e430ef04bb5" caom2:lastModified="2021-03-24T14:08:44.056" caom2:maxLastModified="2021-03-24T14:08:44.056" caom2:metaChecksum="md5:34cbc22fcb343aa278aa29e29a7eace9" caom2:accMetaChecksum="md5:0bfaf36f7172e1b96cb94ac7213a7609">
-          <caom2:uri>ad:CFHT/2255229p_preview_256.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229p_preview_256.jpg</caom2:uri>
           <caom2:productType>thumbnail</caom2:productType>
           <caom2:releaseType>meta</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -10623,7 +10623,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="9ae6ab32-17c4-4730-8622-53dcfbf0b743" caom2:lastModified="2021-03-24T14:08:44.056" caom2:maxLastModified="2021-03-24T14:08:44.056" caom2:metaChecksum="md5:58a298f11ab632000abbd85ac0d3cc54" caom2:accMetaChecksum="md5:c397d0db2eb0c2331fbba881e703cb46">
-          <caom2:uri>ad:CFHT/2255229p_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/2255229p_preview_zoom_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
