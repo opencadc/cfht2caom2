@@ -108,6 +108,7 @@ def test_is_valid():
             test_subject.file_uri == 'ad:CFHT/2460503p.fits.gz'
         ), 'wrong uri'
         assert not test_subject.is_simple, 'should be composite'
+        assert test_subject.file_name == '2460503p.fits.gz', 'no decomp'
 
         test_subject = CFHTName(
             file_name='2452990p.fits.fz', instrument='MegaPrime'
