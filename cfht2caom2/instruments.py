@@ -2226,6 +2226,23 @@ class Sitelle(InstrumentType):
                 cc.reset_energy(self._chunk)
             else:
                 self._chunk.energy_axis = 3
+        if (
+            self._chunk.energy is not None
+            and self._chunk.energy.axis is not None
+            and self.chunk.energy.axis.function is not None
+            and self.chunk.energy.axis.function.ref_coord.val == 0.0
+            and self.chunk.energy.axis.function.ref_coord.pix == 0.5
+            and self._chunk.energy.axis.function.naxis == 1
+            and self._chunk.energy.axis.function.delta == 1e-10
+        ):
+            # stop 2270550c.fits from showing up as being in the Gamma Ray
+            # energy band
+            self._logger.warning(
+                f'Setting energy to None for {self._storage_name.file_name} '
+                f'because the presence of all the default values indicates '
+                f'mis-leading metadata.'
+            )
+            cc.reset_energy(self._chunk)
 
         if (
             self._chunk.energy is not None

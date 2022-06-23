@@ -74,7 +74,7 @@ import warnings
 from astropy.io import fits
 from astropy.utils.exceptions import AstropyUserWarning
 from collections import deque
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from hashlib import md5
 from tempfile import TemporaryDirectory
 

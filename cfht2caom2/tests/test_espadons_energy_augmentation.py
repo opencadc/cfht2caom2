@@ -68,7 +68,7 @@
 
 from os.path import join
 
-from caom2pipe import manage_composable as mc
+from caom2pipe.manage_composable import read_obs_from_file, StorageName
 from cfht2caom2 import espadons_energy_augmentation
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -79,18 +79,18 @@ TEST_FILES_DIR = '/test_files'
 
 
 def test_visit():
-    orig_collection = mc.StorageName.collection
-    orig_scheme = mc.StorageName.scheme
+    orig_scheme = StorageName.scheme
+    orig_collection = StorageName.collection
     try:
-        mc.StorageName.scheme = 'cadc'
-        mc.StorageName.collection = cn.COLLECTION
+        StorageName.scheme = 'cadc'
+        StorageName.collection = cn.COLLECTION
         product_id = '2460606i'
         f_name = f'{product_id}.fits.gz'
         obs_fqn = (
             f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
             f'multi_plane/2460606.expected.xml'
         )
-        obs = mc.read_obs_from_file(obs_fqn)
+        obs = read_obs_from_file(obs_fqn)
 
         # pre-conditions
         uri = f'cadc:CFHT/{product_id}.fits'
@@ -127,5 +127,5 @@ def test_visit():
         assert test_reference.custom_axis is None, 'wrong custom axis'
         assert test_reference.polarization_axis is None, 'wrong pol axis'
     finally:
-        mc.StorageName.collection = orig_collection
-        mc.StorageName.scheme = orig_scheme
+        StorageName.scheme = orig_scheme
+        StorageName.collection = orig_collection
