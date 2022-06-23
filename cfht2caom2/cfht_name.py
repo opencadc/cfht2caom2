@@ -93,7 +93,8 @@ cfht_names = {}
 class CFHTName(StorageName):
     """Naming rules:
     - support mixed-case file name storage, and mixed-case obs id values
-    - support fz and gz files in storage
+    - support fz files in storage,
+    - decompress all .gz files, recompress if it's lossless
     - product id == file id
     - the file_name attribute has ALL the extensions, including compression
       type.
@@ -149,7 +150,7 @@ class CFHTName(StorageName):
 
         """
         if self._bitpix is None or self._bitpix in [-32, -64]:
-            # if bitpix isn't known, don't use fpack
+            # use fpack only if bitpix is known
             result = build_uri(
                 scheme=StorageName.scheme,
                 archive=StorageName.collection,
@@ -330,7 +331,7 @@ class CFHTName(StorageName):
     @staticmethod
     def remove_extensions(name):
         """How to get the file_id from a file_name."""
-        # ESPaDOnS files have a .gz extension ;)
+        # ESPaDOnS files have a .gz extension
         # SITELLE has hdf5 files
         return (
             name.replace('.fits', '')
