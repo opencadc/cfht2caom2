@@ -71,9 +71,9 @@ import logging
 import os
 
 from caom2pipe import name_builder_composable as nbc
-from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name as cn
-from cfht2caom2 import metadata as md
+from caom2pipe.manage_composable import CadcException, get_keyword, StorageName
+from cfht2caom2.cfht_name import CFHTName
+from cfht2caom2.metadata import Inst
 
 
 __all__ = ['CFHTBuilder']
@@ -104,21 +104,23 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
         bitpix = None
-        if mc.StorageName.is_hdf5(entry):
-            instrument = md.Inst.SITELLE
+        if StorageName.is_hdf5(entry):
+            instrument = Inst.SITELLE
         else:
             entry = entry.replace('.header', '')
             file_name = os.path.basename(entry)
             # the separate construction of file name for the uri supports
             # unit testing
-            storage_name = mc.StorageName(
+            storage_name = StorageName(
                 file_name=file_name, source_names=[entry]
             )
             self._metadata_reader.set(storage_name)
+            logging.error(self._metadata_reader.headers.keys())
+            logging.error(storage_name)
             headers = self._metadata_reader.headers.get(storage_name.file_uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
-            bitpix = mc.get_keyword(headers, 'BITPIX')
-        result = cn.CFHTName(
+            bitpix = get_keyword(headers, 'BITPIX')
+        result = CFHTName(
             file_name=os.path.basename(entry),
             source_names=[entry],
             instrument=instrument,
@@ -150,8 +152,8 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         :param entry: string for error logging
         :return: md.Inst instance
         """
-        if mc.StorageName.is_hdf5(entry):
-            inst = md.Inst.SITELLE
+        if StorageName.is_hdf5(entry):
+            inst = Inst.SITELLE
         else:
             nextend = None
             detector = None
@@ -167,14 +169,14 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                         if instrument is None:
                             nextend = headers[0].get('NEXTEND')
                             if nextend is None:
-                                raise mc.CadcException(
+                                raise CadcException(
                                     f'Could not identify instrument for '
                                     f'{entry}.'
                                 )
             elif instrument == 'Unknown':
                 detector = headers[0].get('DETECTOR')
             if instrument is None and nextend is not None and nextend > 30:
-                inst = md.Inst.MEGAPRIME
+                inst = Inst.MEGAPRIME
             else:
                 msg = (
                     f'Unknown value for instrument {instrument}, detector '
@@ -182,21 +184,21 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                 )
 
                 try:
-                    inst = md.Inst(instrument)
+                    inst = Inst(instrument)
                 except ValueError:
                     if (
                         instrument == 'CFHT MegaPrime'
                         or instrument == 'megacam'
                     ):
-                        inst = md.Inst.MEGAPRIME
+                        inst = Inst.MEGAPRIME
                     elif instrument == 'Unknown' and detector is not None:
                         if detector == 'OLAPA':
                             # SF 24-06-20
                             # ok to hack ESPADONS name for OLAPA
-                            inst = md.Inst.ESPADONS
+                            inst = Inst.ESPADONS
                         else:
                             try:
-                                inst = md.Inst(detector)
+                                inst = Inst(detector)
                             except ValueError:
                                 # SF 24-06-20
                                 # nasty hacks: all the 48 failed espadons
@@ -206,10 +208,10 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                                 # else fails
                                 pathname = headers[0].get('PATHNAME')
                                 if 'espadons' in pathname:
-                                    inst = md.Inst.ESPADONS
+                                    inst = Inst.ESPADONS
                                 else:
-                                    raise mc.CadcException(msg)
+                                    raise CadcException(msg)
                     else:
-                        raise mc.CadcException(msg)
+                        raise CadcException(msg)
         logging.debug(f'Instrument is {inst}')
         return inst

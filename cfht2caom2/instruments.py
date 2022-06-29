@@ -910,13 +910,14 @@ class InstrumentType(cc.TelescopeMapping):
     def get_time_refcoord_val_simple(self, ext):
         result = self._get_mjd_obs(ext)
         if result is None:
-            temp = self._headers[ext].get('DATE-OBS')
-            if temp is None:
-                # from caom2IngestMegacam.py, l549
-                temp = self._headers[ext].get('DATE')
-            if temp is not None:
-                result = ac.get_datetime(temp)
-                result = result.value
+            # from caom2IngestMegacam.py, l549
+            for ii in ['DATE-OBS', 'DATE']:
+                temp = self._headers[ext].get(ii)
+                if temp is None:
+                    continue
+                else:
+                    result = ac.get_datetime(temp)
+                    break
         return result
 
     def get_time_resolution(self, ext):
@@ -1693,11 +1694,13 @@ class Espadons(InstrumentType):
                 ):
                     hst_time = self._headers[ext].get('HSTTIME)')
                     # fmt 'Mon Nov 27 15:58:17 HST 2006'
-                    mjd_obs = ac.get_datetime(hst_time)
+                    if hst_time is not None:
+                        mjd_obs = ac.get_datetime(hst_time)
                 else:
                     mjd_obs_str = f'{date_obs}T{time_obs}'
                     mjd_obs = ac.get_datetime(mjd_obs_str)
-                mjd_obs = mjd_obs.value
+                if mjd_obs is not None:
+                    mjd_obs = mjd_obs.value
         return mjd_obs
 
     def make_axes_consistent(self):

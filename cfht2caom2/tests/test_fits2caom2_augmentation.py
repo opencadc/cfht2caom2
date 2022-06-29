@@ -211,6 +211,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '979339',
             '2460503p',
             '963946',
+            '770380',
         ],
         md.Inst.SPIROU: [
             '2401727a',
