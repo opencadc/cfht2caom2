@@ -78,6 +78,7 @@ from caom2pipe import data_source_composable as dsc
 from caom2pipe.manage_composable import Config, get_keyword, StorageName
 from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
 from caom2pipe import run_composable as rc
+from caom2pipe.transfer_composable import CadcTransfer
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
@@ -273,8 +274,15 @@ def _run_decompress():
     # the headers have to come from AD, because SI doesn't do that atm
     original_feature = config.features.supports_latest_client
     config.features.supports_latest_client = False
+    # need the ad client to read the file (because need the headers)
     ad_reading = clc.ClientCollection(config)
     decompress_reader = DecompressReader(ad_reading.data_client)
+    store_transfer = CadcTransfer()
+    store_transfer.data_client = ad_reading.data_client
+    # need the si client to write the file (because that's the
+    # destination)
+    config.features.supports_latest_client = True
+    si_writing = clc.ClientCollection(config)
     config.features.supports_latest_client = original_feature
     builder = DecompressBuilder(
         config.archive,
@@ -288,9 +296,10 @@ def _run_decompress():
         builder,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
-        clients=clients,
         source=source,
         metadata_reader=decompress_reader,
+        store_transfer=store_transfer,
+        clients=si_writing,
     )
 
 
