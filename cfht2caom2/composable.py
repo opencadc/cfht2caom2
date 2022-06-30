@@ -71,7 +71,7 @@ import logging
 import sys
 import traceback
 
-from os.path import basename
+from os.path import basename, dirname
 
 from caom2pipe import client_composable as clc
 from caom2pipe import data_source_composable as dsc
@@ -270,6 +270,22 @@ def _run_decompress():
             self._logger.debug('End build.')
             return result
 
+    class CfhtTransferrer(CadcTransfer):
+        """
+        Need the ad client to read, and the si client to write.
+        """
+
+        def __init__(self, ad_client):
+            super().__init__()
+            # need a different name, because the _cadc_client that is
+            # inherited gets over-written
+            self._ad_client = ad_client
+
+        def get(self, source, dest_fqn):
+            self._logger.debug(f'Transfer from {source} to {dest_fqn}.')
+            working_dir = dirname(dest_fqn)
+            self._ad_client.get(working_dir, source)
+
     config, clients, reader_ignore, builder_ignore, source = _common_init()
     # the headers have to come from AD, because SI doesn't do that atm
     original_feature = config.features.supports_latest_client
@@ -277,8 +293,7 @@ def _run_decompress():
     # need the ad client to read the file (because need the headers)
     ad_reading = clc.ClientCollection(config)
     decompress_reader = DecompressReader(ad_reading.data_client)
-    store_transfer = CadcTransfer()
-    store_transfer.data_client = ad_reading.data_client
+    store_transfer = CfhtTransferrer(ad_reading.data_client)
     # need the si client to write the file (because that's the
     # destination)
     config.features.supports_latest_client = True

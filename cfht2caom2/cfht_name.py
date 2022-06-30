@@ -287,7 +287,9 @@ class CFHTName(mc.StorageName):
         def _set_extension(for_entry):
             temp = basename(urlparse(for_entry).path)
             if self._bitpix is None or self._bitpix in [-32, -64]:
-                result = self._get_uri(temp).replace('.header', '')
+                result = self._get_uri(
+                    temp
+                ).replace('.header', '').replace('.gz', '')
             else:
                 result = self._get_uri(temp).replace('.gz', '.fz')
             return result
