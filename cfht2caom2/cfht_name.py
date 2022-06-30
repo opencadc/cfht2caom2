@@ -69,6 +69,7 @@
 
 from logging import getLogger
 from os.path import basename
+from urllib.parse import urlparse
 
 from caom2pipe.manage_composable import build_uri, StorageName
 from cfht2caom2.metadata import Inst
@@ -295,11 +296,21 @@ class CFHTName(StorageName):
         return self._suffix
 
     def set_destination_uris(self):
+        def _set_extension(for_entry):
+            temp = basename(urlparse(for_entry).path)
+            if self._bitpix is None or self._bitpix in [-32, -64]:
+                result = self._get_uri(
+                    temp
+                ).replace('.header', '').replace('.gz', '')
+            else:
+                result = self._get_uri(temp).replace('.gz', '.fz')
+            return result
+
         if len(self._source_names) == 0:
             self._destination_uris.append(self.file_uri)
         else:
             for entry in self._source_names:
-                self._destination_uris.append(self._get_uri(basename(entry)))
+                self._destination_uris.append(_set_extension(entry))
 
     def set_file_id(self):
         self._file_id = CFHTName.remove_extensions(self._file_name)
