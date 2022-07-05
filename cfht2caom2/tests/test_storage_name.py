@@ -221,7 +221,7 @@ def test_is_valid():
             file_name='2602045r.fits.gz',
             instrument='SPIRou',
             bitpix=-32,
-            source_names=['ad:CFHT/2602045r.fits.gz'],
+            source_names=['cadc:CFHT/2602045r.fits.gz'],
         )
         assert (
             test_subject.file_uri == 'cadc:CFHT/2602045r.fits'
