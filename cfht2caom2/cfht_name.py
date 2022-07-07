@@ -150,21 +150,28 @@ class CFHTName(StorageName):
              imcopy file.fits.gz file.fits.fz[compress]
 
         """
-        if self._bitpix is None or self._bitpix in [-32, -64]:
-            # use fpack only if bitpix is known
-            result = build_uri(
-                scheme=StorageName.scheme,
-                archive=StorageName.collection,
-                file_name=file_name,
-            ).replace('.gz', '')
+        if file_name.endswith('.gz'):
+            if self._bitpix is None or self._bitpix in [-32, -64]:
+                # use fpack only if bitpix is known
+                result = build_uri(
+                    scheme=StorageName.scheme,
+                    archive=StorageName.collection,
+                    file_name=file_name,
+                ).replace('.gz', '')
+            else:
+                result = build_uri(
+                    scheme=StorageName.scheme,
+                    archive=StorageName.collection,
+                    file_name=file_name,
+                ).replace('.gz', '.fz')
+                self._logger.debug(
+                    f'{self._file_name} will be recompressed with fpack.'
+                )
         else:
             result = build_uri(
                 scheme=StorageName.scheme,
                 archive=StorageName.collection,
                 file_name=file_name,
-            ).replace('.gz', '.fz')
-            self._logger.debug(
-                f'{self._file_name} will be recompressed with fpack.'
             )
         # .header is mostly for test execution
         return result.replace('.header', '')

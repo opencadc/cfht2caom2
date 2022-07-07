@@ -132,30 +132,13 @@ at CFHT:      | for checking       | CADC:                 | Name at
             if cadc_meta is None:
                 result = True
             else:
-                # get the local FileInfo for the de/recompressed file
-                if storage_name.has_different_destination_name:
-                    fqn = join(
-                        join(
-                            self._config.working_directory,
-                            storage_name.obs_id,
-                        ),
-                        basename(storage_name.file_uri)
-                    )
-                    local_meta = self._metadata_reader.file_info.get(
-                        fqn
-                    ).md5sum
-                    self._logger.debug(
-                        f'Finding post-store metadata {local_meta} from {fqn}.'
-                    )
-                else:
-                    local_meta = self._metadata_reader.file_info.get(
-                        storage_name.file_uri
-                    ).md5sum
-                    self._logger.debug(
-                        f'Finding post-store metadata {local_meta} from '
-                        f'{storage_name.file_uri}.'
-                    )
-
+                local_meta = self._metadata_reader.file_info.get(
+                    storage_name.file_uri
+                ).md5sum
+                self._logger.debug(
+                    f'Finding post-store metadata {local_meta} from '
+                    f'{storage_name.file_uri}.'
+                )
                 if local_meta == cadc_meta.md5sum.replace('md5:', ''):
                     result = False
         else:
