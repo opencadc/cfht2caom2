@@ -1058,7 +1058,7 @@ def visit(observation, **kwargs):
     # SF - 23-02-21
     # No previews for 'frpts' files.
     if '.frpts.' in previewer.storage_name.file_name:
-        result = {'artifacts': 0}
+        result = observation
     else:
         result = previewer.visit(observation)
     return result

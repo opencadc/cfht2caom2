@@ -289,7 +289,7 @@ def test_run_state(
         _cleanup(TEST_DIR)
 
 
-# common definitions for the next two tests
+# common definitions for the test_run_state_compression* tests
 class LocalFilesDataSourceCleanupTest(CFHTLocalFilesDataSource):
 
         def __init__(self, config, cadc_client, metadata_reader, builder):
