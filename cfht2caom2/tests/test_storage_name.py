@@ -214,6 +214,7 @@ def test_is_valid():
             test_subject.zoom_uri
             == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
         ), 'wrong zoom uri'
+        assert not test_subject.has_different_destination_name, f'de/re'
 
         # decompression, no recompression
         StorageName.scheme = 'cadc'
@@ -239,6 +240,7 @@ def test_is_valid():
             test_subject.zoom_uri
             == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
         ), 'wrong zoom uri'
+        assert test_subject.has_different_destination_name, 'de/re'
 
         # decompression plus recompression
         test_subject = CFHTName(
@@ -263,6 +265,7 @@ def test_is_valid():
             test_subject.zoom_uri
             == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
         ), 'wrong zoom uri'
+        assert test_subject.has_different_destination_name, f'de/re'
 
     finally:
         StorageName.scheme = original_scheme

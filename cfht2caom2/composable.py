@@ -74,7 +74,6 @@ import traceback
 from os.path import basename, dirname
 
 from caom2pipe import client_composable as clc
-from caom2pipe import data_source_composable as dsc
 from caom2pipe.manage_composable import Config, get_keyword, StorageName
 from caom2pipe.reader_composable import (
     FileMetadataReader,
@@ -86,6 +85,7 @@ from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
 from cfht2caom2.cfht_builder import CFHTBuilder
+from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
 from cfht2caom2.cfht_name import CFHTName
 from cfht2caom2.metadata import Inst
 from cfht2caom2.instruments import APPLICATION
@@ -121,11 +121,12 @@ def _common_init():
     )
     source = None
     if config.use_local_files:
-        source = dsc.LocalFilesDataSource(
+        source = CFHTLocalFilesDataSource(
             config,
             clients.data_client,
             reader,
             recursive=config.recurse_data_sources,
+            builder=builder,
         )
     return config, clients, reader, builder, source
 

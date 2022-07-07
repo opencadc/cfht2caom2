@@ -115,8 +115,6 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                 file_name=file_name, source_names=[entry]
             )
             self._metadata_reader.set(storage_name)
-            logging.error(self._metadata_reader.headers.keys())
-            logging.error(storage_name)
             headers = self._metadata_reader.headers.get(storage_name.file_uri)
             instrument = CFHTBuilder.get_instrument(headers, entry)
             bitpix = get_keyword(headers, 'BITPIX')

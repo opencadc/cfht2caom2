@@ -222,6 +222,19 @@ class CFHTName(StorageName):
         )
 
     @property
+    def has_different_destination_name(self):
+        if len(self._source_names) == 0:
+            result = (
+                basename(self._file_name) !=
+                basename(self._destination_uris[0])
+            )
+        else:
+            for index, entry in enumerate(self._destination_uris):
+                temp = basename(entry)
+                result = temp != basename(self._source_names[index])
+        return result
+
+    @property
     def has_polarization(self):
         return self._suffix in ['p'] and self._instrument in [
             Inst.ESPADONS,
