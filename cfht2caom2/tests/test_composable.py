@@ -291,36 +291,33 @@ def test_run_state(
 
 # common definitions for the test_run_state_compression* tests
 class LocalFilesDataSourceCleanupTest(CFHTLocalFilesDataSource):
+    def __init__(self, config, cadc_client, metadata_reader, builder):
+        super().__init__(config, cadc_client, metadata_reader, False, builder)
 
-        def __init__(self, config, cadc_client, metadata_reader, builder):
-            super().__init__(
-                config, cadc_client, metadata_reader, False, builder
-            )
-
-        def _move_action(self, source, destination):
-            uris = {
-                '781920i.fits.gz': [
-                    '/test_files/781920i.fits.gz',
-                    '/test_files/success',
-                ],
-                '1681594g.fits.gz': [
-                    '/test_files/1681594g.fits.gz',
-                    '/test_files/success',
-                ],
-                '1028439o.fits': [
-                    '/test_files/1028439o.fits',
-                    '/test_files/success',
-                ],
-                '2359320o.fits.fz': [
-                    '/test_files/2359320o.fits.fz',
-                    '/test_files/success',
-                ],
-            }
-            f_name = os.path.basename(source)
-            lookup = uris.get(f_name)
-            assert lookup is not None, f'unexpected f_name {f_name}'
-            assert lookup[0] == source, f'source {source}'
-            assert lookup[1] == destination, f'destination {destination}'
+    def _move_action(self, source, destination):
+        uris = {
+            '781920i.fits.gz': [
+                '/test_files/781920i.fits.gz',
+                '/test_files/success',
+            ],
+            '1681594g.fits.gz': [
+                '/test_files/1681594g.fits.gz',
+                '/test_files/success',
+            ],
+            '1028439o.fits': [
+                '/test_files/1028439o.fits',
+                '/test_files/success',
+            ],
+            '2359320o.fits.fz': [
+                '/test_files/2359320o.fits.fz',
+                '/test_files/success',
+            ],
+        }
+        f_name = os.path.basename(source)
+        lookup = uris.get(f_name)
+        assert lookup is not None, f'unexpected f_name {f_name}'
+        assert lookup[0] == source, f'source {source}'
+        assert lookup[1] == destination, f'destination {destination}'
 
 
 def _mock_dir_list(
@@ -352,6 +349,7 @@ def _mock_dir_list(
         ),  # already compressed, no decompression or recompression
     )
     return result
+
 
 uris = {
     '781920': FileInfo(
@@ -444,7 +442,9 @@ def test_run_state_compression_cleanup(
                 # mock the ingest task
                 return None
 
-        clients_mock.return_value.metadata_client.read.side_effect = _mock_read
+        clients_mock.return_value.metadata_client.read.side_effect = (
+            _mock_read
+        )
 
         test_state_fqn = f'{tmp_dir_name}/state.yml'
         start_time = datetime.now(tz=timezone.utc) - timedelta(minutes=5)
@@ -457,7 +457,9 @@ def test_run_state_compression_cleanup(
         test_config = mc.Config()
         test_config.working_directory = tmp_dir_name
         test_config.task_types = [
-            mc.TaskType.STORE, mc.TaskType.INGEST, mc.TaskType.MODIFY
+            mc.TaskType.STORE,
+            mc.TaskType.INGEST,
+            mc.TaskType.MODIFY,
         ]
         test_config.logging_level = 'DEBUG'
         test_config.log_to_file = True
@@ -595,12 +597,13 @@ def test_run_state_compression_cleanup(
                 info_calls
             ), 'wrong info args'
 
-            clients_mock.return_value.data_client.get_head.assert_not_called(
-            ), 'LocalStore, get_head should not be called'
-            clients_mock.return_value.data_client.get.assert_not_called(
-            ), 'LocalStore, get should not be called'
+            # LocalStore, get_head should not be called
+            clients_mock.return_value.data_client.get_head.assert_not_called()
+            # LocalStore, get should not be called
+            clients_mock.return_value.data_client.get.assert_not_called()
 
-            clients_mock.return_value.metadata_client.read.assert_called(
+            assert (
+                clients_mock.return_value.metadata_client.read.called
             ), 'read'
             assert (
                 clients_mock.return_value.metadata_client.read.call_count == 8
@@ -619,7 +622,8 @@ def test_run_state_compression_cleanup(
                 read_calls,
             ), 'wrong read args'
 
-            clients_mock.return_value.metadata_client.create.assert_called(
+            assert (
+                clients_mock.return_value.metadata_client.create.called
             ), 'create'
             assert (
                 clients_mock.return_value.metadata_client.create.call_count
@@ -774,12 +778,124 @@ def test_run_state_compression_commands(
                 info_calls
             ), 'wrong info args'
 
-            clients_mock.return_value.data_client.get_head.assert_not_called(
-            ), 'LocalStore, get_head should not be called'
-            clients_mock.return_value.data_client.get.assert_not_called(
-            ), 'LocalStore, get should not be called'
-            clients_mock.return_value.metadata_client.read.assert_not_called(
+            # LocalStore, get_head should not be called
+            clients_mock.return_value.data_client.get_head.assert_not_called()
+            # LocalStore, get should not be called
+            clients_mock.return_value.data_client.get.assert_not_called()
+            assert (
+                not clients_mock.return_value.metadata_client.read.called
             ), 'read'
+        finally:
+            os.chdir(cwd)
+            os.getcwd = getcwd_orig
+
+
+@patch('caom2pipe.client_composable.ClientCollection')
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
+@patch(
+    'caom2pipe.data_source_composable.TodoFileDataSource.get_work',
+    autospec=True,
+)
+def test_run_compression_unsupported(
+    get_work_mock,
+    cache_mock,
+    clients_mock,
+):
+    # this test works with FITS files, not header-only versions of FITS
+    # files, because it's testing the decompression/recompression cycle
+    # for Inst.UNSUPPORTED, so there is only a STORE task
+
+    def _mock_get_work(ign1):
+        result = deque()
+        # unsupported file type, no recompression
+        result.append('ad:CFHT/73947o.fits.gz')
+        return result
+
+    get_work_mock.side_effect = _mock_get_work
+
+    def _mock_get_head(uri_ignore):
+        hdr1 = fits.Header()
+        hdr1['SIMPLE'] = 'T'
+        hdr1['BITPIX'] = 16
+        hdr2 = fits.Header()
+        hdr2['SIMPLE'] = 'T'
+        hdr2['INSTRUME'] = 'abc'
+        return [hdr1, hdr2]
+
+    clients_mock.return_value.data_client.get_head.side_effect = (
+        _mock_get_head
+    )
+
+    def _mock_get(wd, uri):
+        temp = os.path.basename(uri)
+        shutil.copyfile('/test_files/73947o.fits.gz', f'{wd}/{temp}')
+
+    clients_mock.return_value.data_client.get.side_effect = _mock_get
+
+    cwd = os.getcwd()
+    with TemporaryDirectory() as tmp_dir_name:
+        os.chdir(tmp_dir_name)
+        test_config = mc.Config()
+        test_config.working_directory = tmp_dir_name
+        test_config.task_types = [mc.TaskType.STORE]
+        test_config.logging_level = 'INFO'
+        test_config.collection = 'CFHT'
+        test_config.proxy_file_name = 'cadcproxy.pem'
+        test_config.proxy_fqn = f'{tmp_dir_name}/cadcproxy.pem'
+        test_config.features.supports_latest_client = True
+        test_config.features.supports_decompression = True
+        test_config.use_local_files = False
+        test_config.retry_failures = False
+        test_config.cleanup_files_when_storing = False
+        mc.Config.write_to_file(test_config)
+        with open(test_config.proxy_fqn, 'w') as f:
+            f.write('test content')
+        getcwd_orig = os.getcwd
+        os.getcwd = Mock(return_value=tmp_dir_name)
+        try:
+            # execution
+            try:
+                test_result = composable._run_decompress()
+                assert test_result == 0, 'expecting correct execution'
+            except Exception as e:
+                error(e)
+                error(format_exc())
+                raise e
+
+            clients_mock.return_value.data_client.put.assert_called(), 'put'
+            assert (
+                clients_mock.return_value.data_client.put.call_count == 1
+            ), 'put call count, including the previews'
+            clients_mock.return_value.data_client.put.assert_called_with(
+                f'{tmp_dir_name}/73947', 'cadc:CFHT/73947o.fits', None
+            ), 'wrong put args'
+
+            clients_mock.return_value.data_client.info.assert_called(), 'info'
+            assert (
+                clients_mock.return_value.data_client.info.call_count == 1
+            ), 'info call count, only checking _post_store_check_md5sum'
+            clients_mock.return_value.data_client.info.assert_called_with(
+                'ad:CFHT/73947o.fits.gz'
+            ), 'wrong info args'
+
+            # Store, get_head should be called
+            assert clients_mock.return_value.data_client.get_head.called
+            assert (
+                clients_mock.return_value.data_client.get_head.call_count == 1
+            ), 'get_head call count'
+            clients_mock.return_value.data_client.get_head.assert_called_with(
+                'ad:CFHT/73947o.fits.gz'
+            )
+            # Store, get should be called
+            assert clients_mock.return_value.data_client.get.called
+            assert (
+                clients_mock.return_value.data_client.get.call_count == 1
+            ), 'get call count'
+            clients_mock.return_value.data_client.get.assert_called_with(
+                f'{tmp_dir_name}/73947', 'ad:CFHT/73947o.fits.gz'
+            )
+            # Store, metadata client read should not be called
+            clients_mock.return_value.metadata_client.read.assert_not_called()
         finally:
             os.chdir(cwd)
             os.getcwd = getcwd_orig

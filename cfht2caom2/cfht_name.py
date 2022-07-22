@@ -151,7 +151,12 @@ class CFHTName(StorageName):
 
         """
         if file_name.endswith('.gz'):
-            if self._bitpix is None or self._bitpix in [-32, -64]:
+            if (
+                self._bitpix is None
+                or self._bitpix in [-32, -64]
+                # fpack failures for unsupported instruments
+                or self._instrument is Inst.UNSUPPORTED
+            ):
                 # use fpack only if bitpix is known
                 result = build_uri(
                     scheme=StorageName.scheme,
