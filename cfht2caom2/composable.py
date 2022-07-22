@@ -270,7 +270,7 @@ def _run_decompress():
                 try:
                     instrument = CFHTBuilder.get_instrument(headers, entry)
                 except CadcException as e:
-                    instrument = 'NotImplemented'
+                    instrument = 'Unsupported'
                 bitpix = get_keyword(headers, 'BITPIX')
             result = CFHTName(
                 file_name=basename(entry),

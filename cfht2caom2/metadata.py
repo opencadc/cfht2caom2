@@ -84,6 +84,7 @@ class Inst(Enum):
     SITELLE = 'SITELLE'
     SPIROU = 'SPIRou'
     WIRCAM = 'WIRCam'
+    UNSUPPORTED = 'Unsupported'
     NONE = None
 
 
