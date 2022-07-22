@@ -74,7 +74,9 @@ import traceback
 from os.path import basename, dirname
 
 from caom2pipe import client_composable as clc
-from caom2pipe.manage_composable import Config, get_keyword, StorageName
+from caom2pipe.manage_composable import (
+    CadcException, Config, get_keyword, StorageName
+)
 from caom2pipe.reader_composable import (
     FileMetadataReader,
     StorageClientReader,
@@ -265,7 +267,10 @@ def _run_decompress():
                 )
                 self._metadata_reader.set(storage_name)
                 headers = self._metadata_reader.headers.get(entry)
-                instrument = CFHTBuilder.get_instrument(headers, entry)
+                try:
+                    instrument = CFHTBuilder.get_instrument(headers, entry)
+                except CadcException as e:
+                    instrument = 'NotImplemented'
                 bitpix = get_keyword(headers, 'BITPIX')
             result = CFHTName(
                 file_name=basename(entry),
