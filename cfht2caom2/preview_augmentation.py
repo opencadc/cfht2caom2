@@ -410,12 +410,6 @@ class CFHTPreview(mc.PreviewVisitor):
                             '.fz', '_slice.fz'
                         )
                     )
-                elif self._storage_name.file_name.endswith('.gz'):
-                    temp_science_f_name = (
-                        self._storage_name.file_name.replace(
-                            '.gz', '_slice.gz'
-                        )
-                    )
                 else:
                     temp_science_f_name = (
                         self._storage_name.file_name.replace(
@@ -1064,7 +1058,7 @@ def visit(observation, **kwargs):
     # SF - 23-02-21
     # No previews for 'frpts' files.
     if '.frpts.' in previewer.storage_name.file_name:
-        result = {'artifacts': 0}
+        result = observation
     else:
         result = previewer.visit(observation)
     return result

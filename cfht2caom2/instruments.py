@@ -589,7 +589,7 @@ class InstrumentType(cc.TelescopeMapping):
         if elevation is not None and not (0.0 <= elevation <= 90.0):
             self._logger.info(
                 f'Setting elevation to None for '
-                f'{self._get_filename(ext)} because the value is {elevation}.'
+                f'{self._storage_name.file_name} because the value is {elevation}.'
             )
             elevation = None
         return elevation
@@ -895,11 +895,13 @@ class InstrumentType(cc.TelescopeMapping):
             dt_str = self._headers[ext].get('REL_DATE')
             if dt_str is None:
                 dt_str = self._headers[ext].get('DATE')
-        mjd_obs = ac.get_datetime(dt_str)
+        mjd_obs = None
+        if dt_str is not None:
+            mjd_obs = ac.get_datetime(dt_str)
         if mjd_obs is None:
             self._logger.warning(
                 f'Chunk.time.axis.function.refCoord.val is None for '
-                f'{self._get_filename(ext)}'
+                f'{self._storage_name.file_name}, extension {ext}'
             )
         else:
             mjd_obs = mjd_obs.value
@@ -908,19 +910,20 @@ class InstrumentType(cc.TelescopeMapping):
     def get_time_refcoord_val_simple(self, ext):
         result = self._get_mjd_obs(ext)
         if result is None:
-            temp = self._headers[ext].get('DATE-OBS')
-            if temp is None:
-                # from caom2IngestMegacam.py, l549
-                temp = self._headers[ext].get('DATE')
-            result = ac.get_datetime(temp)
-            result = result.value
+            # from caom2IngestMegacam.py, l549
+            for ii in ['DATE-OBS', 'DATE']:
+                temp = self._headers[ext].get(ii)
+                if temp is None:
+                    continue
+                else:
+                    result = ac.get_datetime(temp)
+                    if result is not None:
+                        result = result.value
+                    break
         return result
 
     def get_time_resolution(self, ext):
         pass
-
-    def _get_filename(self, ext):
-        return self._headers[ext].get('FILENAME')
 
     def _get_mjd_obs(self, ext):
         return mc.to_float(self._headers[ext].get('MJD-OBS'))
@@ -965,7 +968,7 @@ class InstrumentType(cc.TelescopeMapping):
                 # this is a flat. i have the impression in this case you can
                 # ignore the ra/dec stuff
                 self._logger.warning(
-                    f'OBSRADEC is GAPPT for {self._get_filename(ext)}'
+                    f'OBSRADEC is GAPPT for {self._storage_name.file_name}'
                 )
             else:
                 ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
@@ -1213,7 +1216,7 @@ class InstrumentType(cc.TelescopeMapping):
 
         :param observation A CAOM Observation model instance.
         :param file_info cadcdata.FileInfo instance
-        :param data_client StorageClientWrapper instance
+        :param clients ClientCollection instance
 
         :param **kwargs Everything else."""
         self._logger.debug('Begin update.')
@@ -1693,11 +1696,13 @@ class Espadons(InstrumentType):
                 ):
                     hst_time = self._headers[ext].get('HSTTIME)')
                     # fmt 'Mon Nov 27 15:58:17 HST 2006'
-                    mjd_obs = ac.get_datetime(hst_time)
+                    if hst_time is not None:
+                        mjd_obs = ac.get_datetime(hst_time)
                 else:
                     mjd_obs_str = f'{date_obs}T{time_obs}'
                     mjd_obs = ac.get_datetime(mjd_obs_str)
-                mjd_obs = mjd_obs.value
+        if mjd_obs is not None and hasattr(mjd_obs, 'value'):
+            mjd_obs = mjd_obs.value
         return mjd_obs
 
     def make_axes_consistent(self):
@@ -2154,7 +2159,7 @@ class Sitelle(InstrumentType):
                     '.hdf5', '.fits.fz'
                 )
                 if temp.count('z') == 1:
-                    # uri looks like: ad:CFHT/2384125p.fits.fz
+                    # uri looks like: cadc:CFHT/2384125p.fits.fz
                     p_artifact_key = temp
                 else:
                     p_artifact_key = temp.replace('z', 'p', 1)
@@ -2163,21 +2168,17 @@ class Sitelle(InstrumentType):
                         'z', 'p', 1
                     ).replace('.hdf5', '.fits')
                     if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = self._storage_name.file_uri.replace(
-                            'z', 'p', 1
-                        ).replace('.hdf5', '.fits.gz')
+                        p_artifact_key = (
+                            self._storage_name.file_uri.replace(
+                                'z', 'p', 1
+                            ).replace('.hdf5', '.fits.header')
+                        )
                         if p_artifact_key not in p_plane.artifacts.keys():
-                            p_artifact_key = (
-                                self._storage_name.file_uri.replace(
-                                    'z', 'p', 1
-                                ).replace('.hdf5', '.fits.header')
+                            raise mc.CadcException(
+                                f'Unexpected extension name pattern for '
+                                f'artifact URI {p_artifact_key} in '
+                                f'{observation.observation_id}.'
                             )
-                            if p_artifact_key not in p_plane.artifacts.keys():
-                                raise mc.CadcException(
-                                    f'Unexpected extension name pattern for '
-                                    f'artifact URI {p_artifact_key} in '
-                                    f'{observation.observation_id}.'
-                                )
                 features = mc.Features()
                 features.supports_latest_caom = True
                 for part in p_plane.artifacts[p_artifact_key].parts.values():
@@ -3188,7 +3189,10 @@ class Wircam(InstrumentType):
                     rnder=0.0000001, syser=0.0000001
                 )
 
-            if self._chunk.time.axis.function is None:
+            if (
+                self._chunk.time.axis.function is None
+                and ref_coord_val is not None
+            ):
                 ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val))
 
                 time_index = part_header.get('ZNAXIS')

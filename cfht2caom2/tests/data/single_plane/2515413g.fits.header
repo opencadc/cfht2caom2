@@ -1,0 +1,182 @@
+SIMPLE  =                    T / Standard FITS                                  
+BITPIX  =                   16 / Bits per pixel (not appl. to PHU)              
+NAXIS   =                    0 / No image data with primary header              
+EXTEND  =                    T / File contains extensions                       
+NEXTEND =                    2 / Number of extensions                           
+DATE    = '2020-09-19T05:49:43' / UTC Date of first image                       
+HSTTIME = 'Fri Sep 18 19:49:43 HST 2020' / Local time in Hawaii                 
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+INSTRUME= 'SPIRou  '           / Instrument Name                                
+ETYPE   = 'GUIDE   '           / Exposure type                                  
+ETIME   =              10.0000 / Integration time per image (ms)                
+FRMRATE =                50.00 / Requested frame rate (Hz)                      
+FRMRATEM=                48.83 / Measured frame rate (Hz)                       
+TEMP    =             -40.0000 / TEC cooler setpoint (C)                        
+PIXSCALE=              0.12800 / Pixel scale (arcseconds / second)              
+ISUGAIN =               0.8000 / Proportional applied to ISU corrections        
+ISUINT  =               0.1000 / Integral applied to ISU corrections            
+ISUDIFF =                0.000 / Differential applied to ISU corrections        
+ISUDIST =                2.000 / Distance threshold to apply scale factor       
+ISUSCALE=               0.4000 / Scale factor applied beyond ISUDIST            
+MAXERROR=               0.4000 / Maximum star position calculation error used   
+WIN_X0  =                  333 / X0 coordinate for the subraster                
+WIN_Y0  =                  250 / Y0 coordinate for the subraster                
+WIN_X1  =                  364 / X1 coordinate for the subraster                
+WIN_Y1  =                  281 / Y1 coordinate for the subraster                
+GUIDE_X0=                  333 / X0 coordinate for the guide raster             
+GUIDE_Y0=                  250 / Y0 coordinate for the guide raster             
+GUIDE_X1=                  364 / X1 coordinate for the guide raster             
+GUIDE_Y1=                  281 / Y1 coordinate for the guide raster             
+HOLE_X  =               349.38 / X coordinate center of aperture hole           
+HOLE_Y  =               266.86 / Y coordinate center of aperture hole           
+GD_STATE= 'TCS     '           / Guiding state (OFF | ON | TCS)                 
+ISUSTATE= 'ON      '           / ISU state (OFF | ON)                           
+FILENAME= '2515413 '           / Observation file name                          
+OBJMAG  =               6.5300 / Object magnitude                               
+RA      = '18:34:36.78'        / Telescope RA                                   
+DEC     = '40:07:22.1'         / Telescope Dec                                  
+EQUINOX =               2000.0 / Telescope Equinox                              
+SB_ADC_S= 'ON      '           / SPIRou ADC tracking state (on/off)             
+SBADC1_P=                184.6 / SPIRou ADC 1 angle at start of exp (degrees)   
+SBADC2_P=                244.9 / SPIRou ADC 2 angle at start of exp (degrees)   
+SBDENS_P=                  0.0 / SPIRou guiding density at start of exp         
+SEADC1_P=                183.3 / SPIRou ADC 1 angle at end of exp (degrees)     
+SEADC2_P=                245.9 / SPIRou ADC 2 angle at end of exp (degrees)     
+SEDENS_P=                  0.0 / SPIRou guiding density at end of exp           
+SGCHOLEX=             349.3925 / SPIRou Guider Calculated Hole X loc (pixel)    
+SGCHOLEY=             266.8864 / SPIRou Guider Calculated Hole Y loc (pixel)    
+SGEHOLEX=               0.0190 / SPIRou Guider Calculated Hole X error (pixel)  
+SGEHOLEY=               0.0231 / SPIRou Guider Calculated Hole Y error (pixel)  
+SGCSTARX=             349.3488 / SPIRou Guider Calculated Star X loc (pixel)    
+SGCSTARY=             266.8576 / SPIRou Guider Calculated Star Y loc (pixel)    
+SGESTARX=               0.0165 / SPIRou Guider Calculated Star X error (pixel)  
+SGESTARY=               0.0163 / SPIRou Guider Calculated Star Y error (pixel)  
+SGCNOFFX=              -0.0312 / SPIRou Guider Calculated Null X offset (pixel  
+SGCNOFFY=              -0.0024 / SPIRou Guider Calculated Null Y offset (pixel) 
+SGCSEE  =               0.8771 / SPIRou Guider Calculated Seeing                
+SGESEE  =               0.0045 / SPIRou Guider Calculated Seeing Error          
+SGCMAGN =               6.9887 / SPIRou Guider Calculated Magnitude             
+SGEMAGN =               0.0279 / SPIRou Guider Calculated Magnitude Error       
+END                                                                             
+XTENSION= 'IMAGE   '           / Image extension                                
+BITPIX  =                   16 / Bits per pixel                                 
+NAXIS   =                    3 / Number of axes                                 
+NAXIS1  =                   32 / Number of pixel columns                        
+NAXIS2  =                   32 / Number of pixel rows                           
+NAXIS3  =                 5507 / Cube depth                                     
+PCOUNT  =                    0 / No 'random' parameters                         
+GCOUNT  =                    1 / Only one group                                 
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+EXTNAME = 'IMAGE DATA'         / Extension name                                 
+END                                                                             
+XTENSION= 'TABLE   '                                                            
+BITPIX  =                    8 / 8-bit ASCII                                    
+NAXIS   =                    2 / 2D table of values                             
+NAXIS1  =                  124 / Characters in each table row                   
+NAXIS2  =                 5507 / Number of rows in table                        
+PCOUNT  =                    0 / Random parameters before each array in a group 
+GCOUNT  =                    1 / Number of random groups                        
+TFIELDS =                   16 / Number of columns in table                     
+TFORM1  = 'D14.3   '           / FITS table field format                        
+TBCOL1  =                    1 / First character of column                      
+TFORM2  = 'I8      '           / FITS table field format                        
+TBCOL2  =                   15 / First character of column                      
+TFORM3  = 'D7.2    '           / FITS table field format                        
+TBCOL3  =                   23 / First character of column                      
+TFORM4  = 'D7.2    '           / FITS table field format                        
+TBCOL4  =                   30 / First character of column                      
+TFORM5  = 'D7.2    '           / FITS table field format                        
+TBCOL5  =                   37 / First character of column                      
+TFORM6  = 'D7.2    '           / FITS table field format                        
+TBCOL6  =                   44 / First character of column                      
+TFORM7  = 'D7.2    '           / FITS table field format                        
+TBCOL7  =                   51 / First character of column                      
+TFORM8  = 'D7.2    '           / FITS table field format                        
+TBCOL8  =                   58 / First character of column                      
+TFORM9  = 'D7.2    '           / FITS table field format                        
+TBCOL9  =                   65 / First character of column                      
+TFORM10 = 'D7.2    '           / FITS table field format                        
+TBCOL10 =                   72 / First character of column                      
+TFORM11 = 'D9.4    '           / FITS table field format                        
+TBCOL11 =                   79 / First character of column                      
+TFORM12 = 'D9.4    '           / FITS table field format                        
+TBCOL12 =                   88 / First character of column                      
+TFORM13 = 'D7.2    '           / FITS table field format                        
+TBCOL13 =                   97 / First character of column                      
+TFORM14 = 'D7.2    '           / FITS table field format                        
+TBCOL14 =                  104 / First character of column                      
+TFORM15 = 'D7.2    '           / FITS table field format                        
+TBCOL15 =                  111 / First character of column                      
+TFORM16 = 'D7.2    '           / FITS table field format                        
+TBCOL16 =                  118 / First character of column                      
+EXTNAME = 'METADATA'           / Extension name                                 
+TTYPE1  = 'UNIXTIME'           / Column name                                    
+TUNIT1  = 'Seconds '           / Column data units                              
+TBCOM1  = 'Unix timestamp'     / Column description                             
+TTYPE2  = 'SEQNUM  '           / Column name                                    
+TUNIT2  = '        '           / Column data units                              
+TBCOM2  = 'Image sequence number' / Column description                          
+TTYPE3  = 'ISUERR_X'           / Column name                                    
+TUNIT3  = 'mrad    '           / Column data units                              
+TBCOM3  = 'ISU X error in X'   / Column description                             
+TTYPE4  = 'ISUERR_Y'           / Column name                                    
+TUNIT4  = 'mrad    '           / Column data units                              
+TBCOM4  = 'ISU Y error in Y'   / Column description                             
+TTYPE5  = 'GD_XOFF '           / Column name                                    
+TUNIT5  = 'Pixels  '           / Column data units                              
+TBCOM5  = 'Guide star offset in X' / Column description                         
+TTYPE6  = 'GD_YOFF '           / Column name                                    
+TUNIT6  = 'Pixels  '           / Column data units                              
+TBCOM6  = 'Guide star offset in Y' / Column description                         
+TTYPE7  = 'SMRAD_X '           / Column name                                    
+TUNIT7  = 'mrad    '           / Column data units                              
+TBCOM7  = 'Delta ISU position in X' / Column description                        
+TTYPE8  = 'SMRAD_Y '           / Column name                                    
+TUNIT8  = 'mrad    '           / Column data units                              
+TBCOM8  = 'Delta ISU position in Y' / Column description                        
+TTYPE9  = 'RMRAD_X '           / Column name                                    
+TUNIT9  = 'mrad    '           / Column data units                              
+TBCOM9  = 'Read ISU position in X' / Column description                         
+TTYPE10 = 'RMRAD_Y '           / Column name                                    
+TUNIT10 = 'mrad    '           / Column data units                              
+TBCOM10 = 'Read ISU position in Y' / Column description                         
+TTYPE11 = 'RISUAS_X'           / Column name                                    
+TUNIT11 = 'arcsec  '           / Column data units                              
+TBCOM11 = 'Read ISU position in X' / Column description                         
+TTYPE12 = 'RISUAS_Y'           / Column name                                    
+TUNIT12 = 'arcsec  '           / Column data units                              
+TBCOM12 = 'Read ISU position in Y' / Column description                         
+TTYPE13 = 'TCS_X   '           / Column name                                    
+TUNIT13 = 'arcsec  '           / Column data units                              
+TBCOM13 = 'Status last TCS X correction' / Column description                   
+TTYPE14 = 'TCS_Y   '           / Column name                                    
+TUNIT14 = 'arcsec  '           / Column data units                              
+TBCOM14 = 'Status last TCS Y correction' / Column description                   
+TTYPE15 = 'SEEING  '           / Column name                                    
+TUNIT15 = 'arcsec  '           / Column data units                              
+TBCOM15 = 'Seeing measurement' / Column description                             
+TTYPE16 = 'STARMAG '           / Column name                                    
+TUNIT16 = 'mag     '           / Column data units                              
+TBCOM16 = 'Star magnitude measurement' / Column description                     
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             

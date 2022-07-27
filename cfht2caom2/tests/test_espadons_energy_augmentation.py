@@ -82,8 +82,8 @@ def test_visit():
     orig_scheme = StorageName.scheme
     orig_collection = StorageName.collection
     try:
-        StorageName.scheme = 'ad'
-        StorageName.collection = 'CFHT'
+        StorageName.scheme = 'cadc'
+        StorageName.collection = cn.COLLECTION
         product_id = '2460606i'
         f_name = f'{product_id}.fits.gz'
         obs_fqn = (
@@ -93,7 +93,7 @@ def test_visit():
         obs = read_obs_from_file(obs_fqn)
 
         # pre-conditions
-        uri = f'ad:CFHT/{product_id}.fits.gz'
+        uri = f'cadc:CFHT/{product_id}.fits'
         assert (
             obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy
             is None
@@ -101,7 +101,9 @@ def test_visit():
         test_storage_name = cn.CFHTName(
             file_name=f_name, instrument=md.Inst.ESPADONS
         )
-        test_storage_name.source_names = [join(TEST_FILES_DIR, f_name)]
+        test_storage_name.source_names = [
+            join(TEST_FILES_DIR, f_name).replace('.gz', ''),
+        ]
         kwargs = {
             'storage_name': test_storage_name,
             'working_directory': TEST_FILES_DIR,

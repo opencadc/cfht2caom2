@@ -57,7 +57,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="55c762e7-688d-4af0-9adc-ff88ee24f001" caom2:lastModified="2019-11-27T16:26:38.227" caom2:maxLastModified="2019-11-27T16:26:38.227" caom2:metaChecksum="md5:c0dd58faba03311cbbead5c40c8c30b7" caom2:accMetaChecksum="md5:0539a397912509cca3d5687c55ebc0e1" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/2462928a.fits</caom2:uri>
+          <caom2:uri>cadc:CFHT/2462928a.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

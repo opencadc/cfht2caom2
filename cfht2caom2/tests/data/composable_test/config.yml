@@ -88,5 +88,5 @@ data_source_extensions:
 task_types: 
   - ingest
 features:
-  supports_composite: False
-  supports_multiple_files: True
+  supports_latest_client: True
+  supports_decompression: True

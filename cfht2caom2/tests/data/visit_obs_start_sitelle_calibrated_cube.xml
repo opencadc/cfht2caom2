@@ -204,7 +204,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-ef95-0168d04120e0" caom2:lastModified="2019-02-09T03:16:03.059" caom2:maxLastModified="2019-02-09T03:16:03.059" caom2:metaChecksum="md5:2769583a8838d35109d387812cda37f6" caom2:accMetaChecksum="md5:5c64f4118b178a73ac2cd4ddf2210664">
-          <caom2:uri>ad:CFHT/2359320p.fits</caom2:uri>
+          <caom2:uri>cadc:CFHT/2359320p.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

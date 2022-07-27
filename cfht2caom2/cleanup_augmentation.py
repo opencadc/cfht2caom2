@@ -118,7 +118,9 @@ def visit(observation, **kwargs):
                 if '.jpg' not in artifact.uri:
                     continue
                 if f':CFHT/{storage_name.product_id}_' not in artifact.uri:
-                    artifact_delete_list[plane.product_id].append(artifact.uri)
+                    artifact_delete_list[plane.product_id].append(
+                        artifact.uri
+                    )
 
     for entry in delete_list:
         logging.info(

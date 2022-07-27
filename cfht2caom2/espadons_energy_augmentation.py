@@ -96,10 +96,13 @@ def visit(observation, **kwargs):
     ):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
+                logging.error(
+                    f'storage_name {storage_name.file_uri} artifact {artifact.uri}'
+                )
                 if storage_name.file_uri == artifact.uri:
                     count += _do_energy(artifact, science_fqn, storage_name)
         logging.info(
-            f'Completed ESPaDOnS energy augmentation for '
+            f'Completed ESPaDOnS energy augmentation for {count} artifacts in '
             f'{observation.observation_id}.'
         )
     return observation

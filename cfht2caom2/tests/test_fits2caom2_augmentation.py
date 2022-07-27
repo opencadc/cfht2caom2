@@ -82,7 +82,7 @@ from caom2.diff import get_differences
 from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
 from caom2pipe.manage_composable import StorageName, read_obs_from_file
-from caom2pipe.manage_composable import write_obs_to_file
+from caom2pipe.manage_composable import get_keyword, write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
 from cfht2caom2 import CFHTName, COLLECTION
@@ -116,7 +116,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
     original_scheme = StorageName.scheme
     original_collection = StorageName.collection
     try:
-        StorageName.scheme = 'ad'
+        StorageName.scheme = 'cadc'
         StorageName.collection = COLLECTION
         storage_name = CFHTName(
             file_name=basename(test_name).replace('.header', ''),
@@ -134,6 +134,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,
         }
+        storage_name._bitpix = get_keyword(headers, 'BITPIX')
         observation = None
         observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
@@ -210,6 +211,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '979339',
             '2460503p',
             '963946',
+            '770380',
         ],
         md.Inst.SPIROU: [
             '2401727a',
@@ -221,6 +223,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '2515996g',
             '2455409p',
             '2602045r',
+            '2515413',
         ],
         md.Inst.WIRCAM: [
             '840066',

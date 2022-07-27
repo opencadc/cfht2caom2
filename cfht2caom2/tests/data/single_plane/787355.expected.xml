@@ -62,7 +62,7 @@
       <caom2:polarization/>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-8ed5-9b22b8db08ba" caom2:lastModified="2017-11-16T23:39:19.493" caom2:maxLastModified="2017-11-16T23:39:19.493" caom2:metaChecksum="md5:df1b8f45e038c8ef21d8240b017158f5" caom2:accMetaChecksum="md5:4f7afa33dbb5501cf049aefec2b5b8fc" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/787355_preview_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/787355_preview_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -71,7 +71,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-b033-758aa5a39e9d" caom2:lastModified="2017-11-16T23:39:19.493" caom2:maxLastModified="2017-11-16T23:39:19.493" caom2:metaChecksum="md5:68fb483c2491e209ddbc58bdd09962fe" caom2:accMetaChecksum="md5:7f30a0b0610233d1b8864c954716775b" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/787355_preview_256.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/787355_preview_256.jpg</caom2:uri>
           <caom2:productType>thumbnail</caom2:productType>
           <caom2:releaseType>meta</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -80,7 +80,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-b2c0-4906ea18c800" caom2:lastModified="2017-11-16T23:39:19.493" caom2:maxLastModified="2017-11-16T23:39:19.493" caom2:metaChecksum="md5:b6c83250f7b2896b9ea9a6e2792d607c" caom2:accMetaChecksum="md5:b26dcfaf79b9439803626b1a523e1a4c" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/787355_preview_zoom_1024.jpg</caom2:uri>
+          <caom2:uri>cadc:CFHT/787355_preview_zoom_1024.jpg</caom2:uri>
           <caom2:productType>preview</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>image/jpeg</caom2:contentType>
@@ -89,7 +89,7 @@
           <caom2:parts/>
         </caom2:artifact>
         <caom2:artifact caom2:id="00000000-0000-0000-ab91-0eab2eb501d5" caom2:lastModified="2017-11-16T23:39:19.493" caom2:maxLastModified="2017-11-16T23:39:19.493" caom2:metaChecksum="md5:2d36943e175b670b8a85dfbe74af49ad" caom2:accMetaChecksum="md5:a3cc55f5de3c43e7cb22f8e77c2b12a7" caom2:metaProducer="cfht2caom2/0.3.2">
-          <caom2:uri>ad:CFHT/787355d.fits</caom2:uri>
+          <caom2:uri>cadc:CFHT/787355d.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>

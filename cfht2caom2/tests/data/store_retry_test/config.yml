@@ -95,4 +95,5 @@ task_types:
   - ingest
   - modify
 features:
-  supports_composite: False
+  supports_latest_client: True
+  supports_decompression: True

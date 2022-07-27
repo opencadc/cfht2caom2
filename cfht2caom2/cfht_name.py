@@ -67,13 +67,12 @@
 # ***********************************************************************
 #
 
-import logging
-
+from logging import getLogger
 from os.path import basename
 from urllib.parse import urlparse
 
-from caom2pipe import manage_composable as mc
-from cfht2caom2 import metadata as md
+from caom2pipe.manage_composable import build_uri, StorageName
+from cfht2caom2.metadata import Inst
 
 
 __all__ = ['CFHTName', 'COLLECTION', 'ARCHIVE']
@@ -92,10 +91,11 @@ ARCHIVE = 'CFHT'
 cfht_names = {}
 
 
-class CFHTName(mc.StorageName):
+class CFHTName(StorageName):
     """Naming rules:
     - support mixed-case file name storage, and mixed-case obs id values
-    - support fz and gz files in storage
+    - support fz files in storage,
+    - decompress all .gz files, recompress if it's lossless
     - product id == file id
     - the file_name attribute has ALL the extensions, including compression
       type.
@@ -109,24 +109,28 @@ class CFHTName(mc.StorageName):
         file_name=None,
         instrument=None,
         source_names=[],
+        bitpix=None,
     ):
-        self._instrument = md.Inst(instrument)
+        self._instrument = Inst(instrument)
         self._file_id = None
         self._file_name = None
         self._obs_id = None
         self._suffix = None
+        # make recompression decisions based on bitpix
+        self._bitpix = bitpix
         super().__init__(
             obs_id=obs_id,
             file_name=file_name.replace('.header', ''),
             source_names=source_names,
         )
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = getLogger(self.__class__.__name__)
         self._logger.debug(self)
 
     def __str__(self):
         return (
             f'\n'
             f'      instrument: {self.instrument}\n'
+            f'          bitpix: {self._bitpix}\n'
             f'          obs_id: {self.obs_id}\n'
             f'         file_id: {self.file_id}\n'
             f'       file_name: {self.file_name}\n'
@@ -136,13 +140,55 @@ class CFHTName(mc.StorageName):
             f'      product_id: {self.product_id}\n'
         )
 
+    def _get_uri(self, file_name):
+        """
+        SF - 20-05-22
+        it looks like compression will be:
+        if bitpix==(-32|-64):
+             gunzip file.fits.gz
+        else:
+             imcopy file.fits.gz file.fits.fz[compress]
+
+        """
+        if file_name.endswith('.gz'):
+            if (
+                self._bitpix is None
+                or self._bitpix in [-32, -64]
+                # fpack failures for unsupported instruments
+                or self._instrument is Inst.UNSUPPORTED
+            ):
+                # use fpack only if bitpix is known
+                result = build_uri(
+                    scheme=StorageName.scheme,
+                    archive=StorageName.collection,
+                    file_name=file_name,
+                ).replace('.gz', '')
+            else:
+                result = build_uri(
+                    scheme=StorageName.scheme,
+                    archive=StorageName.collection,
+                    file_name=file_name,
+                ).replace('.gz', '.fz')
+                self._logger.debug(
+                    f'{self._file_name} will be recompressed with fpack.'
+                )
+        else:
+            result = build_uri(
+                scheme=StorageName.scheme,
+                archive=StorageName.collection,
+                file_name=file_name,
+            )
+        # .header is mostly for test execution
+        return result.replace('.header', '')
+
     def is_valid(self):
         return True
 
     @property
     def file_uri(self):
-        """The CADC Storage URI for the file."""
-        # this is only required until CFHT decompression is added in
+        """
+        The CADC Storage URI for the file.
+        """
         return self._get_uri(self._file_name)
 
     @property
@@ -184,20 +230,32 @@ class CFHTName(mc.StorageName):
     @property
     def has_energy(self):
         return not (
-            self._instrument is md.Inst.ESPADONS
-            and self._suffix in ['i', 'p']
+            self._instrument is Inst.ESPADONS and self._suffix in ['i', 'p']
         )
+
+    @property
+    def has_different_destination_name(self):
+        if len(self._source_names) == 0:
+            result = (
+                basename(self._file_name) !=
+                basename(self._destination_uris[0])
+            )
+        else:
+            for index, entry in enumerate(self._destination_uris):
+                temp = basename(entry)
+                result = temp != basename(self._source_names[index])
+        return result
 
     @property
     def has_polarization(self):
         return self._suffix in ['p'] and self._instrument in [
-            md.Inst.ESPADONS,
-            md.Inst.SPIROU,
+            Inst.ESPADONS,
+            Inst.SPIROU,
         ]
 
     @property
     def is_derived_sitelle(self):
-        return self._instrument == md.Inst.SITELLE and self._suffix in [
+        return self._instrument == Inst.SITELLE and self._suffix in [
             'p',
             'v',
             'z',
@@ -211,7 +269,7 @@ class CFHTName(mc.StorageName):
         StorageName instance.
         :return:
         """
-        return not mc.StorageName.is_hdf5(self._file_name)
+        return not StorageName.is_hdf5(self._file_name)
 
     @property
     def is_simple(self):
@@ -236,7 +294,7 @@ class CFHTName(mc.StorageName):
             or self.simple_by_suffix
             or self.is_master_cal
             or (
-                self._instrument is md.Inst.SPIROU
+                self._instrument is Inst.SPIROU
                 and self._suffix in ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v']
             )
         ):
@@ -249,12 +307,12 @@ class CFHTName(mc.StorageName):
             (
                 self._suffix in ['p', 's']
                 and self._instrument
-                in [md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.WIRCAM]
+                in [Inst.MEGACAM, Inst.MEGAPRIME, Inst.WIRCAM]
             )
-            or (self._suffix == 'i' and self._instrument is md.Inst.ESPADONS)
+            or (self._suffix == 'i' and self._instrument is Inst.ESPADONS)
             or (
                 self._suffix in ['e', 's', 't', 'v']
-                and self._instrument is md.Inst.SPIROU
+                and self._instrument is Inst.SPIROU
             )
         )
 
@@ -263,19 +321,28 @@ class CFHTName(mc.StorageName):
         return self._suffix
 
     def set_destination_uris(self):
-        # this is only required until CFHT decompression is added in
-        for entry in self._source_names:
-            temp = urlparse(entry)
-            self._destination_uris.append(
-                self._get_uri(basename(temp.path)).replace('.header', '')
-            )
+        def _set_extension(for_entry):
+            temp = basename(urlparse(for_entry).path)
+            if self._bitpix is None or self._bitpix in [-32, -64]:
+                result = self._get_uri(
+                    temp
+                ).replace('.header', '').replace('.gz', '')
+            else:
+                result = self._get_uri(temp).replace('.gz', '.fz')
+            return result
+
+        if len(self._source_names) == 0:
+            self._destination_uris.append(self.file_uri)
+        else:
+            for entry in self._source_names:
+                self._destination_uris.append(_set_extension(entry))
 
     def set_file_id(self):
         self._file_id = CFHTName.remove_extensions(self._file_name)
         self._suffix = self._file_id[-1]
 
     def set_obs_id(self):
-        if self._instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
+        if self._instrument in [Inst.MEGAPRIME, Inst.MEGACAM]:
             # SF - slack - 02-04-20
             # - MegaCam - the logic should be probably be 2 planes: p
             # and o for science. - all cfht exposures are sorted by EXPNUM
@@ -300,7 +367,7 @@ class CFHTName(mc.StorageName):
     @staticmethod
     def remove_extensions(name):
         """How to get the file_id from a file_name."""
-        # ESPaDOnS files have a .gz extension ;)
+        # ESPaDOnS files have a .gz extension
         # SITELLE has hdf5 files
         return (
             name.replace('.fits', '')
