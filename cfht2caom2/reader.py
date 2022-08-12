@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2022.                            (c) 2022.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -68,30 +68,32 @@
 #
 
 import h5py
-from caom2utils import caom2blueprint
-from caom2pipe import caom_composable as cc
-from cfht2caom2 import instruments
+from caom2pipe import reader_composable
+
+__all__ = ['Hdf5AndFitsMetadataReader']
 
 
-class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
-    def __init__(self, observation, **kwargs):
-        super().__init__(observation, **kwargs)
+class Hdf5AndFitsMetadataReader(reader_composable.FileMetadataReader):
 
-    def _get_mapping(self, headers):
-        return instruments.factory(headers, self._storage_name)
+    def __init__(self):
+        super().__init__()
 
-    def _get_parser(self, headers, blueprint, uri):
-        if '.h5' or '.hdf5' in uri:
-            self._logger.debug(
-                f'No headers, using a GenericParser for '
-                f'{self._storage_name.file_uri}'
-            )
-            f_in = h5py.File('/usr/src/app/cfht2caom2/cfht2caom2/tests/data/sitelle/2752885z.hdf5')
-            parser = caom2blueprint.Hdf5Parser2(blueprint, uri, f_in)
-        else:
-            parser = super()._get_parser(headers, blueprint, uri)
-        return parser
+    def set_headers(self, storage_name):
+        """Retrieves the Header information to memory."""
+        self._logger.debug(f'Begin set_headers for {storage_name.file_name}')
+        for index, entry in enumerate(storage_name.destination_uris):
+            if entry not in self._headers:
+                if storage_name.hdf5:
+                    self._logger.debug(f'Retrieve hdf5 headers for {entry}')
+                    self._headers[entry] = self._retrieve_headers(storage_name.source_names[index])
+                elif '.fits' in entry:
+                    self._logger.debug(f'Retrieve fits headers for {entry}')
+                    self._headers[entry] = super()._retrieve_headers(storage_name.source_names[index])
+                else:
+                    self._headers[entry] = []
+        self._logger.debug('End set_headers')
 
-
-def visit(observation, **kwargs):
-    return CFHTFits2caom2Visitor(observation, **kwargs).visit()
+    def _retrieve_headers(self, source_name):
+        self._logger.debug(f'Retrieve "attrs" for {source_name}')
+        f_in = h5py.File(source_name)
+        return [f_in.attrs]
