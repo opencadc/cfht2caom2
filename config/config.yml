@@ -9,7 +9,7 @@ proxy_file_name: /usr/src/app/cadcproxy.pem
 # test value - modifies entries on sc2.canfar.net
 # resource_id: ivo://cadc.nrc.ca/sc2repo
 resource_id: ivo://cadc.nrc.ca/ams
-tap_id: ivo://cadc.nrc.ca/ad
+tap_id: ivo://cadc.nrc.ca/global/luskan
 # file that contains the list of entries to process
 todo_file_name: todo.txt
 # values True False
@@ -38,13 +38,13 @@ store_modified_files_only: True
 # to the cleanup_success_destination when the transfer is done, and
 # to the cleanup_failure_destination when the transfer fails, or the
 # file fails FITS verification.
-cleanup_files_when_storing: False
-cleanup_success_destination: /dev/null
-cleanup_failure_destination: /dev/null
+cleanup_files_when_storing: True
+cleanup_success_destination: /data/success
+cleanup_failure_destination: /data/failure
 # values DEBUG INFO WARNING ERROR
 logging_level: INFO
 # values True False
-log_to_file: True
+log_to_file: False
 # fully qualified name for a directory to write log files
 log_file_directory: /usr/src/app/logs
 # the filename where success logs are written
@@ -67,10 +67,6 @@ retry_file_name: retries.txt
 # this file is created in the logs directory, default is 'progress.txt'
 progress_file_name: progress.txt
 #
-# ad stream value - sorry
-# set stream to 'default', if using TaskType STORE or PULL
-stream: raw
-archive: CFHT
 collection: CFHT
 #
 # CADC service execution metrics
@@ -98,6 +94,7 @@ cache_file_name: cache.yml
 # time-box.
 #
 interval: 600
+storage_inventory_resource_id: ivo://cadc.nrc.ca/uvic/minoc
 # how to control the work that gets done
 # possible values are:
 # - scrape - read the headers, write out the xml - kind of a test mode
@@ -105,7 +102,9 @@ interval: 600
 # - ingest - read the headers, write the xml to the endpoint found by resource_id
 # - modify - create a footprint and previews for an existing CAOM model record
 task_types: 
+  - store
   - ingest
   - modify
 features:
-  supports_latest_client: False
+  supports_latest_client: True
+  supports_decompression: True
