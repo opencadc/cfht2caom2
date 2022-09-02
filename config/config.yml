@@ -9,7 +9,7 @@ proxy_file_name: /usr/src/app/cadcproxy.pem
 # test value - modifies entries on sc2.canfar.net
 # resource_id: ivo://cadc.nrc.ca/sc2repo
 resource_id: ivo://cadc.nrc.ca/ams
-tap_id: ivo://cadc.nrc.ca/global/luskan
+tap_id: ivo://cadc.nrc.ca/ams/cfht
 # file that contains the list of entries to process
 todo_file_name: todo.txt
 # values True False
