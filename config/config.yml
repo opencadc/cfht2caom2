@@ -29,6 +29,7 @@ data_source_extensions:
   - .fits.fz
   - .fits.gz
   - .hdf5
+recurse_data_sources: False
 # if the 'store' task type is listed, ensure the local file has a different
 # md5 checksum than the file at CADC before transferring the file.
 # 'use_local_files' must be also be True
@@ -93,7 +94,10 @@ cache_file_name: cache.yml
 # the interval, in minutes, that define the start and end of the 
 # time-box.
 #
-interval: 600
+interval: 10
+retry_failures: True
+retry_count: 3
+retry_decay: 1
 storage_inventory_resource_id: ivo://cadc.nrc.ca/uvic/minoc
 # how to control the work that gets done
 # possible values are:
