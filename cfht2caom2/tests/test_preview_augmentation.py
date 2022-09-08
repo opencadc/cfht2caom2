@@ -325,6 +325,7 @@ def test_preview_augment():
                                     f'{artifact.content_checksum.uri}'
                                 )
 
+                mc.write_obs_to_file(obs, f'{key.replace("start", "stop")}')
         assert (
             len(checksum_failures) == 0,
             '\n'.join(ii for ii in checksum_failures),

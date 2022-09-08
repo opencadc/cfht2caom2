@@ -81,13 +81,13 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
         return instruments.factory(headers, self._storage_name)
 
     def _get_parser(self, headers, blueprint, uri):
-        if '.h5' or '.hdf5' in uri:
+        if self._storage_name.hdf5 and len(headers) > 0:
             self._logger.debug(
                 f'No headers, using a GenericParser for '
                 f'{self._storage_name.file_uri}'
             )
-            f_in = h5py.File('/usr/src/app/cfht2caom2/cfht2caom2/tests/data/sitelle/2752885z.hdf5')
-            parser = caom2blueprint.Hdf5Parser2(blueprint, uri, f_in)
+            f_in = h5py.File(self._storage_name.source_names[0])
+            parser = caom2blueprint.Hdf5Parser(blueprint, uri, f_in)
         else:
             parser = super()._get_parser(headers, blueprint, uri)
         return parser

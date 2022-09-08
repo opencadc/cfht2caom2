@@ -6,9 +6,9 @@
   <caom2:observationID>2752885p</caom2:observationID>
   <caom2:metaRelease>2022-04-25T00:00:00.000</caom2:metaRelease>
   <caom2:algorithm>
-    <caom2:name>scan</caom2:name>
+    <caom2:name>ORB</caom2:name>
   </caom2:algorithm>
-  <caom2:type>DATACUBE</caom2:type>
+  <caom2:type>SCIENCE</caom2:type>
   <caom2:intent>science</caom2:intent>
   <caom2:proposal>
     <caom2:id>22AQ10</caom2:id>
@@ -105,7 +105,7 @@
                     </caom2:axis>
                     <caom2:specsys>TOPOCENT</caom2:specsys>
                     <caom2:bandpassName>SN3</caom2:bandpassName>
-                    <caom2:resolvingPower>5043.7163756113405</caom2:resolvingPower>
+                    <caom2:resolvingPower>4926.487818556442</caom2:resolvingPower>
                   </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
@@ -133,6 +133,24 @@
               </caom2:chunks>
             </caom2:part>
           </caom2:parts>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="f222281d-f336-4392-a827-34ef9c15d8da">
+          <caom2:uri>ad:CFHT/2752885z_preview_1024.jpg</caom2:uri>
+          <caom2:productType>preview</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>103684</caom2:contentLength>
+          <caom2:contentChecksum>md5:c17382d7c7a738ef5c3682eba663bf35</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+        <caom2:artifact caom2:id="b541ea01-c6e6-40e5-a61a-8a4c6890ac56">
+          <caom2:uri>ad:CFHT/2752885z_preview_256.jpg</caom2:uri>
+          <caom2:productType>thumbnail</caom2:productType>
+          <caom2:releaseType>meta</caom2:releaseType>
+          <caom2:contentType>image/jpeg</caom2:contentType>
+          <caom2:contentLength>11504</caom2:contentLength>
+          <caom2:contentChecksum>md5:ded702279f63b239f2203010aeb1c800</caom2:contentChecksum>
+          <caom2:parts/>
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>

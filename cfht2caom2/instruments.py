@@ -182,7 +182,6 @@ import os
 
 from astropy import units
 from astropy.io import fits
-from datetime import timedelta
 from enum import Enum
 
 from caom2 import Axis, Slice, ObservableAxis, Chunk, DataProductType
@@ -2383,8 +2382,9 @@ class SitelleHdf5(InstrumentType):
             bp.configure_energy_axis(4)
 
         bp.set('Observation.metaRelease', (['OBS_DATE'], None))
-        # Laurie Rousseau-Nepton - 11-08-22
-        bp.set('Observation.type', 'DATACUBE')
+        # Laurie Rousseau-Nepton - 12-08-22
+        # 'SCIENCE' is ok with me
+        bp.set('Observation.type', 'SCIENCE')
 
         if self._storage_name.suffix == 'v':
             bp.set('Observation.intent', ObservationIntentType.SCIENCE)
@@ -2395,6 +2395,7 @@ class SitelleHdf5(InstrumentType):
             bp.set('Plane.provenance.version', (['PROGRAM'], None))
             bp.set('Artifact.productType', ProductType.SCIENCE)
 
+        bp.set('Observation.algorithm.name', (['PROGRAM'], None))
         bp.set('Observation.instrument.name', self._storage_name.instrument.value)
 
         bp.set('Observation.proposal.id', '_get_proposal_id()')
@@ -2407,6 +2408,7 @@ class SitelleHdf5(InstrumentType):
         bp.set('Observation.target_position.point.cval2', (['target_y'], None))
 
         bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+        bp.set('Plane.dataProductType', DataProductType.CUBE)
         bp.set('Plane.dataRelease', '_get_plane_data_release()')
         bp.set('Plane.metaRelease', (['OBS_DATE'], None))
 
@@ -2463,11 +2465,11 @@ class SitelleHdf5(InstrumentType):
         step = self._headers[ext].get('STEP')
         zpd_index = self._headers[ext].get('zpd_index')
         naxis_3 = self._headers[ext].get('step_nb')
-        line_fwhm = self._headers[ext].get('line_fwhm')
+        filter_max = self._headers[ext].get('filter_nm_max')
         filter_min = self._headers[ext].get('filter_nm_min')
         wl = None
-        if line_fwhm is not None and filter_min is not None:
-            wl = line_fwhm + filter_min
+        if filter_max is not None and filter_min is not None:
+            wl = (filter_min + filter_max) / 2
         if step is not None and zpd_index is not None and naxis_3 is not None and wl is not None:
             result = 1 / wl * 2 * (step * (naxis_3 - zpd_index)) / 1.2067
         return result
@@ -2519,7 +2521,9 @@ class SitelleHdf5(InstrumentType):
         self._logger.debug('Begin update.')
 
         if not isinstance(observation, DerivedObservation):
-            observation = cc.change_to_composite(observation, 'scan')
+            # Laurie Rousseau-Nepton - 12-08-22
+            # It could be the attrs(‘program’)
+            observation = cc.change_to_composite(observation, self._headers[0].get('PROGRAM'))
 
         self._observation = observation
         idx = 0
@@ -3597,7 +3601,8 @@ def factory(headers, cfht_name):
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         temp = Mega(headers, cfht_name)
     elif cfht_name.instrument is md.Inst.SITELLE:
-        if cfht_name.file_name.endswith('.hdf5') or cfht_name.file_name.endswith('.h5'):
+        if cfht_name.hdf5 and len(headers) > 0:
+            # len => could be an h5 file with no attrs
             temp = SitelleHdf5(headers, cfht_name)
         else:
             temp = Sitelle(headers, cfht_name)
