@@ -1249,16 +1249,12 @@ class InstrumentType(cc.TelescopeMapping):
             observation.observation_id
         )
         if is_derived and not isinstance(observation, DerivedObservation):
-            self._logger.info(
-                f'{observation.observation_id} will be changed to a Derived '
-                f'Observation.'
-            )
+            self._logger.info(f'{observation.observation_id} will be changed to a Derived Observation.')
             algorithm_name = 'master_detrend'
-            if observation.observation_id[-1] == 'p':
-                if self._storage_name.has_polarization:
-                    algorithm_name = 'polarization'
-                else:
-                    algorithm_name = 'scan'
+            if self._storage_name.has_polarization:
+                algorithm_name = 'polarization'
+            elif self._storage_name.is_derived_sitelle:
+                algorithm_name = 'scan'
             observation = cc.change_to_composite(observation, algorithm_name)
 
         if (
@@ -1332,6 +1328,14 @@ class InstrumentType(cc.TelescopeMapping):
                         _repair_filename_provenance_value,
                         observation.observation_id,
                     )
+                # the derived plane itself is not considered one of the inputs
+                delete_these = []
+                for ip in plane.provenance.inputs:
+                    if ip.get_product_id().endswith(self._storage_name.product_id):
+                        delete_these.append(ip)
+                for entry in delete_these:
+                    plane.provenance.inputs.remove(entry)
+
             self.update_plane()
             # this is here, because the bits that are being copied have been
             # created/modified by the update_chunk call
@@ -2136,7 +2140,8 @@ class Sitelle(InstrumentType):
 
         # if the 'p' plane exists, the observation id is the same as the
         # plane id, so copy the metadata to the 'z' plane
-        z_plane_key = observation.observation_id.replace('p', 'z')
+        z_plane_key = self._storage_name.product_id.replace('p', 'z')
+        p_plane_key = self._storage_name.product_id.replace('z', 'p')
         temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
         z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
 
@@ -2151,10 +2156,10 @@ class Sitelle(InstrumentType):
                 z_artifact_key
             ].meta_producer = z_plane.meta_producer
 
-            if observation.observation_id in observation.planes.keys():
+            if p_plane_key in observation.planes.keys():
                 # replicate the plane-level information from the p plane to the
                 # z plane
-                p_plane = observation.planes[observation.observation_id]
+                p_plane = observation.planes[p_plane_key]
                 temp = self._storage_name.file_uri.replace(
                     '.hdf5', '.fits.fz'
                 )
@@ -3286,11 +3291,8 @@ def _repair_filename_provenance_value(value, obs_id):
     # FILENAM2= '2460504o'           / Base filename at acquisition
     # FILENAM3= '2460505o'           / Base filename at acquisition
     # FILENAM4= '2460506o'           / Base filename at acquisition
-    prov_prod_id = None
-    prov_obs_id = None
-    if value != obs_id:
-        prov_prod_id = value
-        prov_obs_id = value[:-1]
+    prov_prod_id = value
+    prov_obs_id = value[:-1]
     logging.debug(f'End _repair_filename_provenance_value')
     return prov_obs_id, prov_prod_id
 

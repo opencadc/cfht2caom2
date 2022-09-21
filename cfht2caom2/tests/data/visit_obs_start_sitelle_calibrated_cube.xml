@@ -1,6 +1,6 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:CompositeObservation" caom2:id="00000000-0000-0000-ef95-0168d041149a" caom2:lastModified="2019-02-09T03:16:03.059" caom2:maxLastModified="2019-10-05T03:27:37.660" caom2:metaChecksum="md5:fe3451d8c986ce84ba4006147fca96db" caom2:accMetaChecksum="md5:ed9c7d5c835c6eb5e089a92a71391e1e">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2359320p</caom2:observationID>
+  <caom2:observationID>2359320</caom2:observationID>
   <caom2:metaRelease>2018-12-07T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2359320</caom2:sequenceNumber>
   <caom2:algorithm>
