@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="fcbe0c75-5ad8-44fa-a5cb-392ab3be1548" caom2:lastModified="2019-11-26T17:26:39.310" caom2:maxLastModified="2019-11-26T19:52:43.275" caom2:metaChecksum="md5:092c3ca48c7e7aa984e92acb81f7418a" caom2:accMetaChecksum="md5:38b7a551dc3a8e3feadd0c1267b2f1cb" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2445397p</caom2:observationID>
+  <caom2:observationID>2445397</caom2:observationID>
   <caom2:metaRelease>2019-10-01T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2445397</caom2:sequenceNumber>
   <caom2:algorithm>

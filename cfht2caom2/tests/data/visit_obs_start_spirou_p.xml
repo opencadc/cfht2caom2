@@ -1,6 +1,6 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="78da17d4-fe25-4f6c-8bf8-a28cb795b4f6" caom2:lastModified="2019-12-18T01:30:05.001" caom2:maxLastModified="2021-11-06T16:42:24.488" caom2:metaChecksum="md5:b2281aca7b0fa0d1b57c884d1fa6abbf" caom2:accMetaChecksum="md5:68925cea58198ef3ed8b372308521111">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2446341p</caom2:observationID>
+  <caom2:observationID>2446341</caom2:observationID>
   <caom2:metaRelease>2024-01-31T00:00:00.000</caom2:metaRelease>
   <caom2:metaReadGroups>
     <caom2:groupURI>ivo://cadc.nrc.ca/gms?CFHT-19BP40</caom2:groupURI>

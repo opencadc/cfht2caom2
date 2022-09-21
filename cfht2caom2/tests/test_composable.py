@@ -914,9 +914,9 @@ def test_run_by_builder_hdf5_first(
     # also make sure the SCRAPE task works, so ensure
     # there's no need for credentials, or CADC library clients
 
-    test_obs_id = '2384125p'
+    test_obs_id = '2384125'
     test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
-    fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
+    fits_fqn = f'{test_dir}/{test_obs_id}p.fits.header'
     hdf5_fqn = f'{test_dir}/2384125z.hdf5'
     actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
     expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'

@@ -342,27 +342,23 @@ class CFHTName(StorageName):
         self._suffix = self._file_id[-1]
 
     def set_obs_id(self):
-        if self._instrument in [Inst.MEGAPRIME, Inst.MEGACAM]:
-            # SF - slack - 02-04-20
-            # - MegaCam - the logic should be probably be 2 planes: p
-            # and o for science. - all cfht exposures are sorted by EXPNUM
-            # if i understand their data acquisition. b,f,d,x should be 1
-            # plane observations. - my assumption is that the b,f,d,x have
-            # no reason to have a processed equivalent.
-            if (
-                self._suffix in ['b', 'd', 'f', 'x']
-                or self._suffix.isnumeric()
-            ):
-                self._obs_id = self._file_id
-            else:
-                self._obs_id = self._file_id[:-1]
-        else:
-            if self.is_simple and not self.is_master_cal:
-                self._obs_id = self._file_id[:-1]
-            else:
-                self._obs_id = self._file_id
-                if self.is_derived_sitelle:
-                    self._obs_id = self._obs_id.replace(self._suffix, 'p')
+        # SF - 14-09-22
+        # observation ID should be run ID
+        #
+        # which over-rides this:
+        #
+        # SF - slack - 02-04-20
+        # - MegaCam - the logic should be probably be 2 planes: p
+        # and o for science. - all cfht exposures are sorted by EXPNUM
+        # if i understand their data acquisition. b,f,d,x should be 1
+        # plane observations. - my assumption is that the b,f,d,x have
+        # no reason to have a processed equivalent.
+
+        try:
+            ignore = int(self._file_id[:-1])
+            self._obs_id = self._file_id[:-1]
+        except ValueError as e:
+            self._obs_id = self._file_id
 
     @staticmethod
     def remove_extensions(name):
