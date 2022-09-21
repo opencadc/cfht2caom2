@@ -344,6 +344,7 @@ class CFHTName(StorageName):
     def set_obs_id(self):
         # SF - 14-09-22
         # observation ID should be run ID
+        # Laurie Rosseau-Nepton - 11-08-22 - remove the 'p'
         #
         # which over-rides this:
         #
