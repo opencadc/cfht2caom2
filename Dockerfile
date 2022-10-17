@@ -5,11 +5,12 @@ ADD https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tgz /usr/local/src/
 
 RUN apt-get update --no-install-recommends \
     && apt-get install -y \
+        curl \
         gcc \
         g++ \
         git \
         libc6-dev \
-        libcfitsio-bin \
+        libcfitsio-dev \
         libgdbm-dev \
         libncursesw5-dev \
         libreadline-gplv2-dev \
