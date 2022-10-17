@@ -100,7 +100,7 @@ TEST_DIR = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/composable_test'
 
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('caom2pipe.astro_composable.check_fits')
+@patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cadcutils.net.ws.WsCapabilities.get_access_url')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
@@ -137,7 +137,7 @@ def test_run_by_builder(
 @patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('caom2pipe.astro_composable.check_fits')
+@patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
@@ -175,7 +175,7 @@ def test_run_store(
 
 @patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('caom2pipe.astro_composable.check_fits')
+@patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 @patch('caom2pipe.client_composable.CadcTapClient')
@@ -940,7 +940,7 @@ def test_run_by_builder_hdf5_first(
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
-@patch('caom2pipe.astro_composable.check_fits')
+@patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')

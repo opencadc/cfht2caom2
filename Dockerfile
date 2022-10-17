@@ -44,6 +44,17 @@ WORKDIR /usr/src/app
 
 ARG OPENCADC_BRANCH=master
 ARG OPENCADC_REPO=opencadc
+ARG FITSVERIFY_VERSION=4.20
+ARG FITSVERIFY_URL=https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-${FITSVERIFY_VERSION}.tar.gz
+
+RUN curl -LSs -o /usr/local/src/fitsverify-${FITSVERIFY_VERSION}.tar.gz ${FITSVERIFY_URL}
+
+RUN cd /usr/local/src \
+  && tar zxvf fitsverify-${FITSVERIFY_VERSION}.tar.gz \
+  && cd fitsverify-${FITSVERIFY_VERSION} \
+  && gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -I/usr/local/include -L/usr/local/lib -lcfitsio -lm -lnsl \
+  && cp ./fitsverify /usr/local/bin/ \
+  && ldconfig
 
 RUN git clone https://github.com/opencadc/caom2tools.git && \
     cd caom2tools && \
