@@ -131,7 +131,7 @@ def test_run_by_builder(
         assert repo_mock.return_value.read.called, 'repo read not called'
         assert repo_mock.return_value.create.called, 'repo create not called'
     finally:
-        _cleanup(TEST_DIR)
+        _cleanup(TEST_DIR, 'test_obs_id')
 
 
 @patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
@@ -236,7 +236,7 @@ def test_run_store_retry(
         if os.path.exists(test_failure_fqn):
             test_new_fqn = os.path.join(test_dir_fqn, 'new/1000003f.fits.fz')
             shutil.move(test_failure_fqn, test_new_fqn)
-        _cleanup(test_dir_fqn)
+        _cleanup(test_dir_fqn, '1000003')
 
 
 @patch('caom2pipe.client_composable.ClientCollection')
@@ -286,7 +286,7 @@ def test_run_state(
             test_storage.file_uri == f'cadc:CFHT/{test_f_name}'
         ), 'wrong uri'
     finally:
-        _cleanup(TEST_DIR)
+        _cleanup(TEST_DIR, test_obs_id)
 
 
 # common definitions for the test_run_state_compression* tests
@@ -916,7 +916,7 @@ def test_run_by_builder_hdf5_first(
 
     test_obs_id = '2384125'
     test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
-    fits_fqn = f'{test_dir}/{test_obs_id}p.fits.header'
+    fits_fqn = f'{test_dir}/{test_obs_id}p.fits'
     hdf5_fqn = f'{test_dir}/2384125z.hdf5'
     actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
     expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
@@ -957,9 +957,9 @@ def test_run_by_builder_hdf5_added_to_existing(
         # to make sure the observation is writable to an ams service, and the
         # 'p' metadata gets duplicated correctly
 
-        test_obs_id = '2384125p'
+        test_obs_id = '2384125'
         hdf5_fqn = f'{test_dir}/2384125z.hdf5'
-        fits_fqn = f'{test_dir}/{test_obs_id}.fits.header'
+        fits_fqn = f'{test_dir}/{test_obs_id}p.fits'
         actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
         expected_fqn = f'{test_dir}/all.expected.xml'
         expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
@@ -971,8 +971,7 @@ def test_run_by_builder_hdf5_added_to_existing(
             shutil.copy(expected_hdf5_only_fqn, actual_fqn)
         if not os.path.exists(fits_fqn):
             shutil.copy(
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-                f'{test_obs_id}.fits.header',
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/{test_obs_id}p.fits.header',
                 fits_fqn,
             )
 
@@ -982,7 +981,7 @@ def test_run_by_builder_hdf5_added_to_existing(
 
         _common_execution(test_dir, actual_fqn, expected_fqn)
     finally:
-        _cleanup(test_dir)
+        _cleanup(test_dir, test_obs_id)
 
 
 @patch('cadcutils.net.ws.WsCapabilities.get_access_url')
@@ -1063,12 +1062,13 @@ def test_run_ingest(
             os.chdir(cwd)
 
 
-def _cleanup(test_dir_fqn):
+def _cleanup(test_dir_fqn, obs_id):
     for ii in [
         f'{test_dir_fqn}/logs',
         f'{test_dir_fqn}/logs_0',
         f'{test_dir_fqn}/metrics',
         f'{test_dir_fqn}/rejected',
+        f'{test_dir_fqn}/{obs_id}',
     ]:
         if os.path.exists(ii):
             for entry in os.scandir(ii):

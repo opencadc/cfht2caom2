@@ -2170,14 +2170,13 @@ class Sitelle(InstrumentType):
                 # replicate the plane-level information from the p plane to the
                 # z plane
                 p_plane = observation.planes[p_plane_key]
-                temp = self._storage_name.file_uri.replace(
-                    '.hdf5', '.fits.fz'
-                )
+                temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
                 if temp.count('z') == 1:
                     # uri looks like: cadc:CFHT/2384125p.fits.fz
                     p_artifact_key = temp
                 else:
                     p_artifact_key = temp.replace('z', 'p', 1)
+                self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
                 if p_artifact_key not in p_plane.artifacts.keys():
                     p_artifact_key = self._storage_name.file_uri.replace(
                         'z', 'p', 1

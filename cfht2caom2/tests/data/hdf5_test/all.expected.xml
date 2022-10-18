@@ -621,7 +621,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVN</caom2:ctype>
-                        <caom2:cunit>m**-1</caom2:cunit>
+                        <caom2:cunit>/m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
@@ -1198,7 +1198,7 @@
           <caom2:uri>cadc:CFHT/2384125p.fits</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentType>text/plain</caom2:contentType>
+          <caom2:contentType>application/fits</caom2:contentType>
           <caom2:contentLength>56537</caom2:contentLength>
           <caom2:parts>
             <caom2:part caom2:id="8ede77f3-45c3-4fa8-a4cc-31964821b62a">
@@ -1255,7 +1255,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVN</caom2:ctype>
-                        <caom2:cunit>m**-1</caom2:cunit>
+                        <caom2:cunit>/m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>
