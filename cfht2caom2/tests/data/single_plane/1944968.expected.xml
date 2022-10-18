@@ -187,7 +187,7 @@
                     <caom2:axis>
                       <caom2:axis>
                         <caom2:ctype>WAVN</caom2:ctype>
-                        <caom2:cunit>m**-1</caom2:cunit>
+                        <caom2:cunit>/m</caom2:cunit>
                       </caom2:axis>
                       <caom2:error>
                         <caom2:syser>1.0</caom2:syser>

@@ -226,6 +226,16 @@ class CFHTValueRepair(mc.ValueRepairCache):
             'NONE': 'none',
             'Open': 'none',
         },
+        # PD 17-10-22
+        #
+        # if I change the CUNIT to /m it passes.
+        # in VOUnit (https://www.ivoa.net/documents/VOUnits/20140523/VOUnits-REC-1.0-20140523.pdf)
+        # the table on A.4 (page 33) shows this is division and FITS and VOUnit agree on /m... a few lines down,
+        # "sym raised to power y" differs between FITS and VOU and I tried all the syntaxes in note (9) but none
+        # of them worked.... so looks like wcslib only considers "division" syntax for this unit.
+        #
+        # which over-rides this:
+        #
         # PD 08-04-20
         # the correct way to express "inverse meter" is
         # either  m**-1 or m^-1
@@ -234,7 +244,7 @@ class CFHTValueRepair(mc.ValueRepairCache):
         # to ** so I guess at that time we thought ** was
         # the more common style.
         'chunk.energy.axis.axis.cunit': {
-            '1 / m': 'm**-1',
+            '1 / m': '/m',
         },
     }
 
