@@ -24,7 +24,7 @@
     <caom2:plane caom2:id="3930428c-ea51-436c-b7d8-821dd31a4002" caom2:lastModified="2020-04-07T17:57:00.767" caom2:maxLastModified="2020-04-09T02:35:59.622" caom2:metaChecksum="md5:2a1eecc1d9196c69e6f3b47aedb942ea" caom2:accMetaChecksum="md5:5caad5f6c52416df302953ae5ab4293c" caom2:metaProducer="cfht2caom2/0.3.2">
       <caom2:productID>2477185v</caom2:productID>
       <caom2:metaRelease>2020-02-24T00:00:00.000</caom2:metaRelease>
-      <caom2:dataRelease>2021-03-20T00:00:00.000</caom2:dataRelease>
+      <caom2:dataRelease>2021-02-23T06:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>cube</caom2:dataProductType>
       <caom2:calibrationLevel>2</caom2:calibrationLevel>
       <caom2:provenance>

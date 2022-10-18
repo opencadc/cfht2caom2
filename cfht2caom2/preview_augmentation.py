@@ -68,6 +68,7 @@
 #
 
 import aplpy
+import h5py
 import logging
 import os
 
@@ -110,11 +111,11 @@ class CFHTPreview(mc.PreviewVisitor):
 
     def generate_plots(self, obs_id):
         self._logger.debug(f'Begin generate_plots for {obs_id}')
-        if (
-            self._instrument is md.Inst.SITELLE
-            and self._storage_name.suffix == 'p'
-        ):
-            count = self._sitelle_calibrated_cube()
+        if self._instrument is md.Inst.SITELLE and (self._storage_name.suffix == 'p' or self._storage_name.hdf5):
+            if self._storage_name.suffix == 'p':
+                count = self._sitelle_calibrated_cube()
+            else:
+                count = self._sitelle_hdf5()
         elif (
             self._instrument is md.Inst.ESPADONS
             and self._storage_name.suffix in ['i', 'p']
@@ -973,6 +974,17 @@ class CFHTPreview(mc.PreviewVisitor):
         )
         self.add_to_delete(self._zoom_fqn)
         return 3
+
+    def _sitelle_hdf5(self):
+        self._logger.debug(f'Do sitelle hdf5 preview augmentation with {self._science_fqn}')
+        # Laurie Rousseau-Nepton - 11-08-22
+        with h5py.File(self._science_fqn, 'r') as f:
+            dataset = f.get('deep_frame')
+            plt.figure(figsize=(10.24, 10.24), dpi=200)
+            plt.axis('off')
+            plt.imshow(np.log10(dataset), vmin=4.5, vmax=5.5)
+            plt.savefig(self._preview_fqn, bbox_inches='tight', format='jpg')
+        return self._save_figure()
 
     def _create_rgb_inputs(
         self,
