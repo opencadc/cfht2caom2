@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:type="caom2:DerivedObservation" caom2:id="901a7a26-207c-4465-8099-586ed308a4c8" caom2:metaChecksum="md5:02ae68f60e408ec896e13fad2deb59d9" caom2:accMetaChecksum="md5:1696f836cfac2b4b9ade47afc7aaf48c" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2752885p</caom2:observationID>
+  <caom2:observationID>2752885</caom2:observationID>
   <caom2:metaRelease>2022-04-25T00:00:00.000</caom2:metaRelease>
   <caom2:algorithm>
     <caom2:name>ORB</caom2:name>
@@ -133,24 +133,6 @@
               </caom2:chunks>
             </caom2:part>
           </caom2:parts>
-        </caom2:artifact>
-        <caom2:artifact caom2:id="f222281d-f336-4392-a827-34ef9c15d8da">
-          <caom2:uri>ad:CFHT/2752885z_preview_1024.jpg</caom2:uri>
-          <caom2:productType>preview</caom2:productType>
-          <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentType>image/jpeg</caom2:contentType>
-          <caom2:contentLength>103684</caom2:contentLength>
-          <caom2:contentChecksum>md5:c17382d7c7a738ef5c3682eba663bf35</caom2:contentChecksum>
-          <caom2:parts/>
-        </caom2:artifact>
-        <caom2:artifact caom2:id="b541ea01-c6e6-40e5-a61a-8a4c6890ac56">
-          <caom2:uri>ad:CFHT/2752885z_preview_256.jpg</caom2:uri>
-          <caom2:productType>thumbnail</caom2:productType>
-          <caom2:releaseType>meta</caom2:releaseType>
-          <caom2:contentType>image/jpeg</caom2:contentType>
-          <caom2:contentLength>11504</caom2:contentLength>
-          <caom2:contentChecksum>md5:ded702279f63b239f2203010aeb1c800</caom2:contentChecksum>
-          <caom2:parts/>
         </caom2:artifact>
       </caom2:artifacts>
     </caom2:plane>

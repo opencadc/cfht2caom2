@@ -149,10 +149,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
         observation = None
         for f_name in LOOKUP[test_name]:
             if 'hdf5' in f_name:
-                source_names = [
-                    f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-                    f'{f_name}'
-                ]
+                source_names = [f'/test_files/{f_name}']
             else:
                 source_names = [
                     f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
@@ -167,9 +164,14 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
             )
             metadata_reader = rdc.FileMetadataReader()
             metadata_reader.set(storage_name)
-            metadata_reader.file_info[
-                storage_name.file_uri
-            ].file_type = 'application/fits'
+            if 'hdf5' in f_name:
+                metadata_reader.file_info[
+                    storage_name.file_uri
+                ].file_type = 'application/x-hdf5'
+            else:
+                metadata_reader.file_info[
+                    storage_name.file_uri
+                ].file_type = 'application/fits'
             kwargs = {
                 'storage_name': storage_name,
                 'metadata_reader': metadata_reader,

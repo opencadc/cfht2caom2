@@ -2150,8 +2150,7 @@ class Sitelle(InstrumentType):
         if self._storage_name.suffix not in ['p', 'z']:
             return
 
-        # if the 'p' plane exists, the observation id is the same as the
-        # plane id, so copy the metadata to the 'z' plane
+        # if the 'p' plane exists, copy the metadata to the 'z' plane
         z_plane_key = self._storage_name.product_id.replace('p', 'z')
         p_plane_key = self._storage_name.product_id.replace('z', 'p')
         temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
@@ -2167,22 +2166,19 @@ class Sitelle(InstrumentType):
             z_plane.artifacts[
                 z_artifact_key
             ].meta_producer = z_plane.meta_producer
-
             if p_plane_key in observation.planes.keys():
                 # replicate the plane-level information from the p plane to the
                 # z plane
                 p_plane = observation.planes[p_plane_key]
                 temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
-                if temp.count('z') == 1:
-                    # uri looks like: cadc:CFHT/2384125p.fits.fz
-                    p_artifact_key = temp
-                else:
-                    p_artifact_key = temp.replace('z', 'p', 1)
+                temp = temp.replace('z', 'p', 1)
+                if temp not in p_plane.artifacts.keys():
+                    temp = self._storage_name.file_uri.replace('.hdf5', '.fits')
+                p_artifact_key = temp
+
                 self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._storage_name.file_uri.replace(
-                        'z', 'p', 1
-                    ).replace('.hdf5', '.fits')
+                    p_artifact_key = self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits')
                     if p_artifact_key not in p_plane.artifacts.keys():
                         p_artifact_key = (
                             self._storage_name.file_uri.replace(
@@ -2640,6 +2636,60 @@ class SitelleHdf5(InstrumentType):
                     to_header['CD1_2'] = cd1_2
                     to_header['CD2_1'] = cd2_1
                     to_header['CD2_2'] = cd2_2
+
+
+class SitelleNoHdf5Metadata(Sitelle):
+    def __init__(self, headers, cfht_name):
+        super().__init__(headers, cfht_name)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the Sitelle-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        meta_producer = mc.get_version(APPLICATION)
+        bp.set('Observation.metaProducer', meta_producer)
+        bp.set('Plane.metaProducer', meta_producer)
+        bp.set('Artifact.metaProducer', meta_producer)
+        bp.set('Chunk.metaProducer', meta_producer)
+
+        # Laurie Rousseau-Nepton - 12-08-22
+        # 'SCIENCE' is ok with me
+        bp.set('Observation.type', 'SCIENCE')
+
+        bp.set('Plane.calibrationLevel', CalibrationLevel.CALIBRATED)
+        bp.set('Plane.dataProductType', DataProductType.CUBE)
+
+        bp.set('Plane.provenance.producer', 'CFHT')
+        bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
+        bp.set('Plane.provenance.name', 'ORBS')
+        bp.set('Plane.provenance.reference', 'http://ascl.net/1409.007')
+
+        if self._storage_name.suffix == 'z':
+            bp.set('Artifact.productType', ProductType.SCIENCE)
+        self._logger.debug('End accumulate_blueprint.')
+
+    def update(self, observation, file_info, clients):
+        self._logger.debug('Begin update.')
+
+        if not isinstance(observation, DerivedObservation):
+            observation = cc.change_to_composite(observation, 'scan')
+
+        self._observation = observation
+        idx = 0
+        self.extension = idx
+        for plane in observation.planes.values():
+            if plane.product_id != self._storage_name.product_id:
+                # do only the work for the applicable plane
+                continue
+            self.plane = plane
+            for artifact in plane.artifacts.values():
+                if artifact.uri != self._storage_name.file_uri:
+                    continue
+                update_artifact_meta(artifact, file_info)
+
+        self._update_sitelle_plane(observation)
+        self._logger.debug('Done update.')
+        return observation
 
 
 class Spirou(InstrumentType):
@@ -3612,9 +3662,12 @@ def factory(headers, cfht_name):
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         temp = Mega(headers, cfht_name)
     elif cfht_name.instrument is md.Inst.SITELLE:
-        if cfht_name.hdf5 and len(headers) > 0:
-            # len => could be an h5 file with no attrs
-            temp = SitelleHdf5(headers, cfht_name)
+        if cfht_name.hdf5:
+            if len(headers) > 0:
+                # len => could be an h5 file with no attrs
+                temp = SitelleHdf5(headers, cfht_name)
+            else:
+                temp = SitelleNoHdf5Metadata(headers, cfht_name)
         else:
             temp = Sitelle(headers, cfht_name)
     elif cfht_name.instrument is md.Inst.SPIROU:

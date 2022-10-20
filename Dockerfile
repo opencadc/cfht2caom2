@@ -10,8 +10,10 @@ RUN apt-get update --no-install-recommends \
         g++ \
         git \
         libc6-dev \
+        libcfitsio-bin \
         libcfitsio-dev \
         libgdbm-dev \
+        libhdf5-dev \
         libncursesw5-dev \
         libreadline-gplv2-dev \
         libsqlite3-dev \

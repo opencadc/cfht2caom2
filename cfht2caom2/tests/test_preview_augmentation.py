@@ -229,7 +229,7 @@ def test_preview_augment():
         mc.StorageName.collection = cfht_name.COLLECTION
         for key, value in test_files.items():
             obs = mc.read_obs_from_file(
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/{key}'
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/visit/{key}'
             )
             if 'wircam' in key:
                 instrument = md.Inst.WIRCAM

@@ -393,6 +393,7 @@ info_calls = [
 ]
 
 
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch(
@@ -404,6 +405,7 @@ def test_run_state_compression_cleanup(
     get_work_mock,
     cache_mock,
     clients_mock,
+    vo_table_mock,
 ):
     # this test works with FITS files, not header-only versions of FITS
     # files, because it's testing the decompression/recompression cycle
@@ -411,6 +413,7 @@ def test_run_state_compression_cleanup(
     get_work_mock.side_effect = _mock_dir_list
 
     clients_mock.return_value.data_client.info.side_effect = info_returns
+    vo_table_mock.side_effect = test_fits2caom2_augmentation._vo_mock
 
     def _check_uris(obs):
         file_info = uris.get(obs.observation_id)
@@ -461,7 +464,7 @@ def test_run_state_compression_cleanup(
             mc.TaskType.INGEST,
             mc.TaskType.MODIFY,
         ]
-        test_config.logging_level = 'DEBUG'
+        test_config.logging_level = 'INFO'
         test_config.log_to_file = True
         test_config.collection = 'CFHT'
         test_config.proxy_file_name = 'cadcproxy.pem'
@@ -470,7 +473,7 @@ def test_run_state_compression_cleanup(
         test_config.features.supports_decompression = True
         test_config.use_local_files = True
         test_config.log_file_directory = f'{tmp_dir_name}/logs'
-        test_config.data_sources = '/test_files'
+        test_config.data_sources = ['/test_files']
         test_config.state_file_name = 'state.yml'
         test_config.retry_failures = False
         test_config.cleanup_files_when_storing = True
@@ -646,6 +649,7 @@ def test_run_state_compression_cleanup(
             os.getcwd = getcwd_orig
 
 
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('caom2pipe.manage_composable.exec_cmd_array')
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
@@ -659,6 +663,7 @@ def test_run_state_compression_commands(
     cache_mock,
     clients_mock,
     exec_mock,
+    vo_table_mock,
 ):
     # this test works with FITS files, not header-only versions of FITS
     # files, because it's testing the decompression/recompression cycle
@@ -667,6 +672,7 @@ def test_run_state_compression_commands(
 
     get_work_mock.side_effect = _mock_dir_list
     clients_mock.return_value.data_client.info.side_effect = info_returns
+    vo_table_mock.side_effect = test_fits2caom2_augmentation._vo_mock
 
     def _mock_exec_cmd_array(arg1, arg2):
         exec_cmd_array(arg1, arg2)
@@ -916,7 +922,7 @@ def test_run_by_builder_hdf5_first(
 
     test_obs_id = '2384125'
     test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
-    fits_fqn = f'{test_dir}/{test_obs_id}p.fits'
+    fits_fqn = f'{test_dir}/{test_obs_id}p.fits.header'
     hdf5_fqn = f'{test_dir}/2384125z.hdf5'
     actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
     expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
@@ -929,40 +935,55 @@ def test_run_by_builder_hdf5_first(
 
     # make sure expected files are present
     if not os.path.exists(hdf5_fqn):
-        shutil.copy(
-            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
-            f'multi_plane/2384125z.hdf5',
-            hdf5_fqn,
-        )
+        shutil.copy(f'/test_files/2384125z.hdf5', hdf5_fqn)
 
-    _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
+    try:
+        _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
+    finally:
+        _cleanup(test_dir, test_obs_id)
 
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
+@patch('caom2utils.data_util.get_local_file_info')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.CAOM2RepoClient')
 @patch('caom2pipe.client_composable.CadcTapClient')
 @patch('caom2pipe.client_composable.StorageClientWrapper')
 def test_run_by_builder_hdf5_added_to_existing(
-    data_mock, tap_mock, repo_mock, fits_check_mock, header_mock, cache_mock
+    data_mock, tap_mock, repo_mock, fits_check_mock, header_mock, file_info_mock, cache_mock
 ):
     test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
+
+    def _make_headers(fqn):
+        if not fqn.endswith('.header)'):
+            fqn = f'{fqn}.header'
+        return ac.make_headers_from_file(fqn)
+
     try:
         warnings.simplefilter('ignore', category=AstropyUserWarning)
         fits_check_mock.return_value = True
-        header_mock.side_effect = ac.make_headers_from_file
+        header_mock.side_effect = _make_headers
 
         # add to an existing observation with an hdf5 file, just using scrape
         # to make sure the observation is writable to an ams service, and the
         # 'p' metadata gets duplicated correctly
 
+        # can't use the real 'p' file and can't do modify, because it runs out of memory
+
         test_obs_id = '2384125'
         hdf5_fqn = f'{test_dir}/2384125z.hdf5'
-        fits_fqn = f'{test_dir}/{test_obs_id}p.fits'
+        fits_fqn = f'{test_dir}/{test_obs_id}p.fits.header'
         actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
         expected_fqn = f'{test_dir}/all.expected.xml'
         expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
+
+        file_info_mock.return_value = FileInfo(
+            id=f'cadc:CFHT/{test_obs_id}p.fits',
+            size=56537,
+            file_type='application/fits',
+            md5sum='abd123',
+        )
 
         # make sure expected files are present
         if not os.path.exists(actual_fqn):
@@ -970,10 +991,7 @@ def test_run_by_builder_hdf5_added_to_existing(
                 os.mkdir(os.path.join(test_dir, 'logs'))
             shutil.copy(expected_hdf5_only_fqn, actual_fqn)
         if not os.path.exists(fits_fqn):
-            shutil.copy(
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/{test_obs_id}p.fits.header',
-                fits_fqn,
-            )
+            shutil.copy(f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/{test_obs_id}p.fits.header', fits_fqn)
 
         # clean up unexpected files
         if os.path.exists(hdf5_fqn):

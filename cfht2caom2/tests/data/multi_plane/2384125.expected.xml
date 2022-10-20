@@ -1200,6 +1200,9 @@
           <caom2:uri>cadc:CFHT/2384125z.hdf5</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>application/x-hdf5</caom2:contentType>
+          <caom2:contentLength>8606365612</caom2:contentLength>
+          <caom2:contentChecksum>md5:1ca4483aac2b46e6281a80d41b36aa39</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="fb9f10bd-9ed7-410a-a803-2f5d8936b733" caom2:lastModified="2019-08-21T17:27:35.985" caom2:maxLastModified="2019-08-21T17:27:35.985" caom2:metaChecksum="md5:68d4577689638a91d214367e02aec79f" caom2:accMetaChecksum="md5:4f8ec6d224acd7f5b02aa017567af6ee">
               <caom2:name>0</caom2:name>

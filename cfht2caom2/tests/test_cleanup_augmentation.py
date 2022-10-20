@@ -75,25 +75,21 @@ import test_fits2caom2_augmentation
 
 def test_cleanup_augmentation():
     test_obs = mc.read_obs_from_file(
-        path.join(
-            test_fits2caom2_augmentation.TEST_DATA_DIR,
-            'visit_obs_start_cleanup.xml',
-        )
+        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_start_cleanup.xml')
     )
     assert len(test_obs.planes) == 3, 'initial conditions failed'
     storage_name = cfht_name.CFHTName(file_name='abc.fits.fz')
     kwargs = {'storage_name': storage_name}
     test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
-    assert len(test_obs.planes) == 1, 'post-test conditions failed'
+    assert len(test_obs.planes) == 2, 'post-test conditions failed'
     assert '1927963p' in test_obs.planes.keys(), 'wrong plane deleted'
+    assert '1927963f' in test_obs.planes.keys(), 'wrong plane deleted'
+    assert '1927963og' not in test_obs.planes.keys(), 'wrong plane deleted'
 
 
 def test_cleanup_augmentation_bad_artifact_uris():
     test_obs = mc.read_obs_from_file(
-        path.join(
-            test_fits2caom2_augmentation.TEST_DATA_DIR,
-            'visit_obs_duplicate_uris_cleanup.xml',
-        )
+        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_duplicate_uris_cleanup.xml')
     )
     assert len(test_obs.planes) == 2, 'initial conditions failed'
     f1 = '2255229o.fits.fz'
@@ -120,10 +116,7 @@ def test_cleanup_augmentation_bad_artifact_uris():
 
 def test_cleanup_edge_case():
     test_obs = mc.read_obs_from_file(
-        path.join(
-            test_fits2caom2_augmentation.TEST_DATA_DIR,
-            'visit_obs_edge_case_cleanup.xml',
-        )
+        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_edge_case_cleanup.xml')
     )
     storage_name = cfht_name.CFHTName(
         file_name='2014318p.fits.fz', instrument=Inst.WIRCAM

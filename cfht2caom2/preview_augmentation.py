@@ -130,7 +130,9 @@ class CFHTPreview(mc.PreviewVisitor):
             else:
                 count = self._do_spirou_intensity_spectrum()
         else:
-            count = self._do_ds9_prev(obs_id)
+            count = 0
+            if not self._storage_name.hdf5:
+                count = self._do_ds9_prev(obs_id)
         self._logger.debug('End generate_plots')
         return count
 
@@ -1060,8 +1062,10 @@ class CFHTPreview(mc.PreviewVisitor):
 
 
 def visit(observation, **kwargs):
+    # default value of SITELLE covers the only known case of undefined instrument, which occurs when a SITELLE HDF5
+    # file has no "attrs"
     previewer = CFHTPreview(
-        observation.instrument.name,
+        observation.instrument.name if observation.instrument is not None else md.Inst.SITELLE.value,
         observation.intent,
         observation.type,
         observation.target,

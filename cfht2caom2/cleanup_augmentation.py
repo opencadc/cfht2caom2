@@ -84,15 +84,13 @@ def visit(observation, **kwargs):
     artifact_count = 0
     delete_list = []
     artifact_delete_list = defaultdict(list)
-    instrument = md.Inst(observation.instrument.name)
+
+    if observation.instrument is None:
+        # a SITELLE observation with only an HDF5 artifact, no cleanup required
+        return observation
+
     for plane in observation.planes.values():
         if plane.product_id.endswith('og'):
-            delete_list.append(plane.product_id)
-        if (
-            plane.product_id[-1:] in ['b', 'd', 'f', 'x']
-            and observation.observation_id != plane.product_id
-            and instrument in [md.Inst.MEGACAM, md.Inst.MEGAPRIME]
-        ):
             delete_list.append(plane.product_id)
 
         if storage_name.product_id != plane.product_id:
@@ -103,12 +101,12 @@ def visit(observation, **kwargs):
         # obsolete ones
         if (
             (
-                instrument is md.Inst.ESPADONS
+                observation.instrument.name is md.Inst.ESPADONS
                 and storage_name.suffix == 'i'
                 and len(plane.artifacts) > 3
             )
             or (
-                instrument is md.Inst.SPIROU
+                observation.instrument.name is md.Inst.SPIROU
                 and storage_name.suffix in ['e', 'p', 's', 't', 'v']
                 and len(plane.artifacts) > 3
             )
