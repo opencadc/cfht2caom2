@@ -2577,27 +2577,6 @@ class SitelleHdf5(InstrumentType):
             if cd1_1 is None:
                 hdr = fits.Header()
                 SitelleHdf5._from_pc_to_cd(header, hdr)
-                #     from astropy.io import fits
-                #
-                #     pc1_1 = header.get('PC1_1')
-                #     if pc1_1 is not None:
-                #         cdelt1 = mc.to_float(header.get('CDELT1'))
-                #         if cdelt1 is None:
-                #             cd1_1 = mc.to_float(header.get('PC1_1'))
-                #             cd1_2 = mc.to_float(header.get('PC1_2'))
-                #             cd2_1 = mc.to_float(header.get('PC2_1'))
-                #             cd2_2 = mc.to_float(header.get('PC2_2'))
-                #         else:
-                #             cdelt2 = mc.to_float(header.get('CDELT2'))
-                #             cd1_1 = cdelt1 * mc.to_float(header.get('PC1_1'))
-                #             cd1_2 = cdelt1 * mc.to_float(header.get('PC1_2'))
-                #             cd2_1 = cdelt2 * mc.to_float(header.get('PC2_1'))
-                #             cd2_2 = cdelt2 * mc.to_float(header.get('PC2_2'))
-                #         hdr['CD1_1'] = cd1_1
-                #         hdr['CD1_2'] = cd1_2
-                #         hdr['CD2_1'] = cd2_1
-                #         hdr['CD2_2'] = cd2_2
-
                 for kw in ['CDELT1', 'CDELT2', 'CRPIX1', 'CRPIX2', 'CRVAL1', 'CRVAL2',
                            'CTYPE1', 'CTYPE2', 'CUNIT1', 'CUNIT2', 'NAXIS', 'NAXIS1', 'NAXIS2',
                            'OBS_DATE', 'OBS_TIME', 'EQUINOX'
