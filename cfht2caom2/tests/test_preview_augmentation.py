@@ -137,6 +137,7 @@ def test_preview_augment():
         'visit_obs_start_spirou_p.xml': ['2446341p.fits'],
         'visit_obs_start_spirou_p2.xml': ['2630033p.fits'],
         'visit_obs_start_wircam_fits.xml': ['1334131g.fits'],
+        'visit_obs_start_sitelle_hdf5.xml': ['2752885z.hdf5'],
     }
 
     test_checksums = {
@@ -228,7 +229,7 @@ def test_preview_augment():
         mc.StorageName.collection = cfht_name.COLLECTION
         for key, value in test_files.items():
             obs = mc.read_obs_from_file(
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/{key}'
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/visit/{key}'
             )
             if 'wircam' in key:
                 instrument = md.Inst.WIRCAM
@@ -295,8 +296,11 @@ def test_preview_augment():
                 #     test_result['artifacts'] == check_number
                 # ), f'artifacts should be added {f_name}'
 
-                if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
-                    end_artifact_count = 6
+                if instrument is md.Inst.SITELLE:
+                    if test_name.suffix == 'p':
+                        end_artifact_count = 6
+                    elif test_name.suffix == 'z':
+                        end_artifact_count = 3
                 assert (
                     len(obs.planes[test_name.product_id].artifacts)
                     == end_artifact_count

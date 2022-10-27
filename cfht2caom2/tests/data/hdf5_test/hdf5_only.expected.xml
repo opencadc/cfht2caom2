@@ -15,7 +15,9 @@
           <caom2:uri>cadc:CFHT/2384125z.hdf5</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
-          <caom2:contentChecksum>md5:fd64ff2460857e840daa79e663115d4b</caom2:contentChecksum>
+          <caom2:contentType>application/x-hdf5</caom2:contentType>
+          <caom2:contentLength>8606365612</caom2:contentLength>
+          <caom2:contentChecksum>md5:1ca4483aac2b46e6281a80d41b36aa39</caom2:contentChecksum>
           <caom2:parts/>
         </caom2:artifact>
       </caom2:artifacts>

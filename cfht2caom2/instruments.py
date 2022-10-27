@@ -180,7 +180,8 @@ import logging
 import math
 import os
 
-from datetime import timedelta
+from astropy import units
+from astropy.io import fits
 from enum import Enum
 
 from caom2 import Axis, Slice, ObservableAxis, Chunk, DataProductType
@@ -1900,6 +1901,7 @@ class Mega(InstrumentType):
             'Plane.provenance.reference',
             'http://www.cfht.hawaii.edu/Instruments/Elixir/',
         )
+        bp.set('Chunk.energy.axis.function.naxis', 1)
         self._logger.debug('Done accumulate_blueprint.')
 
     def _is_derived(self, obs_id):
@@ -2114,9 +2116,9 @@ class Sitelle(InstrumentType):
                 'REL_DATE', self._headers[ext].get('DATE-OBS')
             )
             if rel_date is not None:
-                rel_date_dt = mc.make_time(rel_date)
-                # add approximately 13 months
-                result = rel_date_dt + timedelta(days=13 * 30)
+                temp = ac.get_datetime(rel_date) + 1 * units.year
+                temp.format = 'isot'
+                result = temp.value
         else:
             result = super().get_plane_data_release(ext)
         return result
@@ -2148,8 +2150,7 @@ class Sitelle(InstrumentType):
         if self._storage_name.suffix not in ['p', 'z']:
             return
 
-        # if the 'p' plane exists, the observation id is the same as the
-        # plane id, so copy the metadata to the 'z' plane
+        # if the 'p' plane exists, copy the metadata to the 'z' plane
         z_plane_key = self._storage_name.product_id.replace('p', 'z')
         p_plane_key = self._storage_name.product_id.replace('z', 'p')
         temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
@@ -2165,23 +2166,19 @@ class Sitelle(InstrumentType):
             z_plane.artifacts[
                 z_artifact_key
             ].meta_producer = z_plane.meta_producer
-
             if p_plane_key in observation.planes.keys():
                 # replicate the plane-level information from the p plane to the
                 # z plane
                 p_plane = observation.planes[p_plane_key]
-                temp = self._storage_name.file_uri.replace(
-                    '.hdf5', '.fits.fz'
-                )
-                if temp.count('z') == 1:
-                    # uri looks like: cadc:CFHT/2384125p.fits.fz
-                    p_artifact_key = temp
-                else:
-                    p_artifact_key = temp.replace('z', 'p', 1)
+                temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
+                temp = temp.replace('z', 'p', 1)
+                if temp not in p_plane.artifacts.keys():
+                    temp = self._storage_name.file_uri.replace('.hdf5', '.fits')
+                p_artifact_key = temp
+
+                self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
                 if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._storage_name.file_uri.replace(
-                        'z', 'p', 1
-                    ).replace('.hdf5', '.fits')
+                    p_artifact_key = self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits')
                     if p_artifact_key not in p_plane.artifacts.keys():
                         p_artifact_key = (
                             self._storage_name.file_uri.replace(
@@ -2288,6 +2285,7 @@ class Sitelle(InstrumentType):
         # CW
         # Be able to handle any of the 3 wcs systems used
         if cd1_1 is None:
+            # SitelleHdf5._from_pc_to_cd(header, header)
             pc1_1 = header.get('PC1_1')
             if pc1_1 is not None:
                 cdelt1 = mc.to_float(header.get('CDELT1'))
@@ -2372,6 +2370,305 @@ class Sitelle(InstrumentType):
         self._logger.debug(
             f'End _update_position for {self._storage_name.obs_id}'
         )
+
+
+class SitelleHdf5(InstrumentType):
+    def __init__(self, headers, cfht_name):
+        super().__init__(headers, cfht_name)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the Sitelle-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        meta_producer = mc.get_version(APPLICATION)
+        bp.set('Observation.metaProducer', meta_producer)
+        bp.set('Plane.metaProducer', meta_producer)
+        bp.set('Artifact.metaProducer', meta_producer)
+        bp.set('Chunk.metaProducer', meta_producer)
+
+        bp.configure_position_axes((1, 2))
+        bp.configure_time_axis(3)
+        if self._storage_name.has_energy:
+            bp.configure_energy_axis(4)
+
+        bp.set('Observation.metaRelease', (['OBS_DATE'], None))
+        # Laurie Rousseau-Nepton - 12-08-22
+        # 'SCIENCE' is ok with me
+        bp.set('Observation.type', 'SCIENCE')
+
+        if self._storage_name.suffix == 'v':
+            bp.set('Observation.intent', ObservationIntentType.SCIENCE)
+            bp.set(
+                'Observation.sequenceNumber',
+                self._storage_name.product_id[:-1],
+            )
+            bp.set('Plane.provenance.version', (['PROGRAM'], None))
+            bp.set('Artifact.productType', ProductType.SCIENCE)
+
+        bp.set('Observation.algorithm.name', (['PROGRAM'], None))
+        bp.set('Observation.instrument.name', self._storage_name.instrument.value)
+
+        bp.set('Observation.proposal.id', '_get_proposal_id()')
+        bp.set('Observation.proposal.project', '_get_proposal_project()')
+        bp.set('Observation.proposal.title', 'get_proposal_title()')
+
+        bp.set('Observation.target.name', (['object_name'], None))
+        bp.set('Observation.target_position.coordsys', (['RADESYS'], None))
+        bp.set('Observation.target_position.point.cval1', (['target_x'], None))
+        bp.set('Observation.target_position.point.cval2', (['target_y'], None))
+
+        bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+        bp.set('Plane.dataProductType', DataProductType.CUBE)
+        bp.set('Plane.dataRelease', '_get_plane_data_release()')
+        bp.set('Plane.metaRelease', (['OBS_DATE'], None))
+
+        bp.set('Plane.provenance.producer', 'CFHT')
+        bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
+        bp.set('Plane.provenance.lastExecuted', (['DATE'], None))
+        bp.set('Plane.provenance.name', 'ORBS')
+        bp.set('Plane.provenance.reference', 'http://ascl.net/1409.007')
+
+        if self._storage_name.suffix == 'z':
+            bp.set('Artifact.productType', ProductType.SCIENCE)
+
+        # energy
+        bp.set('Chunk.energy.bandpassName', (['filter_name'], None))
+        bp.set('Chunk.energy.resolvingPower', '_get_energy_resolving_power()')
+        bp.set('Chunk.energy.specsys', 'TOPOCENT')
+        bp.set('Chunk.energy.axis.function.naxis', 1)
+        bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
+        bp.set('Chunk.energy.axis.axis.cunit', 'nm')
+        bp.set('Chunk.energy.axis.range.start.pix', 0.5)
+        bp.set('Chunk.energy.axis.range.start.val', (['filter_nm_min'], None))
+        bp.set('Chunk.energy.axis.range.end.pix', 1.5)
+        bp.set('Chunk.energy.axis.range.end.val', (['filter_nm_max'], None))
+
+        # time
+        bp.set('Chunk.time.exposure', '_get_exposure()')
+        bp.set('Chunk.time.resolution', (['exposure_time'], None))
+        bp.set('Chunk.time.timesys', 'UTC')
+        bp.set('Chunk.time.axis.axis.ctype', 'TIME')
+        bp.set('Chunk.time.axis.axis.cunit', 'd')
+        bp.set('Chunk.time.axis.error.syser', 0.0000001)
+        bp.set('Chunk.time.axis.error.rnder', 0.0000001)
+        bp.set('Chunk.time.axis.function.naxis', 1)
+        bp.set('Chunk.time.axis.function.delta', (['exposure_time'], None))
+        bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
+        bp.set('Chunk.time.axis.function.refCoord.val', '_get_datetime()')
+
+        self._logger.debug('End accumulate_blueprint.')
+
+    def _get_datetime(self, ext):
+        result = None
+        d = self._headers[ext].get('OBS_DATE')
+        t = self._headers[ext].get('OBS_TIME')
+        if d is not None and t is not None:
+            dt = f'{d} {t}'
+            result = ac.get_datetime(dt).value
+        return result
+
+    def _get_energy_resolving_power(self, ext):
+        result = None
+        # Laurie Rousseau-Nepton - 11-08-22
+        # Resolving Power could be given at the central wavelength of the filter.
+        # The formula is R = 1/lambda[nm]* (2*(STEP[nm]*(NAXIS3-zpd_index))/1.2067
+        step = self._headers[ext].get('STEP')
+        zpd_index = self._headers[ext].get('zpd_index')
+        naxis_3 = self._headers[ext].get('step_nb')
+        filter_max = self._headers[ext].get('filter_nm_max')
+        filter_min = self._headers[ext].get('filter_nm_min')
+        wl = None
+        if filter_max is not None and filter_min is not None:
+            wl = (filter_min + filter_max) / 2
+        if step is not None and zpd_index is not None and naxis_3 is not None and wl is not None:
+            result = 1 / wl * 2 * (step * (naxis_3 - zpd_index)) / 1.2067
+        return result
+
+    def _get_exposure(self, ext):
+        # Laurie Rousseau-Nepton - 11-08-22
+        # Int. Time could be the total (multiplied by the cube spectral dimension f.attrs.get(‘NAXIS3’)
+        result = None
+        exposure = self._headers[ext].get('exposure_time')
+        naxis_3 = self._headers[ext].get('step_nb')
+        if exposure is not None and naxis_3 is not None:
+            result = exposure * naxis_3
+        return result
+
+    def _get_plane_data_release(self, ext):
+        # Laurie Rousseau-Nepton - 11-08-22
+        # It is always one year for all program except the LP P41 which is public right away.
+        result = None
+        d = self._headers[ext].get('OBS_DATE')
+        if d is not None:
+            program = self._headers[ext].get('PROGRAM')
+            temp = ac.get_datetime(d)
+            if program is None or program != 'LP P41':
+                temp = temp + 1 * units.year
+            temp.format = 'isot'
+            result = temp.value
+        return result
+
+    def _get_proposal_id(self, ext):
+        result = None
+        image_path = self._headers[ext].get('image_list_path_2')
+        if image_path is not None:
+            bits = image_path.split('/')
+            if len(bits) >= 5:
+                result = bits[4]
+        return result
+
+    def _get_proposal_project(self, ext):
+        # Laurie Rousseau-Nepton - 11-08-22
+        result = None
+        image_path = self._headers[ext].get('image_list_path_2')
+        if image_path is not None:
+            bits = image_path.split('/')
+            if len(bits) >= 6:
+                result = md.cache.get_program(bits[5])
+        return result
+
+    def update(self, observation, file_info, clients):
+        self._logger.debug('Begin update.')
+
+        if not isinstance(observation, DerivedObservation):
+            # Laurie Rousseau-Nepton - 12-08-22
+            # It could be the attrs(‘program’)
+            observation = cc.change_to_composite(observation, self._headers[0].get('PROGRAM'))
+
+        self._observation = observation
+        idx = 0
+        self.extension = idx
+        for plane in observation.planes.values():
+            if plane.product_id != self._storage_name.product_id:
+                # do only the work for the applicable plane
+                continue
+
+            self.plane = plane
+            for artifact in plane.artifacts.values():
+                if artifact.uri != self._storage_name.file_uri:
+                    continue
+                update_artifact_meta(artifact, file_info)
+
+                for part in artifact.parts.values():
+                    for chunk in part.chunks:
+                        self.update_position(chunk)
+                        # there are no cutouts, so these values don't make sense
+                        chunk.position_axis_1 = None
+                        chunk.position_axis_2 = None
+                        chunk.energy_axis = None
+                        chunk.time_axis = None
+                        if chunk.energy is not None and chunk.energy.axis is not None:
+                            # need to set the function.naxis, otherwise axis construction
+                            # fails, but energy is a range, not a function
+                            chunk.energy.axis.function = None
+            self.update_plane()
+
+        InstrumentType.value_repair.repair(observation)
+        self._logger.debug('Done update.')
+        return observation
+
+    def update_position(self, chunk):
+        self._logger.debug(
+            f'Begin update_position_function for {self._storage_name.obs_id}'
+        )
+        if chunk.position is not None:
+            header = self._headers[self._extension]
+            cd1_1 = header.get('CD1_1')
+            if cd1_1 is None:
+                hdr = fits.Header()
+                SitelleHdf5._from_pc_to_cd(header, hdr)
+                for kw in ['CDELT1', 'CDELT2', 'CRPIX1', 'CRPIX2', 'CRVAL1', 'CRVAL2',
+                           'CTYPE1', 'CTYPE2', 'CUNIT1', 'CUNIT2', 'NAXIS', 'NAXIS1', 'NAXIS2',
+                           'OBS_DATE', 'OBS_TIME', 'EQUINOX'
+                           ]:
+                    hdr[kw] = header.get(kw)
+                wcs_parser = FitsWcsParser(
+                    hdr, self._storage_name.obs_id, self._extension
+                )
+                wcs_parser.augment_position(chunk)
+        self._logger.debug(
+            f'End update_function_position for {self._storage_name.obs_id}'
+        )
+
+    @staticmethod
+    def _from_pc_to_cd(from_header, to_header):
+            cd1_1 = from_header.get('CD1_1')
+            # caom2IngestSitelle.py, l745
+            # CW
+            # Be able to handle any of the 3 wcs systems used
+            if cd1_1 is None:
+                pc1_1 = from_header.get('PC1_1')
+                if pc1_1 is not None:
+                    cdelt1 = mc.to_float(from_header.get('CDELT1'))
+                    if cdelt1 is None:
+                        cd1_1 = mc.to_float(from_header.get('PC1_1'))
+                        cd1_2 = mc.to_float(from_header.get('PC1_2'))
+                        cd2_1 = mc.to_float(from_header.get('PC2_1'))
+                        cd2_2 = mc.to_float(from_header.get('PC2_2'))
+                    else:
+                        cdelt2 = mc.to_float(from_header.get('CDELT2'))
+                        cd1_1 = cdelt1 * mc.to_float(from_header.get('PC1_1'))
+                        cd1_2 = cdelt1 * mc.to_float(from_header.get('PC1_2'))
+                        cd2_1 = cdelt2 * mc.to_float(from_header.get('PC2_1'))
+                        cd2_2 = cdelt2 * mc.to_float(from_header.get('PC2_2'))
+                    to_header['CD1_1'] = cd1_1
+                    to_header['CD1_2'] = cd1_2
+                    to_header['CD2_1'] = cd2_1
+                    to_header['CD2_2'] = cd2_2
+
+
+class SitelleNoHdf5Metadata(Sitelle):
+    def __init__(self, headers, cfht_name):
+        super().__init__(headers, cfht_name)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the Sitelle-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        meta_producer = mc.get_version(APPLICATION)
+        bp.set('Observation.metaProducer', meta_producer)
+        bp.set('Plane.metaProducer', meta_producer)
+        bp.set('Artifact.metaProducer', meta_producer)
+        bp.set('Chunk.metaProducer', meta_producer)
+
+        # Laurie Rousseau-Nepton - 12-08-22
+        # 'SCIENCE' is ok with me
+        bp.set('Observation.type', 'SCIENCE')
+
+        bp.set('Plane.calibrationLevel', CalibrationLevel.CALIBRATED)
+        bp.set('Plane.dataProductType', DataProductType.CUBE)
+
+        bp.set('Plane.provenance.producer', 'CFHT')
+        bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
+        bp.set('Plane.provenance.name', 'ORBS')
+        bp.set('Plane.provenance.reference', 'http://ascl.net/1409.007')
+
+        if self._storage_name.suffix == 'z':
+            bp.set('Artifact.productType', ProductType.SCIENCE)
+        self._logger.debug('End accumulate_blueprint.')
+
+    def update(self, observation, file_info, clients):
+        self._logger.debug('Begin update.')
+
+        if not isinstance(observation, DerivedObservation):
+            observation = cc.change_to_composite(observation, 'scan')
+
+        self._observation = observation
+        idx = 0
+        self.extension = idx
+        for plane in observation.planes.values():
+            if plane.product_id != self._storage_name.product_id:
+                # do only the work for the applicable plane
+                continue
+            self.plane = plane
+            for artifact in plane.artifacts.values():
+                if artifact.uri != self._storage_name.file_uri:
+                    continue
+                update_artifact_meta(artifact, file_info)
+
+        self._update_sitelle_plane(observation)
+        self._logger.debug('Done update.')
+        return observation
 
 
 class Spirou(InstrumentType):
@@ -3344,7 +3641,14 @@ def factory(headers, cfht_name):
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         temp = Mega(headers, cfht_name)
     elif cfht_name.instrument is md.Inst.SITELLE:
-        temp = Sitelle(headers, cfht_name)
+        if cfht_name.hdf5:
+            if len(headers) > 0:
+                # len => could be an h5 file with no attrs
+                temp = SitelleHdf5(headers, cfht_name)
+            else:
+                temp = SitelleNoHdf5Metadata(headers, cfht_name)
+        else:
+            temp = Sitelle(headers, cfht_name)
     elif cfht_name.instrument is md.Inst.SPIROU:
         temp = Spirou(headers, cfht_name)
     elif cfht_name.instrument is md.Inst.WIRCAM:

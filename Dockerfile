@@ -10,8 +10,10 @@ RUN apt-get update --no-install-recommends \
         g++ \
         git \
         libc6-dev \
+        libcfitsio-bin \
         libcfitsio-dev \
         libgdbm-dev \
+        libhdf5-dev \
         libncursesw5-dev \
         libreadline-gplv2-dev \
         libsqlite3-dev \
@@ -56,6 +58,19 @@ RUN cd /usr/local/src \
   && gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -I/usr/local/include -L/usr/local/lib -lcfitsio -lm -lnsl \
   && cp ./fitsverify /usr/local/bin/ \
   && ldconfig
+
+ARG H5CHECK_VERSION=2.0.1
+ARG H5CHECK_URL=https://support.hdfgroup.org/ftp/HDF5/tools/h5check/src/h5check-${H5CHECK_VERSION}.tar.gz 
+
+RUN cd /tmp && \
+    curl -LSs ${H5CHECK_URL} && \
+    tar xxvf h5check-${H5CHECK_VERSION}.tar.gz && \
+    cd h5check-${H5CHECK_VERSION} && \
+    ./configure && \
+    make && \
+    cp tool/h5check /usr/local/bin && \
+    cd /usr/src/app && \
+    rm -rf /tmp/h5check-${H5CHECK_VERSION}
 
 RUN git clone https://github.com/opencadc/caom2tools.git && \
     cd caom2tools && \

@@ -67,7 +67,6 @@
 # ***********************************************************************
 #
 
-from os.path import basename, join
 from traceback import format_exc
 from caom2pipe.data_source_composable import LocalFilesDataSource
 

@@ -67,31 +67,66 @@
 # ***********************************************************************
 #
 
-import h5py
-from caom2utils import caom2blueprint
-from caom2pipe import caom_composable as cc
-from cfht2caom2 import instruments
+import glob
+import warnings
+
+from astropy.utils.exceptions import AstropyUserWarning
+from astropy.wcs import FITSFixedWarning
+from mock import patch
+from os.path import basename, dirname,join, realpath
+
+from cadcdata import FileInfo
+from caom2pipe.manage_composable import StorageName, read_obs_from_file
+from cfht2caom2 import CFHTName, COLLECTION
+from cfht2caom2 import fits2caom2_augmentation, reader
+import test_fits2caom2_augmentation
 
 
-class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
-    def __init__(self, observation, **kwargs):
-        super().__init__(observation, **kwargs)
-
-    def _get_mapping(self, headers):
-        return instruments.factory(headers, self._storage_name)
-
-    def _get_parser(self, headers, blueprint, uri):
-        if self._storage_name.hdf5 and len(headers) > 0:
-            self._logger.debug(
-                f'No headers, using a GenericParser for '
-                f'{self._storage_name.file_uri}'
-            )
-            f_in = h5py.File(self._storage_name.source_names[0])
-            parser = caom2blueprint.Hdf5Parser(blueprint, uri, f_in)
-        else:
-            parser = super()._get_parser(headers, blueprint, uri)
-        return parser
+THIS_DIR = dirname(realpath(__file__))
+TEST_DATA_DIR = join(THIS_DIR, 'data')
+SITELLE_DIR = join(TEST_DATA_DIR, 'sitelle')
 
 
-def visit(observation, **kwargs):
-    return CFHTFits2caom2Visitor(observation, **kwargs).visit()
+def pytest_generate_tests(metafunc):
+    obs_id_list = glob.glob(f'{SITELLE_DIR}/*.hdf5')
+    metafunc.parametrize('test_name', obs_id_list)
+
+
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
+@patch('caom2pipe.astro_composable.get_vo_table')
+def test_visitor(vo_mock, cache_mock, test_name):
+    warnings.simplefilter('ignore', category=AstropyUserWarning)
+    warnings.simplefilter('ignore', category=FITSFixedWarning)
+    vo_mock.side_effect = test_fits2caom2_augmentation._vo_mock
+    # cache_mock there so there are no update cache calls - so the tests
+    # work without a network connection
+    original_scheme = StorageName.scheme
+    original_collection = StorageName.collection
+    try:
+        StorageName.scheme = 'cadc'
+        StorageName.collection = COLLECTION
+        storage_name = CFHTName(
+            file_name=basename(test_name),
+            instrument=test_fits2caom2_augmentation._identify_inst_mock(None, test_name),
+            source_names=[test_name],
+        )
+        file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
+        metadata_reader = reader.Hdf5AndFitsMetadataReader()
+        metadata_reader.set_headers(storage_name)
+        # metadata_reader._headers = {storage_name.file_uri: None}
+        metadata_reader._file_info = {storage_name.file_uri: file_info}
+        import logging
+        logging .error(metadata_reader._headers)
+        kwargs = {
+            'storage_name': storage_name,
+            'metadata_reader': metadata_reader,
+        }
+        storage_name._bitpix = -32
+        observation = None
+        observation = fits2caom2_augmentation.visit(observation, **kwargs)
+
+        test_fits2caom2_augmentation._compare(observation, storage_name.obs_id, 'sitelle')
+        # assert False
+    finally:
+        StorageName.scheme = original_scheme
+        StorageName.collection = original_collection
