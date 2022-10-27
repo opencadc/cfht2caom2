@@ -59,6 +59,19 @@ RUN cd /usr/local/src \
   && cp ./fitsverify /usr/local/bin/ \
   && ldconfig
 
+ARG H5CHECK_VERSION=2.0.1
+ARG H5CHECK_URL=https://support.hdfgroup.org/ftp/HDF5/tools/h5check/src/h5check-${H5CHECK_VERSION}.tar.gz 
+
+RUN cd /tmp && \
+    curl -LSs ${H5CHECK_URL} && \
+    tar xxvf h5check-${H5CHECK_VERSION}.tar.gz && \
+    cd h5check-${H5CHECK_VERSION} && \
+    ./configure && \
+    make && \
+    cp tool/h5check /usr/local/bin && \
+    cd /usr/src/app && \
+    rm -rf /tmp/h5check-${H5CHECK_VERSION}
+
 RUN git clone https://github.com/opencadc/caom2tools.git && \
     cd caom2tools && \
     pip install ./caom2utils && \

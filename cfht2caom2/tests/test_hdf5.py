@@ -111,9 +111,6 @@ def test_visitor(vo_mock, cache_mock, test_name):
             source_names=[test_name],
         )
         file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
-        import logging
-        logging.error(storage_name)
-        logging.getLogger('Hdf5MetadataReader').setLevel(logging.DEBUG)
         metadata_reader = reader.Hdf5AndFitsMetadataReader()
         metadata_reader.set_headers(storage_name)
         # metadata_reader._headers = {storage_name.file_uri: None}
