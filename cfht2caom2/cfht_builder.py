@@ -80,18 +80,11 @@ __all__ = ['CFHTBuilder']
 
 
 class CFHTBuilder(nbc.StorageNameBuilder):
-    def __init__(
-        self,
-        archive,
-        use_local_files,
-        metadata_reader,
-        supports_latest_client=False,
-    ):
+    def __init__(self, collection, use_local_files, metadata_reader):
         super(CFHTBuilder, self).__init__()
         self._metadata_reader = metadata_reader
-        self._archive = archive
+        self._collection = collection
         self._use_local_files = use_local_files
-        self._supports_latest_client = supports_latest_client
         self._logger = logging.getLogger(__name__)
 
     def build(self, entry):

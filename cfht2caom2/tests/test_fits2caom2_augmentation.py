@@ -85,8 +85,7 @@ from caom2pipe.manage_composable import StorageName, read_obs_from_file
 from caom2pipe.manage_composable import get_keyword, write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
-from cfht2caom2 import CFHTName, COLLECTION
-from cfht2caom2 import fits2caom2_augmentation
+from cfht2caom2 import CFHTName, fits2caom2_augmentation
 from cfht2caom2 import metadata as md
 
 
@@ -101,9 +100,9 @@ def pytest_generate_tests(metafunc):
 
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('caom2utils.data_util.get_local_headers_from_fits')
+@patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
+def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = _vo_mock
@@ -113,36 +112,28 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name):
     local_headers_mock.side_effect = _local_headers
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
-    original_scheme = StorageName.scheme
-    original_collection = StorageName.collection
-    try:
-        StorageName.scheme = 'cadc'
-        StorageName.collection = COLLECTION
-        storage_name = CFHTName(
-            file_name=basename(test_name).replace('.header', ''),
-            instrument=_identify_inst_mock(None, test_name),
-            source_names=[test_name],
-        )
-        file_info = FileInfo(
-            id=storage_name.file_uri, file_type='application/fits'
-        )
-        headers = ac.make_headers_from_file(test_name)
-        metadata_reader = rdc.FileMetadataReader()
-        metadata_reader._headers = {storage_name.file_uri: headers}
-        metadata_reader._file_info = {storage_name.file_uri: file_info}
-        kwargs = {
-            'storage_name': storage_name,
-            'metadata_reader': metadata_reader,
-        }
-        storage_name._bitpix = get_keyword(headers, 'BITPIX')
-        observation = None
-        observation = fits2caom2_augmentation.visit(observation, **kwargs)
+    storage_name = CFHTName(
+        file_name=basename(test_name).replace('.header', ''),
+        instrument=_identify_inst_mock(None, test_name),
+        source_names=[test_name],
+    )
+    file_info = FileInfo(
+        id=storage_name.file_uri, file_type='application/fits'
+    )
+    headers = ac.make_headers_from_file(test_name)
+    metadata_reader = rdc.FileMetadataReader()
+    metadata_reader._headers = {storage_name.file_uri: headers}
+    metadata_reader._file_info = {storage_name.file_uri: file_info}
+    kwargs = {
+        'storage_name': storage_name,
+        'metadata_reader': metadata_reader,
+    }
+    storage_name._bitpix = get_keyword(headers, 'BITPIX')
+    observation = None
+    observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-        _compare(observation, storage_name.obs_id, 'single_plane')
-        # assert False
-    finally:
-        StorageName.scheme = original_scheme
-        StorageName.collection = original_collection
+    _compare(observation, storage_name.obs_id, 'single_plane')
+    # assert False
 
 
 def _compare(observation, obs_id, dir_name):

@@ -131,9 +131,7 @@ at CFHT:      | for checking       | CADC:                 | Name at
             if cadc_meta is None:
                 result = True
             else:
-                local_meta = self._metadata_reader.file_info.get(
-                    storage_name.file_uri
-                ).md5sum
+                local_meta = self._metadata_reader.file_info.get(storage_name.file_uri).md5sum.replace('md5:', '')
                 self._logger.debug(
                     f'Finding post-store metadata {local_meta} from '
                     f'{storage_name.file_uri}.'

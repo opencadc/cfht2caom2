@@ -44,11 +44,9 @@ retry_file_name: retries.txt
 # this file is created in the logs directory, default is 'progress.txt'
 progress_file_name: progress.txt
 #
-# ad stream value - sorry
-# set stream to 'default', if using TaskType STORE or PULL
-stream: default
-archive: CFHT
 collection: CFHT
+scheme: cadc
+preview_scheme: cadc
 #
 # CADC service execution metrics
 #
@@ -89,6 +87,3 @@ task_types:
   - store
   - ingest
   - modify
-features:
-  supports_latest_client: True
-  supports_decompression: True

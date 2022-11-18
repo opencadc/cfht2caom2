@@ -71,25 +71,15 @@ import logging
 import sys
 import traceback
 
-from os.path import basename, dirname
-
 from caom2pipe import client_composable as clc
-from caom2pipe.manage_composable import (
-    CadcException, Config, get_keyword, StorageName
-)
-from caom2pipe.reader_composable import (
-    FileMetadataReader,
-    StorageClientReader,
-)
+from caom2pipe.manage_composable import CadcException, Config, get_keyword, StorageName
+from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
 from caom2pipe import run_composable as rc
-from caom2pipe.transfer_composable import CadcTransfer
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
 from cfht2caom2.cfht_builder import CFHTBuilder
 from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
-from cfht2caom2.cfht_name import CFHTName
-from cfht2caom2.metadata import Inst
 from cfht2caom2.instruments import APPLICATION
 
 
@@ -107,20 +97,13 @@ def _common_init():
     config = Config()
     config.get_executors()
     StorageName.collection = config.collection
-    StorageName.scheme = (
-        'cadc' if config.features.supports_latest_client else 'ad'
-    )
+    StorageName.scheme = config.scheme
     clients = clc.ClientCollection(config)
     if config.use_local_files:
         reader = FileMetadataReader()
     else:
         reader = StorageClientReader(clients.data_client)
-    builder = CFHTBuilder(
-        config.archive,
-        config.use_local_files,
-        reader,
-        config.features.supports_latest_client,
-    )
+    builder = CFHTBuilder(config.collection, config.use_local_files, reader)
     source = None
     if config.use_local_files:
         source = CFHTLocalFilesDataSource(
@@ -185,153 +168,6 @@ def _run_by_builder():
 def run_by_builder():
     try:
         result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
-
-
-def _run_decompress():
-    """
-    Run decompression for CFHT. This is interim code, hence the
-    location of the DecompressReader class definition.
-    """
-
-    class DecompressReader(StorageClientReader):
-        """
-        Using the source_names for the set_* implementations means
-        the information can be obtained for the compressed file name, and
-        since the header information is required to decide whether or not
-        to recompress a file, this is important distinction during
-        execution. In the case, the chicken in the compressed file name,
-        and the egg is the "does it need to be recompressed" decision.
-        """
-
-        def __init__(self, client):
-            super().__init__(client)
-
-        def set_file_info(self, storage_name):
-            """Retrieves FileInfo information to memory."""
-            for entry in storage_name.source_names:
-                if entry not in self._file_info.keys():
-                    self._file_info[entry] = self._client.info(entry)
-
-        def set_headers(self, storage_name):
-            """Retrieves the Header information to memory."""
-            self._logger.debug(
-                f'Begin set_headers for {storage_name.file_name}'
-            )
-            for entry in storage_name.source_names:
-                if entry not in self._headers.keys():
-                    if '.fits' in entry:
-                        self._headers[entry] = self._client.get_head(entry)
-                    else:
-                        self._headers[entry] = []
-            self._logger.debug('End set_headers')
-
-    class DecompressBuilder(CFHTBuilder):
-        def __init__(
-            self,
-            archive,
-            use_local_files,
-            metadata_reader,
-            supports_latest_client,
-        ):
-            super().__init__(
-                archive,
-                use_local_files,
-                metadata_reader,
-                supports_latest_client,
-            )
-
-        def build(self, entry):
-            """
-            :param entry an entry is a file name, complete with the appropriate
-            compression extension, that is sufficient to retrieve file header
-            information from CADC's storage system.
-            """
-
-            # retrieve the header information, extract the instrument name
-            self._logger.debug(f'Build a StorageName instance for {entry}.')
-            bitpix = None
-            if StorageName.is_hdf5(entry):
-                instrument = Inst.SITELLE
-            else:
-                file_name = basename(entry).replace('.header', '')
-                # the separate construction of file name for the uri supports
-                # unit testing
-                storage_name = StorageName(
-                    file_name=file_name, source_names=[entry]
-                )
-                self._metadata_reader.set(storage_name)
-                headers = self._metadata_reader.headers.get(entry)
-                try:
-                    instrument = CFHTBuilder.get_instrument(headers, entry)
-                except CadcException as e:
-                    instrument = 'Unsupported'
-                bitpix = get_keyword(headers, 'BITPIX')
-            result = CFHTName(
-                file_name=basename(entry),
-                source_names=[entry],
-                instrument=instrument,
-                bitpix=bitpix,
-            )
-            self._logger.debug('End build.')
-            return result
-
-    class CfhtTransferrer(CadcTransfer):
-        """
-        Need the ad client to read, and the si client to write.
-        """
-
-        def __init__(self, ad_client):
-            super().__init__()
-            # need a different name, because the _cadc_client that is
-            # inherited gets over-written
-            self._ad_client = ad_client
-
-        def get(self, source, dest_fqn):
-            self._logger.debug(f'Transfer from {source} to {dest_fqn}.')
-            working_dir = dirname(dest_fqn)
-            self._ad_client.get(working_dir, source)
-
-    config, clients, reader_ignore, builder_ignore, source = _common_init()
-    # the headers have to come from AD, because SI doesn't do that atm
-    original_feature = config.features.supports_latest_client
-    config.features.supports_latest_client = False
-    # need the ad client to read the file (because need the headers)
-    ad_reading = clc.ClientCollection(config)
-    decompress_reader = DecompressReader(ad_reading.data_client)
-    store_transfer = CfhtTransferrer(ad_reading.data_client)
-    # need the si client to write the file (because that's the
-    # destination)
-    config.features.supports_latest_client = True
-    si_writing = clc.ClientCollection(config)
-    config.features.supports_latest_client = original_feature
-    builder = DecompressBuilder(
-        config.archive,
-        config.use_local_files,
-        decompress_reader,
-        config.features.supports_latest_client,
-    )
-
-    return rc.run_by_todo(
-        config,
-        builder,
-        meta_visitors=META_VISITORS,
-        data_visitors=DATA_VISITORS,
-        source=source,
-        metadata_reader=decompress_reader,
-        store_transfer=store_transfer,
-        clients=si_writing,
-    )
-
-
-def run_decompress():
-    try:
-        result = _run_decompress()
         sys.exit(result)
     except Exception as e:
         logging.error(e)
