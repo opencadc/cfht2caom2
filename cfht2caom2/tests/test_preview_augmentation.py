@@ -85,13 +85,12 @@ REJECTED_FILE = os.path.join(
 )
 
 
-def test_preview_augment():
+def test_preview_augment(test_config):
 
     # this should result in three new artifacts being added to every plane:
     # one for a thumbnail and two for previews (one zoom)
 
     test_rejected = mc.Rejected(REJECTED_FILE)
-    test_config = mc.Config()
     test_observable = mc.Observable(test_rejected, mc.Metrics(test_config))
 
     test_files = {
@@ -222,115 +221,106 @@ def test_preview_augment():
 
     checksum_failures = []
 
-    orig_scheme = mc.StorageName.scheme
-    orig_collection = mc.StorageName.collection
-    try:
-        mc.StorageName.scheme = 'cadc'
-        mc.StorageName.collection = cfht_name.COLLECTION
-        for key, value in test_files.items():
-            obs = mc.read_obs_from_file(
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/visit/{key}'
-            )
-            if 'wircam' in key:
-                instrument = md.Inst.WIRCAM
-            elif 'mega' in key or 'scatter' in key:
-                instrument = md.Inst.MEGACAM
-            elif 'sitelle' in key:
-                instrument = md.Inst.SITELLE
-            elif 'espadons' in key:
-                instrument = md.Inst.ESPADONS
-            elif 'spirou' in key:
-                instrument = md.Inst.SPIROU
-            else:
-                assert False, 'do not understand instrument'
-            for f_name in value:
-                test_name = cfht_name.CFHTName(
-                    file_name=f_name, instrument=instrument
-                )
-                test_name.source_names = [
-                    os.path.join(TEST_FILES_DIR, f_name)
-                ]
-                kwargs['storage_name'] = test_name
-                check_number = 1
-                if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
-                    check_number = 3
-                assert (
-                    len(obs.planes[test_name.product_id].artifacts)
-                    == check_number
-                ), f'initial condition {f_name}'
-
-                try:
-                    from datetime import datetime
-
-                    start_ts = datetime.utcnow().timestamp()
-                    test_result = preview_augmentation.visit(obs, **kwargs)
-                    end_ts = datetime.utcnow().timestamp()
-                    logging.error(
-                        f'{f_name} execution time {end_ts - start_ts}'
-                    )
-                except Exception as e:
-                    logging.error(e)
-                    logging.error(traceback.format_exc())
-                    assert False
-
-                assert test_result is not None, f'expect a result {f_name}'
-
-                check_number = 3
-                end_artifact_count = 4
-                f_name_list = [
-                    test_name.prev_uri,
-                    test_name.thumb_uri,
-                    test_name.zoom_uri,
-                ]
-                if (
-                    instrument is md.Inst.ESPADONS and test_name.suffix == 'i'
-                ) or (
-                    instrument is md.Inst.SPIROU
-                    and test_name.suffix in ['e', 'p', 's', 't', 'v']
-                ):
-                    check_number = 2
-                    end_artifact_count = 3
-                    f_name_list = [test_name.prev_uri, test_name.thumb_uri]
-
-                # assert (
-                #     test_result['artifacts'] == check_number
-                # ), f'artifacts should be added {f_name}'
-
-                if instrument is md.Inst.SITELLE:
-                    if test_name.suffix == 'p':
-                        end_artifact_count = 6
-                    elif test_name.suffix == 'z':
-                        end_artifact_count = 3
-                assert (
-                    len(obs.planes[test_name.product_id].artifacts)
-                    == end_artifact_count
-                ), f'new artifacts {f_name}'
-
-                for p in f_name_list:
-                    # assert p in \
-                    #        obs.planes[test_name.product_id].artifacts.keys(), \
-                    #        f'no preview {p}'
-                    if p in obs.planes[test_name.product_id].artifacts.keys():
-                        artifact = obs.planes[test_name.product_id].artifacts[
-                            p
-                        ]
-                        # because 2359320p_preview_1024 keeps changing ....
-                        if artifact.uri in test_checksums:
-                            if (
-                                artifact.content_checksum.uri
-                                != test_checksums[p]
-                            ):
-                                checksum_failures.append(
-                                    f'{p} expected {test_checksums[p]} actual '
-                                    f'{artifact.content_checksum.uri}'
-                                )
-
-        assert (
-            len(checksum_failures) == 0,
-            '\n'.join(ii for ii in checksum_failures),
+    for key, value in test_files.items():
+        obs = mc.read_obs_from_file(
+            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/visit/{key}'
         )
-    finally:
-        mc.StorageName.collection = orig_collection
-        mc.StorageName.scheme = orig_scheme
+        if 'wircam' in key:
+            instrument = md.Inst.WIRCAM
+        elif 'mega' in key or 'scatter' in key:
+            instrument = md.Inst.MEGACAM
+        elif 'sitelle' in key:
+            instrument = md.Inst.SITELLE
+        elif 'espadons' in key:
+            instrument = md.Inst.ESPADONS
+        elif 'spirou' in key:
+            instrument = md.Inst.SPIROU
+        else:
+            assert False, 'do not understand instrument'
+        for f_name in value:
+            test_name = cfht_name.CFHTName(
+                file_name=f_name, instrument=instrument
+            )
+            test_name.source_names = [
+                os.path.join(TEST_FILES_DIR, f_name)
+            ]
+            kwargs['storage_name'] = test_name
+            check_number = 1
+            if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
+                check_number = 3
+            assert (
+                len(obs.planes[test_name.product_id].artifacts)
+                == check_number
+            ), f'initial condition {f_name}'
 
+            try:
+                from datetime import datetime
+
+                start_ts = datetime.utcnow().timestamp()
+                test_result = preview_augmentation.visit(obs, **kwargs)
+                end_ts = datetime.utcnow().timestamp()
+                logging.error(
+                    f'{f_name} execution time {end_ts - start_ts}'
+                )
+            except Exception as e:
+                logging.error(e)
+                logging.error(traceback.format_exc())
+                assert False
+
+            assert test_result is not None, f'expect a result {f_name}'
+
+            check_number = 3
+            end_artifact_count = 4
+            f_name_list = [
+                test_name.prev_uri,
+                test_name.thumb_uri,
+                test_name.zoom_uri,
+            ]
+            if (
+                instrument is md.Inst.ESPADONS and test_name.suffix == 'i'
+            ) or (
+                instrument is md.Inst.SPIROU
+                and test_name.suffix in ['e', 'p', 's', 't', 'v']
+            ):
+                check_number = 2
+                end_artifact_count = 3
+                f_name_list = [test_name.prev_uri, test_name.thumb_uri]
+
+            # assert (
+            #     test_result['artifacts'] == check_number
+            # ), f'artifacts should be added {f_name}'
+
+            if instrument is md.Inst.SITELLE:
+                if test_name.suffix == 'p':
+                    end_artifact_count = 6
+                elif test_name.suffix == 'z':
+                    end_artifact_count = 3
+            assert (
+                len(obs.planes[test_name.product_id].artifacts)
+                == end_artifact_count
+            ), f'new artifacts {f_name}'
+
+            for p in f_name_list:
+                # assert p in \
+                #        obs.planes[test_name.product_id].artifacts.keys(), \
+                #        f'no preview {p}'
+                if p in obs.planes[test_name.product_id].artifacts.keys():
+                    artifact = obs.planes[test_name.product_id].artifacts[
+                        p
+                    ]
+                    # because 2359320p_preview_1024 keeps changing ....
+                    if artifact.uri in test_checksums:
+                        if (
+                            artifact.content_checksum.uri
+                            != test_checksums[p]
+                        ):
+                            checksum_failures.append(
+                                f'{p} expected {test_checksums[p]} actual '
+                                f'{artifact.content_checksum.uri}'
+                            )
+
+    assert (
+        len(checksum_failures) == 0,
+        '\n'.join(ii for ii in checksum_failures),
+    )
     # assert False
