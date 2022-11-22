@@ -48,7 +48,7 @@ RUN pip install --no-cache-dir "astropy<5" \
 
 ARG FITSVERIFY_VERSION=4.20
 ARG FITSVERIFY_URL=https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-${FITSVERIFY_VERSION}.tar.gz
-ADD ${FITSVERIFY_URL}  /usr/local/src/fitsverify-${FITSVERIFY_VERSION}.tar.gz
+ADD ${FITSVERIFY_URL}  /usr/local/src/
 RUN cd /usr/local/src \
   && tar zxvf fitsverify-${FITSVERIFY_VERSION}.tar.gz \
   && cd fitsverify-${FITSVERIFY_VERSION} \
@@ -60,7 +60,7 @@ RUN cd /usr/local/src \
 
 ARG H5CHECK_VERSION=2.0.1
 ARG H5CHECK_URL=https://support.hdfgroup.org/ftp/HDF5/tools/h5check/src/h5check-${H5CHECK_VERSION}.tar.gz 
-ADD ${H5CHECK_URL} /usr/local/src/h5check-${H5CHECK_VERSION}.tar.gz
+ADD ${H5CHECK_URL} /usr/local/src/
 RUN cd /usr/local/src && \
     tar xxvf h5check-${H5CHECK_VERSION}.tar.gz && \
     cd h5check-${H5CHECK_VERSION} && \
