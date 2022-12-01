@@ -69,6 +69,8 @@ retry_file_name: retries.txt
 progress_file_name: progress.txt
 #
 collection: CFHT
+scheme: cadc
+preview_scheme: cadc
 #
 # CADC service execution metrics
 #
@@ -109,6 +111,3 @@ task_types:
   - store
   - ingest
   - modify
-features:
-  supports_latest_client: True
-  supports_decompression: True

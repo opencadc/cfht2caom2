@@ -83,7 +83,6 @@ from PIL import Image, ImageDraw, ImageFont
 from caom2 import ProductType, ReleaseType, ObservationIntentType
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
 __all__ = ['visit']
@@ -91,7 +90,7 @@ __all__ = ['visit']
 
 class CFHTPreview(mc.PreviewVisitor):
     def __init__(self, instrument, intent, obs_type, target, **kwargs):
-        super(CFHTPreview, self).__init__(cn.ARCHIVE, **kwargs)
+        super(CFHTPreview, self).__init__(**kwargs)
         self._instrument = md.Inst(instrument)
         self._intent = intent
         self._obs_type = obs_type

@@ -76,8 +76,7 @@ from mock import patch
 from os.path import basename, dirname,join, realpath
 
 from cadcdata import FileInfo
-from caom2pipe.manage_composable import StorageName, read_obs_from_file
-from cfht2caom2 import CFHTName, COLLECTION
+from cfht2caom2 import CFHTName
 from cfht2caom2 import fits2caom2_augmentation, reader
 import test_fits2caom2_augmentation
 
@@ -94,39 +93,28 @@ def pytest_generate_tests(metafunc):
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, cache_mock, test_name):
+def test_visitor(vo_mock, cache_mock, test_name, test_config):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = test_fits2caom2_augmentation._vo_mock
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
-    original_scheme = StorageName.scheme
-    original_collection = StorageName.collection
-    try:
-        StorageName.scheme = 'cadc'
-        StorageName.collection = COLLECTION
-        storage_name = CFHTName(
-            file_name=basename(test_name),
-            instrument=test_fits2caom2_augmentation._identify_inst_mock(None, test_name),
-            source_names=[test_name],
-        )
-        file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
-        metadata_reader = reader.Hdf5AndFitsMetadataReader()
-        metadata_reader.set_headers(storage_name)
-        # metadata_reader._headers = {storage_name.file_uri: None}
-        metadata_reader._file_info = {storage_name.file_uri: file_info}
-        import logging
-        logging .error(metadata_reader._headers)
-        kwargs = {
-            'storage_name': storage_name,
-            'metadata_reader': metadata_reader,
-        }
-        storage_name._bitpix = -32
-        observation = None
-        observation = fits2caom2_augmentation.visit(observation, **kwargs)
+    storage_name = CFHTName(
+        file_name=basename(test_name),
+        instrument=test_fits2caom2_augmentation._identify_inst_mock(None, test_name),
+        source_names=[test_name],
+    )
+    file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
+    metadata_reader = reader.Hdf5AndFitsMetadataReader()
+    metadata_reader.set_headers(storage_name)
+    metadata_reader._file_info = {storage_name.file_uri: file_info}
+    kwargs = {
+        'storage_name': storage_name,
+        'metadata_reader': metadata_reader,
+    }
+    storage_name._bitpix = -32
+    observation = None
+    observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-        test_fits2caom2_augmentation._compare(observation, storage_name.obs_id, 'sitelle')
-        # assert False
-    finally:
-        StorageName.scheme = original_scheme
-        StorageName.collection = original_collection
+    test_fits2caom2_augmentation._compare(observation, storage_name.obs_id, 'sitelle')
+    # assert False

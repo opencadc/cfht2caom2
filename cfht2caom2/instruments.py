@@ -189,7 +189,8 @@ from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
 from caom2 import TemporalWCS, CoordAxis1D, CoordFunction1D, CoordError
 from caom2 import CalibrationLevel, ProductType, ObservationIntentType
 from caom2 import DerivedObservation, TypedList
-from caom2utils.caom2blueprint import FitsWcsParser, update_artifact_meta
+from caom2utils.caom2blueprint import FitsWcsParser, ObsBlueprint, update_artifact_meta
+from caom2utils.data_util import get_local_headers_from_fits
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
@@ -259,8 +260,8 @@ class CFHTValueRepair(mc.ValueRepairCache):
 class InstrumentType(cc.TelescopeMapping):
     value_repair = CFHTValueRepair()
 
-    def __init__(self, headers, cfht_name):
-        super().__init__(cfht_name, headers)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(cfht_name, headers, clients)
         # keep because of MegaCam/MegaPrime
         self._name = cfht_name.instrument.value
         self._storage_name = cfht_name
@@ -1089,7 +1090,7 @@ class InstrumentType(cc.TelescopeMapping):
                     )
         return result
 
-    def _update_observation_metadata(self, observation, clients):
+    def _update_observation_metadata(self, observation):
         """
         Why this method exists:
 
@@ -1161,24 +1162,12 @@ class InstrumentType(cc.TelescopeMapping):
                         uri = self._storage_name.file_uri
                         # this is the fits2caom2 implementation, which returns
                         # a list structure
-                        from caom2utils import data_util
-
-                        unmodified_headers = (
-                            data_util.get_local_headers_from_fits(
-                                self._storage_name.source_names[0]
-                            )
-                        )
+                        unmodified_headers = get_local_headers_from_fits(self._storage_name.source_names[0])
                     else:
                         # this is the fits2caom2 implementation, which returns
                         # a list structure
-                        if (
-                            clients is not None
-                            and clients.data_client is not None
-                        ):
-                            unmodified_headers = clients.data_client.get_head(
-                                self._storage_name.file_uri
-                            )
-                    from caom2utils import ObsBlueprint
+                        if self._clients is not None and self._clients.data_client is not None:
+                            unmodified_headers = self._clients.data_client.get_head(self._storage_name.file_uri)
 
                     bp = ObsBlueprint(instantiated_class=self)
                     self.accumulate_blueprint(bp)
@@ -1217,7 +1206,7 @@ class InstrumentType(cc.TelescopeMapping):
     def _update_plane_post(self, observation):
         pass
 
-    def update(self, observation, file_info, clients):
+    def update(self, observation, file_info):
         """Called to fill multiple CAOM model elements and/or attributes, must
         have this signature for import_module loading and execution.
 
@@ -1227,9 +1216,7 @@ class InstrumentType(cc.TelescopeMapping):
 
         :param observation A CAOM Observation model instance.
         :param file_info cadcdata.FileInfo instance
-        :param clients ClientCollection instance
-
-        :param **kwargs Everything else."""
+        """
         self._logger.debug('Begin update.')
 
         ingesting_hdf5 = False
@@ -1274,7 +1261,7 @@ class InstrumentType(cc.TelescopeMapping):
         ):
             idx = 0
         else:
-            idx = self._update_observation_metadata(observation, clients)
+            idx = self._update_observation_metadata(observation)
         self.observation = observation
         self.extension = idx
         self.update_observation()
@@ -1317,7 +1304,7 @@ class InstrumentType(cc.TelescopeMapping):
                         plane,
                         self._headers[1:],
                         derived_type.value,
-                        cn.COLLECTION,
+                        self._storage_name.collection,
                         _repair_imcmb_provenance_value,
                         observation.observation_id,
                     )
@@ -1326,7 +1313,7 @@ class InstrumentType(cc.TelescopeMapping):
                         plane,
                         self._headers,
                         derived_type.value,
-                        cn.COLLECTION,
+                        self._storage_name.collection,
                         _repair_comment_provenance_value,
                         observation.observation_id,
                     )
@@ -1335,7 +1322,7 @@ class InstrumentType(cc.TelescopeMapping):
                         plane,
                         self._headers,
                         derived_type.value,
-                        cn.COLLECTION,
+                        self._storage_name.collection,
                         _repair_filename_provenance_value,
                         observation.observation_id,
                     )
@@ -1440,9 +1427,7 @@ class InstrumentType(cc.TelescopeMapping):
             f'Begin _update_plane_provenance for {self._storage_name.obs_id}'
         )
         obs_uri_ignore, plane_uri = cc.make_plane_uri(
-            self._storage_name.obs_id,
-            f'{self._storage_name.obs_id}o',
-            cn.COLLECTION,
+            self._storage_name.obs_id, f'{self._storage_name.obs_id}o', self._storage_name.collection
         )
         self.plane.provenance.inputs.add(plane_uri)
         self._logger.debug(
@@ -1460,8 +1445,8 @@ class InstrumentType(cc.TelescopeMapping):
 
 
 class Espadons(InstrumentType):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
 
     def _is_espadons_energy(self):
         result = False
@@ -1875,8 +1860,8 @@ class Espadons(InstrumentType):
 
 
 class Mega(InstrumentType):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
         self._filter_name = None
 
     @property
@@ -1992,8 +1977,8 @@ class Mega(InstrumentType):
 
 
 class Sitelle(InstrumentType):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
 
     def _is_derived(self, obs_id):
         if self._storage_name.suffix == 'z':
@@ -2373,8 +2358,8 @@ class Sitelle(InstrumentType):
 
 
 class SitelleHdf5(InstrumentType):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2527,7 +2512,7 @@ class SitelleHdf5(InstrumentType):
                 result = md.cache.get_program(bits[5])
         return result
 
-    def update(self, observation, file_info, clients):
+    def update(self, observation, file_info):
         self._logger.debug('Begin update.')
 
         if not isinstance(observation, DerivedObservation):
@@ -2618,8 +2603,8 @@ class SitelleHdf5(InstrumentType):
 
 
 class SitelleNoHdf5Metadata(Sitelle):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2647,7 +2632,7 @@ class SitelleNoHdf5Metadata(Sitelle):
             bp.set('Artifact.productType', ProductType.SCIENCE)
         self._logger.debug('End accumulate_blueprint.')
 
-    def update(self, observation, file_info, clients):
+    def update(self, observation, file_info):
         self._logger.debug('Begin update.')
 
         if not isinstance(observation, DerivedObservation):
@@ -2672,8 +2657,8 @@ class SitelleNoHdf5Metadata(Sitelle):
 
 
 class Spirou(InstrumentType):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
         # TODO self._header = headers[extension]
         self._header = None
 
@@ -3090,8 +3075,8 @@ class Spirou(InstrumentType):
 
 
 class Wircam(InstrumentType):
-    def __init__(self, headers, cfht_name):
-        super().__init__(headers, cfht_name)
+    def __init__(self, headers, cfht_name, clients):
+        super().__init__(headers, cfht_name, clients)
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3635,24 +3620,24 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
-def factory(headers, cfht_name):
+def factory(headers, cfht_name, clients):
     if cfht_name.instrument is md.Inst.ESPADONS:
-        temp = Espadons(headers, cfht_name)
+        temp = Espadons(headers, cfht_name, clients)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
-        temp = Mega(headers, cfht_name)
+        temp = Mega(headers, cfht_name, clients)
     elif cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.hdf5:
             if len(headers) > 0:
                 # len => could be an h5 file with no attrs
-                temp = SitelleHdf5(headers, cfht_name)
+                temp = SitelleHdf5(headers, cfht_name, clients)
             else:
-                temp = SitelleNoHdf5Metadata(headers, cfht_name)
+                temp = SitelleNoHdf5Metadata(headers, cfht_name, clients)
         else:
-            temp = Sitelle(headers, cfht_name)
+            temp = Sitelle(headers, cfht_name, clients)
     elif cfht_name.instrument is md.Inst.SPIROU:
-        temp = Spirou(headers, cfht_name)
+        temp = Spirou(headers, cfht_name, clients)
     elif cfht_name.instrument is md.Inst.WIRCAM:
-        temp = Wircam(headers, cfht_name)
+        temp = Wircam(headers, cfht_name, clients)
     else:
         raise mc.CadcException(
             f'No support for unexpected instrument {cfht_name.instrument}.'

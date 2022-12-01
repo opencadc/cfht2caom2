@@ -75,12 +75,10 @@ from caom2pipe.manage_composable import build_uri, StorageName
 from cfht2caom2.metadata import Inst
 
 
-__all__ = ['CFHTName', 'COLLECTION', 'ARCHIVE']
+__all__ = ['CFHTName']
 
 
-COLLECTION = 'CFHT'
-ARCHIVE = 'CFHT'
-
+# TODO - is this still required?
 # minimize the number of times the code tries to figure out which instrument
 # generated the file being ingested
 #
@@ -140,7 +138,7 @@ class CFHTName(StorageName):
             f'      product_id: {self.product_id}\n'
         )
 
-    def _get_uri(self, file_name):
+    def _get_uri(self, file_name, scheme):
         """
         SF - 20-05-22
         it looks like compression will be:
@@ -173,11 +171,7 @@ class CFHTName(StorageName):
                     f'{self._file_name} will be recompressed with fpack.'
                 )
         else:
-            result = build_uri(
-                scheme=StorageName.scheme,
-                archive=StorageName.collection,
-                file_name=file_name,
-            )
+            result = build_uri(scheme=scheme, archive=StorageName.collection, file_name=file_name)
         # .header is mostly for test execution
         return result.replace('.header', '')
 
@@ -189,7 +183,7 @@ class CFHTName(StorageName):
         """
         The CADC Storage URI for the file.
         """
-        return self._get_uri(self._file_name)
+        return self._get_uri(self._file_name, StorageName.scheme)
 
     @property
     def instrument(self):
@@ -213,7 +207,7 @@ class CFHTName(StorageName):
     @property
     def zoom_uri(self):
         """The zoom preview URI."""
-        return self._get_uri(self.zoom)
+        return self._get_uri(self.zoom, StorageName.scheme)
 
     @property
     def is_master_cal(self):
@@ -325,10 +319,10 @@ class CFHTName(StorageName):
             temp = basename(urlparse(for_entry).path)
             if self._bitpix is None or self._bitpix in [-32, -64]:
                 result = self._get_uri(
-                    temp
+                    temp, StorageName.scheme
                 ).replace('.header', '').replace('.gz', '')
             else:
-                result = self._get_uri(temp).replace('.gz', '.fz')
+                result = self._get_uri(temp, StorageName.scheme).replace('.gz', '.fz')
             return result
 
         if len(self._source_names) == 0:

@@ -68,205 +68,196 @@
 #
 
 from caom2pipe.manage_composable import StorageName
-from cfht2caom2 import CFHTName, COLLECTION
+from cfht2caom2 import CFHTName
 
 
-def test_is_valid():
-    original_scheme = StorageName.scheme
-    original_collection = StorageName.collection
-    try:
-        StorageName.scheme = 'cadc'
-        StorageName.collection = COLLECTION
-        assert CFHTName(file_name='anything', instrument='SITELLE').is_valid()
-        test_subject = CFHTName(
-            file_name='2463796o.fits.fz', instrument='MegaCam'
-        )
-        assert test_subject.obs_id == '2463796', 'wrong obs id'
-        assert test_subject.file_id == '2463796o', 'wrong file id'
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2463796o.fits.fz'
-        ), 'wrong uri'
-        assert test_subject.source_names == [], 'not local'
-        assert test_subject.is_simple, 'should be simple'
+def test_is_valid(test_config):
+    assert CFHTName(file_name='anything', instrument='SITELLE').is_valid()
+    test_subject = CFHTName(
+        file_name='2463796o.fits.fz', instrument='MegaCam'
+    )
+    assert test_subject.obs_id == '2463796', 'wrong obs id'
+    assert test_subject.file_id == '2463796o', 'wrong file id'
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2463796o.fits.fz'
+    ), 'wrong uri'
+    assert test_subject.source_names == [], 'not local'
+    assert test_subject.is_simple, 'should be simple'
 
-        StorageName.scheme = 'cadc'
-        test_subject = CFHTName(
-            file_name='1944968p.fits.fz', instrument='SITELLE'
-        )
-        assert test_subject.obs_id == '1944968', 'wrong obs id'
-        assert test_subject.file_id == '1944968p', 'wrong file id'
-        assert test_subject.file_uri == 'cadc:CFHT/1944968p.fits.fz', 'uri'
-        assert not test_subject.is_simple, 'should be composite'
+    StorageName.scheme = 'cadc'
+    test_subject = CFHTName(
+        file_name='1944968p.fits.fz', instrument='SITELLE'
+    )
+    assert test_subject.obs_id == '1944968', 'wrong obs id'
+    assert test_subject.file_id == '1944968p', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/1944968p.fits.fz', 'uri'
+    assert not test_subject.is_simple, 'should be composite'
 
-        StorageName.scheme = 'cadc'
-        test_subject = CFHTName(
-            file_name='2460503p.fits.gz', instrument='ESPaDOnS'
-        )
-        assert test_subject.obs_id == '2460503', 'wrong obs id'
-        assert test_subject.file_id == '2460503p', 'wrong file id'
-        assert test_subject.file_uri == 'cadc:CFHT/2460503p.fits', 'wrong uri'
-        assert not test_subject.is_simple, 'should be composite'
-        assert test_subject.file_name == '2460503p.fits.gz', 'no decomp'
+    StorageName.scheme = 'cadc'
+    test_subject = CFHTName(
+        file_name='2460503p.fits.gz', instrument='ESPaDOnS'
+    )
+    assert test_subject.obs_id == '2460503', 'wrong obs id'
+    assert test_subject.file_id == '2460503p', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/2460503p.fits', 'wrong uri'
+    assert not test_subject.is_simple, 'should be composite'
+    assert test_subject.file_name == '2460503p.fits.gz', 'no decomp'
 
-        test_subject = CFHTName(
-            file_name='2452990p.fits.fz', instrument='MegaPrime'
-        )
-        assert test_subject.simple_by_suffix, 'should be simple'
-        assert test_subject.obs_id == '2452990', 'wrong obs id'
-        assert test_subject.file_id == '2452990p', 'wrong file id'
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2452990p.fits.fz'
-        ), 'wrong uri'
-        assert test_subject.is_simple, 'should be simple'
+    test_subject = CFHTName(
+        file_name='2452990p.fits.fz', instrument='MegaPrime'
+    )
+    assert test_subject.simple_by_suffix, 'should be simple'
+    assert test_subject.obs_id == '2452990', 'wrong obs id'
+    assert test_subject.file_id == '2452990p', 'wrong file id'
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2452990p.fits.fz'
+    ), 'wrong uri'
+    assert test_subject.is_simple, 'should be simple'
 
-        test_subject = CFHTName(
-            file_name='2384125z.hdf5', instrument='SITELLE'
-        )
-        assert not test_subject.simple_by_suffix, 'should be derived'
-        assert test_subject.obs_id == '2384125', 'wrong obs id'
-        assert test_subject.file_id == '2384125z', 'wrong file id'
-        assert test_subject.file_uri == 'cadc:CFHT/2384125z.hdf5', 'wrong uri'
-        assert not test_subject.is_simple, 'should be derived'
+    test_subject = CFHTName(
+        file_name='2384125z.hdf5', instrument='SITELLE'
+    )
+    assert not test_subject.simple_by_suffix, 'should be derived'
+    assert test_subject.obs_id == '2384125', 'wrong obs id'
+    assert test_subject.file_id == '2384125z', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/2384125z.hdf5', 'wrong uri'
+    assert not test_subject.is_simple, 'should be derived'
 
-        test_subject = CFHTName(
-            file_name='2384125p.fits.fz', instrument='SITELLE'
-        )
-        assert not test_subject.simple_by_suffix, 'should be derived'
-        assert test_subject.obs_id == '2384125', 'wrong obs id'
-        assert test_subject.file_id == '2384125p', 'wrong file id'
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2384125p.fits.fz'
-        ), 'wrong uri'
-        assert not test_subject.is_simple, 'should be derived'
+    test_subject = CFHTName(
+        file_name='2384125p.fits.fz', instrument='SITELLE'
+    )
+    assert not test_subject.simple_by_suffix, 'should be derived'
+    assert test_subject.obs_id == '2384125', 'wrong obs id'
+    assert test_subject.file_id == '2384125p', 'wrong file id'
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2384125p.fits.fz'
+    ), 'wrong uri'
+    assert not test_subject.is_simple, 'should be derived'
 
-        test_subject = CFHTName(
-            file_name='979412p.fits.fz', instrument='MegaPrime'
-        )
-        assert test_subject.simple_by_suffix, 'should be simple'
-        assert test_subject.obs_id == '979412', 'wrong obs id'
-        assert test_subject.file_id == '979412p', 'wrong file id'
-        assert test_subject.file_uri == 'cadc:CFHT/979412p.fits.fz', 'wrong uri'
-        assert test_subject.is_simple, 'should be simple'
+    test_subject = CFHTName(
+        file_name='979412p.fits.fz', instrument='MegaPrime'
+    )
+    assert test_subject.simple_by_suffix, 'should be simple'
+    assert test_subject.obs_id == '979412', 'wrong obs id'
+    assert test_subject.file_id == '979412p', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/979412p.fits.fz', 'wrong uri'
+    assert test_subject.is_simple, 'should be simple'
 
-        test_subject = CFHTName(
-            file_name='979412b.fits.fz', instrument='MegaPrime'
-        )
-        assert (
-            not test_subject.simple_by_suffix
-        ), 'should not be simple by suffix'
-        assert test_subject.obs_id == '979412', 'wrong obs id'
-        assert test_subject.file_id == '979412b', 'wrong file id'
-        assert test_subject.file_uri == 'cadc:CFHT/979412b.fits.fz', 'wrong uri'
-        assert test_subject.is_simple, 'should be simple'
+    test_subject = CFHTName(
+        file_name='979412b.fits.fz', instrument='MegaPrime'
+    )
+    assert (
+        not test_subject.simple_by_suffix
+    ), 'should not be simple by suffix'
+    assert test_subject.obs_id == '979412', 'wrong obs id'
+    assert test_subject.file_id == '979412b', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/979412b.fits.fz', 'wrong uri'
+    assert test_subject.is_simple, 'should be simple'
 
-        test_subject = CFHTName(
-            file_name='2003A.frpts.z.36.00.fits.fz', instrument='MegaPrime'
-        )
-        assert (
-            not test_subject.simple_by_suffix
-        ), 'should not be simple by suffix'
-        assert test_subject.obs_id == '2003A.frpts.z.36.00', 'wrong obs id'
-        assert test_subject.file_id == '2003A.frpts.z.36.00', 'wrong file id'
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2003A.frpts.z.36.00.fits.fz'
-        ), 'wrong uri'
-        assert not test_subject.is_master_cal, 'should not be master cal'
-        assert not test_subject.is_simple, 'should be derived'
+    test_subject = CFHTName(
+        file_name='2003A.frpts.z.36.00.fits.fz', instrument='MegaPrime'
+    )
+    assert (
+        not test_subject.simple_by_suffix
+    ), 'should not be simple by suffix'
+    assert test_subject.obs_id == '2003A.frpts.z.36.00', 'wrong obs id'
+    assert test_subject.file_id == '2003A.frpts.z.36.00', 'wrong file id'
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2003A.frpts.z.36.00.fits.fz'
+    ), 'wrong uri'
+    assert not test_subject.is_master_cal, 'should not be master cal'
+    assert not test_subject.is_simple, 'should be derived'
 
-        test_subject = CFHTName(
-            file_name='2455409p.fits', instrument='SPIRou'
-        )
-        assert (
-            not test_subject.simple_by_suffix
-        ), 'should not be simple by suffix'
-        assert test_subject.obs_id == '2455409', 'wrong obs id'
-        assert test_subject.file_id == '2455409p', 'wrong file id'
-        assert test_subject.file_uri == 'cadc:CFHT/2455409p.fits', 'wrong uri'
-        assert not test_subject.is_master_cal, 'should not be master cal'
-        assert not test_subject.is_simple, 'should be derived'
+    test_subject = CFHTName(
+        file_name='2455409p.fits', instrument='SPIRou'
+    )
+    assert (
+        not test_subject.simple_by_suffix
+    ), 'should not be simple by suffix'
+    assert test_subject.obs_id == '2455409', 'wrong obs id'
+    assert test_subject.file_id == '2455409p', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/2455409p.fits', 'wrong uri'
+    assert not test_subject.is_master_cal, 'should not be master cal'
+    assert not test_subject.is_simple, 'should be derived'
 
-        test_subject = CFHTName(
-            file_name='2238502i.fits.fz', instrument='ESPaDOnS'
-        )
-        assert test_subject.obs_id == '2238502', 'wrong obs id'
+    test_subject = CFHTName(
+        file_name='2238502i.fits.fz', instrument='ESPaDOnS'
+    )
+    assert test_subject.obs_id == '2238502', 'wrong obs id'
 
-        StorageName.scheme = 'cadc'
-        test_subject = CFHTName(
-            file_name='2602045r.fits.fz',
-            instrument='SPIRou',
-            bitpix=-32,
-        )
-        assert test_subject.obs_id == '2602045', 'wrong obs id'
-        assert test_subject.product_id == '2602045r', 'wrong product id'
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
-        ), 'wrong file uri'
-        assert (
-            test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz'
-        ), 'wrong destination uri'
-        assert (
-            test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
-        ), 'wrong thumb uri'
-        assert (
-            test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
-        ), 'wrong preview uri'
-        assert (
-            test_subject.zoom_uri
-            == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
-        ), 'wrong zoom uri'
-        assert not test_subject.has_different_destination_name, f'de/re'
+    StorageName.scheme = 'cadc'
+    test_subject = CFHTName(
+        file_name='2602045r.fits.fz',
+        instrument='SPIRou',
+        bitpix=-32,
+    )
+    assert test_subject.obs_id == '2602045', 'wrong obs id'
+    assert test_subject.product_id == '2602045r', 'wrong product id'
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
+    ), 'wrong file uri'
+    assert (
+        test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz'
+    ), 'wrong destination uri'
+    assert (
+        test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
+    ), 'wrong thumb uri'
+    assert (
+        test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
+    ), 'wrong preview uri'
+    assert (
+        test_subject.zoom_uri
+        == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
+    ), 'wrong zoom uri'
+    assert not test_subject.has_different_destination_name, f'de/re'
 
-        # decompression, no recompression
-        StorageName.scheme = 'cadc'
-        test_subject = CFHTName(
-            file_name='2602045r.fits.gz',
-            instrument='SPIRou',
-            bitpix=-32,
-            source_names=['cadc:CFHT/2602045r.fits.gz'],
-        )
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2602045r.fits'
-        ), 'wrong file uri'
-        assert (
-            test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits'
-        ), 'wrong destination uri'
-        assert (
-            test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
-        ), 'wrong thumb uri'
-        assert (
-            test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
-        ), 'wrong preview uri'
-        assert (
-            test_subject.zoom_uri
-            == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
-        ), 'wrong zoom uri'
-        assert test_subject.has_different_destination_name, 'de/re'
+    # decompression, no recompression
+    StorageName.scheme = 'cadc'
+    test_subject = CFHTName(
+        file_name='2602045r.fits.gz',
+        instrument='SPIRou',
+        bitpix=-32,
+        source_names=['cadc:CFHT/2602045r.fits.gz'],
+    )
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2602045r.fits'
+    ), 'wrong file uri'
+    assert (
+        test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits'
+    ), 'wrong destination uri'
+    assert (
+        test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
+    ), 'wrong thumb uri'
+    assert (
+        test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
+    ), 'wrong preview uri'
+    assert (
+        test_subject.zoom_uri
+        == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
+    ), 'wrong zoom uri'
+    assert test_subject.has_different_destination_name, 'de/re'
 
-        # decompression plus recompression
-        test_subject = CFHTName(
-            file_name='2602045r.fits.gz',
-            instrument='SPIRou',
-            bitpix=32,
-            source_names=['2602045r.fits.gz'],
-        )
-        assert (
-            test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
-        ), 'wrong file uri'
-        assert (
-            test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz'
-        ), 'wrong destination uri'
-        assert (
-            test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
-        ), 'wrong thumb uri'
-        assert (
-            test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
-        ), 'wrong preview uri'
-        assert (
-            test_subject.zoom_uri
-            == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
-        ), 'wrong zoom uri'
-        assert test_subject.has_different_destination_name, f'de/re'
-
-    finally:
-        StorageName.scheme = original_scheme
-        StorageName.collection = original_collection
+    # decompression plus recompression
+    test_subject = CFHTName(
+        file_name='2602045r.fits.gz',
+        instrument='SPIRou',
+        bitpix=32,
+        source_names=['2602045r.fits.gz'],
+    )
+    assert (
+        test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz'
+    ), 'wrong file uri'
+    assert (
+        test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz'
+    ), 'wrong destination uri'
+    assert (
+        test_subject.thumb_uri == 'cadc:CFHT/2602045r_preview_256.jpg'
+    ), 'wrong thumb uri'
+    assert (
+        test_subject.prev_uri == 'cadc:CFHT/2602045r_preview_1024.jpg'
+    ), 'wrong preview uri'
+    assert (
+        test_subject.zoom_uri
+        == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg'
+    ), 'wrong zoom uri'
+    assert test_subject.has_different_destination_name, f'de/re'

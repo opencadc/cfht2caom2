@@ -3,7 +3,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2022.                            (c) 2022.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -62,115 +62,26 @@
 #  <http://www.gnu.org/licenses/>.      pas le cas, consultez :
 #                                       <http://www.gnu.org/licenses/>.
 #
-#  $Revision: 4 $
+#  : 4 $
 #
 # ***********************************************************************
 #
 
-import logging
-import sys
-import traceback
+from caom2pipe.manage_composable import Config, StorageName
+import pytest
 
-from caom2pipe import client_composable as clc
-from caom2pipe.manage_composable import CadcException, Config, get_keyword, StorageName
-from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
-from caom2pipe import run_composable as rc
-from cfht2caom2 import cleanup_augmentation
-from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
-from cfht2caom2 import fits2caom2_augmentation
-from cfht2caom2.cfht_builder import CFHTBuilder
-from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
-from cfht2caom2.instruments import APPLICATION
+COLLECTION = 'CFHT'
+SCHEME = 'cadc'
+PREVIEW_SCHEME = 'cadc'
 
 
-META_VISITORS = [fits2caom2_augmentation]
-DATA_VISITORS = [
-    espadons_energy_augmentation,
-    preview_augmentation,
-    cleanup_augmentation,
-]
-
-CFHT_BOOKMARK = 'cfht_timestamp'
-
-
-def _common_init():
+@pytest.fixture()
+def test_config():
     config = Config()
-    config.get_executors()
+    config.collection = COLLECTION
+    config.preview_scheme = PREVIEW_SCHEME
+    config.scheme = SCHEME
     StorageName.collection = config.collection
+    StorageName.preview_scheme = config.preview_scheme
     StorageName.scheme = config.scheme
-    clients = clc.ClientCollection(config)
-    if config.use_local_files:
-        reader = FileMetadataReader()
-    else:
-        reader = StorageClientReader(clients.data_client)
-    builder = CFHTBuilder(config.collection, config.use_local_files, reader)
-    source = None
-    if config.use_local_files:
-        source = CFHTLocalFilesDataSource(
-            config,
-            clients.data_client,
-            reader,
-            recursive=config.recurse_data_sources,
-            builder=builder,
-        )
-    return config, clients, reader, builder, source
-
-
-def _run_state():
-    config, clients, reader, builder, source = _common_init()
-    return rc.run_by_state(
-        config=config,
-        name_builder=builder,
-        bookmark_name=CFHT_BOOKMARK,
-        meta_visitors=META_VISITORS,
-        data_visitors=DATA_VISITORS,
-        clients=clients,
-        source=source,
-        metadata_reader=reader,
-        application=APPLICATION,
-    )
-
-
-def run_state():
-    """Wraps _run_state in exception handling."""
-    try:
-        _run_state()
-        sys.exit(0)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
-
-
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
-
-    :return 0 if successful, -1 if there's any sort of failure. Return status
-        is used by airflow for task instance management and reporting.
-    """
-    config, clients, reader, builder, source = _common_init()
-    return rc.run_by_todo(
-        config,
-        builder,
-        meta_visitors=META_VISITORS,
-        data_visitors=DATA_VISITORS,
-        clients=clients,
-        source=source,
-        metadata_reader=reader,
-        application=APPLICATION,
-    )
-
-
-def run_by_builder():
-    try:
-        result = _run_by_builder()
-        sys.exit(result)
-    except Exception as e:
-        logging.error(e)
-        tb = traceback.format_exc()
-        logging.debug(tb)
-        sys.exit(-1)
+    return config

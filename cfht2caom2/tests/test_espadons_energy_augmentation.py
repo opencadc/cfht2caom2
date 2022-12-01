@@ -78,54 +78,46 @@ import test_fits2caom2_augmentation
 TEST_FILES_DIR = '/test_files'
 
 
-def test_visit():
-    orig_scheme = StorageName.scheme
-    orig_collection = StorageName.collection
-    try:
-        StorageName.scheme = 'cadc'
-        StorageName.collection = cn.COLLECTION
-        product_id = '2460606i'
-        f_name = f'{product_id}.fits.gz'
-        obs_fqn = (
-            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
-            f'multi_plane/2460606.expected.xml'
-        )
-        obs = read_obs_from_file(obs_fqn)
+def test_visit(test_config):
+    product_id = '2460606i'
+    f_name = f'{product_id}.fits.gz'
+    obs_fqn = (
+        f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
+        f'multi_plane/2460606.expected.xml'
+    )
+    obs = read_obs_from_file(obs_fqn)
 
-        # pre-conditions
-        uri = f'cadc:CFHT/{product_id}.fits'
-        assert (
-            obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy
-            is None
-        ), 'expect to assign'
-        test_storage_name = cn.CFHTName(
-            file_name=f_name, instrument=md.Inst.ESPADONS
-        )
-        test_storage_name.source_names = [
-            join(TEST_FILES_DIR, f_name).replace('.gz', ''),
-        ]
-        kwargs = {
-            'storage_name': test_storage_name,
-            'working_directory': TEST_FILES_DIR,
-        }
-        cn.cfht_names[uri] = test_storage_name
+    # pre-conditions
+    uri = f'cadc:CFHT/{product_id}.fits'
+    assert (
+        obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy
+        is None
+    ), 'expect to assign'
+    test_storage_name = cn.CFHTName(
+        file_name=f_name, instrument=md.Inst.ESPADONS
+    )
+    test_storage_name.source_names = [
+        join(TEST_FILES_DIR, f_name).replace('.gz', ''),
+    ]
+    kwargs = {
+        'storage_name': test_storage_name,
+        'working_directory': TEST_FILES_DIR,
+    }
+    cn.cfht_names[uri] = test_storage_name
 
-        test_obs = espadons_energy_augmentation.visit(obs, **kwargs)
-        assert test_obs is not None, 'expect a result'
-        # assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
-        test_reference = (
-            obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
-        )
-        assert test_reference is not None, 'expect to assign'
-        assert test_reference.energy is not None, 'expect to assign energy'
-        assert test_reference.naxis == 2, 'wrong naxis'
-        assert test_reference.energy_axis == 1, 'wrong energy axis'
-        assert test_reference.observable_axis == 2, 'wrong observable axis'
-        assert test_reference.position_axis_1 is None, 'wrong position 1 axis'
-        assert test_reference.position_axis_2 is None, 'wrong position 2 axis'
-        assert test_reference.time_axis is None, 'wrong time axis'
-        assert test_reference.custom_axis is None, 'wrong custom axis'
-        assert test_reference.polarization_axis is None, 'wrong pol axis'
-    finally:
-        StorageName.scheme = orig_scheme
-        StorageName.collection = orig_collection
+    test_obs = espadons_energy_augmentation.visit(obs, **kwargs)
+    assert test_obs is not None, 'expect a result'
+    # assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
+    test_reference = (
+        obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
+    )
+    assert test_reference is not None, 'expect to assign'
+    assert test_reference.energy is not None, 'expect to assign energy'
+    assert test_reference.naxis == 2, 'wrong naxis'
+    assert test_reference.energy_axis == 1, 'wrong energy axis'
+    assert test_reference.observable_axis == 2, 'wrong observable axis'
+    assert test_reference.position_axis_1 is None, 'wrong position 1 axis'
+    assert test_reference.position_axis_2 is None, 'wrong position 2 axis'
+    assert test_reference.time_axis is None, 'wrong time axis'
+    assert test_reference.custom_axis is None, 'wrong custom axis'
+    assert test_reference.polarization_axis is None, 'wrong pol axis'
