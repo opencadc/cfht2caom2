@@ -78,7 +78,7 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
         super().__init__(observation, **kwargs)
 
     def _get_mapping(self, headers):
-        return instruments.factory(headers, self._storage_name, self._clients)
+        return instruments.factory(headers, self._storage_name, self._clients, self._observable)
 
     def _get_parser(self, headers, blueprint, uri):
         if self._storage_name.hdf5 and len(headers) > 0:

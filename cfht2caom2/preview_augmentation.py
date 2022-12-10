@@ -749,11 +749,10 @@ class CFHTPreview(mc.PreviewVisitor):
             width, height = image.size
             draw = ImageDraw.Draw(image)
             font = ImageFont.truetype(
-                '/usr/local/lib/python3.8/site-packages/matplotlib/mpl-data/'
-                'fonts/ttf/DejaVuSans-Bold.ttf',
-                font_size,
+                '/usr/local/lib/python3.9/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', font_size
             )
-            text_width, text_height = draw.textsize(title, font=font)
+            ignore_left, top, ignore_right, bottom = font.getbbox(title)
+            text_height = bottom - top
             text_length = draw.textlength(title)
             margin = 10
             x = width / 2 - text_length / 2 - margin * offset

@@ -263,7 +263,7 @@ def test_preview_augment(test_config):
                     f'{f_name} execution time {end_ts - start_ts}'
                 )
             except Exception as e:
-                logging.error(e)
+                logging.error(f'{obs.observation_id} {e}')
                 logging.error(traceback.format_exc())
                 assert False
 

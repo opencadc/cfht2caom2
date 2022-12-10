@@ -81,6 +81,7 @@ def test_config():
     config.collection = COLLECTION
     config.preview_scheme = PREVIEW_SCHEME
     config.scheme = SCHEME
+    config.logging_level = 'INFO'
     StorageName.collection = config.collection
     StorageName.preview_scheme = config.preview_scheme
     StorageName.scheme = config.scheme

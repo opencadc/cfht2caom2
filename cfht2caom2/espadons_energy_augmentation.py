@@ -86,6 +86,7 @@ def visit(observation, **kwargs):
     clients = kwargs.get('clients')
     if clients is None:
         logging.warning(f'No clients for ESPaDoNS energy augmentation.')
+    observable = kwargs.get('observable')
     science_fqn = storage_name.get_file_fqn(working_dir)
     count = 0
     if (
@@ -102,7 +103,7 @@ def visit(observation, **kwargs):
                     f'storage_name {storage_name.file_uri} artifact {artifact.uri}'
                 )
                 if storage_name.file_uri == artifact.uri:
-                    count += _do_energy(artifact, science_fqn, storage_name, clients)
+                    count += _do_energy(artifact, science_fqn, storage_name, clients, observable)
         logging.info(
             f'Completed ESPaDOnS energy augmentation for {count} artifacts in '
             f'{observation.observation_id}.'
@@ -110,7 +111,7 @@ def visit(observation, **kwargs):
     return observation
 
 
-def _do_energy(artifact, science_fqn, cfht_name, clients):
+def _do_energy(artifact, science_fqn, cfht_name, clients, observable):
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -152,7 +153,7 @@ def _do_energy(artifact, science_fqn, cfht_name, clients):
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave)
     coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
-    espadons = instruments.Espadons([hdr], cfht_name, clients)
+    espadons = instruments.Espadons([hdr], cfht_name, clients, observable)
     espadons.extension = 0
     resolving_power = espadons.get_energy_resolving_power(0)
     chunk = artifact.parts['0'].chunks[0]
