@@ -921,10 +921,6 @@ class InstrumentType(cc.TelescopeMapping):
                 result = ac.get_datetime(self._headers[ext].get(ii))
                 if ac.is_good_date(result, self._instrument_start_date):
                     break
-                # if temp is None:
-                #     continue
-                # else:
-                #     result = ac.get_datetime(temp)
         if result is None:
             self.track_invalid_date(result, 'Chunk.time.axis.function.refCoord.val')
         else:
@@ -941,26 +937,22 @@ class InstrumentType(cc.TelescopeMapping):
         return result
 
     def _get_mjd_start(self, ext):
-        mjd_obs = self._get_mjd_obs(ext)
-        if mjd_obs is None:
-            date_str = self._headers[ext].get('DATE-OBS')
-            if date_str is None:
-                dt_str = self._headers[ext].get('DATE')
-                if dt_str is not None:
-                    mjd_obs = ac.get_datetime(dt_str)
+        mjd_obs = None
+        for index, value in enumerate([self._get_mjd_obs(ext), 'DATE-OBS', 'DATE']):
+            if index == 0:
+                mjd_obs = value
             else:
-                time_str = self._headers[ext].get('TIME-OBS')
-                date_obs = ac.get_datetime(date_str)
-                time_obs = None
-                if time_str is not None:
-                    time_obs = ac.get_datetime(time_str)
-                if time_obs is None:
-                    mjd_obs = date_obs
-                else:
-                    mjd_obs = date_obs + time_obs
-            mjd_obs = mjd_obs.value
-        else:
-            mjd_obs = mjd_obs.value
+                temp = self._headers[ext].get(value)
+                if value == 'DATE-OBS':
+                    temp2 = self._headers[ext].get('TIME-OBS')
+                    if temp is not None and temp2 is not None:
+                        temp = f'{temp}T{temp2}'
+                mjd_obs = ac.get_datetime(temp)
+
+            if ac.is_good_date(mjd_obs, self._instrument_start_date):
+                if hasattr(mjd_obs, 'value'):
+                    mjd_obs = mjd_obs.value
+                break
         return mjd_obs
 
     def _get_ra_dec(self, ext):
@@ -1713,7 +1705,6 @@ class Espadons(InstrumentType):
                         if temp is not None and temp2 is not None:
                             temp = f'{temp}T{temp2}'
                     mjd_obs = ac.get_datetime(temp)
-                logging.error(f'_refcoord_val {mjd_obs} keyword {index}')
                 if ac.is_good_date(mjd_obs, self._instrument_start_date):
                     break
         if mjd_obs is None:
@@ -3495,10 +3486,7 @@ class Wircam(InstrumentType):
             # ZNAXIS* keyword values before trying NAXIS*, hence the header
             # lookup code
 
-            ref_coord_val = mc.get_keyword(self._headers, 'MJD-OBS')
-            # ref_coord_val = self._headers[0].get('MJD-OBS')
-            # if ref_coord_val is None:
-            #     ref_coord_val = self._headers[1].get('MJD-OBS')
+            ref_coord_val = ac.to_mjd(mc.get_keyword(self._headers, 'MJD-OBS'))
             part_index = mc.to_int(self.part.name)
             part_header = self._headers[part_index]
 
@@ -3525,7 +3513,7 @@ class Wircam(InstrumentType):
                 self._chunk.time.axis.function is None
                 and ref_coord_val is not None
             ):
-                ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val))
+                ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val.value))
 
                 time_index = part_header.get('ZNAXIS')
                 if time_index is None:
