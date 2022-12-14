@@ -1,6 +1,7 @@
 <caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-31ff-0140f23ec8cc" caom2:lastModified="2022-06-29T16:27:36.380" caom2:maxLastModified="2022-06-29T16:27:54.734" caom2:metaChecksum="md5:bd0ebee37c8fcd67a6f38582f0e6173e" caom2:accMetaChecksum="md5:810d2bc628474f9395d6480b91a42c99" caom2:metaProducer="cfht2caom2/0.3.8">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>770380</caom2:observationID>
+  <caom2:metaRelease>2004-11-24T02:17:06.000</caom2:metaRelease>
   <caom2:sequenceNumber>770380</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
@@ -35,6 +36,7 @@
   <caom2:planes>
     <caom2:plane caom2:id="00000000-0000-0000-31ff-0140f23ecb35" caom2:lastModified="2022-06-29T16:27:36.380" caom2:maxLastModified="2022-06-29T16:27:54.734" caom2:metaChecksum="md5:da7e3fb2a78344071800892775896895" caom2:accMetaChecksum="md5:ed3367256cd9727751817916cb9efd81" caom2:metaProducer="cfht2caom2/0.3.8">
       <caom2:productID>770380b</caom2:productID>
+      <caom2:metaRelease>2004-11-24T02:17:06.000</caom2:metaRelease>
       <caom2:dataProductType>spectrum</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>
@@ -54,27 +56,6 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-31ff-0140f23ecb41" caom2:lastModified="2022-06-29T16:27:36.380" caom2:maxLastModified="2022-06-29T16:27:36.380" caom2:metaChecksum="md5:64b957988bd1fb66b0d0d4610094409d" caom2:accMetaChecksum="md5:1896e2e771bc5104e5fb101c37a19075" caom2:metaProducer="cfht2caom2/0.3.8">
-                  <caom2:energy>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>nm</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:range>
-                        <caom2:start>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>370.0</caom2:val>
-                        </caom2:start>
-                        <caom2:end>
-                          <caom2:pix>1.5</caom2:pix>
-                          <caom2:val>1048.2948088</caom2:val>
-                        </caom2:end>
-                      </caom2:range>
-                    </caom2:axis>
-                    <caom2:specsys>TOPOCENT</caom2:specsys>
-                    <caom2:ssyssrc>TOPOCENT</caom2:ssyssrc>
-                    <caom2:bandpassName>Unknown</caom2:bandpassName>
-                  </caom2:energy>
                   <caom2:time>
                     <caom2:axis>
                       <caom2:axis>
@@ -90,7 +71,7 @@
                         <caom2:delta>0.0</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>0.0</caom2:val>
+                          <caom2:val>53332.67854166667</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
