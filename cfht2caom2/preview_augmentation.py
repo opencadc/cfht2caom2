@@ -72,12 +72,14 @@ import h5py
 import logging
 import os
 
+import matplotlib as mpl
 import matplotlib.image as image
 import matplotlib.pyplot as plt
 import numpy as np
 
 from astropy.io import fits
 from astropy.table import Table
+from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from caom2 import ProductType, ReleaseType, ObservationIntentType
@@ -707,9 +709,8 @@ class CFHTPreview(mc.PreviewVisitor):
             image = Image.open(in_fqn)
             width, height = image.size
             draw = ImageDraw.Draw(image)
-            font = ImageFont.truetype(
-                '/usr/local/lib/python3.9/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', font_size
-            )
+            fpath = Path(mpl.get_data_path(), 'fonts/ttf/DejaVuSans-Bold.ttf')
+            font = ImageFont.truetype(fpath.as_posix())
             ignore_left, top, ignore_right, bottom = font.getbbox(title)
             text_height = bottom - top
             text_length = draw.textlength(title)
