@@ -162,6 +162,12 @@ def test_run_store(
     data_client_mock.return_value.info.side_effect = _mock_get_file_info
     headers_mock.side_effect = ac.make_headers_from_file
     check_fits_mock.return_value = True
+
+    # make sure the rejected.yml file doesn't contain the file under test
+    rejected_fqn = f'{test_dir_fqn}/rejected/rejected.yml'
+    if os.path.exists(rejected_fqn):
+        os.unlink(rejected_fqn)
+
     try:
         # execution
         test_result = composable._run_by_builder()

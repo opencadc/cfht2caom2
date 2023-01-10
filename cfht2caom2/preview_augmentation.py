@@ -72,12 +72,14 @@ import h5py
 import logging
 import os
 
+import matplotlib as mpl
 import matplotlib.image as image
 import matplotlib.pyplot as plt
 import numpy as np
 
 from astropy.io import fits
 from astropy.table import Table
+from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from caom2 import ProductType, ReleaseType, ObservationIntentType
@@ -198,48 +200,21 @@ class CFHTPreview(mc.PreviewVisitor):
                 )  # increase scale of polarization
 
         fig = plt.figure(figsize=(10.24, 10.24), dpi=100)
-        self._subplot(
-            fig,
-            swa,
-            sia,
-            spa,
-            4300.0,
-            4600.0,
-            1,
-            4408.0,
-            4412.0,
-            'Stokes spectrum (x5)',
-        )
-        self._subplot(
-            fig,
-            swa,
-            sia,
-            spa,
-            6500.0,
-            6750.0,
-            2,
-            6589.0,
-            6593.0,
-            'Stokes spectrum (x5)',
-        )
-        plt.savefig(self._preview_fqn, format='jpg')
-        self.add_preview(
-            self._storage_name.prev_uri,
-            self._storage_name.prev,
-            ProductType.PREVIEW,
-            ReleaseType.DATA,
-        )
-        self.add_to_delete(self._preview_fqn)
-        count = 1
-        count += self._gen_thumbnail()
-        if count == 2:
-            self.add_preview(
-                self._storage_name.thumb_uri,
-                self._storage_name.thumb,
-                ProductType.THUMBNAIL,
-                ReleaseType.META,
-            )
-            self.add_to_delete(self._thumb_fqn)
+        count = 0
+        if self._subplot(fig, swa, sia, spa, 4300.0, 4600.0, 1, 4408.0, 4412.0, 'Stokes spectrum (x5)'):
+            if self._subplot(fig, swa, sia, spa, 6500.0, 6750.0, 2, 6589.0, 6593.0, 'Stokes spectrum (x5)'):
+                plt.savefig(self._preview_fqn, format='jpg')
+                self.add_preview(
+                    self._storage_name.prev_uri, self._storage_name.prev, ProductType.PREVIEW, ReleaseType.DATA
+                )
+                self.add_to_delete(self._preview_fqn)
+                count = 1
+                count += self._gen_thumbnail()
+                if count == 2:
+                    self.add_preview(
+                        self._storage_name.thumb_uri, self._storage_name.thumb, ProductType.THUMBNAIL, ReleaseType.META
+                    )
+                    self.add_to_delete(self._thumb_fqn)
         return count
 
     def _subplot(
@@ -264,40 +239,46 @@ class CFHTPreview(mc.PreviewVisitor):
             pflux = spa[(swa > wl_low) & (swa < wl_high)]
             pflux_sort = pflux[wl.argsort()]
             flux = np.append(flux, pflux)
-        ymax = 1.1 * np.max(flux)
-        if np.isnan(ymax):
-            ymax = 1.0
-        ymin = np.min([0.0, np.min(flux) - (ymax - np.max(flux))])
-        if np.isnan(ymin):
-            ymin = 0.0
+        result = False
+        if flux.shape == (0,):
+            self._logger.warning(f'Sub-plot flux ill-defined for {self._storage_name.file_name}')
+        else:
+            ymax = 1.1 * np.max(flux)
+            if np.isnan(ymax):
+                ymax = 1.0
+            ymin = np.min([0.0, np.min(flux) - (ymax - np.max(flux))])
+            if np.isnan(ymin):
+                ymin = 0.0
 
-        # pylab.subplot(2, 1, subplot_index)
-        axis = fig.add_subplot(2, 1, subplot_index)
-        axis.grid(True)
-        axis.plot(wl_sort, flux_sort, color='k')
-        if self._storage_name.suffix == 'p':
-            axis.plot(wl_sort, pflux_sort, color='b')
-            axis.text(
-                text_1,
-                (ymin + 0.02 * (ymax - ymin)),
-                text_3,
-                size=16,
-                color='b',
+            # pylab.subplot(2, 1, subplot_index)
+            axis = fig.add_subplot(2, 1, subplot_index)
+            axis.grid(True)
+            axis.plot(wl_sort, flux_sort, color='k')
+            if self._storage_name.suffix == 'p':
+                axis.plot(wl_sort, pflux_sort, color='b')
+                axis.text(
+                    text_1,
+                    (ymin + 0.02 * (ymax - ymin)),
+                    text_3,
+                    size=16,
+                    color='b',
+                )
+            axis.set(
+                title=label,
+                xlabel=r'Wavelength ($\AA$)',
+                ylabel='Relative Intensity',
             )
-        axis.set(
-            title=label,
-            xlabel=r'Wavelength ($\AA$)',
-            ylabel='Relative Intensity',
-        )
-        axis.title.set_weight('bold')
-        axis.title.set_color('m')
-        axis.text(
-            text_2,
-            (ymin + 0.935 * (ymax - ymin)),
-            'Intensity spectrum',
-            size=16,
-        )
-        axis.set_ylim(ymin, ymax)
+            axis.title.set_weight('bold')
+            axis.title.set_color('m')
+            axis.text(
+                text_2,
+                (ymin + 0.935 * (ymax - ymin)),
+                'Intensity spectrum',
+                size=16,
+            )
+            axis.set_ylim(ymin, ymax)
+            result = True
+        return result
 
     def _do_ds9_prev(self, obs_id):
         """
@@ -654,34 +635,14 @@ class CFHTPreview(mc.PreviewVisitor):
             if self._storage_name.suffix == 'p':
                 spa[i] = float(sp[i]) * pScale  # increase polarization scale
         fig = plt.figure(figsize=(10.24, 10.24), dpi=100)
-        self._subplot(
-            fig,
-            swa,
-            sia,
-            spa,
-            15000.0,
-            15110.0,
-            1,
-            15030.0,
-            15030.0,
-            'Stokes spectrum',
-        )
-        self._subplot(
-            fig,
-            swa,
-            sia,
-            spa,
-            22940.0,
-            23130.0,
-            2,
-            22990.0,
-            22990.0,
-            'Stokes spectrum',
-        )
-        plt.tight_layout()
-        plt.savefig(self._preview_fqn, format='jpg')
-        plt.close()
-        return self._save_figure()
+        result = 0
+        if self._subplot(fig, swa, sia, spa, 15000.0, 15110.0, 1, 15030.0, 15030.0, 'Stokes spectrum'):
+            if self._subplot(fig, swa, sia, spa, 22940.0, 23130.0, 2, 22990.0, 22990.0, 'Stokes spectrum'):
+                plt.tight_layout()
+                plt.savefig(self._preview_fqn, format='jpg')
+                plt.close()
+                result = self._save_figure()
+        return result
 
     def _exec_cmd_chdir(self, temp_file, cmd):
         orig_dir = os.getcwd()
@@ -748,12 +709,10 @@ class CFHTPreview(mc.PreviewVisitor):
             image = Image.open(in_fqn)
             width, height = image.size
             draw = ImageDraw.Draw(image)
-            font = ImageFont.truetype(
-                '/usr/local/lib/python3.8/site-packages/matplotlib/mpl-data/'
-                'fonts/ttf/DejaVuSans-Bold.ttf',
-                font_size,
-            )
-            text_width, text_height = draw.textsize(title, font=font)
+            fpath = Path(mpl.get_data_path(), 'fonts/ttf/DejaVuSans-Bold.ttf')
+            font = ImageFont.truetype(fpath.as_posix(), font_size)
+            ignore_left, top, ignore_right, bottom = font.getbbox(title)
+            text_height = bottom - top
             text_length = draw.textlength(title)
             margin = 10
             x = width / 2 - text_length / 2 - margin * offset

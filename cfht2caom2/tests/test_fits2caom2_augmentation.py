@@ -81,7 +81,7 @@ from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
 from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
-from caom2pipe.manage_composable import StorageName, read_obs_from_file
+from caom2pipe.manage_composable import Observable, Rejected, StorageName, read_obs_from_file
 from caom2pipe.manage_composable import get_keyword, write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
@@ -102,7 +102,7 @@ def pytest_generate_tests(metafunc):
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config):
+def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config, tmp_path):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = _vo_mock
@@ -124,9 +124,13 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     metadata_reader = rdc.FileMetadataReader()
     metadata_reader._headers = {storage_name.file_uri: headers}
     metadata_reader._file_info = {storage_name.file_uri: file_info}
+    test_config.rejected_file_name = 'rejected.yml'
+    test_config.rejected_directory = tmp_path.as_posix()
+    test_observable = Observable(rejected=Rejected(test_config.rejected_fqn), metrics=None)
     kwargs = {
         'storage_name': storage_name,
         'metadata_reader': metadata_reader,
+        'observable': test_observable,
     }
     storage_name._bitpix = get_keyword(headers, 'BITPIX')
     observation = None
@@ -146,10 +150,7 @@ def _compare(observation, obs_id, dir_name):
     if compare_result is not None:
         write_obs_to_file(observation, actual_fqn)
         compare_text = '\n'.join([r for r in compare_result])
-        msg = (
-            f'Differences found in observation {expected.observation_id}\n'
-            f'{compare_text}'
-        )
+        msg = f'Differences found in {expected.observation_id} {observation.instrument.name}\n{compare_text}'
         raise AssertionError(msg)
 
 
@@ -203,6 +204,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '2460503p',
             '963946',
             '770380',
+            '881397',
         ],
         md.Inst.SPIROU: [
             '2401727a',

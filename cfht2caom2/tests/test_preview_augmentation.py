@@ -137,6 +137,7 @@ def test_preview_augment(test_config):
         'visit_obs_start_spirou_p2.xml': ['2630033p.fits'],
         'visit_obs_start_wircam_fits.xml': ['1334131g.fits'],
         'visit_obs_start_sitelle_hdf5.xml': ['2752885z.hdf5'],
+        'visit_obs_start_spirou_p_bad_flux.xml': ['2446341p.fits'],
     }
 
     test_checksums = {
@@ -263,7 +264,7 @@ def test_preview_augment(test_config):
                     f'{f_name} execution time {end_ts - start_ts}'
                 )
             except Exception as e:
-                logging.error(e)
+                logging.error(f'{obs.observation_id} {e}')
                 logging.error(traceback.format_exc())
                 assert False
 

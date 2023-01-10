@@ -260,8 +260,8 @@ class CFHTValueRepair(mc.ValueRepairCache):
 class InstrumentType(cc.TelescopeMapping):
     value_repair = CFHTValueRepair()
 
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(cfht_name, headers, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(cfht_name, headers, clients, observable)
         # keep because of MegaCam/MegaPrime
         self._name = cfht_name.instrument.value
         self._storage_name = cfht_name
@@ -271,6 +271,7 @@ class InstrumentType(cc.TelescopeMapping):
         self._part = None
         self._plane = None
         self._extension = None
+        self._instrument_start_date = ac.get_datetime('1979-01-01 00:00:00')
         self._logger = logging.getLogger(self._name)
 
     @property
@@ -653,19 +654,13 @@ class InstrumentType(cc.TelescopeMapping):
     def get_meta_release(self, ext):
         # order set from:
         # caom2IngestWircam.py, l777
-        result = self._headers[ext].get('MET_DATE')
-        if result is None:
-            result = self._headers[ext].get('DATE-OBS')
-            if result is None:
-                # caom2IngestEspadons.py, l625
-                result = self._headers[ext].get('DATE-OB1')
-                if result is None:
-                    result = self._headers[ext].get('DATE')
-                    if result is None:
-                        result = self._headers[ext].get('REL_DATE')
-                    if result is None:
-                        # caom2IngestMegadetrend.py, l445
-                        result = self._headers[ext].get('TVSTART')
+        # caom2IngestEspadons.py, l625
+        # caom2IngestMegadetrend.py, l445
+        for keyword in ['MET_DATE', 'DATE-OBS', 'DATE-OB1', 'DATE', 'REL_DATE', 'TVSTART']:
+            result = self._headers[ext].get(keyword)
+            # no end date check - CFHT has random metadata release rules that should be reflected in the keyword values
+            if ac.is_good_date(ac.get_datetime(result), self._instrument_start_date, check_end_date=False):
+                break
         return result
 
     def get_obs_environment_humidity(self, ext):
@@ -763,6 +758,12 @@ class InstrumentType(cc.TelescopeMapping):
                         else:
                             rel_year += 1
                             result = f'{rel_year}-02-28T00:00:00'
+        if (
+            result is not None
+            and not ac.is_good_date(ac.get_datetime(result), self._instrument_start_date, check_end_date=False)
+        ):
+            self.track_invalid_date(result, 'Plane.dataRelease')
+            result = None
         return result
 
     def get_polarization_function_val(self, ext):
@@ -902,19 +903,12 @@ class InstrumentType(cc.TelescopeMapping):
         # Time - set exptime as time of one image, start and stop dates
         # as one pixel so this means crval3 is not equal to exptime
         # if TVSTART not defined, use release_date as mjdstart
-        dt_str = self._headers[ext].get('TVSTART')
-        if dt_str is None:
-            dt_str = self._headers[ext].get('REL_DATE')
-            if dt_str is None:
-                dt_str = self._headers[ext].get('DATE')
-        mjd_obs = None
-        if dt_str is not None:
-            mjd_obs = ac.get_datetime(dt_str)
+        for keyword in ['TVSTART', 'REL_DATE', 'DATE']:
+            mjd_obs = ac.get_datetime(self._headers[ext].get(keyword))
+            if ac.is_good_date(mjd_obs, self._instrument_start_date):
+                break
         if mjd_obs is None:
-            self._logger.warning(
-                f'Chunk.time.axis.function.refCoord.val is None for '
-                f'{self._storage_name.file_name}, extension {ext}'
-            )
+            self.track_invalid_date(mjd_obs, 'Chunk.time.axis.function.refCoord.val')
         else:
             mjd_obs = mjd_obs.value
         return mjd_obs
@@ -924,41 +918,41 @@ class InstrumentType(cc.TelescopeMapping):
         if result is None:
             # from caom2IngestMegacam.py, l549
             for ii in ['DATE-OBS', 'DATE']:
-                temp = self._headers[ext].get(ii)
-                if temp is None:
-                    continue
-                else:
-                    result = ac.get_datetime(temp)
-                    if result is not None:
-                        result = result.value
+                result = ac.get_datetime(self._headers[ext].get(ii))
+                if ac.is_good_date(result, self._instrument_start_date):
                     break
+        if result is None:
+            self.track_invalid_date(result, 'Chunk.time.axis.function.refCoord.val')
+        else:
+            result = result.value
         return result
 
     def get_time_resolution(self, ext):
         pass
 
     def _get_mjd_obs(self, ext):
-        return mc.to_float(self._headers[ext].get('MJD-OBS'))
+        result = ac.to_mjd(self._headers[ext].get('MJD-OBS'))
+        if not ac.is_good_date(result, self._instrument_start_date):
+            result = None
+        return result
 
     def _get_mjd_start(self, ext):
-        mjd_obs = self._get_mjd_obs(ext)
-        if mjd_obs is None:
-            date_str = self._headers[ext].get('DATE-OBS')
-            if date_str is None:
-                dt_str = self._headers[ext].get('DATE')
-                if dt_str is not None:
-                    mjd_obs = ac.get_datetime(dt_str)
+        mjd_obs = None
+        for index, value in enumerate([self._get_mjd_obs(ext), 'DATE-OBS', 'DATE']):
+            if index == 0:
+                mjd_obs = value
             else:
-                time_str = self._headers[ext].get('TIME-OBS')
-                date_obs = ac.get_datetime(date_str)
-                time_obs = None
-                if time_str is not None:
-                    time_obs = ac.get_datetime(time_str)
-                if time_obs is None:
-                    mjd_obs = date_obs
-                else:
-                    mjd_obs = date_obs + time_obs
-            mjd_obs = mjd_obs.value
+                temp = self._headers[ext].get(value)
+                if value == 'DATE-OBS':
+                    temp2 = self._headers[ext].get('TIME-OBS')
+                    if temp is not None and temp2 is not None:
+                        temp = f'{temp}T{temp2}'
+                mjd_obs = ac.get_datetime(temp)
+
+            if ac.is_good_date(mjd_obs, self._instrument_start_date):
+                if hasattr(mjd_obs, 'value'):
+                    mjd_obs = mjd_obs.value
+                break
         return mjd_obs
 
     def _get_ra_dec(self, ext):
@@ -1391,6 +1385,10 @@ class InstrumentType(cc.TelescopeMapping):
     def reset_position(self):
         pass
 
+    def track_invalid_date(self, value, key):
+        self._logger.warning(f'Invalid date of {value} for {key}.')
+        self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
+
     def update_chunk(self):
         self.update_observable()
         self.update_polarization()
@@ -1445,8 +1443,10 @@ class InstrumentType(cc.TelescopeMapping):
 
 
 class Espadons(InstrumentType):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+        # SF 18-11-22 espadons is 2004
+        self._instrument_start_time = ac.get_datetime('2004-01-01 00:00:00')
 
     def _is_espadons_energy(self):
         result = False
@@ -1673,36 +1673,45 @@ class Espadons(InstrumentType):
         return exptime / 86400.0  # units are d
 
     def get_time_refcoord_val(self, ext):
+        """
+        SF 18-11-22
+        DATE-OBS is wrong, but the DATE is ok in the fits headers. so the chain rules of date check in the
+        instrument.py could be added with something like
+            && result_date > commissioning_date_of_instrument && result_date < today
+        espadons is 2004.
+
+        :param ext:
+        :return:
+        """
+        mjd_obs = None
         if self._storage_name.suffix == 'p':
             mjd_start1 = self._headers[ext].get('MJDSTART1')
             mjd_date1 = self._headers[ext].get('MJDATE1')
-            mjd_obs = None
             if mjd_start1 is not None or mjd_date1 is not None:
                 # caom2IngestEspadons.py, l406
                 if mjd_start1 is not None:
-                    mjd_obs = mjd_start1
+                    temp = mjd_start1
                 else:
-                    mjd_obs = mjd_date1
+                    temp = mjd_date1
+                mjd_obs = ac.to_mjd(temp)
         else:
-            mjd_obs = self._get_mjd_obs(ext)
-            if mjd_obs is None:
-                date_obs = self._headers[ext].get('DATE-OBS')
-                time_obs = self._headers[ext].get('TIME-OBS')
-                if (
-                    date_obs is None
-                    or time_obs is None
-                    or date_obs == '1970-01-01'
-                    or date_obs == '1970-00-01'
-                ):
-                    hst_time = self._headers[ext].get('HSTTIME)')
-                    # fmt 'Mon Nov 27 15:58:17 HST 2006'
-                    if hst_time is not None:
-                        mjd_obs = ac.get_datetime(hst_time)
+            for index, value in enumerate([self._get_mjd_obs(ext), 'DATE-OBS', 'HSTTIME', 'DATE']):
+                if index == 0:
+                    mjd_obs = value
                 else:
-                    mjd_obs_str = f'{date_obs}T{time_obs}'
-                    mjd_obs = ac.get_datetime(mjd_obs_str)
-        if mjd_obs is not None and hasattr(mjd_obs, 'value'):
-            mjd_obs = mjd_obs.value
+                    temp = self._headers[ext].get(value)
+                    if value == 'DATE-OBS':
+                        temp2 = self._headers[ext].get('TIME-OBS')
+                        if temp is not None and temp2 is not None:
+                            temp = f'{temp}T{temp2}'
+                    mjd_obs = ac.get_datetime(temp)
+                if ac.is_good_date(mjd_obs, self._instrument_start_date):
+                    break
+        if mjd_obs is None:
+            self.track_invalid_date(None, 'Chunk.time.axis.function.refCoord.val')
+        else:
+            if hasattr(mjd_obs, 'value'):
+                mjd_obs = mjd_obs.value
         return mjd_obs
 
     def make_axes_consistent(self):
@@ -1860,9 +1869,12 @@ class Espadons(InstrumentType):
 
 
 class Mega(InstrumentType):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
         self._filter_name = None
+        # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
+        # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
+        self._instrument_start_date = ac.get_datetime('2001-01-24 00:00:00')
 
     @property
     def extension(self):
@@ -1977,8 +1989,11 @@ class Mega(InstrumentType):
 
 
 class Sitelle(InstrumentType):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+        # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
+        # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
+        self._instrument_start_date = ac.get_datetime('2015-07-07 00:00:00.000')
 
     def _is_derived(self, obs_id):
         if self._storage_name.suffix == 'z':
@@ -2104,6 +2119,9 @@ class Sitelle(InstrumentType):
                 temp = ac.get_datetime(rel_date) + 1 * units.year
                 temp.format = 'isot'
                 result = temp.value
+                if not ac.is_good_date(result, self._instrument_start_date, check_end_date=False):
+                    self.track_invalid_date(result, 'Plane.dataRelease')
+                    result = None
         else:
             result = super().get_plane_data_release(ext)
         return result
@@ -2358,8 +2376,8 @@ class Sitelle(InstrumentType):
 
 
 class SitelleHdf5(InstrumentType):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2491,6 +2509,8 @@ class SitelleHdf5(InstrumentType):
                 temp = temp + 1 * units.year
             temp.format = 'isot'
             result = temp.value
+            if not ac.is_good_date(result, self._instrument_start_date, check_end_date=False):
+                self.track_invalid_date(result, 'Plane.dataRelease')
         return result
 
     def _get_proposal_id(self, ext):
@@ -2603,8 +2623,8 @@ class SitelleHdf5(InstrumentType):
 
 
 class SitelleNoHdf5Metadata(Sitelle):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2657,10 +2677,13 @@ class SitelleNoHdf5Metadata(Sitelle):
 
 
 class Spirou(InstrumentType):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
         # TODO self._header = headers[extension]
         self._header = None
+        # https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_news.php says 2019-02-13 00:00:00.000
+        # but existing metadata has a minimum value of 2018-04-25 02:12:03.942720 for 2401710o.fits
+        self._instrument_start_date = ac.get_datetime('2018-04-24 00:00:00')
 
     @property
     def extension(self):
@@ -3075,8 +3098,11 @@ class Spirou(InstrumentType):
 
 
 class Wircam(InstrumentType):
-    def __init__(self, headers, cfht_name, clients):
-        super().__init__(headers, cfht_name, clients)
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+        # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
+        # but existing metadata has a minimum value of 2000-07-21 00:00:00 for mastertwilightflat_Ks_13Aw01_v200.fits
+        self._instrument_start_date = ac.get_datetime('2000-07-20 00:00:00.000')
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3460,10 +3486,7 @@ class Wircam(InstrumentType):
             # ZNAXIS* keyword values before trying NAXIS*, hence the header
             # lookup code
 
-            ref_coord_val = mc.get_keyword(self._headers, 'MJD-OBS')
-            # ref_coord_val = self._headers[0].get('MJD-OBS')
-            # if ref_coord_val is None:
-            #     ref_coord_val = self._headers[1].get('MJD-OBS')
+            ref_coord_val = ac.to_mjd(mc.get_keyword(self._headers, 'MJD-OBS'))
             part_index = mc.to_int(self.part.name)
             part_header = self._headers[part_index]
 
@@ -3490,7 +3513,7 @@ class Wircam(InstrumentType):
                 self._chunk.time.axis.function is None
                 and ref_coord_val is not None
             ):
-                ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val))
+                ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val.value))
 
                 time_index = part_header.get('ZNAXIS')
                 if time_index is None:
@@ -3620,26 +3643,25 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
-def factory(headers, cfht_name, clients):
+def factory(headers, cfht_name, clients, observable):
     if cfht_name.instrument is md.Inst.ESPADONS:
-        temp = Espadons(headers, cfht_name, clients)
+        temp = Espadons(headers, cfht_name, clients, observable)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
-        temp = Mega(headers, cfht_name, clients)
+        temp = Mega(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.hdf5:
             if len(headers) > 0:
                 # len => could be an h5 file with no attrs
-                temp = SitelleHdf5(headers, cfht_name, clients)
+                temp = SitelleHdf5(headers, cfht_name, clients, observable)
             else:
-                temp = SitelleNoHdf5Metadata(headers, cfht_name, clients)
+                temp = SitelleNoHdf5Metadata(headers, cfht_name, clients, observable)
         else:
-            temp = Sitelle(headers, cfht_name, clients)
+            temp = Sitelle(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.SPIROU:
-        temp = Spirou(headers, cfht_name, clients)
+        temp = Spirou(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.WIRCAM:
-        temp = Wircam(headers, cfht_name, clients)
+        temp = Wircam(headers, cfht_name, clients, observable)
     else:
-        raise mc.CadcException(
-            f'No support for unexpected instrument {cfht_name.instrument}.'
-        )
+        observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
+        raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
     return temp
