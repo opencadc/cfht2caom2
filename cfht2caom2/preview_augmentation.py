@@ -710,7 +710,7 @@ class CFHTPreview(mc.PreviewVisitor):
             width, height = image.size
             draw = ImageDraw.Draw(image)
             fpath = Path(mpl.get_data_path(), 'fonts/ttf/DejaVuSans-Bold.ttf')
-            font = ImageFont.truetype(fpath.as_posix())
+            font = ImageFont.truetype(fpath.as_posix(), font_size)
             ignore_left, top, ignore_right, bottom = font.getbbox(title)
             text_height = bottom - top
             text_length = draw.textlength(title)
