@@ -103,6 +103,7 @@ def pytest_generate_tests(metafunc):
 @patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config, tmp_path):
+    # logging.getLogger('root').setLevel(logging.DEBUG)
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = _vo_mock
@@ -182,6 +183,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '03Am05.fringe',
             '1265044',
             '688231',
+            '19BMfr.fringe.gri.40.00',
         ],
         md.Inst.ESPADONS: [
             '2460606',
@@ -217,6 +219,8 @@ def _identify_inst_mock(ignore_headers, uri):
             '2455409p',
             '2602045r',
             '2515413',
+            '2466133',
+            '2584185',
         ],
         md.Inst.WIRCAM: [
             '840066',

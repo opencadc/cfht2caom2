@@ -94,6 +94,3 @@ task_types:
   - store
   - ingest
   - modify
-features:
-  supports_latest_client: True
-  supports_decompression: True

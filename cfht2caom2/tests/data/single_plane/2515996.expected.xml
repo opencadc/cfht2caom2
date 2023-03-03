@@ -7,6 +7,7 @@
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
+  <caom2:type>GUIDE</caom2:type>
   <caom2:intent>science</caom2:intent>
   <caom2:telescope>
     <caom2:name>CFHT 3.6m</caom2:name>
@@ -45,6 +46,48 @@
               <caom2:name>IMAGE DATA</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="1e06ecfe-81e8-4669-99f0-152de1d4bf91" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:1c822f2bda104fec7acabcc3e4bf617e" caom2:accMetaChecksum="md5:8c712db8ddfe259a75b6a05580882b5d" caom2:metaProducer="cfht2caom2/0.3.2">
+                  <caom2:position>
+                    <caom2:axis>
+                      <caom2:axis1>
+                        <caom2:ctype>RA---TAN</caom2:ctype>
+                        <caom2:cunit>deg</caom2:cunit>
+                      </caom2:axis1>
+                      <caom2:axis2>
+                        <caom2:ctype>DEC--TAN</caom2:ctype>
+                        <caom2:cunit>deg</caom2:cunit>
+                      </caom2:axis2>
+                      <caom2:error1>
+                        <caom2:syser>2.78e-05</caom2:syser>
+                        <caom2:rnder>2.78e-05</caom2:rnder>
+                      </caom2:error1>
+                      <caom2:error2>
+                        <caom2:syser>2.78e-05</caom2:syser>
+                        <caom2:rnder>2.78e-05</caom2:rnder>
+                      </caom2:error2>
+                      <caom2:function>
+                        <caom2:dimension>
+                          <caom2:naxis1>1</caom2:naxis1>
+                          <caom2:naxis2>1</caom2:naxis2>
+                        </caom2:dimension>
+                        <caom2:refCoord>
+                          <caom2:coord1>
+                            <caom2:pix>1.0</caom2:pix>
+                            <caom2:val>106.6507916666666</caom2:val>
+                          </caom2:coord1>
+                          <caom2:coord2>
+                            <caom2:pix>1.0</caom2:pix>
+                            <caom2:val>-12.39780555555556</caom2:val>
+                          </caom2:coord2>
+                        </caom2:refCoord>
+                        <caom2:cd11>-0.00035833</caom2:cd11>
+                        <caom2:cd12>0.0</caom2:cd12>
+                        <caom2:cd21>0.0</caom2:cd21>
+                        <caom2:cd22>0.00035833</caom2:cd22>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:coordsys>FK5</caom2:coordsys>
+                    <caom2:equinox>2000.0</caom2:equinox>
+                  </caom2:position>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>
@@ -95,6 +138,48 @@
               <caom2:name>METADATA</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="f3b1f8dc-1b5a-4bc1-b35c-20331bc1d65f" caom2:lastModified="2020-09-22T03:07:04.917" caom2:maxLastModified="2020-09-22T03:07:04.917" caom2:metaChecksum="md5:d41d6813d9464b05c8cd2d063263cd0a" caom2:accMetaChecksum="md5:bea09589b518bd8921bd560a4fc84a5b" caom2:metaProducer="cfht2caom2/0.3.2">
+                  <caom2:position>
+                    <caom2:axis>
+                      <caom2:axis1>
+                        <caom2:ctype>RA---TAN</caom2:ctype>
+                        <caom2:cunit>deg</caom2:cunit>
+                      </caom2:axis1>
+                      <caom2:axis2>
+                        <caom2:ctype>DEC--TAN</caom2:ctype>
+                        <caom2:cunit>deg</caom2:cunit>
+                      </caom2:axis2>
+                      <caom2:error1>
+                        <caom2:syser>2.78e-05</caom2:syser>
+                        <caom2:rnder>2.78e-05</caom2:rnder>
+                      </caom2:error1>
+                      <caom2:error2>
+                        <caom2:syser>2.78e-05</caom2:syser>
+                        <caom2:rnder>2.78e-05</caom2:rnder>
+                      </caom2:error2>
+                      <caom2:function>
+                        <caom2:dimension>
+                          <caom2:naxis1>1</caom2:naxis1>
+                          <caom2:naxis2>1</caom2:naxis2>
+                        </caom2:dimension>
+                        <caom2:refCoord>
+                          <caom2:coord1>
+                            <caom2:pix>1.0</caom2:pix>
+                            <caom2:val>106.6507916666666</caom2:val>
+                          </caom2:coord1>
+                          <caom2:coord2>
+                            <caom2:pix>1.0</caom2:pix>
+                            <caom2:val>-12.39780555555556</caom2:val>
+                          </caom2:coord2>
+                        </caom2:refCoord>
+                        <caom2:cd11>-0.00035833</caom2:cd11>
+                        <caom2:cd12>0.0</caom2:cd12>
+                        <caom2:cd21>0.0</caom2:cd21>
+                        <caom2:cd22>0.00035833</caom2:cd22>
+                      </caom2:function>
+                    </caom2:axis>
+                    <caom2:coordsys>FK5</caom2:coordsys>
+                    <caom2:equinox>2000.0</caom2:equinox>
+                  </caom2:position>
                   <caom2:energy>
                     <caom2:axis>
                       <caom2:axis>

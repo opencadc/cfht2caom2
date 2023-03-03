@@ -272,7 +272,6 @@ class InstrumentType(cc.TelescopeMapping):
         self._plane = None
         self._extension = None
         self._instrument_start_date = ac.get_datetime('1979-01-01 00:00:00')
-        self._logger = logging.getLogger(self._name)
 
     @property
     def chunk(self):
@@ -548,7 +547,7 @@ class InstrumentType(cc.TelescopeMapping):
         return result
 
     def get_dec_deg_from_0th_header(self, ext):
-        return self._headers[ext].get('DEC_DEG')
+        return self._headers[0].get('DEC_DEG')
 
     def get_energy_ctype(self, ext):
         result = None
@@ -838,7 +837,7 @@ class InstrumentType(cc.TelescopeMapping):
         return result
 
     def get_ra_deg_from_0th_header(self, ext):
-        return self._headers[ext].get('RA_DEG')
+        return self._headers[0].get('RA_DEG')
 
     def get_target_position_cval1(self, ext):
         ra, ignore_dec = self._get_ra_dec(ext)
@@ -882,9 +881,14 @@ class InstrumentType(cc.TelescopeMapping):
             # caom2IngestWircamdetrend.py, l422
             exp_time = 20.0
         else:
-            mjd_end = ac.get_datetime(tv_stop)
-            mjd_end = mjd_end.value
-            exp_time = mjd_end - mjd_obs
+            if ac.is_good_date(tv_stop, self._instrument_start_date):
+                mjd_end = ac.get_datetime(tv_stop)
+                mjd_end = mjd_end.value
+                exp_time = mjd_end - mjd_obs
+            else:
+                self.track_invalid_date(tv_stop, 'Chunk.time.axis.function.refCoord.delta')
+                # use the default value, as it's an ok value if TVSTOP is not defined
+                exp_time = None
         return exp_time
 
     def get_time_refcoord_delta_simple(self, ext):
@@ -1278,14 +1282,6 @@ class InstrumentType(cc.TelescopeMapping):
                     time_delta = self.get_time_refcoord_delta_derived(idx)
 
                 for part in artifact.parts.values():
-                    if (
-                        self._storage_name.instrument is md.Inst.SPIROU
-                        and self._storage_name.suffix == 's'
-                    ):
-                        part.chunks = TypedList(
-                            Chunk,
-                        )
-
                     for chunk in part.chunks:
                         cc.undo_astropy_cdfix_call(chunk, time_delta)
                         self.part = part
@@ -2765,15 +2761,15 @@ class Spirou(InstrumentType):
         bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
         bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
         bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
-        bp.set(
-            'Chunk.position.axis.function.refCoord.coord1.val',
-            'get_ra_deg_from_0th_header()',
-        )
         bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
-        bp.set(
-            'Chunk.position.axis.function.refCoord.coord2.val',
-            'get_dec_deg_from_0th_header()',
-        )
+        if self._storage_name.suffix == 'g':
+            bp.clear('Observation.type')
+            bp.add_attribute('Observation.type', 'ETYPE')
+            bp.set('Chunk.position.axis.function.refCoord.coord1.val', '_get_ra()')
+            bp.set('Chunk.position.axis.function.refCoord.coord2.val', '_get_dec()')
+        else:
+            bp.set('Chunk.position.axis.function.refCoord.coord1.val', 'get_ra_deg_from_0th_header()')
+            bp.set('Chunk.position.axis.function.refCoord.coord2.val', 'get_dec_deg_from_0th_header()')
         bp.set('Chunk.position.axis.function.cd11', -0.00035833)
         bp.set('Chunk.position.axis.function.cd12', 0.0)
         bp.set('Chunk.position.axis.function.cd21', 0.0)
@@ -2803,6 +2799,14 @@ class Spirou(InstrumentType):
             bp.set('Chunk.polarization.axis.function.naxis', 1)
             bp.set('Chunk.polarization.axis.function.delta', 1.0)
             bp.set('Chunk.polarization.axis.function.refCoord.pix', 1.0)
+
+    def _get_ra(self, ext):
+        ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
+        return ra
+
+    def _get_dec(self, ext):
+        ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
+        return dec
 
     def get_exptime(self, ext):
         if self._storage_name.suffix in ['g']:
@@ -2910,13 +2914,14 @@ class Spirou(InstrumentType):
             and dec_deg is None
             and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
         ):
-            cc.reset_position(self._chunk)
+            if self._storage_name.suffix != 'g':
+                cc.reset_position(self._chunk)
         self._logger.debug(
             f'End reset_position for {self._storage_name.obs_id}'
         )
 
     def update_observation(self):
-        super(Spirou, self).update_observation()
+        super().update_observation()
         if self._storage_name.suffix != 'r':
             cc.rename_parts(self._observation, self._headers)
 
@@ -2929,9 +2934,7 @@ class Spirou(InstrumentType):
             self.plane.data_product_type = DataProductType.IMAGE
 
     def update_polarization(self):
-        self._logger.debug(
-            f'End update_polarization for {self._storage_name.obs_id}'
-        )
+        self._logger.debug(f'Begin update_polarization for {self._storage_name.obs_id}')
         if self._storage_name.suffix == 'p':
             header = None
             for h in self._headers:
@@ -2979,9 +2982,7 @@ class Spirou(InstrumentType):
             self._chunk.energy_axis = None
             self._chunk.time_axis = None
             self._chunk.polarization_axis = None
-        self._logger.debug(
-            f'End update_polarization for {self._storage_name.obs_id}'
-        )
+        self._logger.debug(f'End update_polarization for {self._storage_name.obs_id}')
 
     def update_time(self):
         if self._storage_name.suffix == 'g':

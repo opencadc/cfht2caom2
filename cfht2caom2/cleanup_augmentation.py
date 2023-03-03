@@ -120,6 +120,11 @@ def visit(observation, **kwargs):
                         artifact.uri
                     )
 
+        for artifact in plane.artifacts.values():
+            if '.png' in artifact.uri:
+                # there are duplicate .png and .jpg previews, prefer the smaller jpgs
+                artifact_delete_list[plane.product_id].append(artifact.uri)
+
     for entry in delete_list:
         logging.info(
             f'Removing plane {entry} from {observation.observation_id}'
@@ -132,6 +137,7 @@ def visit(observation, **kwargs):
             if plane.product_id == product_id:
                 for entry in entries:
                     artifact_count += 1
+                    logging.info(f'Removing artifact {entry} from plane {product_id} in {observation.observation_id}')
                     plane.artifacts.pop(entry)
 
     logging.info(

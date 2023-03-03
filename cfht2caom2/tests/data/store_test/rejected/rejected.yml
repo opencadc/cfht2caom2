@@ -1,6 +1,10 @@
 bad_data: []
-bad_metadata: []
+bad_metadata:
+- 1000003f.fits.fz
+invalid_file_name: []
 is_valid_fails: []
 missing_at_source: []
+mystery_value: []
 no_instrument: []
 no_preview: []
+old_version: []

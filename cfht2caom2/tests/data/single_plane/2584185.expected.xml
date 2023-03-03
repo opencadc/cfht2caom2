@@ -1,8 +1,8 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="9ec1a7a3-d781-4cf9-a19a-3ee1fcd49f32" caom2:lastModified="2021-04-24T14:08:53.471" caom2:maxLastModified="2021-09-01T18:23:21.020" caom2:metaChecksum="md5:f71b7bd083c72226f3071a47a13b1e56" caom2:accMetaChecksum="md5:cbfd97fb8a4ae7b9ee7369749e85f60c" caom2:metaProducer="cfht2caom2/0.3.5">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="0d3799f4-f878-498f-9293-43566e7e0296" caom2:lastModified="2023-02-14T09:42:08.689" caom2:maxLastModified="2023-02-15T08:50:37.625" caom2:metaChecksum="md5:93d2d9b50038daf02bb5113001fe915d" caom2:accMetaChecksum="md5:957ceb3c1dbfe0de42281acd7dc18071" caom2:metaProducer="cfht2caom2/0.6">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2515413</caom2:observationID>
-  <caom2:metaRelease>2020-09-19T05:49:43.000</caom2:metaRelease>
-  <caom2:sequenceNumber>2515413</caom2:sequenceNumber>
+  <caom2:observationID>2584185</caom2:observationID>
+  <caom2:metaRelease>2021-02-21T10:44:25.000</caom2:metaRelease>
+  <caom2:sequenceNumber>2584185</caom2:sequenceNumber>
   <caom2:algorithm>
     <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
@@ -18,9 +18,9 @@
     <caom2:name>SPIRou</caom2:name>
   </caom2:instrument>
   <caom2:planes>
-    <caom2:plane caom2:id="fed35d12-03c3-4c12-90c3-7986f18b9f45" caom2:lastModified="2020-09-19T06:23:05.258" caom2:maxLastModified="2021-09-01T18:23:21.020" caom2:metaChecksum="md5:d7a64e1fd0b552723f65edfa343d8cfd" caom2:accMetaChecksum="md5:9d57b500c0850bffa620f03278632292" caom2:metaProducer="cfht2caom2/0.2">
-      <caom2:productID>2515413g</caom2:productID>
-      <caom2:metaRelease>2020-09-19T05:49:43.000</caom2:metaRelease>
+    <caom2:plane caom2:id="613ef830-5eb1-441e-8513-722919c99aff" caom2:lastModified="2021-03-01T21:07:22.932" caom2:maxLastModified="2022-09-22T16:08:09.338" caom2:metaChecksum="md5:f77ee70f9768ddeb813cc427987005cb" caom2:accMetaChecksum="md5:1a32a1e064480ea3895fb56a77f50b61" caom2:metaProducer="cfht2caom2/0.3.2">
+      <caom2:productID>2584185g</caom2:productID>
+      <caom2:metaRelease>2021-02-21T10:44:25.000</caom2:metaRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
       <caom2:calibrationLevel>1</caom2:calibrationLevel>
       <caom2:provenance>
@@ -30,21 +30,21 @@
         <caom2:reference>https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_pipeline.php</caom2:reference>
       </caom2:provenance>
       <caom2:artifacts>
-        <caom2:artifact caom2:id="1b098a58-1381-4baa-9fde-251060abc35a" caom2:lastModified="2021-09-01T18:23:21.020" caom2:maxLastModified="2021-09-01T18:23:21.020" caom2:metaChecksum="md5:3b9bfb4f62fc072ff5763804759bd632" caom2:accMetaChecksum="md5:5cfac654f0b38f118e510f65a6425dd0" caom2:metaProducer="cfht2caom2/0.2">
-          <caom2:uri>cadc:CFHT/2515413g.fits</caom2:uri>
+        <caom2:artifact caom2:id="74fd6474-2358-4711-910e-54dae428f0ec" caom2:lastModified="2022-09-22T16:08:09.338" caom2:maxLastModified="2022-09-22T16:08:09.338" caom2:metaChecksum="md5:b8c981b9989a4f44639ef35ea784caf9" caom2:accMetaChecksum="md5:d494a35f59214398983dfd6f181f4e2f" caom2:metaProducer="cfht2caom2/0.3.2">
+          <caom2:uri>cadc:CFHT/2584185g.fits</caom2:uri>
           <caom2:productType>calibration</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
-          <caom2:contentChecksum>md5:7f79986cbb6bc8b2400e52f4163ab318</caom2:contentChecksum>
+          <caom2:contentChecksum>md5:fed37031a9791ccb5e0c1e7958964999</caom2:contentChecksum>
           <caom2:parts>
-            <caom2:part caom2:id="2c49c3b0-fb3f-473f-8cf8-1d3379632a5c" caom2:lastModified="2020-09-19T06:23:05.258" caom2:maxLastModified="2020-09-19T06:23:05.258" caom2:metaChecksum="md5:d44600d2feb6133d89b887945dfa0e52" caom2:accMetaChecksum="md5:9ac0988883ac2f42ca4adf00093c5990">
+            <caom2:part caom2:id="3cf88c1f-6be2-47c2-8a57-8a1fc3436a65" caom2:lastModified="2021-02-21T11:20:10.403" caom2:maxLastModified="2021-02-21T11:20:10.403" caom2:metaChecksum="md5:a2ae471c3e7c1e8737431fd041015fbd" caom2:accMetaChecksum="md5:3181d3a4c0b2b1abcdeb499f295d9deb">
               <caom2:name>0</caom2:name>
               <caom2:chunks/>
             </caom2:part>
-            <caom2:part caom2:id="06839a50-47ee-47af-903c-b532e71fa9af" caom2:lastModified="2020-09-19T06:23:05.258" caom2:maxLastModified="2020-09-19T06:23:05.258" caom2:metaChecksum="md5:934d7d49a06de4e3c13e1eb83a45f0ac" caom2:accMetaChecksum="md5:25cbde57a60c2cebc3b04b660cda7e29">
+            <caom2:part caom2:id="28cdaf90-27ae-424e-8a8a-f46eae2bd0cb" caom2:lastModified="2021-02-21T11:20:10.403" caom2:maxLastModified="2021-02-21T11:20:10.403" caom2:metaChecksum="md5:fe8dbe39b742db88324d7b638decd049" caom2:accMetaChecksum="md5:4e1cf5be55ede4742b7433b46cfdb002">
               <caom2:name>IMAGE DATA</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="bc4a7ad6-0a2d-41fc-81e1-7f0ab5959368" caom2:lastModified="2020-09-19T06:23:05.258" caom2:maxLastModified="2020-09-19T06:23:05.258" caom2:metaChecksum="md5:4a175fa13d726a85f926b7aff9ab0372" caom2:accMetaChecksum="md5:e9294df0357d050b893e93425395e25a" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="ee084505-c7ba-45fc-b9b3-e9dae0051959" caom2:lastModified="2021-02-21T11:20:10.403" caom2:maxLastModified="2021-02-21T11:20:10.403" caom2:metaChecksum="md5:4da753872cf6b1e9fe4f0d3f62d2ac98" caom2:accMetaChecksum="md5:2a2e19ee3cdf8dc18974b6cdff145b61" caom2:metaProducer="cfht2caom2/0.3.2">
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -71,11 +71,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>278.65325</caom2:val>
+                            <caom2:val>162.3141666666667</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>40.12280555555556</caom2:val>
+                            <caom2:val>10.54505555555555</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-0.00035833</caom2:cd11>
@@ -118,11 +118,11 @@
                         <caom2:cunit>d</caom2:cunit>
                       </caom2:axis>
                       <caom2:function>
-                        <caom2:naxis>5507</caom2:naxis>
+                        <caom2:naxis>15574</caom2:naxis>
                         <caom2:delta>1.1574074074074074e-07</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>59111.24285879629</caom2:val>
+                          <caom2:val>59266.44751157407</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
@@ -133,10 +133,10 @@
                 </caom2:chunk>
               </caom2:chunks>
             </caom2:part>
-            <caom2:part caom2:id="92b746cb-7404-4284-97d5-8aad31f5bddb" caom2:lastModified="2020-09-19T06:23:05.258" caom2:maxLastModified="2020-09-19T06:23:05.258" caom2:metaChecksum="md5:29e5443f4c9c870e25851f6677689878" caom2:accMetaChecksum="md5:cb65df01378f2760110eaca95c8516e0">
+            <caom2:part caom2:id="f6ab5bb9-64dc-4208-8de2-6d19d7a70818" caom2:lastModified="2021-02-21T11:20:10.403" caom2:maxLastModified="2021-02-21T11:20:10.403" caom2:metaChecksum="md5:19d21ff21e452f475b1e6d8797c1b63f" caom2:accMetaChecksum="md5:f09cf770bdfe73970f291f444f201d6b">
               <caom2:name>METADATA</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="0b3bd818-295a-4bfc-af21-910b6ce5ff46" caom2:lastModified="2020-09-19T06:23:05.258" caom2:maxLastModified="2020-09-19T06:23:05.258" caom2:metaChecksum="md5:a86a3bb42a1783d049d812e40b4783a3" caom2:accMetaChecksum="md5:dbd34f9a98ae0a2a165420e6c509ac30" caom2:metaProducer="cfht2caom2/0.2">
+                <caom2:chunk caom2:id="6f4ca2e6-d74a-411e-bdc0-0095ce271019" caom2:lastModified="2021-02-21T11:20:10.403" caom2:maxLastModified="2021-02-21T11:20:10.403" caom2:metaChecksum="md5:f7b4dded8652bfa7cf029da0748c70e7" caom2:accMetaChecksum="md5:a840e315bc407c16df3043d63ea52c01" caom2:metaProducer="cfht2caom2/0.3.2">
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -163,11 +163,11 @@
                         <caom2:refCoord>
                           <caom2:coord1>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>278.65325</caom2:val>
+                            <caom2:val>162.3141666666667</caom2:val>
                           </caom2:coord1>
                           <caom2:coord2>
                             <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>40.12280555555556</caom2:val>
+                            <caom2:val>10.54505555555555</caom2:val>
                           </caom2:coord2>
                         </caom2:refCoord>
                         <caom2:cd11>-0.00035833</caom2:cd11>
@@ -210,11 +210,11 @@
                         <caom2:cunit>d</caom2:cunit>
                       </caom2:axis>
                       <caom2:function>
-                        <caom2:naxis>5507</caom2:naxis>
+                        <caom2:naxis>15574</caom2:naxis>
                         <caom2:delta>1.1574074074074074e-07</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>59111.24285879629</caom2:val>
+                          <caom2:val>59266.44751157407</caom2:val>
                         </caom2:refCoord>
                       </caom2:function>
                     </caom2:axis>
