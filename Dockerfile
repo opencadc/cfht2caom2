@@ -70,7 +70,7 @@ RUN cd /usr/local/src && \
     cd /usr/src/app && \
     rm -rf /usr/local/src/h5check-${H5CHECK_VERSION}
 
-ARG OPENCADC_BRANCH=master
+ARG OPENCADC_BRANCH=main
 ARG OPENCADC_REPO=opencadc
 RUN git clone https://github.com/opencadc/caom2tools.git && \
     cd caom2tools && \
