@@ -68,6 +68,7 @@
 #
 
 from os import path
+from caom2pipe.caom_composable import get_all_artifact_keys
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cleanup_augmentation, cfht_name, Inst
 import test_fits2caom2_augmentation
@@ -85,6 +86,24 @@ def test_cleanup_augmentation():
     assert '1927963p' in test_obs.planes.keys(), 'wrong plane deleted'
     assert '1927963f' in test_obs.planes.keys(), 'wrong plane deleted'
     assert '1927963og' not in test_obs.planes.keys(), 'wrong plane deleted'
+
+
+def test_cleanup_augmentation_png():
+    test_obs = mc.read_obs_from_file(
+        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_start_png_cleanup.xml')
+    )
+    assert len(test_obs.planes) == 5, 'initial conditions failed'
+    storage_name = cfht_name.CFHTName(file_name='2368534s.fits')
+    storage_name._instrument = Inst.SPIROU
+    kwargs = {'storage_name': storage_name}
+    test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
+    assert len(test_obs.planes) == 5, 'post-test conditions failed - should be no plane clean-up'
+    artifact_keys = get_all_artifact_keys(test_obs)
+    # remove the artifacts from the plane that's been visited, since otherwise there might not be preview images
+    assert 'cadc:CFHT/2368534e_preview_1024.png' in artifact_keys, 's 1024'
+    assert 'cadc:CFHT/2368534e_preview_256.png' in artifact_keys, 'e 256'
+    assert 'cadc:CFHT/2368534s_preview_256.png' not in artifact_keys, 's 256'
+    assert 'cadc:CFHT/2368534s_preview_1024.png' not in artifact_keys, 's 1024'
 
 
 def test_cleanup_augmentation_bad_artifact_uris():

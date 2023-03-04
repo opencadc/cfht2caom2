@@ -272,7 +272,6 @@ class InstrumentType(cc.TelescopeMapping):
         self._plane = None
         self._extension = None
         self._instrument_start_date = ac.get_datetime('1979-01-01 00:00:00')
-        self._logger = logging.getLogger(self._name)
 
     @property
     def chunk(self):
@@ -548,7 +547,7 @@ class InstrumentType(cc.TelescopeMapping):
         return result
 
     def get_dec_deg_from_0th_header(self, ext):
-        return self._headers[ext].get('DEC_DEG')
+        return self._headers[0].get('DEC_DEG')
 
     def get_energy_ctype(self, ext):
         result = None
@@ -838,7 +837,7 @@ class InstrumentType(cc.TelescopeMapping):
         return result
 
     def get_ra_deg_from_0th_header(self, ext):
-        return self._headers[ext].get('RA_DEG')
+        return self._headers[0].get('RA_DEG')
 
     def get_target_position_cval1(self, ext):
         ra, ignore_dec = self._get_ra_dec(ext)
@@ -882,9 +881,14 @@ class InstrumentType(cc.TelescopeMapping):
             # caom2IngestWircamdetrend.py, l422
             exp_time = 20.0
         else:
-            mjd_end = ac.get_datetime(tv_stop)
-            mjd_end = mjd_end.value
-            exp_time = mjd_end - mjd_obs
+            if ac.is_good_date(tv_stop, self._instrument_start_date):
+                mjd_end = ac.get_datetime(tv_stop)
+                mjd_end = mjd_end.value
+                exp_time = mjd_end - mjd_obs
+            else:
+                self.track_invalid_date(tv_stop, 'Chunk.time.axis.function.refCoord.delta')
+                # use the default value, as it's an ok value if TVSTOP is not defined
+                exp_time = None
         return exp_time
 
     def get_time_refcoord_delta_simple(self, ext):
@@ -1278,14 +1282,6 @@ class InstrumentType(cc.TelescopeMapping):
                     time_delta = self.get_time_refcoord_delta_derived(idx)
 
                 for part in artifact.parts.values():
-                    if (
-                        self._storage_name.instrument is md.Inst.SPIROU
-                        and self._storage_name.suffix == 's'
-                    ):
-                        part.chunks = TypedList(
-                            Chunk,
-                        )
-
                     for chunk in part.chunks:
                         cc.undo_astropy_cdfix_call(chunk, time_delta)
                         self.part = part
@@ -2697,6 +2693,9 @@ class Spirou(InstrumentType):
     def accumulate_blueprint(self, bp):
         """Configure the SPIRou-specific ObsBlueprint at the CAOM model
         Observation level.
+
+        SF 03-03-23
+        Add in WCS for 's' files, and spatial WCS for 'g' files.
         """
         super().accumulate_blueprint(bp)
         bp.set('Observation.target.targetID', '_get_gaia_target_id()')
@@ -2765,15 +2764,9 @@ class Spirou(InstrumentType):
         bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
         bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
         bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
-        bp.set(
-            'Chunk.position.axis.function.refCoord.coord1.val',
-            'get_ra_deg_from_0th_header()',
-        )
         bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
-        bp.set(
-            'Chunk.position.axis.function.refCoord.coord2.val',
-            'get_dec_deg_from_0th_header()',
-        )
+        bp.set('Chunk.position.axis.function.refCoord.coord1.val', 'get_ra_deg_from_0th_header()')
+        bp.set('Chunk.position.axis.function.refCoord.coord2.val', 'get_dec_deg_from_0th_header()')
         bp.set('Chunk.position.axis.function.cd11', -0.00035833)
         bp.set('Chunk.position.axis.function.cd12', 0.0)
         bp.set('Chunk.position.axis.function.cd21', 0.0)
@@ -2797,21 +2790,10 @@ class Spirou(InstrumentType):
             )
             bp.set('Chunk.time.resolution', 'get_time_resolution()')
 
-        if self._storage_name.suffix == 'p':
-            bp.configure_polarization_axis(7)
-            bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
-            bp.set('Chunk.polarization.axis.function.naxis', 1)
-            bp.set('Chunk.polarization.axis.function.delta', 1.0)
-            bp.set('Chunk.polarization.axis.function.refCoord.pix', 1.0)
-
     def get_exptime(self, ext):
-        if self._storage_name.suffix in ['g']:
-            result = super().get_exptime(ext)
         # caom2IngestSpirou.py, l530+
-        elif self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
+        if self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
             result = self._headers[ext].get('EXPTIME')
-        elif self._storage_name.suffix == 'p':
-            result = self._headers[ext].get('TOTETIME')
         else:
             result = self._headers[ext].get('DARKTIME')
         if result is None:
@@ -2916,80 +2898,50 @@ class Spirou(InstrumentType):
         )
 
     def update_observation(self):
-        super(Spirou, self).update_observation()
+        super().update_observation()
         if self._storage_name.suffix != 'r':
             cc.rename_parts(self._observation, self._headers)
 
     def update_plane(self):
-        super(Spirou, self).update_plane()
+        super().update_plane()
         # caom2IngestSpirou.py, l584
         if self._storage_name.suffix in ['e', 's', 't']:
             self._update_plane_provenance()
-        elif self._storage_name.suffix == 'g':
-            self.plane.data_product_type = DataProductType.IMAGE
 
-    def update_polarization(self):
-        self._logger.debug(
-            f'End update_polarization for {self._storage_name.obs_id}'
-        )
-        if self._storage_name.suffix == 'p':
-            header = None
-            for h in self._headers:
-                if h.get('EXTNAME') == self.part.name:
-                    header = h
-                    break
 
-            stokes_param = header.get('STOKES')
-            if stokes_param is None:
-                self._logger.warning(
-                    f'No STOKES value for HDU {self.part.name} in '
-                    f'{self._storage_name.obs_id}. No polarization.'
-                )
-                self._chunk.polarization = None
-                self._chunk.polarization_axis = None
-            else:
-                lookup = {
-                    'I': 1.0,
-                    'Q': 2.0,
-                    'U': 3.0,
-                    'V': 4.0,
-                    'W': 5.0,
-                }
-                crval = lookup.get(stokes_param, 0.0)
-                if crval == 0.0:
-                    self._logger.warning(
-                        f'STOKES value is {crval}. No polarization.'
-                    )
-                    self._chunk.polarization = None
-                    self._chunk.polarization_axis = None
-                else:
-                    if (
-                        self._chunk.polarization is not None
-                        and self._chunk.polarization.axis is not None
-                        and self._chunk.polarization.axis.function is not None
-                    ):
-                        self._chunk.polarization.axis.function.ref_coord.val = (
-                            crval
-                        )
-            # check with Dustin on what a polarization cut-out
-            # looks like before deciding this is semi-ok
-            self._chunk.naxis = None
-            self._chunk.position_axis_1 = None
-            self._chunk.position_axis_2 = None
-            self._chunk.energy_axis = None
-            self._chunk.time_axis = None
-            self._chunk.polarization_axis = None
-        self._logger.debug(
-            f'End update_polarization for {self._storage_name.obs_id}'
-        )
+class SpirouG(Spirou):
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the SPIRou-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+        # SF 03-03-23 - use ETYPE, add Spatial WCS support
+        bp.clear('Observation.type')
+        bp.add_attribute('Observation.type', 'ETYPE')
+        bp.set('Chunk.position.axis.function.refCoord.coord1.val', '_get_ra()')
+        bp.set('Chunk.position.axis.function.refCoord.coord2.val', '_get_dec()')
+
+    def _get_ra(self, ext):
+        ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
+        return ra
+
+    def _get_dec(self, ext):
+        ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
+        return dec
+
+    def get_exptime(self, ext):
+        return super().get_exptime(ext)
+
+    def reset_position(self):
+        pass
+
+    def update_plane(self):
+        self.plane.data_product_type = DataProductType.IMAGE
 
     def update_time(self):
-        if self._storage_name.suffix == 'g':
-            self._update_time_g()
-        elif self._storage_name.suffix == 'p':
-            self._update_time_p()
-
-    def _update_time_g(self):
         self._logger.debug(
             f'Begin update_time for {self._storage_name.obs_id}'
         )
@@ -3032,10 +2984,7 @@ class Spirou(InstrumentType):
 
         e_time = mc.get_keyword(self._headers, 'ETIME')
         if e_time is None:
-            self._logger.warning(
-                f'No exposure found for {self._storage_name.file_name}. '
-                f'No Temporal WCS.'
-            )
+            self._logger.warning(f'No exposure found for {self._storage_name.file_name}. No Temporal WCS.')
         else:
             self._chunk.time.exposure = e_time / 1000.0
             self._chunk.time.resolution = self._chunk.time.exposure
@@ -3043,14 +2992,91 @@ class Spirou(InstrumentType):
             self._chunk.time.axis.function = CoordFunction1D(
                 naxis=time_naxis, delta=time_delta, ref_coord=ref_coord
             )
-        self._logger.debug(
-            f'End _update_time_g for {self._storage_name.obs_id}'
-        )
+        self._logger.debug(f'End _update_time_g for {self._storage_name.obs_id}')
 
-    def _update_time_p(self):
-        self._logger.debug(
-            f'Begin _update_time_p for {self._storage_name.obs_id}'
-        )
+
+class SpirouP(Spirou):
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the SPIRou-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+        bp.configure_polarization_axis(7)
+        bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+        bp.set('Chunk.polarization.axis.function.naxis', 1)
+        bp.set('Chunk.polarization.axis.function.delta', 1.0)
+        bp.set('Chunk.polarization.axis.function.refCoord.pix', 1.0)
+
+    def get_exptime(self, ext):
+        result = self._headers[ext].get('TOTETIME')
+        if result is None:
+            self._logger.warning(f'No get_exptime value for {self._storage_name.file_uri}.')
+        return result
+
+    def get_time_refcoord_delta(self, ext):
+        # caom2IngestSpirou.py, l530+
+        result = None
+        temp = self.get_exptime(ext)
+        if temp is None:
+            self._logger.warning(f'No Time WCS refcoord.delta value for {self._storage_name.file_uri}.')
+        else:
+            result = temp / (24.0 * 3600.0)
+        return result
+
+    def get_time_refcoord_naxis(self, ext):
+        # caom2IngestSpirou.py, l557
+        return 1.0
+
+    def update_polarization(self):
+        self._logger.debug(f'Begin update_polarization for {self._storage_name.obs_id}')
+        header = None
+        for h in self._headers:
+            if h.get('EXTNAME') == self.part.name:
+                header = h
+                break
+
+        stokes_param = header.get('STOKES')
+        if stokes_param is None:
+            self._logger.warning(
+                f'No STOKES value for HDU {self.part.name} in {self._storage_name.obs_id}. No polarization.'
+            )
+            self._chunk.polarization = None
+            self._chunk.polarization_axis = None
+        else:
+            lookup = {
+                'I': 1.0,
+                'Q': 2.0,
+                'U': 3.0,
+                'V': 4.0,
+                'W': 5.0,
+            }
+            crval = lookup.get(stokes_param, 0.0)
+            if crval == 0.0:
+                self._logger.warning(f'STOKES value is {crval}. No polarization.')
+                self._chunk.polarization = None
+                self._chunk.polarization_axis = None
+            else:
+                if (
+                    self._chunk.polarization is not None
+                    and self._chunk.polarization.axis is not None
+                    and self._chunk.polarization.axis.function is not None
+                ):
+                    self._chunk.polarization.axis.function.ref_coord.val = crval
+        # check with Dustin on what a polarization cut-out
+        # looks like before deciding this is semi-ok
+        self._chunk.naxis = None
+        self._chunk.position_axis_1 = None
+        self._chunk.position_axis_2 = None
+        self._chunk.energy_axis = None
+        self._chunk.time_axis = None
+        self._chunk.polarization_axis = None
+        self._logger.debug(f'End update_polarization for {self._storage_name.obs_id}')
+
+    def update_time(self):
+        self._logger.debug(f'Begin update_time for {self._storage_name.obs_id}')
         # TOTETIME is not in all the HDUs, so copy it from the HDUs that have
         # it, and use it everywhere - this matches existing CFHT SPIRou 'p'
         # behaviour
@@ -3092,9 +3118,7 @@ class Spirou(InstrumentType):
         else:
             self._chunk.time.exposure = tot_e_time
             self._chunk.time.resolution = tot_e_time
-        self._logger.debug(
-            f'End _update_time_p for {self._storage_name.obs_id}'
-        )
+        self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
 class Wircam(InstrumentType):
@@ -3658,7 +3682,12 @@ def factory(headers, cfht_name, clients, observable):
         else:
             temp = Sitelle(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.SPIROU:
-        temp = Spirou(headers, cfht_name, clients, observable)
+        if cfht_name.suffix == 'g':
+            temp = SpirouG(headers, cfht_name, clients, observable)
+        elif cfht_name.suffix == 'p':
+            temp = SpirouP(headers, cfht_name, clients, observable)
+        else:
+            temp = Spirou(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.WIRCAM:
         temp = Wircam(headers, cfht_name, clients, observable)
     else:

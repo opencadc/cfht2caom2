@@ -80,7 +80,7 @@ from logging import error
 from tempfile import TemporaryDirectory
 from traceback import format_exc
 
-from mock import ANY, call, Mock, patch
+from mock import ANY, call, Mock, patch, PropertyMock
 
 from cadcdata import FileInfo
 from caom2utils import data_util
@@ -252,6 +252,12 @@ def test_run_store_retry(
         _cleanup(test_dir_fqn, '1000003')
 
 
+@patch(
+    'caom2pipe.run_composable.StateRunner.end_time',
+    new_callable=PropertyMock(
+        return_value=datetime(year=2019, month=3, day=7, hour=19, minute=5, tzinfo=timezone.utc)
+    )
+)
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
@@ -267,8 +273,17 @@ def test_run_state(
     util_headers_mock,
     cache_mock,
     clients_mock,
+    end_time_mock,
 ):
     try:
+        test_state_fqn = f'{TEST_DIR}/state.yml'
+        start_time = datetime(year=2019, month=3, day=3, hour=19, minute=5, tzinfo=timezone.utc)
+        start_file_content = (
+            f'bookmarks:\n  cfht_timestamp:\n    last_record: {start_time}\n'
+        )
+        with open(test_state_fqn, 'w') as f:
+            f.write(start_file_content)
+
         util_headers_mock.side_effect = ac.make_headers_from_file
         run_mock.return_value = 0
         get_work_mock.side_effect = _mock_dir_listing
@@ -340,25 +355,25 @@ def _mock_dir_list(
     result.append(
         StateRunnerMeta(
             '/test_files/781920i.fits.gz',
-            '2019-10-23T16:27:19.000',
+            datetime(2019, 10, 23, 16, 27, 19, tzinfo=timezone.utc),
         ),  # BITPIX -32, no recompression
     )
     result.append(
         StateRunnerMeta(
             '/test_files/1681594g.fits.gz',
-            '2019-10-23T16:27:20.000',
+            datetime(2019, 10, 23, 16, 27, 20, tzinfo=timezone.utc),
         ),  # BITPIX 16, recompression
     )
     result.append(
         StateRunnerMeta(
             '/test_files/1028439o.fits',
-            '2019-10-23T16:27:21.000',
+            datetime(2019, 10, 23, 16, 27, 21, tzinfo=timezone.utc),
         ),  # already uncompressed, no decompression or recompression
     )
     result.append(
         StateRunnerMeta(
             '/test_files/2359320o.fits.fz',
-            '2019-10-23T16:27:22.000',
+            datetime(2019, 10, 23, 16, 27, 22, tzinfo=timezone.utc),
         ),  # already compressed, no decompression or recompression
     )
     return result
@@ -1014,7 +1029,7 @@ def _mock_dir_listing(
             os.path.join(
                 os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz'
             ),
-            '2019-10-23T16:27:19.000',
+            datetime(year=2019, month=10, day=23, hour=16, minute=27, second=19, tzinfo=timezone.utc),
         ),
     ]
 
