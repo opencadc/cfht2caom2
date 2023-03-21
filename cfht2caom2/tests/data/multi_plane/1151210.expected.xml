@@ -548,7 +548,7 @@
         <caom2:producer>SExtractor</caom2:producer>
         <caom2:runID>09Bw04</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2011-04-15T16:22:00.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2011-04-14T20:22:00.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-5522-013d41d79af8" caom2:lastModified="2017-12-10T05:44:48.373" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:f4ba573d1598a6d5dfc9b1e769d3271b" caom2:accMetaChecksum="md5:9fa5ac4a8bd9af53c20e37b7b655c60a" caom2:metaProducer="cfht2caom2/0.3.2">
@@ -988,7 +988,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>09Bw04</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2011-04-15T16:21:13.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2011-04-14T20:21:13.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-4d27-013d159bde19" caom2:lastModified="2017-12-10T05:44:48.373" caom2:maxLastModified="2017-12-10T05:44:48.373" caom2:metaChecksum="md5:e1a460b84ee0651c0d93c1dc1e819113" caom2:accMetaChecksum="md5:1869e2a50a6dd1a9984ba42ac37a96e8" caom2:metaProducer="cfht2caom2/0.3.2">

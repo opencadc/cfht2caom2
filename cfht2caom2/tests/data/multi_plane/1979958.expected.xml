@@ -52,7 +52,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>16Bw01</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2016-08-23T22:49:00.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2016-08-23T02:49:00.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>skysubtraction=yes</caom2:keyword>
         </caom2:keywords>
@@ -497,7 +497,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>16Bw01</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2016-08-23T22:49:00.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2016-08-23T02:49:00.000</caom2:lastExecuted>
         <caom2:inputs>
           <caom2:planeURI>caom:CFHT/1979958/1979958o</caom2:planeURI>
         </caom2:inputs>

@@ -182,13 +182,14 @@ import os
 
 from astropy import units
 from astropy.io import fits
+from dateutil import tz
 from enum import Enum
 
 from caom2 import Axis, Slice, ObservableAxis, Chunk, DataProductType
 from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
 from caom2 import TemporalWCS, CoordAxis1D, CoordFunction1D, CoordError
 from caom2 import CalibrationLevel, ProductType, ObservationIntentType
-from caom2 import DerivedObservation, TypedList
+from caom2 import DerivedObservation
 from caom2utils.caom2blueprint import FitsWcsParser, ObsBlueprint, update_artifact_meta
 from caom2utils.data_util import get_local_headers_from_fits
 from caom2pipe import astro_composable as ac
@@ -201,6 +202,12 @@ from cfht2caom2 import metadata as md
 __all__ = ['APPLICATION', 'factory', 'InstrumentType']
 
 APPLICATION = 'cfht2caom2'
+
+
+def cfht_time_helper(ip):
+    tz_info = tz.gettz('HST') if 'HST' in ip else tz.UTC
+    temp = mc.make_datetime_tz(ip, tz_info)
+    return ac.get_datetime_mjd(temp)
 
 
 class ProvenanceType(Enum):
@@ -271,7 +278,7 @@ class InstrumentType(cc.TelescopeMapping):
         self._part = None
         self._plane = None
         self._extension = None
-        self._instrument_start_date = ac.get_datetime('1979-01-01 00:00:00')
+        self._instrument_start_date = mc.make_datetime_tz('1979-01-01 00:00:00', tz.UTC)
 
     @property
     def chunk(self):
@@ -658,7 +665,10 @@ class InstrumentType(cc.TelescopeMapping):
         for keyword in ['MET_DATE', 'DATE-OBS', 'DATE-OB1', 'DATE', 'REL_DATE', 'TVSTART']:
             result = self._headers[ext].get(keyword)
             # no end date check - CFHT has random metadata release rules that should be reflected in the keyword values
-            if ac.is_good_date(ac.get_datetime(result), self._instrument_start_date, check_end_date=False):
+            if result in ['1970-00-01', '1970-00-01T0:00:00'] or result is None:
+                continue
+            temp = cfht_time_helper(result)
+            if ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
                 break
         return result
 
@@ -757,12 +767,11 @@ class InstrumentType(cc.TelescopeMapping):
                         else:
                             rel_year += 1
                             result = f'{rel_year}-02-28T00:00:00'
-        if (
-            result is not None
-            and not ac.is_good_date(ac.get_datetime(result), self._instrument_start_date, check_end_date=False)
-        ):
-            self.track_invalid_date(result, 'Plane.dataRelease')
-            result = None
+        if result is not None:
+            temp = mc.make_datetime_tz(result, tz.UTC)
+            if not ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
+                self.track_invalid_date(result, 'Plane.dataRelease')
+                result = None
         return result
 
     def get_polarization_function_val(self, ext):
@@ -823,9 +832,10 @@ class InstrumentType(cc.TelescopeMapping):
     def get_provenance_last_executed(self, ext):
         result = self._headers[ext].get('PROCDATE')
         if result is not None:
-            # format like 2018-06-05HST17:21:20, which default code doesn't
-            # understand
-            result = mc.make_time(result)
+            # format like 2018-06-05HST17:21:20
+            tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
+            # replace is because CAOM2 is non-aware
+            result = mc.make_datetime_tz(result, tz_info).replace(tzinfo=None)
         return result
 
     def get_provenance_version(self, ext):
@@ -881,9 +891,9 @@ class InstrumentType(cc.TelescopeMapping):
             # caom2IngestWircamdetrend.py, l422
             exp_time = 20.0
         else:
-            if ac.is_good_date(tv_stop, self._instrument_start_date):
-                mjd_end = ac.get_datetime(tv_stop)
-                mjd_end = mjd_end.value
+            temp = cfht_time_helper(tv_stop)
+            if ac.is_good_date(temp, self._instrument_start_date):
+                mjd_end = temp.value
                 exp_time = mjd_end - mjd_obs
             else:
                 self.track_invalid_date(tv_stop, 'Chunk.time.axis.function.refCoord.delta')
@@ -908,7 +918,10 @@ class InstrumentType(cc.TelescopeMapping):
         # as one pixel so this means crval3 is not equal to exptime
         # if TVSTART not defined, use release_date as mjdstart
         for keyword in ['TVSTART', 'REL_DATE', 'DATE']:
-            mjd_obs = ac.get_datetime(self._headers[ext].get(keyword))
+            temp = self._headers[ext].get(keyword)
+            if temp is None:
+                continue
+            mjd_obs = cfht_time_helper(temp)
             if ac.is_good_date(mjd_obs, self._instrument_start_date):
                 break
         if mjd_obs is None:
@@ -922,7 +935,10 @@ class InstrumentType(cc.TelescopeMapping):
         if result is None:
             # from caom2IngestMegacam.py, l549
             for ii in ['DATE-OBS', 'DATE']:
-                result = ac.get_datetime(self._headers[ext].get(ii))
+                temp = self._headers[ext].get(ii)
+                if temp is None:
+                    continue
+                result = cfht_time_helper(temp)
                 if ac.is_good_date(result, self._instrument_start_date):
                     break
         if result is None:
@@ -951,7 +967,7 @@ class InstrumentType(cc.TelescopeMapping):
                     temp2 = self._headers[ext].get('TIME-OBS')
                     if temp is not None and temp2 is not None:
                         temp = f'{temp}T{temp2}'
-                mjd_obs = ac.get_datetime(temp)
+                mjd_obs = cfht_time_helper(temp)
 
             if ac.is_good_date(mjd_obs, self._instrument_start_date):
                 if hasattr(mjd_obs, 'value'):
@@ -1412,9 +1428,9 @@ class InstrumentType(cc.TelescopeMapping):
         if self._observation.algorithm.name == 'scan':
             self.plane.data_product_type = DataProductType.CUBE
             if self.plane.provenance is not None:
-                self.plane.provenance.last_executed = mc.make_time(
-                    self._headers[self._extension].get('DATE'),
-                )
+                self.plane.provenance.last_executed = mc.make_datetime_tz(
+                    self._headers[self._extension].get('DATE'), tz.UTC
+                ).replace(tzinfo=None)
 
     def _update_plane_provenance(self):
         self._logger.debug(
@@ -1442,7 +1458,7 @@ class Espadons(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable):
         super().__init__(headers, cfht_name, clients, observable)
         # SF 18-11-22 espadons is 2004
-        self._instrument_start_time = ac.get_datetime('2004-01-01 00:00:00')
+        self._instrument_start_time = mc.make_datetime_tz('2004-01-01 00:00:00', tz.UTC)
 
     def _is_espadons_energy(self):
         result = False
@@ -1600,9 +1616,9 @@ class Espadons(InstrumentType):
             for comment in comments:
                 if 'Upena processing date:' in comment:
                     result = comment.split('Upena processing date: ')[1]
-                    # format like Fri Mar 13 22:51:55 HST 2009, which default
-                    # code doesn't understand
-                    result = mc.make_time(result)
+                    # format like Fri Mar 13 22:51:55 HST 2009
+                    tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
+                    result = mc.make_datetime_tz(result, tz_info).replace(tzinfo=None)
                     break
                 elif 'opera-' in comment:
                     result = comment.split('opera-')[1].split(' build date')[
@@ -1700,7 +1716,9 @@ class Espadons(InstrumentType):
                         temp2 = self._headers[ext].get('TIME-OBS')
                         if temp is not None and temp2 is not None:
                             temp = f'{temp}T{temp2}'
-                    mjd_obs = ac.get_datetime(temp)
+                    if temp in ['1970-00-01', '1970-00-01T0:00:00', '1970-00-01T0:00:00.000']:
+                        continue
+                    mjd_obs = cfht_time_helper(temp)
                 if ac.is_good_date(mjd_obs, self._instrument_start_date):
                     break
         if mjd_obs is None:
@@ -1870,7 +1888,7 @@ class Mega(InstrumentType):
         self._filter_name = None
         # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
         # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
-        self._instrument_start_date = ac.get_datetime('2001-01-24 00:00:00')
+        self._instrument_start_date = mc.make_datetime_tz('2001-01-24 00:00:00', tz.UTC)
 
     @property
     def extension(self):
@@ -1913,7 +1931,7 @@ class Mega(InstrumentType):
         if result is None:
             result = self._headers[ext].get('DATEPROC')
             if result is not None:
-                result = mc.make_time(result)
+                result = mc.make_datetime_tz(result, tz.UTC).replace(tzinfo=None)
         return result
 
     def make_axes_consistent(self):
@@ -1989,7 +2007,7 @@ class Sitelle(InstrumentType):
         super().__init__(headers, cfht_name, clients, observable)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
-        self._instrument_start_date = ac.get_datetime('2015-07-07 00:00:00.000')
+        self._instrument_start_date = mc.make_datetime_tz('2015-07-07 00:00:00.000', tz.UTC)
 
     def _is_derived(self, obs_id):
         if self._storage_name.suffix == 'z':
@@ -2112,10 +2130,11 @@ class Sitelle(InstrumentType):
                 'REL_DATE', self._headers[ext].get('DATE-OBS')
             )
             if rel_date is not None:
-                temp = ac.get_datetime(rel_date) + 1 * units.year
+                temp = ac.get_datetime_mjd(rel_date) + 1 * units.year
                 temp.format = 'isot'
-                result = temp.value
-                if not ac.is_good_date(result, self._instrument_start_date, check_end_date=False):
+                if ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
+                    result = temp.value
+                else:
                     self.track_invalid_date(result, 'Plane.dataRelease')
                     result = None
         else:
@@ -2462,8 +2481,7 @@ class SitelleHdf5(InstrumentType):
         d = self._headers[ext].get('OBS_DATE')
         t = self._headers[ext].get('OBS_TIME')
         if d is not None and t is not None:
-            dt = f'{d} {t}'
-            result = ac.get_datetime(dt).value
+            result = cfht_time_helper(f'{d} {t}').value
         return result
 
     def _get_energy_resolving_power(self, ext):
@@ -2500,7 +2518,7 @@ class SitelleHdf5(InstrumentType):
         d = self._headers[ext].get('OBS_DATE')
         if d is not None:
             program = self._headers[ext].get('PROGRAM')
-            temp = ac.get_datetime(d)
+            temp = cfht_time_helper(d)
             if program is None or program != 'LP P41':
                 temp = temp + 1 * units.year
             temp.format = 'isot'
@@ -2679,7 +2697,7 @@ class Spirou(InstrumentType):
         self._header = None
         # https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_news.php says 2019-02-13 00:00:00.000
         # but existing metadata has a minimum value of 2018-04-25 02:12:03.942720 for 2401710o.fits
-        self._instrument_start_date = ac.get_datetime('2018-04-24 00:00:00')
+        self._instrument_start_date = mc.make_datetime_tz('2018-04-24 00:00:00', tz.UTC)
 
     @property
     def extension(self):
@@ -2952,7 +2970,7 @@ class SpirouG(Spirou):
         # SF - 22-09-20 - use ETIME
 
         ref_coord_val = mc.get_keyword(self._headers, 'DATE')
-        ref_coord_mjd = ac.get_datetime(ref_coord_val).value
+        ref_coord_mjd = cfht_time_helper(ref_coord_val).value
 
         if self._chunk.time is None:
             self._chunk.time = TemporalWCS(
@@ -3126,7 +3144,7 @@ class Wircam(InstrumentType):
         super().__init__(headers, cfht_name, clients, observable)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
         # but existing metadata has a minimum value of 2000-07-21 00:00:00 for mastertwilightflat_Ks_13Aw01_v200.fits
-        self._instrument_start_date = ac.get_datetime('2000-07-20 00:00:00.000')
+        self._instrument_start_date = mc.make_datetime_tz('2000-07-20 00:00:00.000', tz.UTC)
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
