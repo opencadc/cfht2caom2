@@ -76,6 +76,7 @@ from mock import patch
 from os.path import basename, dirname,join, realpath
 
 from cadcdata import FileInfo
+from caom2pipe.manage_composable import Observable, Rejected
 from cfht2caom2 import CFHTName
 from cfht2caom2 import fits2caom2_augmentation, reader
 import test_fits2caom2_augmentation
@@ -108,9 +109,12 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config):
     metadata_reader = reader.Hdf5AndFitsMetadataReader()
     metadata_reader.set_headers(storage_name)
     metadata_reader._file_info = {storage_name.file_uri: file_info}
+    test_config.rejected_fqn = '/tmp/rejected.yml'
+    test_observable = Observable(rejected=Rejected(test_config.rejected_fqn), metrics=None)
     kwargs = {
         'storage_name': storage_name,
         'metadata_reader': metadata_reader,
+        'observable': test_observable,
     }
     storage_name._bitpix = -32
     observation = None
