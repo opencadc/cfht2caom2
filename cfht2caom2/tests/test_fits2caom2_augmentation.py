@@ -146,12 +146,19 @@ def _compare(observation, obs_id, dir_name):
     actual_fqn = expected_fqn.replace('expected', 'actual')
     expected = read_obs_from_file(expected_fqn)
     compare_result = get_differences(expected, observation)
-    if exists(actual_fqn):
-        unlink(actual_fqn)
-    if compare_result is not None:
-        write_obs_to_file(observation, actual_fqn)
-        compare_text = '\n'.join([r for r in compare_result])
-        msg = f'Differences found in {expected.observation_id} {observation.instrument.name}\n{compare_text}'
+    if compare_result is None:
+        if exists(actual_fqn):
+            unlink(actual_fqn)
+    else:
+        if observation is None:
+            msg = f'No observation for {expected.observation_id}'
+        else:
+            write_obs_to_file(observation, actual_fqn)
+            compare_text = '\n'.join([r for r in compare_result])
+            if observation.instrument is None:
+                msg = f'Differences found in {expected.observation_id}\n{compare_text}'
+            else:
+                msg = f'Differences found in {expected.observation_id} {observation.instrument.name}\n{compare_text}'
         raise AssertionError(msg)
 
 
@@ -184,6 +191,8 @@ def _identify_inst_mock(ignore_headers, uri):
             '1265044',
             '688231',
             '19BMfr.fringe.gri.40.00',
+            '695816p_diag',
+            '1013552p_flag',
         ],
         md.Inst.ESPADONS: [
             '2460606',

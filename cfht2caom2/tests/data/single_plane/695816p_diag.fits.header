@@ -1,0 +1,49 @@
+SIMPLE  =                    T / file does conform to FITS standard             
+BITPIX  =                   16 / number of bits per data pixel                  
+NAXIS   =                    0 / number of data axes                            
+EXTEND  =                    T / FITS dataset may contain extensions            
+COMMENT FITS (Flexible Image Transport System) format is defined in 'Astronomy  
+COMMENT and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H   
+END                                                                             
+XTENSION= 'BINTABLE'           / binary table extension                         
+BITPIX  =                    8 / 8-bit bytes                                    
+NAXIS   =                    2 / 2-dimensional binary table                     
+NAXIS1  =                   36 / width of table in bytes                        
+NAXIS2  =                   36 / number of rows in table                        
+PCOUNT  =                    0 / size of special data area                      
+GCOUNT  =                    1 / one data group (required keyword)              
+TFIELDS =                    9 / number of fields in each row                   
+TTYPE1  = 'background'         / label for field   1                            
+TFORM1  = 'E       '           / data format of field: 4-byte REAL              
+TUNIT1  = 'ADU     '           / physical unit of field                         
+TTYPE2  = 'backgroundmas'      / label for field   2                            
+TFORM2  = 'E       '           / data format of field: 4-byte REAL              
+TUNIT2  = 'mag/arcsec2'        / physical unit of field                         
+TTYPE3  = 'sigma_bkg'          / label for field   3                            
+TFORM3  = 'E       '           / data format of field: 4-byte REAL              
+TUNIT3  = 'ADU     '           / physical unit of field                         
+TTYPE4  = 'nsexdet '           / label for field   4                            
+TFORM4  = 'J       '           / data format of field: 4-byte INTEGER           
+TTYPE5  = 'seeing  '           / label for field   5                            
+TFORM5  = 'E       '           / data format of field: 4-byte REAL              
+TUNIT5  = 'pixel   '           / physical unit of field                         
+TTYPE6  = 'seeingas'           / label for field   6                            
+TFORM6  = 'E       '           / data format of field: 4-byte REAL              
+TUNIT6  = 'arcsec  '           / physical unit of field                         
+TTYPE7  = 'sloaded '           / label for field   7                            
+TFORM7  = 'J       '           / data format of field: 4-byte INTEGER           
+TTYPE8  = 'saccepted'          / label for field   8                            
+TFORM8  = 'J       '           / data format of field: 4-byte INTEGER           
+TTYPE9  = 'schi2   '           / label for field   9                            
+TFORM9  = 'E       '           / data format of field: 4-byte REAL              
+EXTNAME = 'TPX_DIAG'           / name of this binary table extension            
+SOFTNAME= 'qualityFITS'        / The software that processed those data         
+SOFTVERS= '1.12.1  '           / Version of the software                        
+SOFTDATE= '2005-09-23'         / Release date of the software                   
+SOFTAUTH= 'Frederic Magnard <magnard@iap.fr>' / Maintainer of the software      
+SOFTINST= 'TERAPIX team at IAP  http://terapix.iap.fr'                          
+MSEEING =               5.8408 / median seeing over the N chip (pixels)         
+MSEEINGA=             1.077625 / median seeing over the N chip (arcsec)         
+MBKG    =             69.33578 / median background over the N chip (ADU)        
+MBKGMAS2=             20.98166 / median background over the N chip(mag/arcsec^2)
+END                                                                             

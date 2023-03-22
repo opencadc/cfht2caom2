@@ -136,6 +136,7 @@ class CFHTName(StorageName):
             f'destination_uris: {self.destination_uris}\n'
             f'        file_uri: {self.file_uri}\n'
             f'      product_id: {self.product_id}\n'
+            f'          suffix: {self.suffix}\n'
         )
 
     def _get_uri(self, file_name, scheme):
@@ -193,6 +194,23 @@ class CFHTName(StorageName):
     def prev(self):
         """The preview file name for the file."""
         return '{}_preview_1024.jpg'.format(self.product_id)
+
+    @property
+    def sequence_number(self):
+        result = None
+        # SF 09-01-20
+        # *y files are produced from other files, I am guessing the sky
+        # subtraction software at CFHT copies the header from one of the
+        # exposure and does not update the EXPNUM.
+        #
+        # SGo - because of this, as a secondary measure, try the file name for the sequence number
+        if (
+            self.is_simple and not self.is_master_cal
+        ) or (
+            self.instrument in [Inst.ESPADONS, Inst.SITELLE, Inst.SPIROU] and self.suffix == 'p'
+        ):
+            result = self._file_id.split(self._suffix)[0]
+        return result
 
     @property
     def thumb(self):
@@ -333,7 +351,8 @@ class CFHTName(StorageName):
 
     def set_file_id(self):
         self._file_id = CFHTName.remove_extensions(self._file_name)
-        self._suffix = self._file_id[-1]
+        # for file names that have _flag or _diag in them
+        self._suffix = self._file_id.split('_')[0][-1]
 
     def set_obs_id(self):
         # SF - 14-09-22
@@ -353,7 +372,18 @@ class CFHTName(StorageName):
             ignore = int(self._file_id[:-1])
             self._obs_id = self._file_id[:-1]
         except ValueError as e:
-            self._obs_id = self._file_id
+            if self.sequence_number is None:
+                self._obs_id = self._file_id
+            else:
+                self._obs_id = self.sequence_number
+
+    def set_product_id(self, **kwargs):
+        if '_diag' in self._file_name:
+            # SF 16-03-23
+            # artifact of the *p ones
+            self._product_id = self._file_id.split('_')[0]
+        else:
+            super().set_product_id(**kwargs)
 
     @staticmethod
     def remove_extensions(name):
