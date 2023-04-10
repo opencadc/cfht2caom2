@@ -55,7 +55,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>18Aw03</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2018-06-05T07:21:20.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2018-06-06T03:21:20.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>skysubtraction=yes</caom2:keyword>
         </caom2:keywords>
@@ -501,7 +501,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>18Aw03</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2018-06-05T07:21:20.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2018-06-06T03:21:20.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>skysubtraction=no</caom2:keyword>
         </caom2:keywords>

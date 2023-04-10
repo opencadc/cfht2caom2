@@ -56,7 +56,7 @@
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Upena/</caom2:reference>
-        <caom2:lastExecuted>2019-11-21T06:29:15.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2019-11-21T16:29:15.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>reduction=Polar</caom2:keyword>
         </caom2:keywords>

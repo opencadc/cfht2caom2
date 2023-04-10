@@ -199,15 +199,11 @@ from caom2pipe import translate_composable as tc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
-__all__ = ['APPLICATION', 'factory', 'InstrumentType']
-
-APPLICATION = 'cfht2caom2'
+__all__ = ['factory', 'InstrumentType']
 
 
 def cfht_time_helper(ip):
-    tz_info = tz.gettz('HST') if 'HST' in ip else tz.UTC
-    temp = mc.make_datetime_tz(ip, tz_info)
-    return ac.get_datetime_mjd(temp)
+    return ac.get_datetime_mjd(mc.make_datetime(ip))
 
 
 class ProvenanceType(Enum):
@@ -278,7 +274,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         self._part = None
         self._plane = None
         self._extension = None
-        self._instrument_start_date = mc.make_datetime_tz('1979-01-01 00:00:00', tz.UTC)
+        self._instrument_start_date = mc.make_datetime('1979-01-01 00:00:00')
 
     @property
     def chunk(self):
@@ -331,10 +327,8 @@ class AuxiliaryType(cc.TelescopeMapping):
         the set method to reference a function call.
         """
         self._logger.debug('Begin accumulate_blueprint.')
-        super().accumulate_blueprint(bp, APPLICATION)
+        super().accumulate_blueprint(bp)
         bp.set('Observation.intent', 'get_obs_intent()')
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Observation.metaProducer', meta_producer)
         bp.set('Observation.metaRelease', 'get_meta_release()')
         bp.set('Observation.sequenceNumber', 'get_obs_sequence_number()')
         bp.set('Observation.type', 'get_obs_type()')
@@ -370,14 +364,12 @@ class AuxiliaryType(cc.TelescopeMapping):
         bp.set('Plane.dataRelease', 'get_plane_data_release()')
         bp.set('Plane.metaRelease', 'get_meta_release()')
         bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
-        bp.set('Plane.metaProducer', meta_producer)
         bp.set_default('Plane.provenance.producer', 'CFHT')
         bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
         bp.clear('Plane.provenance.runID')
         bp.add_attribute('Plane.provenance.runID', 'CRUNID')
         bp.set('Plane.provenance.version', 'get_provenance_version()')
 
-        bp.set('Artifact.metaProducer', meta_producer)
         bp.set('Artifact.productType', 'get_product_type()')
         bp.set('Artifact.releaseType', 'data')
 
@@ -528,7 +520,7 @@ class AuxiliaryType(cc.TelescopeMapping):
                             rel_year += 1
                             result = f'{rel_year}-02-28T00:00:00'
         if result is not None:
-            temp = mc.make_datetime_tz(result, tz.UTC)
+            temp = mc.make_datetime(result)
             if not ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
                 self.track_invalid_date(result, 'Plane.dataRelease')
                 result = None
@@ -585,7 +577,7 @@ class AuxiliaryType(cc.TelescopeMapping):
             # format like 2018-06-05HST17:21:20
             tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
             # replace is because CAOM2 is non-aware
-            result = mc.make_datetime_tz(result, tz_info).replace(tzinfo=None)
+            result = mc.make_datetime(result)
         return result
 
     def get_provenance_version(self, ext):
@@ -911,9 +903,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         if self._observation.algorithm.name == 'scan':
             self.plane.data_product_type = DataProductType.CUBE
             if self.plane.provenance is not None:
-                self.plane.provenance.last_executed = mc.make_datetime_tz(
-                    self._headers[self._extension].get('DATE'), tz.UTC
-                ).replace(tzinfo=None)
+                self.plane.provenance.last_executed = mc.make_datetime(self._headers[self._extension].get('DATE'))
 
     def _update_observation_metadata(self, observation):
         pass
@@ -985,8 +975,6 @@ class InstrumentType(AuxiliaryType):
             bp.configure_energy_axis(4)
         bp.configure_observable_axis(6)
 
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Chunk.metaProducer', meta_producer)
         # hard-coded values from:
         # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
         # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
@@ -1510,7 +1498,7 @@ class Espadons(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable):
         super().__init__(headers, cfht_name, clients, observable)
         # SF 18-11-22 espadons is 2004
-        self._instrument_start_time = mc.make_datetime_tz('2004-01-01 00:00:00', tz.UTC)
+        self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
 
     def _is_espadons_energy(self):
         result = False
@@ -1670,7 +1658,7 @@ class Espadons(InstrumentType):
                     result = comment.split('Upena processing date: ')[1]
                     # format like Fri Mar 13 22:51:55 HST 2009
                     tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
-                    result = mc.make_datetime_tz(result, tz_info).replace(tzinfo=None)
+                    result = mc.make_datetime(result)
                     break
                 elif 'opera-' in comment:
                     result = comment.split('opera-')[1].split(' build date')[
@@ -1940,7 +1928,7 @@ class Mega(InstrumentType):
         self._filter_name = None
         # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
         # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
-        self._instrument_start_date = mc.make_datetime_tz('2001-01-24 00:00:00', tz.UTC)
+        self._instrument_start_date = mc.make_datetime('2001-01-24 00:00:00')
 
     @property
     def extension(self):
@@ -1991,7 +1979,7 @@ class Mega(InstrumentType):
         if result is None:
             result = self._headers[ext].get('DATEPROC')
             if result is not None:
-                result = mc.make_datetime_tz(result, tz.UTC).replace(tzinfo=None)
+                result = mc.make_datetime(result)
         return result
 
     def make_axes_consistent(self):
@@ -2070,7 +2058,7 @@ class Sitelle(InstrumentType):
         super().__init__(headers, cfht_name, clients, observable)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
-        self._instrument_start_date = mc.make_datetime_tz('2015-07-07 00:00:00.000', tz.UTC)
+        self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
 
     def _is_derived(self, obs_id):
         if self._storage_name.suffix == 'z':
@@ -2461,12 +2449,6 @@ class SitelleHdf5(InstrumentType):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Observation.metaProducer', meta_producer)
-        bp.set('Plane.metaProducer', meta_producer)
-        bp.set('Artifact.metaProducer', meta_producer)
-        bp.set('Chunk.metaProducer', meta_producer)
-
         bp.configure_position_axes((1, 2))
         bp.configure_time_axis(3)
         if self._storage_name.has_energy:
@@ -2707,12 +2689,6 @@ class SitelleNoHdf5Metadata(Sitelle):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Observation.metaProducer', meta_producer)
-        bp.set('Plane.metaProducer', meta_producer)
-        bp.set('Artifact.metaProducer', meta_producer)
-        bp.set('Chunk.metaProducer', meta_producer)
-
         # Laurie Rousseau-Nepton - 12-08-22
         # 'SCIENCE' is ok with me
         bp.set('Observation.type', 'SCIENCE')
@@ -2760,7 +2736,7 @@ class Spirou(InstrumentType):
         self._header = None
         # https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_news.php says 2019-02-13 00:00:00.000
         # but existing metadata has a minimum value of 2018-04-25 02:12:03.942720 for 2401710o.fits
-        self._instrument_start_date = mc.make_datetime_tz('2018-04-24 00:00:00', tz.UTC)
+        self._instrument_start_date = mc.make_datetime('2018-04-24 00:00:00')
 
     @property
     def extension(self):
@@ -3207,7 +3183,7 @@ class Wircam(InstrumentType):
         super().__init__(headers, cfht_name, clients, observable)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
         # but existing metadata has a minimum value of 2000-07-21 00:00:00 for mastertwilightflat_Ks_13Aw01_v200.fits
-        self._instrument_start_date = mc.make_datetime_tz('2000-07-20 00:00:00.000', tz.UTC)
+        self._instrument_start_date = mc.make_datetime('2000-07-20 00:00:00.000')
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model

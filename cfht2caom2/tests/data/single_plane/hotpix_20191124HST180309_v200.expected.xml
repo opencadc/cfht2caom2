@@ -53,7 +53,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>19Bw02</caom2:runID>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam</caom2:reference>
-        <caom2:lastExecuted>2019-11-27T04:15:30.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2019-11-28T00:15:30.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="1bc43bc9-30a2-4a72-b99d-2fa4349b2439" caom2:lastModified="2019-11-28T19:02:01.068" caom2:maxLastModified="2019-11-28T19:02:01.068" caom2:metaChecksum="md5:daf4e3a96f0b35e9089d7dac45acd8dd" caom2:accMetaChecksum="md5:5f0c7cc4880820d9743fed1b3d3f0c3c" caom2:metaProducer="cfht2caom2/0.3.2">

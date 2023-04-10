@@ -68,7 +68,9 @@
 #
 
 from traceback import format_exc
+
 from caom2pipe.data_source_composable import LocalFilesDataSource
+from caom2pipe.manage_composable import get_now
 
 
 class CFHTLocalFilesDataSource(LocalFilesDataSource):
@@ -104,6 +106,7 @@ at CFHT:      | for checking       | CADC:                 | Name at
         super().__init__(config, cadc_client, metadata_reader, recursive)
         # use a builder so there's no need to guess CFHT naming patterns
         self._builder = builder
+        self._end_dt = get_now()
 
     def _post_store_check_md5sum(self, entry_path):
         """

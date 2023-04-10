@@ -80,7 +80,6 @@ from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
 from cfht2caom2.cfht_builder import CFHTBuilder
 from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
-from cfht2caom2.instruments import APPLICATION
 
 
 META_VISITORS = [fits2caom2_augmentation]
@@ -89,8 +88,6 @@ DATA_VISITORS = [
     preview_augmentation,
     cleanup_augmentation,
 ]
-
-CFHT_BOOKMARK = 'cfht_timestamp'
 
 
 def _common_init():
@@ -121,13 +118,11 @@ def _run_state():
     return rc.run_by_state(
         config=config,
         name_builder=builder,
-        bookmark_name=CFHT_BOOKMARK,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
         source=source,
         metadata_reader=reader,
-        application=APPLICATION,
     )
 
 
@@ -161,7 +156,6 @@ def _run_by_builder():
         clients=clients,
         source=source,
         metadata_reader=reader,
-        application=APPLICATION,
     )
 
 

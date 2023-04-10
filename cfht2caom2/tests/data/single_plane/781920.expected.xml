@@ -54,7 +54,7 @@
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Upena/</caom2:reference>
-        <caom2:lastExecuted>2012-06-05T14:19:17.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2012-06-06T00:19:17.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>reduction=Intensity</caom2:keyword>
         </caom2:keywords>

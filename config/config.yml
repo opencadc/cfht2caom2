@@ -111,3 +111,4 @@ task_types:
   - store
   - ingest
   - modify
+time_zone: UTC
