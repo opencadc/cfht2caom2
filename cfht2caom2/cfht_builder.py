@@ -159,14 +159,9 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                             instrument = headers[1].get('DETECTOR')
                         if instrument is None:
                             nextend = headers[0].get('NEXTEND')
-                            if nextend is None:
-                                raise CadcException(
-                                    f'Could not identify instrument for '
-                                    f'{entry}.'
-                                )
             elif instrument == 'Unknown':
                 detector = headers[0].get('DETECTOR')
-            if instrument is None and nextend is not None and nextend > 30:
+            if (instrument is None and nextend is not None and nextend > 30) or '_diag' in entry:
                 inst = Inst.MEGAPRIME
             else:
                 msg = (

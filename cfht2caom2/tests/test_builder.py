@@ -121,5 +121,18 @@ def test_cfht_builder(test_config):
     assert args[0].destination_uris[0] == test_uri, 'wrong uri'
 
 
+def test_diag(test_config):
+    headers_mock = Mock(autospec=True)
+    headers_mock.headers.get.side_effect = _mock_get
+    test_subject = CFHTBuilder(test_config.collection, use_local_files=False, metadata_reader=headers_mock)
+    test_result = test_subject.build('695816p_diag.fits')
+    assert test_result.instrument == metadata.Inst.MEGAPRIME
+
+
 def _mock_get(uri):
-    return ac.make_headers_from_file(test_fqn)
+    if uri == 'cadc:CFHT/695816p_diag.fits':
+        return ac.make_headers_from_file(
+            f'{cfht_mocks.TEST_DATA_DIR}/single_plane/695816p_diag.fits.header'
+        )
+    else:
+        return ac.make_headers_from_file(test_fqn)

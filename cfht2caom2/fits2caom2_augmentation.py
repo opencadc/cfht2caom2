@@ -88,6 +88,8 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
             )
             f_in = h5py.File(self._storage_name.source_names[0])
             parser = caom2blueprint.Hdf5Parser(blueprint, uri, f_in)
+        elif '_diag' in self._storage_name.file_name:
+            parser = caom2blueprint.BlueprintParser(blueprint, uri)
         else:
             parser = super()._get_parser(headers, blueprint, uri)
         return parser

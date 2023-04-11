@@ -182,13 +182,14 @@ import os
 
 from astropy import units
 from astropy.io import fits
+from dateutil import tz
 from enum import Enum
 
 from caom2 import Axis, Slice, ObservableAxis, Chunk, DataProductType
 from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
 from caom2 import TemporalWCS, CoordAxis1D, CoordFunction1D, CoordError
 from caom2 import CalibrationLevel, ProductType, ObservationIntentType
-from caom2 import DerivedObservation, TypedList
+from caom2 import DerivedObservation
 from caom2utils.caom2blueprint import FitsWcsParser, ObsBlueprint, update_artifact_meta
 from caom2utils.data_util import get_local_headers_from_fits
 from caom2pipe import astro_composable as ac
@@ -198,9 +199,11 @@ from caom2pipe import translate_composable as tc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
-__all__ = ['APPLICATION', 'factory', 'InstrumentType']
+__all__ = ['factory', 'InstrumentType']
 
-APPLICATION = 'cfht2caom2'
+
+def cfht_time_helper(ip):
+    return ac.get_datetime_mjd(mc.make_datetime(ip))
 
 
 class ProvenanceType(Enum):
@@ -257,7 +260,7 @@ class CFHTValueRepair(mc.ValueRepairCache):
         self._logger = logging.getLogger(self.__class__.__name__)
 
 
-class InstrumentType(cc.TelescopeMapping):
+class AuxiliaryType(cc.TelescopeMapping):
     value_repair = CFHTValueRepair()
 
     def __init__(self, headers, cfht_name, clients, observable):
@@ -271,7 +274,7 @@ class InstrumentType(cc.TelescopeMapping):
         self._part = None
         self._plane = None
         self._extension = None
-        self._instrument_start_date = ac.get_datetime('1979-01-01 00:00:00')
+        self._instrument_start_date = mc.make_datetime('1979-01-01 00:00:00')
 
     @property
     def chunk(self):
@@ -313,6 +316,616 @@ class InstrumentType(cc.TelescopeMapping):
     def plane(self, value):
         self._plane = value
 
+    def accumulate_blueprint(self, bp):
+        """Configure the telescope-specific ObsBlueprint at the CAOM model
+        Observation level.
+
+        This code captures the portion of the TDM->CAOM model mapping, where
+        the relationship is one or many elements of the TDM are required to set
+        individual elements of the CAOM model. If the mapping cardinality is 1:1
+        generally, use add_attribute. If the mapping cardinality is n:1 use
+        the set method to reference a function call.
+        """
+        self._logger.debug('Begin accumulate_blueprint.')
+        super().accumulate_blueprint(bp)
+        bp.set('Observation.intent', 'get_obs_intent()')
+        bp.set('Observation.metaRelease', 'get_meta_release()')
+        bp.set('Observation.sequenceNumber', 'get_obs_sequence_number()')
+        bp.set('Observation.type', 'get_obs_type()')
+        bp.set_default('Observation.algorithm.name', None)
+        bp.set('Observation.environment.elevation', 'get_environment_elevation()')
+        bp.set('Observation.environment.humidity', 'get_obs_environment_humidity()')
+        # title is select title from runid_title where proposal_id = 'runid'
+        # this obtained from cache.yml now
+        bp.clear('Observation.proposal.id')
+        bp.add_attribute('Observation.proposal.id', 'RUNID')
+        bp.clear('Observation.proposal.pi')
+        bp.add_attribute('Observation.proposal.pi', 'PI_NAME')
+        bp.set('Observation.proposal.project', 'get_proposal_project()')
+        bp.set('Observation.proposal.title', 'get_proposal_title()')
+        bp.set('Observation.instrument.name', self._storage_name.instrument.value)
+        bp.set('Observation.instrument.keywords', 'get_instrument_keywords()')
+        bp.set('Observation.target.standard', 'get_target_standard()')
+        bp.clear('Observation.target_position.coordsys')
+        bp.add_attribute('Observation.target_position.coordsys', 'OBJRADEC')
+        bp.clear('Observation.target_position.equinox')
+        bp.add_attribute('Observation.target_position.equinox', 'OBJEQN')
+        bp.add_attribute('Observation.target_position.equinox', 'OBJEQUIN')
+        bp.set('Observation.target_position.point.cval1', 'get_target_position_cval1()')
+        bp.set('Observation.target_position.point.cval2', 'get_target_position_cval2()')
+        bp.set('Observation.telescope.name', 'CFHT 3.6m')
+        x, y, z = ac.get_geocentric_location('cfht')
+        bp.set('Observation.telescope.geoLocationX', x)
+        bp.set('Observation.telescope.geoLocationY', y)
+        bp.set('Observation.telescope.geoLocationZ', z)
+
+        bp.set('Plane.dataProductType', 'get_plane_data_product_type()')
+        bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+        bp.set('Plane.dataRelease', 'get_plane_data_release()')
+        bp.set('Plane.metaRelease', 'get_meta_release()')
+        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
+        bp.set_default('Plane.provenance.producer', 'CFHT')
+        bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
+        bp.clear('Plane.provenance.runID')
+        bp.add_attribute('Plane.provenance.runID', 'CRUNID')
+        bp.set('Plane.provenance.version', 'get_provenance_version()')
+
+        bp.set('Artifact.productType', 'get_product_type()')
+        bp.set('Artifact.releaseType', 'data')
+
+    def get_calibration_level(self, ext):
+        result = CalibrationLevel.CALIBRATED
+        if (
+            self._storage_name.is_simple
+            and not self._storage_name.simple_by_suffix
+            and not self._storage_name.is_master_cal
+        ):
+            result = CalibrationLevel.RAW_STANDARD
+        return result
+
+    def get_plane_data_product_type(self, ext):
+        # caom2wircam.default
+        # caom2wircamdetrend.default
+        return DataProductType.IMAGE
+
+    def get_environment_elevation(self, ext):
+        elevation = mc.to_float(self._headers[ext].get('TELALT'))
+        if elevation is not None and not (0.0 <= elevation <= 90.0):
+            self._logger.info(
+                f'Setting elevation to None for '
+                f'{self._storage_name.file_name} because the value is {elevation}.'
+            )
+            elevation = None
+        return elevation
+
+    def get_provenance_keywords(self, ext):
+        pass
+
+    def get_provenance_name(self, ext):
+        pass
+
+    def get_provenance_project(self, ext):
+        pass
+
+    def get_provenance_reference(self, ext):
+        pass
+
+    def get_instrument_keywords(self, ext):
+        inst_mode = self._headers[ext].get('INSTMODE')
+        if inst_mode is not None:
+            inst_mode = f'INSTMODE={inst_mode}'
+        temp = self._headers[ext].get('SITSTEP')
+        sit_step = None
+        if temp is not None:
+            sit_step = f'SITSTEP={temp}'
+        temp = self._headers[ext].get('SITSTEPS')
+        sit_steps = None
+        if temp is not None:
+            sit_steps = f'SITSTEPS={temp}'
+        result = ','.join(filter(None, (inst_mode, sit_step, sit_steps)))
+        if 'Unknown' in result:
+            result = 'Unknown'
+        return result
+
+    def get_meta_release(self, ext):
+        # order set from:
+        # caom2IngestWircam.py, l777
+        # caom2IngestEspadons.py, l625
+        # caom2IngestMegadetrend.py, l445
+        for keyword in ['MET_DATE', 'DATE-OBS', 'DATE-OB1', 'DATE', 'REL_DATE', 'TVSTART']:
+            result = self._headers[ext].get(keyword)
+            # no end date check - CFHT has random metadata release rules that should be reflected in the keyword values
+            if result in ['1970-00-01', '1970-00-01T0:00:00'] or result is None:
+                continue
+            temp = cfht_time_helper(result)
+            if ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
+                break
+        return result
+
+    def get_obs_environment_humidity(self, ext):
+        result = self._headers[ext].get('RELHUMID')
+        if result is not None and result < 0.0:
+            self._logger.warning(f'RELHUMID invalid value {result}.')
+            result = None
+        return result
+
+    def get_obs_intent(self, ext):
+        # CW
+        # Determine Observation.intent = obs.intent = "science" or
+        # "calibration" phot & astr std & acquisitions/align are calibration.
+        # from caom2IngestWircam.py, l731
+        result = ObservationIntentType.CALIBRATION
+        obs_type = self.get_obs_type(ext)
+        if obs_type is None:
+            # no 'OBSTYPE' keyword, so fits2caom2 will set the value to
+            # science
+            result = None
+        elif obs_type == 'OBJECT':
+            run_id = self._get_run_id(ext)
+            if run_id is not None and run_id[3].lower() != 'q':
+                result = ObservationIntentType.SCIENCE
+        return result
+
+    def get_obs_sequence_number(self, ext):
+        return self._headers[ext].get('EXPNUM', self._storage_name.sequence_number)
+
+    def get_obs_type(self, ext):
+        return self._headers[ext].get('OBSTYPE')
+
+    def get_plane_data_release(self, ext):
+        # order set from:
+        # caom2IngestWircam.py, l756
+        #
+        # from http://www.cfht.hawaii.edu/en/science/QSO/
+        #
+        # "The proprietary period of QSO data extends by default to 1 year + 1
+        # month starting at the end of the QSO semester. For instance, data
+        # taken for the 2009B semester (August 1 - January 31) will have a
+        # default release date set to 02/28/2011. The extra month is allowed
+        # because of possible delays in the data reduction distribution of
+        # observations carried out near the end of a semester. If an extension
+        # is requested during the Phase 1 period and is approved by TAC, a new
+        # date will be set for this program through the QSO system. This
+        # release date for the QSO data is indicated in the fits headers by
+        # the keyword REL_DATE."
+
+        result = self._headers[ext].get('REL_DATE')
+        if result is None:
+            date_obs = self._headers[ext].get('DATE-OBS')
+            run_id = self._get_run_id(ext)
+            if run_id is not None:
+                if run_id == 'SMEARING':
+                    result = self._headers[ext].get('DATE')
+                elif (
+                    run_id[3].lower() == 'e' or run_id[3].lower() == 'q'
+                ) and date_obs is not None:
+                    result = f'{date_obs}T00:00:00'
+                else:
+                    obs_intent = self.get_obs_intent(ext)
+                    if obs_intent == ObservationIntentType.CALIBRATION:
+                        # from caom2IngestMegacamdetrend.py, l445
+                        result = self._headers[ext].get('DATE')
+                        if result is None:
+                            result = self._headers[ext].get('TVSTART')
+                    if result is None:
+                        self._logger.warning(
+                            f'REL_DATE not in header. Derive from RUNID '
+                            f'{run_id}.'
+                        )
+                        semester = mc.to_int(run_id[0:2])
+                        rel_year = 2000 + semester + 1
+                        if run_id[2] == 'A':
+                            result = f'{rel_year}-08-31T00:00:00'
+                        else:
+                            rel_year += 1
+                            result = f'{rel_year}-02-28T00:00:00'
+        if result is not None:
+            temp = mc.make_datetime(result)
+            if not ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
+                self.track_invalid_date(result, 'Plane.dataRelease')
+                result = None
+        return result
+
+    def get_product_type(self, ext):
+        result = ProductType.SCIENCE
+        obs_type = self.get_obs_intent(ext)
+        if obs_type == ObservationIntentType.CALIBRATION:
+            result = ProductType.CALIBRATION
+        if self._storage_name.suffix in ['g', 'm', 'w', 'y']:
+            result = ProductType.CALIBRATION
+        if '_diag' in self._storage_name.file_name:
+            # SF 16-03-23
+            # record them as catalogues,  artifact of the *p ones - same behaviour as for the preview images
+            result = ProductType.AUXILIARY
+
+        # The goal is to make all file types easily findable by archive users,
+        # which means having each file type show as a row in the search
+        # results. With the search results limitation, a single file must be
+        # owned by a plane, as that is how it gets displayed in the search
+        # results. The planes must also contain plane-level metadata for the
+        # search to find. Plane-level metadata is only calculated for science
+        # or calibration artifacts, so any file types that might conceivably
+        # be auxiliary product types are labeled as calibration, so that
+        # plane-level metadata is calculated.
+        #
+        # Confirm the goal is find-ability in conversation with CW, SF on
+        # 27-01-20.
+
+        return result
+
+    def get_proposal_project(self, ext):
+        result = None
+        pi_name = self._headers[ext].get('PI_NAME')
+        if pi_name is not None and 'CFHTLS' in pi_name:
+            result = 'CFHTLS'
+        else:
+            run_id = self._headers[ext].get('RUNID')
+            if run_id is not None:
+                result = md.cache.get_program(run_id)
+        return result
+
+    def get_proposal_title(self, ext):
+        result = None
+        run_id = self._headers[ext].get('RUNID')
+        if run_id is not None:
+            result = md.cache.get_title(run_id)
+        return result
+
+    def get_provenance_last_executed(self, ext):
+        result = self._headers[ext].get('PROCDATE')
+        if result is not None:
+            # format like 2018-06-05HST17:21:20
+            tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
+            # replace is because CAOM2 is non-aware
+            result = mc.make_datetime(result)
+        return result
+
+    def get_provenance_version(self, ext):
+        result = self._headers[ext].get('IIWIVER')
+        if result is None:
+            result = self._headers[ext].get('ORBSVER')
+            if result is None:
+                result = self._headers[ext].get('EL_SYS')
+        return result
+
+    def get_target_position_cval1(self, ext):
+        ra, ignore_dec = self._get_ra_dec(ext)
+        return ra
+
+    def get_target_position_cval2(self, ext):
+        ignore_ra, dec = self._get_ra_dec(ext)
+        return dec
+
+    def get_target_standard(self, ext):
+        obs_type = self.get_obs_type(ext)
+        run_id = self._get_run_id(ext)
+        result = None
+        if run_id is not None:
+            run_id_type = run_id[3].lower()
+            if run_id_type == 'q' and obs_type == 'OBJECT':
+                obj_name = self._headers[ext].get('OBJECT').lower()
+                if self._storage_name.instrument is md.Inst.SITELLE:
+                    if 'std' in obj_name:
+                        result = True
+                    else:
+                        result = False
+                else:
+                    if (
+                        'flat' in obj_name
+                        or 'focus' in obj_name
+                        or 'zenith' in obj_name
+                    ):
+                        result = False
+                    else:
+                        result = True
+            else:
+                result = False
+        return result
+
+    def get_time_resolution(self, ext):
+        pass
+
+    def _get_ra_dec(self, ext):
+        obj_ra = self._headers[ext].get('OBJRA')
+        obj_dec = self._headers[ext].get('OBJDEC')
+        obj_ra_dec = self._headers[ext].get('OBJRADEC')
+        if obj_ra_dec is not None:
+            obj_ra_dec = obj_ra_dec.lower()
+        ra = None
+        dec = None
+        if (
+            obj_ra is not None
+            and obj_dec is not None
+            and obj_ra_dec is not None
+        ):
+            if obj_ra_dec == 'gappt' or obj_ra_dec == 'null':
+                # SF 18-12-19
+                # seb 4:01 PM
+                # this is a flat. i have the impression in this case you can
+                # ignore the ra/dec stuff
+                self._logger.warning(
+                    f'OBSRADEC is GAPPT for {self._storage_name.file_name}'
+                )
+            else:
+                ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
+        return ra, dec
+
+    def _get_run_id(self, ext):
+        run_id = self._headers[ext].get('RUNID')
+        if run_id is None:
+            run_id = self._headers[ext].get('CRUNID')
+        if run_id is not None:
+            if len(run_id) < 3 or len(run_id) > 9 or run_id == 'CFHT':
+                # a well-known default value that indicates the past, as
+                # specified in
+                # caom2IngestMegacam.py, l392
+                # caom2IngestWircamdetrend.py, l314
+                # caom2IngestEspadons.py, l522
+                self._logger.warning(
+                    f'Setting RUNID to default 17BE for '
+                    f'{self._headers[ext].get("FILENAME")}.'
+                )
+                run_id = '17BE'
+            else:
+                run_id = run_id.strip()
+        return run_id
+
+    def _get_types(self, ext):
+        dp_result = DataProductType.IMAGE
+        pt_result = ProductType.SCIENCE
+        obs_type = self.get_obs_intent(ext)
+        if obs_type == ObservationIntentType.CALIBRATION:
+            pt_result = ProductType.CALIBRATION
+        if self._storage_name.suffix in ['m', 'w', 'y']:
+            dp_result = DataProductType.AUXILIARY
+            pt_result = ProductType.AUXILIARY
+        return dp_result, pt_result
+
+    def _get_gaia_target_id(self, ext):
+        catalog_id = self._headers[ext].get('GAIAID')
+        # catalog id looks like:
+        # GAIAID  = 'Gaia DR2 470826482635704064'
+        # should look like:
+        # Gaia:DRX/SOURCE_ID
+        # from JJK: 25-02-21
+        # PD: 01-03-21
+        # should be wary of upper-case letters in schemes, so use 'gaia'
+        result = None
+        if catalog_id is not None:
+            if isinstance(catalog_id, int):
+                catalog_dr = self._headers[ext].get('GAIADR')
+                bits = catalog_dr.split()
+                if len(bits) == 2:
+                    result = mc.build_uri(
+                        scheme=bits[0].lower(),
+                        archive=bits[1],
+                        file_name=str(catalog_id),
+                    )
+                else:
+                    self._logger.warning(
+                        f'Unexpected GAIADR value {catalog_dr}.'
+                    )
+            else:
+                bits = catalog_id.split()
+                if len(bits) == 3:
+                    result = mc.build_uri(
+                        scheme=bits[0].lower(),
+                        archive=bits[1],
+                        file_name=bits[2],
+                    )
+                else:
+                    self._logger.warning(
+                        f'Unexpected GAIAID value {catalog_id}.'
+                    )
+        return result
+
+    def _is_derived(self, obs_id):
+        result = False
+        derived_type = ''
+        if cc.is_composite(self._headers):
+            result = True
+            derived_type = ProvenanceType.IMCMB
+        else:
+            file_type = self._headers[0].get('FILETYPE')
+            if file_type is not None and 'alibrat' in file_type:
+                self._logger.info(
+                    f'Treating {obs_id} with filetype {file_type} as derived. '
+                )
+                result = True
+                derived_type = ProvenanceType.COMMENT
+        if not result and not self._storage_name.is_simple:
+            result = True
+            derived_type = ProvenanceType.FILENAME
+        return result, derived_type
+
+    def _update_sitelle_plane(self, observation):
+        pass
+
+    def _update_plane_post(self, observation):
+        pass
+
+    def update(self, observation, file_info):
+        """Called to fill multiple CAOM model elements and/or attributes, must
+        have this signature for import_module loading and execution.
+
+        This code captures the portion of the TDM->CAOM model mapping, where
+        the relationship is multiple elements of the TDM are required to set
+        multiple elements of the CAOM model (mapping cardinality n:n).
+
+        :param observation A CAOM Observation model instance.
+        :param file_info cadcdata.FileInfo instance
+        """
+        self._logger.debug('Begin update.')
+
+        ingesting_hdf5 = False
+
+        if self._storage_name.suffix == 'z':
+            ingesting_hdf5 = True
+            self._logger.info(
+                f'Ingesting the hdf5 plane for {observation.observation_id}'
+            )
+
+        if self._storage_name.instrument is md.Inst.MEGACAM:
+            # need the 'megacam' for the filter lookup at SVO, but there is
+            # only a 'MegaPrime' instrument in the CAOM collection at CADC
+            # see e.g. 2003A.frpts.z.36.00
+            observation.instrument = cc.copy_instrument(
+                observation.instrument, md.Inst.MEGAPRIME.value
+            )
+
+        if ingesting_hdf5:
+            # avoid all the code that references undefined headers variable
+            if not isinstance(observation, DerivedObservation):
+                observation = cc.change_to_composite(observation, 'scan')
+            self._update_sitelle_plane(observation)
+            self._logger.debug('Done hdf5 update.')
+            return observation
+
+        is_derived, derived_type = self._is_derived(observation.observation_id)
+        if is_derived and not isinstance(observation, DerivedObservation):
+            self._logger.info(f'{observation.observation_id} will be changed to a Derived Observation.')
+            algorithm_name = 'master_detrend'
+            if self._storage_name.has_polarization:
+                algorithm_name = 'polarization'
+            elif self._storage_name.is_derived_sitelle:
+                algorithm_name = 'scan'
+            observation = cc.change_to_composite(observation, algorithm_name)
+
+        if (
+            self._storage_name.instrument is md.Inst.SITELLE
+            and self._storage_name.suffix == 'v'
+        ):
+            idx = 0
+        else:
+            idx = self._update_observation_metadata(observation)
+        self.observation = observation
+        self.extension = idx
+        self.update_observation()
+        for plane in observation.planes.values():
+            if plane.product_id != self._storage_name.product_id:
+                # do only the work for the applicable plane
+                continue
+
+            self.plane = plane
+            for artifact in plane.artifacts.values():
+                if artifact.uri != self._storage_name.file_uri:
+                    continue
+                update_artifact_meta(artifact, file_info)
+
+                for part in artifact.parts.values():
+                    if self.get_calibration_level(idx) == CalibrationLevel.RAW_STANDARD:
+                        time_delta = self.get_time_refcoord_delta_simple(idx)
+                    else:
+                        time_delta = self.get_time_refcoord_delta_derived(idx)
+                    for chunk in part.chunks:
+                        cc.undo_astropy_cdfix_call(chunk, time_delta)
+                        self.part = part
+                        self.chunk = chunk
+                        self.update_chunk()
+
+            if isinstance(observation, DerivedObservation):
+                if derived_type is ProvenanceType.IMCMB:
+                    cc.update_plane_provenance(
+                        plane,
+                        self._headers[1:],
+                        derived_type.value,
+                        self._storage_name.collection,
+                        _repair_imcmb_provenance_value,
+                        observation.observation_id,
+                    )
+                elif derived_type is ProvenanceType.COMMENT:
+                    cc.update_plane_provenance_single(
+                        plane,
+                        self._headers,
+                        derived_type.value,
+                        self._storage_name.collection,
+                        _repair_comment_provenance_value,
+                        observation.observation_id,
+                    )
+                else:
+                    cc.update_plane_provenance(
+                        plane,
+                        self._headers,
+                        derived_type.value,
+                        self._storage_name.collection,
+                        _repair_filename_provenance_value,
+                        observation.observation_id,
+                    )
+                # the derived plane itself is not considered one of the inputs
+                delete_these = []
+                for ip in plane.provenance.inputs:
+                    if ip.get_product_id().endswith(self._storage_name.product_id):
+                        delete_these.append(ip)
+                for entry in delete_these:
+                    plane.provenance.inputs.remove(entry)
+
+            self.update_plane()
+            # this is here, because the bits that are being copied have been
+            # created/modified by the update_chunk call
+            self._update_sitelle_plane(observation)
+
+        # relies on update_plane_provenance being called
+        if isinstance(observation, DerivedObservation):
+            cc.update_observation_members(observation)
+        self._update_plane_post(observation)
+        InstrumentType.value_repair.repair(observation)
+        self._logger.debug('Done update.')
+        return observation
+
+    @staticmethod
+    def _semi_deep_copy_plane(
+        from_plane, to_plane, from_artifact, to_artifact
+    ):
+        to_plane.calibration_level = from_plane.calibration_level
+        to_plane.data_product_type = from_plane.data_product_type
+        to_plane.data_release = from_plane.data_release
+        to_plane.meta_producer = from_plane.meta_producer
+        to_plane.meta_release = from_plane.meta_release
+        for part in from_artifact.parts.values():
+            to_artifact.parts.add(cc.copy_part(part))
+            for chunk in part.chunks:
+                to_artifact.parts[part.name].chunks.append(
+                    cc.copy_chunk(chunk)
+                )
+
+    def track_invalid_date(self, value, key):
+        self._logger.warning(f'Invalid date of {value} for {key}.')
+        self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
+
+    def update_observation(self):
+        if (
+            self._observation.proposal is not None
+            and self._observation.proposal.pi_name is None
+        ):
+            self._observation.proposal.pi_name = 'CFHT'
+
+    def update_plane(self):
+        if self._observation.algorithm.name == 'scan':
+            self.plane.data_product_type = DataProductType.CUBE
+            if self.plane.provenance is not None:
+                self.plane.provenance.last_executed = mc.make_datetime(self._headers[self._extension].get('DATE'))
+
+    def _update_observation_metadata(self, observation):
+        pass
+
+    def _update_plane_provenance(self):
+        self._logger.debug(
+            f'Begin _update_plane_provenance for {self._storage_name.obs_id}'
+        )
+        obs_uri_ignore, plane_uri = cc.make_plane_uri(
+            self._storage_name.obs_id, f'{self._storage_name.obs_id}o', self._storage_name.collection
+        )
+        self.plane.provenance.inputs.add(plane_uri)
+        self._logger.debug(
+            f'End _update_plane_provenance for {self._storage_name.obs_id}'
+        )
+
+
+class InstrumentType(AuxiliaryType):
+
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+
     def get_filter_md(self, filter_name):
         filter_md = md.filter_cache.get_svo_filter(self._name, filter_name)
         if not md.filter_cache.is_cached(self._name, filter_name):
@@ -348,7 +961,7 @@ class InstrumentType(cc.TelescopeMapping):
         the set method to reference a function call.
         """
         self._logger.debug('Begin accumulate_blueprint.')
-        super().accumulate_blueprint(bp, APPLICATION)
+        super().accumulate_blueprint(bp)
         bp.configure_position_axes((1, 2))
         if not (
             self._storage_name.suffix == 'p'
@@ -362,86 +975,6 @@ class InstrumentType(cc.TelescopeMapping):
             bp.configure_energy_axis(4)
         bp.configure_observable_axis(6)
 
-        bp.set('Observation.intent', 'get_obs_intent()')
-
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Observation.metaProducer', meta_producer)
-        bp.set('Observation.metaRelease', 'get_meta_release()')
-
-        bp.set('Observation.sequenceNumber', 'get_obs_sequence_number()')
-        bp.set('Observation.type', 'get_obs_type()')
-
-        bp.set_default('Observation.algorithm.name', None)
-
-        bp.set(
-            'Observation.environment.elevation',
-            'get_environment_elevation()',
-        )
-        bp.set(
-            'Observation.environment.humidity',
-            'get_obs_environment_humidity()',
-        )
-
-        # title is select title from runid_title where proposal_id = 'runid'
-        # this obtained from cache.yml now
-        bp.clear('Observation.proposal.id')
-        bp.add_attribute('Observation.proposal.id', 'RUNID')
-        bp.clear('Observation.proposal.pi')
-        bp.add_attribute('Observation.proposal.pi', 'PI_NAME')
-        bp.set('Observation.proposal.project', 'get_proposal_project()')
-        bp.set('Observation.proposal.title', 'get_proposal_title()')
-
-        bp.set(
-            'Observation.instrument.name', self._storage_name.instrument.value
-        )
-        bp.set(
-            'Observation.instrument.keywords',
-            'get_instrument_keywords()',
-        )
-
-        bp.set('Observation.target.standard', 'get_target_standard()')
-
-        bp.clear('Observation.target_position.coordsys')
-        bp.add_attribute('Observation.target_position.coordsys', 'OBJRADEC')
-        bp.clear('Observation.target_position.equinox')
-        bp.add_attribute('Observation.target_position.equinox', 'OBJEQN')
-        bp.add_attribute('Observation.target_position.equinox', 'OBJEQUIN')
-        bp.set(
-            'Observation.target_position.point.cval1',
-            'get_target_position_cval1()',
-        )
-        bp.set(
-            'Observation.target_position.point.cval2',
-            'get_target_position_cval2()',
-        )
-
-        bp.set('Observation.telescope.name', 'CFHT 3.6m')
-        x, y, z = ac.get_geocentric_location('cfht')
-        bp.set('Observation.telescope.geoLocationX', x)
-        bp.set('Observation.telescope.geoLocationY', y)
-        bp.set('Observation.telescope.geoLocationZ', z)
-
-        bp.set('Plane.dataProductType', 'get_plane_data_product_type()')
-        bp.set('Plane.calibrationLevel', 'get_calibration_level()')
-        bp.set('Plane.dataRelease', 'get_plane_data_release()')
-        bp.set('Plane.metaRelease', 'get_meta_release()')
-
-        bp.set(
-            'Plane.provenance.lastExecuted',
-            'get_provenance_last_executed()',
-        )
-        bp.set('Plane.metaProducer', meta_producer)
-        bp.set_default('Plane.provenance.producer', 'CFHT')
-        bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
-        bp.clear('Plane.provenance.runID')
-        bp.add_attribute('Plane.provenance.runID', 'CRUNID')
-        bp.set('Plane.provenance.version', 'get_provenance_version()')
-
-        bp.set('Artifact.metaProducer', meta_producer)
-        bp.set('Artifact.productType', 'get_product_type()')
-        bp.set('Artifact.releaseType', 'data')
-
-        bp.set('Chunk.metaProducer', meta_producer)
         # hard-coded values from:
         # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
         # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
@@ -528,23 +1061,8 @@ class InstrumentType(cc.TelescopeMapping):
             )
         bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
-    def get_plane_data_product_type(self, ext):
-        # caom2wircam.default
-        # caom2wircamdetrend.default
-        return DataProductType.IMAGE
-
     def get_bandpass_name(self, ext):
         pass
-
-    def get_calibration_level(self, ext):
-        result = CalibrationLevel.CALIBRATED
-        if (
-            self._storage_name.is_simple
-            and not self._storage_name.simple_by_suffix
-            and not self._storage_name.is_master_cal
-        ):
-            result = CalibrationLevel.RAW_STANDARD
-        return result
 
     def get_dec_deg_from_0th_header(self, ext):
         return self._headers[0].get('DEC_DEG')
@@ -596,16 +1114,6 @@ class InstrumentType(cc.TelescopeMapping):
                 result = val / delta
         return result
 
-    def get_environment_elevation(self, ext):
-        elevation = mc.to_float(self._headers[ext].get('TELALT'))
-        if elevation is not None and not (0.0 <= elevation <= 90.0):
-            self._logger.info(
-                f'Setting elevation to None for '
-                f'{self._storage_name.file_name} because the value is {elevation}.'
-            )
-            elevation = None
-        return elevation
-
     def get_exptime(self, ext):
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
         # units are seconds
@@ -615,155 +1123,11 @@ class InstrumentType(cc.TelescopeMapping):
                 exptime = 0.0
         return exptime
 
-    def get_provenance_keywords(self, ext):
-        pass
-
-    def get_provenance_name(self, ext):
-        pass
-
-    def get_provenance_project(self, ext):
-        pass
-
-    def get_provenance_reference(self, ext):
-        pass
-
     def get_time_refcoord_delta(self, ext):
         pass
 
     def get_time_refcoord_val(self, ext):
         pass
-
-    def get_instrument_keywords(self, ext):
-        inst_mode = self._headers[ext].get('INSTMODE')
-        if inst_mode is not None:
-            inst_mode = f'INSTMODE={inst_mode}'
-        temp = self._headers[ext].get('SITSTEP')
-        sit_step = None
-        if temp is not None:
-            sit_step = f'SITSTEP={temp}'
-        temp = self._headers[ext].get('SITSTEPS')
-        sit_steps = None
-        if temp is not None:
-            sit_steps = f'SITSTEPS={temp}'
-        result = ','.join(filter(None, (inst_mode, sit_step, sit_steps)))
-        if 'Unknown' in result:
-            result = 'Unknown'
-        return result
-
-    def get_meta_release(self, ext):
-        # order set from:
-        # caom2IngestWircam.py, l777
-        # caom2IngestEspadons.py, l625
-        # caom2IngestMegadetrend.py, l445
-        for keyword in ['MET_DATE', 'DATE-OBS', 'DATE-OB1', 'DATE', 'REL_DATE', 'TVSTART']:
-            result = self._headers[ext].get(keyword)
-            # no end date check - CFHT has random metadata release rules that should be reflected in the keyword values
-            if ac.is_good_date(ac.get_datetime(result), self._instrument_start_date, check_end_date=False):
-                break
-        return result
-
-    def get_obs_environment_humidity(self, ext):
-        result = self._headers[ext].get('RELHUMID')
-        if result is not None and result < 0.0:
-            self._logger.warning(f'RELHUMID invalid value {result}.')
-            result = None
-        return result
-
-    def get_obs_intent(self, ext):
-        # CW
-        # Determine Observation.intent = obs.intent = "science" or
-        # "calibration" phot & astr std & acquisitions/align are calibration.
-        # from caom2IngestWircam.py, l731
-        result = ObservationIntentType.CALIBRATION
-        obs_type = self.get_obs_type(ext)
-        if obs_type is None:
-            # no 'OBSTYPE' keyword, so fits2caom2 will set the value to
-            # science
-            result = None
-        elif obs_type == 'OBJECT':
-            run_id = self._get_run_id(ext)
-            if run_id is not None and run_id[3].lower() != 'q':
-                result = ObservationIntentType.SCIENCE
-        return result
-
-    def get_obs_sequence_number(self, ext):
-        result = None
-        # SF 09-01-20
-        # *y files are produced from other files, I am guessing the sky
-        # subtraction software at CFHT copies the header from one of the
-        # exposure and does not update the EXPNUM.
-        #
-        # SGo - because of this, use the file name to find the sequence
-        # number, not the 'EXPNUM' keyword as in the originating
-        # caom2Ingest*.py scripts.
-        if (
-            self._storage_name.is_simple
-            and not self._storage_name.is_master_cal
-        ) or (
-            self._storage_name.instrument
-            in [md.Inst.ESPADONS, md.Inst.SITELLE, md.Inst.SPIROU]
-            and self._storage_name.suffix == 'p'
-        ):
-            result = self._storage_name.file_id[:-1]
-        return result
-
-    def get_obs_type(self, ext):
-        return self._headers[ext].get('OBSTYPE')
-
-    def get_plane_data_release(self, ext):
-        # order set from:
-        # caom2IngestWircam.py, l756
-        #
-        # from http://www.cfht.hawaii.edu/en/science/QSO/
-        #
-        # "The proprietary period of QSO data extends by default to 1 year + 1
-        # month starting at the end of the QSO semester. For instance, data
-        # taken for the 2009B semester (August 1 - January 31) will have a
-        # default release date set to 02/28/2011. The extra month is allowed
-        # because of possible delays in the data reduction distribution of
-        # observations carried out near the end of a semester. If an extension
-        # is requested during the Phase 1 period and is approved by TAC, a new
-        # date will be set for this program through the QSO system. This
-        # release date for the QSO data is indicated in the fits headers by
-        # the keyword REL_DATE."
-
-        result = self._headers[ext].get('REL_DATE')
-        if result is None:
-            date_obs = self._headers[ext].get('DATE-OBS')
-            run_id = self._get_run_id(ext)
-            if run_id is not None:
-                if run_id == 'SMEARING':
-                    result = self._headers[ext].get('DATE')
-                elif (
-                    run_id[3].lower() == 'e' or run_id[3].lower() == 'q'
-                ) and date_obs is not None:
-                    result = f'{date_obs}T00:00:00'
-                else:
-                    obs_intent = self.get_obs_intent(ext)
-                    if obs_intent == ObservationIntentType.CALIBRATION:
-                        # from caom2IngestMegacamdetrend.py, l445
-                        result = self._headers[ext].get('DATE')
-                        if result is None:
-                            result = self._headers[ext].get('TVSTART')
-                    if result is None:
-                        self._logger.warning(
-                            f'REL_DATE not in header. Derive from RUNID '
-                            f'{run_id}.'
-                        )
-                        semester = mc.to_int(run_id[0:2])
-                        rel_year = 2000 + semester + 1
-                        if run_id[2] == 'A':
-                            result = f'{rel_year}-08-31T00:00:00'
-                        else:
-                            rel_year += 1
-                            result = f'{rel_year}-02-28T00:00:00'
-        if (
-            result is not None
-            and not ac.is_good_date(ac.get_datetime(result), self._instrument_start_date, check_end_date=False)
-        ):
-            self.track_invalid_date(result, 'Plane.dataRelease')
-            result = None
-        return result
 
     def get_polarization_function_val(self, ext):
         lookup = {'I': 1, 'Q': 2, 'U': 3, 'V': 4, 'W': 5}
@@ -779,99 +1143,8 @@ class InstrumentType(cc.TelescopeMapping):
     def get_position_equinox_from_0th_header(self, ext):
         return self._headers[ext].get('EQUINOX')
 
-    def get_product_type(self, ext):
-        result = ProductType.SCIENCE
-        obs_type = self.get_obs_intent(ext)
-        if obs_type == ObservationIntentType.CALIBRATION:
-            result = ProductType.CALIBRATION
-        if self._storage_name.suffix in ['g', 'm', 'w', 'y']:
-            result = ProductType.CALIBRATION
-
-        # The goal is to make all file types easily findable by archive users,
-        # which means having each file type show as a row in the search
-        # results. With the search results limitation, a single file must be
-        # owned by a plane, as that is how it gets displayed in the search
-        # results. The planes must also contain plane-level metadata for the
-        # search to find. Plane-level metadata is only calculated for science
-        # or calibration artifacts, so any file types that might conceivably
-        # be auxiliary product types are labeled as calibration, so that
-        # plane-level metadata is calculated.
-        #
-        # Confirm the goal is find-ability in conversation with CW, SF on
-        # 27-01-20.
-
-        return result
-
-    def get_proposal_project(self, ext):
-        result = None
-        pi_name = self._headers[ext].get('PI_NAME')
-        if pi_name is not None and 'CFHTLS' in pi_name:
-            result = 'CFHTLS'
-        else:
-            run_id = self._headers[ext].get('RUNID')
-            if run_id is not None:
-                result = md.cache.get_program(run_id)
-        return result
-
-    def get_proposal_title(self, ext):
-        result = None
-        run_id = self._headers[ext].get('RUNID')
-        if run_id is not None:
-            result = md.cache.get_title(run_id)
-        return result
-
-    def get_provenance_last_executed(self, ext):
-        result = self._headers[ext].get('PROCDATE')
-        if result is not None:
-            # format like 2018-06-05HST17:21:20, which default code doesn't
-            # understand
-            result = mc.make_time(result)
-        return result
-
-    def get_provenance_version(self, ext):
-        result = self._headers[ext].get('IIWIVER')
-        if result is None:
-            result = self._headers[ext].get('ORBSVER')
-            if result is None:
-                result = self._headers[ext].get('EL_SYS')
-        return result
-
     def get_ra_deg_from_0th_header(self, ext):
         return self._headers[0].get('RA_DEG')
-
-    def get_target_position_cval1(self, ext):
-        ra, ignore_dec = self._get_ra_dec(ext)
-        return ra
-
-    def get_target_position_cval2(self, ext):
-        ignore_ra, dec = self._get_ra_dec(ext)
-        return dec
-
-    def get_target_standard(self, ext):
-        obs_type = self.get_obs_type(ext)
-        run_id = self._get_run_id(ext)
-        result = None
-        if run_id is not None:
-            run_id_type = run_id[3].lower()
-            if run_id_type == 'q' and obs_type == 'OBJECT':
-                obj_name = self._headers[ext].get('OBJECT').lower()
-                if self._storage_name.instrument is md.Inst.SITELLE:
-                    if 'std' in obj_name:
-                        result = True
-                    else:
-                        result = False
-                else:
-                    if (
-                        'flat' in obj_name
-                        or 'focus' in obj_name
-                        or 'zenith' in obj_name
-                    ):
-                        result = False
-                    else:
-                        result = True
-            else:
-                result = False
-        return result
 
     def get_time_refcoord_delta_derived(self, ext):
         mjd_obs = self.get_time_refcoord_val_derived(ext)
@@ -881,9 +1154,9 @@ class InstrumentType(cc.TelescopeMapping):
             # caom2IngestWircamdetrend.py, l422
             exp_time = 20.0
         else:
-            if ac.is_good_date(tv_stop, self._instrument_start_date):
-                mjd_end = ac.get_datetime(tv_stop)
-                mjd_end = mjd_end.value
+            temp = cfht_time_helper(tv_stop)
+            if ac.is_good_date(temp, self._instrument_start_date):
+                mjd_end = temp.value
                 exp_time = mjd_end - mjd_obs
             else:
                 self.track_invalid_date(tv_stop, 'Chunk.time.axis.function.refCoord.delta')
@@ -902,13 +1175,17 @@ class InstrumentType(cc.TelescopeMapping):
         return exp_time
 
     def get_time_refcoord_val_derived(self, ext):
+        mjd_obs = None
         # CW
         # caom2IngestWircamdetrend.py, l388
         # Time - set exptime as time of one image, start and stop dates
         # as one pixel so this means crval3 is not equal to exptime
         # if TVSTART not defined, use release_date as mjdstart
         for keyword in ['TVSTART', 'REL_DATE', 'DATE']:
-            mjd_obs = ac.get_datetime(self._headers[ext].get(keyword))
+            temp = self._headers[ext].get(keyword)
+            if temp is None:
+                continue
+            mjd_obs = cfht_time_helper(temp)
             if ac.is_good_date(mjd_obs, self._instrument_start_date):
                 break
         if mjd_obs is None:
@@ -922,7 +1199,10 @@ class InstrumentType(cc.TelescopeMapping):
         if result is None:
             # from caom2IngestMegacam.py, l549
             for ii in ['DATE-OBS', 'DATE']:
-                result = ac.get_datetime(self._headers[ext].get(ii))
+                temp = self._headers[ext].get(ii)
+                if temp is None:
+                    continue
+                result = cfht_time_helper(temp)
                 if ac.is_good_date(result, self._instrument_start_date):
                     break
         if result is None:
@@ -951,38 +1231,13 @@ class InstrumentType(cc.TelescopeMapping):
                     temp2 = self._headers[ext].get('TIME-OBS')
                     if temp is not None and temp2 is not None:
                         temp = f'{temp}T{temp2}'
-                mjd_obs = ac.get_datetime(temp)
+                mjd_obs = cfht_time_helper(temp)
 
             if ac.is_good_date(mjd_obs, self._instrument_start_date):
                 if hasattr(mjd_obs, 'value'):
                     mjd_obs = mjd_obs.value
                 break
         return mjd_obs
-
-    def _get_ra_dec(self, ext):
-        obj_ra = self._headers[ext].get('OBJRA')
-        obj_dec = self._headers[ext].get('OBJDEC')
-        obj_ra_dec = self._headers[ext].get('OBJRADEC')
-        if obj_ra_dec is not None:
-            obj_ra_dec = obj_ra_dec.lower()
-        ra = None
-        dec = None
-        if (
-            obj_ra is not None
-            and obj_dec is not None
-            and obj_ra_dec is not None
-        ):
-            if obj_ra_dec == 'gappt' or obj_ra_dec == 'null':
-                # SF 18-12-19
-                # seb 4:01 PM
-                # this is a flat. i have the impression in this case you can
-                # ignore the ra/dec stuff
-                self._logger.warning(
-                    f'OBSRADEC is GAPPT for {self._storage_name.file_name}'
-                )
-            else:
-                ra, dec = ac.build_ra_dec_as_deg(obj_ra, obj_dec, obj_ra_dec)
-        return ra, dec
 
     def _get_run_id(self, ext):
         run_id = self._headers[ext].get('RUNID')
@@ -1088,6 +1343,37 @@ class InstrumentType(cc.TelescopeMapping):
                     )
         return result
 
+    def _update_sitelle_plane(self, observation):
+        pass
+
+    def _update_plane_post(self, observation):
+        pass
+
+    def make_axes_consistent(self):
+        pass
+
+    def reset_energy(self):
+        pass
+
+    def reset_position(self):
+        pass
+
+    def update_chunk(self):
+        self.update_observable()
+        self.update_polarization()
+        self.update_time()
+        self.update_position()
+        self.update_energy()
+        self.reset_energy()
+        self.reset_position()
+        self.make_axes_consistent()
+
+    def update_energy(self):
+        pass
+
+    def update_observable(self):
+        pass
+
     def _update_observation_metadata(self, observation):
         """
         Why this method exists:
@@ -1138,9 +1424,9 @@ class InstrumentType(cc.TelescopeMapping):
             if (
                 run_id is None
                 and not (
-                    self._storage_name.instrument is md.Inst.SPIROU
-                    and self._storage_name.suffix == 'g'
-                )
+                self._storage_name.instrument is md.Inst.SPIROU
+                and self._storage_name.suffix == 'g'
+            )
             ) or (
                 run_id is not None
                 and (
@@ -1198,236 +1484,6 @@ class InstrumentType(cc.TelescopeMapping):
         self._logger.debug(f'End _update_observation_metadata.')
         return idx
 
-    def _update_sitelle_plane(self, observation):
-        pass
-
-    def _update_plane_post(self, observation):
-        pass
-
-    def update(self, observation, file_info):
-        """Called to fill multiple CAOM model elements and/or attributes, must
-        have this signature for import_module loading and execution.
-
-        This code captures the portion of the TDM->CAOM model mapping, where
-        the relationship is multiple elements of the TDM are required to set
-        multiple elements of the CAOM model (mapping cardinality n:n).
-
-        :param observation A CAOM Observation model instance.
-        :param file_info cadcdata.FileInfo instance
-        """
-        self._logger.debug('Begin update.')
-
-        ingesting_hdf5 = False
-
-        if self._storage_name.suffix == 'z':
-            ingesting_hdf5 = True
-            self._logger.info(
-                f'Ingesting the hdf5 plane for {observation.observation_id}'
-            )
-
-        if self._storage_name.instrument is md.Inst.MEGACAM:
-            # need the 'megacam' for the filter lookup at SVO, but there is
-            # only a 'MegaPrime' instrument in the CAOM collection at CADC
-            # see e.g. 2003A.frpts.z.36.00
-            observation.instrument = cc.copy_instrument(
-                observation.instrument, md.Inst.MEGAPRIME.value
-            )
-
-        if ingesting_hdf5:
-            # avoid all the code that references undefined headers variable
-            if not isinstance(observation, DerivedObservation):
-                observation = cc.change_to_composite(observation, 'scan')
-            self._update_sitelle_plane(observation)
-            self._logger.debug('Done hdf5 update.')
-            return observation
-
-        is_derived, derived_type = self._is_derived(
-            observation.observation_id
-        )
-        if is_derived and not isinstance(observation, DerivedObservation):
-            self._logger.info(f'{observation.observation_id} will be changed to a Derived Observation.')
-            algorithm_name = 'master_detrend'
-            if self._storage_name.has_polarization:
-                algorithm_name = 'polarization'
-            elif self._storage_name.is_derived_sitelle:
-                algorithm_name = 'scan'
-            observation = cc.change_to_composite(observation, algorithm_name)
-
-        if (
-            self._storage_name.instrument is md.Inst.SITELLE
-            and self._storage_name.suffix == 'v'
-        ):
-            idx = 0
-        else:
-            idx = self._update_observation_metadata(observation)
-        self.observation = observation
-        self.extension = idx
-        self.update_observation()
-        for plane in observation.planes.values():
-            if plane.product_id != self._storage_name.product_id:
-                # do only the work for the applicable plane
-                continue
-
-            self.plane = plane
-            for artifact in plane.artifacts.values():
-                if artifact.uri != self._storage_name.file_uri:
-                    continue
-                update_artifact_meta(artifact, file_info)
-                if (
-                    self.get_calibration_level(idx)
-                    == CalibrationLevel.RAW_STANDARD
-                ):
-                    time_delta = self.get_time_refcoord_delta_simple(idx)
-                else:
-                    time_delta = self.get_time_refcoord_delta_derived(idx)
-
-                for part in artifact.parts.values():
-                    for chunk in part.chunks:
-                        cc.undo_astropy_cdfix_call(chunk, time_delta)
-                        self.part = part
-                        self.chunk = chunk
-                        self.update_chunk()
-
-            if isinstance(observation, DerivedObservation):
-                if derived_type is ProvenanceType.IMCMB:
-                    cc.update_plane_provenance(
-                        plane,
-                        self._headers[1:],
-                        derived_type.value,
-                        self._storage_name.collection,
-                        _repair_imcmb_provenance_value,
-                        observation.observation_id,
-                    )
-                elif derived_type is ProvenanceType.COMMENT:
-                    cc.update_plane_provenance_single(
-                        plane,
-                        self._headers,
-                        derived_type.value,
-                        self._storage_name.collection,
-                        _repair_comment_provenance_value,
-                        observation.observation_id,
-                    )
-                else:
-                    cc.update_plane_provenance(
-                        plane,
-                        self._headers,
-                        derived_type.value,
-                        self._storage_name.collection,
-                        _repair_filename_provenance_value,
-                        observation.observation_id,
-                    )
-                # the derived plane itself is not considered one of the inputs
-                delete_these = []
-                for ip in plane.provenance.inputs:
-                    if ip.get_product_id().endswith(self._storage_name.product_id):
-                        delete_these.append(ip)
-                for entry in delete_these:
-                    plane.provenance.inputs.remove(entry)
-
-            self.update_plane()
-            # this is here, because the bits that are being copied have been
-            # created/modified by the update_chunk call
-            self._update_sitelle_plane(observation)
-
-        # relies on update_plane_provenance being called
-        if isinstance(observation, DerivedObservation):
-            cc.update_observation_members(observation)
-        self._update_plane_post(observation)
-        InstrumentType.value_repair.repair(observation)
-        self._logger.debug('Done update.')
-        return observation
-
-    def _is_derived(self, obs_id):
-        result = False
-        derived_type = ''
-        if cc.is_composite(self._headers):
-            result = True
-            derived_type = ProvenanceType.IMCMB
-        else:
-            file_type = self._headers[0].get('FILETYPE')
-            if file_type is not None and 'alibrat' in file_type:
-                self._logger.info(
-                    f'Treating {obs_id} with filetype {file_type} as derived. '
-                )
-                result = True
-                derived_type = ProvenanceType.COMMENT
-        if not result and not self._storage_name.is_simple:
-            result = True
-            derived_type = ProvenanceType.FILENAME
-        return result, derived_type
-
-    @staticmethod
-    def _semi_deep_copy_plane(
-        from_plane, to_plane, from_artifact, to_artifact
-    ):
-        to_plane.calibration_level = from_plane.calibration_level
-        to_plane.data_product_type = from_plane.data_product_type
-        to_plane.data_release = from_plane.data_release
-        to_plane.meta_producer = from_plane.meta_producer
-        to_plane.meta_release = from_plane.meta_release
-        for part in from_artifact.parts.values():
-            to_artifact.parts.add(cc.copy_part(part))
-            for chunk in part.chunks:
-                to_artifact.parts[part.name].chunks.append(
-                    cc.copy_chunk(chunk)
-                )
-
-    def make_axes_consistent(self):
-        pass
-
-    def reset_energy(self):
-        pass
-
-    def reset_position(self):
-        pass
-
-    def track_invalid_date(self, value, key):
-        self._logger.warning(f'Invalid date of {value} for {key}.')
-        self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
-
-    def update_chunk(self):
-        self.update_observable()
-        self.update_polarization()
-        self.update_time()
-        self.update_position()
-        self.update_energy()
-        self.reset_energy()
-        self.reset_position()
-        self.make_axes_consistent()
-
-    def update_energy(self):
-        pass
-
-    def update_observable(self):
-        pass
-
-    def update_observation(self):
-        if (
-            self._observation.proposal is not None
-            and self._observation.proposal.pi_name is None
-        ):
-            self._observation.proposal.pi_name = 'CFHT'
-
-    def update_plane(self):
-        if self._observation.algorithm.name == 'scan':
-            self.plane.data_product_type = DataProductType.CUBE
-            if self.plane.provenance is not None:
-                self.plane.provenance.last_executed = mc.make_time(
-                    self._headers[self._extension].get('DATE'),
-                )
-
-    def _update_plane_provenance(self):
-        self._logger.debug(
-            f'Begin _update_plane_provenance for {self._storage_name.obs_id}'
-        )
-        obs_uri_ignore, plane_uri = cc.make_plane_uri(
-            self._storage_name.obs_id, f'{self._storage_name.obs_id}o', self._storage_name.collection
-        )
-        self.plane.provenance.inputs.add(plane_uri)
-        self._logger.debug(
-            f'End _update_plane_provenance for {self._storage_name.obs_id}'
-        )
-
     def update_polarization(self):
         pass
 
@@ -1442,7 +1498,7 @@ class Espadons(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable):
         super().__init__(headers, cfht_name, clients, observable)
         # SF 18-11-22 espadons is 2004
-        self._instrument_start_time = ac.get_datetime('2004-01-01 00:00:00')
+        self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
 
     def _is_espadons_energy(self):
         result = False
@@ -1600,9 +1656,9 @@ class Espadons(InstrumentType):
             for comment in comments:
                 if 'Upena processing date:' in comment:
                     result = comment.split('Upena processing date: ')[1]
-                    # format like Fri Mar 13 22:51:55 HST 2009, which default
-                    # code doesn't understand
-                    result = mc.make_time(result)
+                    # format like Fri Mar 13 22:51:55 HST 2009
+                    tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
+                    result = mc.make_datetime(result)
                     break
                 elif 'opera-' in comment:
                     result = comment.split('opera-')[1].split(' build date')[
@@ -1700,7 +1756,9 @@ class Espadons(InstrumentType):
                         temp2 = self._headers[ext].get('TIME-OBS')
                         if temp is not None and temp2 is not None:
                             temp = f'{temp}T{temp2}'
-                    mjd_obs = ac.get_datetime(temp)
+                    if temp in ['1970-00-01', '1970-00-01T0:00:00', '1970-00-01T0:00:00.000']:
+                        continue
+                    mjd_obs = cfht_time_helper(temp)
                 if ac.is_good_date(mjd_obs, self._instrument_start_date):
                     break
         if mjd_obs is None:
@@ -1870,7 +1928,7 @@ class Mega(InstrumentType):
         self._filter_name = None
         # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
         # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
-        self._instrument_start_date = ac.get_datetime('2001-01-24 00:00:00')
+        self._instrument_start_date = mc.make_datetime('2001-01-24 00:00:00')
 
     @property
     def extension(self):
@@ -1908,12 +1966,20 @@ class Mega(InstrumentType):
             result, derived_type = super()._is_derived(obs_id)
         return result, derived_type
 
+    def get_obs_type(self, ext):
+        result = self._headers[ext].get('OBSTYPE')
+        # SF 16-03-23
+        # the flags ones are similar as 2003A.mask.0.36.02  of object type mask.
+        if '_flag' in self._storage_name.file_id:
+            result = 'MASK'
+        return result
+
     def get_provenance_last_executed(self, ext):
         result = super().get_provenance_last_executed(ext)
         if result is None:
             result = self._headers[ext].get('DATEPROC')
             if result is not None:
-                result = mc.make_time(result)
+                result = mc.make_datetime(result)
         return result
 
     def make_axes_consistent(self):
@@ -1934,6 +2000,7 @@ class Mega(InstrumentType):
             or ac.FilterMetadataCache.get_fwhm(filter_md) is None
             or self._storage_name.suffix in ['b', 'l', 'd']
             or self._observation.type in ['DARK']
+            or '_flag' in self._storage_name.file_id
         ):
             cc.reset_energy(self._chunk)
 
@@ -1952,6 +2019,7 @@ class Mega(InstrumentType):
             or ctype1 is None
             # TODO - figure out if this should be called
             # or self.observation_intent is ObservationIntentType.CALIBRATION
+            or '_flag' in self._storage_name.file_id
         ):
             cc.reset_position(self._chunk)
             self._chunk.naxis = None
@@ -1965,6 +2033,7 @@ class Mega(InstrumentType):
             or ac.FilterMetadataCache.get_fwhm(filter_md) is None
             or self._storage_name.suffix in ['b', 'l', 'd']
             or self._observation.type in ['DARK']
+            or '_flag' in self._storage_name.file_id
         ):
             cc.build_chunk_energy_range(
                 self._chunk, updated_filter_name, filter_md
@@ -1989,7 +2058,7 @@ class Sitelle(InstrumentType):
         super().__init__(headers, cfht_name, clients, observable)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
-        self._instrument_start_date = ac.get_datetime('2015-07-07 00:00:00.000')
+        self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
 
     def _is_derived(self, obs_id):
         if self._storage_name.suffix == 'z':
@@ -2112,10 +2181,11 @@ class Sitelle(InstrumentType):
                 'REL_DATE', self._headers[ext].get('DATE-OBS')
             )
             if rel_date is not None:
-                temp = ac.get_datetime(rel_date) + 1 * units.year
+                temp = ac.get_datetime_mjd(rel_date) + 1 * units.year
                 temp.format = 'isot'
-                result = temp.value
-                if not ac.is_good_date(result, self._instrument_start_date, check_end_date=False):
+                if ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
+                    result = temp.value
+                else:
                     self.track_invalid_date(result, 'Plane.dataRelease')
                     result = None
         else:
@@ -2379,12 +2449,6 @@ class SitelleHdf5(InstrumentType):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Observation.metaProducer', meta_producer)
-        bp.set('Plane.metaProducer', meta_producer)
-        bp.set('Artifact.metaProducer', meta_producer)
-        bp.set('Chunk.metaProducer', meta_producer)
-
         bp.configure_position_axes((1, 2))
         bp.configure_time_axis(3)
         if self._storage_name.has_energy:
@@ -2462,8 +2526,7 @@ class SitelleHdf5(InstrumentType):
         d = self._headers[ext].get('OBS_DATE')
         t = self._headers[ext].get('OBS_TIME')
         if d is not None and t is not None:
-            dt = f'{d} {t}'
-            result = ac.get_datetime(dt).value
+            result = cfht_time_helper(f'{d} {t}').value
         return result
 
     def _get_energy_resolving_power(self, ext):
@@ -2500,7 +2563,7 @@ class SitelleHdf5(InstrumentType):
         d = self._headers[ext].get('OBS_DATE')
         if d is not None:
             program = self._headers[ext].get('PROGRAM')
-            temp = ac.get_datetime(d)
+            temp = cfht_time_helper(d)
             if program is None or program != 'LP P41':
                 temp = temp + 1 * units.year
             temp.format = 'isot'
@@ -2626,12 +2689,6 @@ class SitelleNoHdf5Metadata(Sitelle):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
         Observation level.
         """
-        meta_producer = mc.get_version(APPLICATION)
-        bp.set('Observation.metaProducer', meta_producer)
-        bp.set('Plane.metaProducer', meta_producer)
-        bp.set('Artifact.metaProducer', meta_producer)
-        bp.set('Chunk.metaProducer', meta_producer)
-
         # Laurie Rousseau-Nepton - 12-08-22
         # 'SCIENCE' is ok with me
         bp.set('Observation.type', 'SCIENCE')
@@ -2679,7 +2736,7 @@ class Spirou(InstrumentType):
         self._header = None
         # https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_news.php says 2019-02-13 00:00:00.000
         # but existing metadata has a minimum value of 2018-04-25 02:12:03.942720 for 2401710o.fits
-        self._instrument_start_date = ac.get_datetime('2018-04-24 00:00:00')
+        self._instrument_start_date = mc.make_datetime('2018-04-24 00:00:00')
 
     @property
     def extension(self):
@@ -2952,7 +3009,7 @@ class SpirouG(Spirou):
         # SF - 22-09-20 - use ETIME
 
         ref_coord_val = mc.get_keyword(self._headers, 'DATE')
-        ref_coord_mjd = ac.get_datetime(ref_coord_val).value
+        ref_coord_mjd = cfht_time_helper(ref_coord_val).value
 
         if self._chunk.time is None:
             self._chunk.time = TemporalWCS(
@@ -3126,7 +3183,7 @@ class Wircam(InstrumentType):
         super().__init__(headers, cfht_name, clients, observable)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
         # but existing metadata has a minimum value of 2000-07-21 00:00:00 for mastertwilightflat_Ks_13Aw01_v200.fits
-        self._instrument_start_date = ac.get_datetime('2000-07-20 00:00:00.000')
+        self._instrument_start_date = mc.make_datetime('2000-07-20 00:00:00.000')
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3671,7 +3728,10 @@ def factory(headers, cfht_name, clients, observable):
     if cfht_name.instrument is md.Inst.ESPADONS:
         temp = Espadons(headers, cfht_name, clients, observable)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
-        temp = Mega(headers, cfht_name, clients, observable)
+        if '_diag' in cfht_name.file_name:
+            temp = AuxiliaryType(headers, cfht_name, clients, observable)
+        else:
+            temp = Mega(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.hdf5:
             if len(headers) > 0:

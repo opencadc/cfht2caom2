@@ -132,7 +132,7 @@ class CFHTPreview(mc.PreviewVisitor):
                 count = self._do_spirou_intensity_spectrum()
         else:
             count = 0
-            if not self._storage_name.hdf5:
+            if not self._storage_name.hdf5 and not '_diag' in self._storage_name.file_name:
                 count = self._do_ds9_prev(obs_id)
         self._logger.debug('End generate_plots')
         return count
