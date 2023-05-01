@@ -136,7 +136,7 @@ def test_preview_augment(test_config):
         'visit_obs_start_spirou_p.xml': ['2446341p.fits'],
         'visit_obs_start_spirou_p2.xml': ['2630033p.fits'],
         'visit_obs_start_wircam_fits.xml': ['1334131g.fits'],
-        'visit_obs_start_sitelle_hdf5.xml': ['2752885z.hdf5'],
+        'visit_obs_start_sitelle_hdf5.xml': ['2384125z.hdf5'],
         'visit_obs_start_spirou_p_bad_flux.xml': ['2446341p.fits'],
     }
 

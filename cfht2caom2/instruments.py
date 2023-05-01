@@ -2590,7 +2590,7 @@ class SitelleHdf5(InstrumentType):
             # It could be the attrs(‘program’)
             program = self._headers[0].get('program')
             if program is not None:
-                observation = cc.change_to_composite(observation, program)
+                observation = cc.change_to_composite(observation, program.split()[-1])
 
         self._observation = observation
         idx = 0

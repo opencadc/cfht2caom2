@@ -77,8 +77,9 @@ from os.path import basename, dirname,join, realpath
 
 from cadcdata import FileInfo
 from caom2pipe.manage_composable import Observable, Rejected
+from caom2pipe.reader_composable import Hdf5FileMetadataReader
 from cfht2caom2 import CFHTName
-from cfht2caom2 import fits2caom2_augmentation, reader
+from cfht2caom2 import fits2caom2_augmentation
 import test_fits2caom2_augmentation
 
 
@@ -106,7 +107,8 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config):
         source_names=[test_name],
     )
     file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
-    metadata_reader = reader.Hdf5AndFitsMetadataReader()
+    metadata_reader = Hdf5FileMetadataReader()
+    metadata_reader.working_directory = SITELLE_DIR
     metadata_reader.set_headers(storage_name)
     metadata_reader._file_info = {storage_name.file_uri: file_info}
     test_config.rejected_fqn = '/tmp/rejected.yml'

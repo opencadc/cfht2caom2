@@ -81,7 +81,8 @@ __all__ = ['CFHTBuilder', 'CFHTLocalBuilder', 'set_storage_name_values']
 
 class CFHTBuilder(nbc.StorageNameBuilder):
     """
-    Use this when building CFHTName instances for files that exist at CADC.
+    Use this when building CFHTName instances for files that exist at CADC. Split out the header keyword
+    dependent handling, so it can be called after files are retrieved.
     """
 
     def __init__(self, collection):
@@ -205,7 +206,6 @@ class CFHTLocalBuilder(CFHTBuilder):
         self._metadata_reader.set(storage_name)
         headers = self._metadata_reader.headers.get(storage_name.file_uri)
         set_storage_name_values(storage_name, headers)
-        self._logger.error(self._metadata_reader.headers.keys())
 
 
 def set_storage_name_values(storage_name, headers):
