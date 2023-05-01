@@ -198,6 +198,7 @@ from caom2pipe import manage_composable as mc
 from caom2pipe import translate_composable as tc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
+from cfht2caom2.cfht_builder import set_storage_name_values
 
 __all__ = ['factory', 'InstrumentType']
 
@@ -2459,16 +2460,7 @@ class SitelleHdf5(InstrumentType):
         # 'SCIENCE' is ok with me
         bp.set('Observation.type', 'SCIENCE')
 
-        if self._storage_name.suffix == 'v':
-            bp.set('Observation.intent', ObservationIntentType.SCIENCE)
-            bp.set(
-                'Observation.sequenceNumber',
-                self._storage_name.product_id[:-1],
-            )
-            bp.set('Plane.provenance.version', (['PROGRAM'], None))
-            bp.set('Artifact.productType', ProductType.SCIENCE)
-
-        bp.set('Observation.algorithm.name', (['PROGRAM'], None))
+        bp.set('Observation.algorithm.name', (['program'], 'exposure'))
         bp.set('Observation.instrument.name', self._storage_name.instrument.value)
 
         bp.set('Observation.proposal.id', '_get_proposal_id()')
@@ -2491,8 +2483,7 @@ class SitelleHdf5(InstrumentType):
         bp.set('Plane.provenance.name', 'ORBS')
         bp.set('Plane.provenance.reference', 'http://ascl.net/1409.007')
 
-        if self._storage_name.suffix == 'z':
-            bp.set('Artifact.productType', ProductType.SCIENCE)
+        bp.set('Artifact.productType', ProductType.SCIENCE)
 
         # energy
         bp.set('Chunk.energy.bandpassName', (['filter_name'], None))
@@ -2597,7 +2588,9 @@ class SitelleHdf5(InstrumentType):
         if not isinstance(observation, DerivedObservation):
             # Laurie Rousseau-Nepton - 12-08-22
             # It could be the attrs(‘program’)
-            observation = cc.change_to_composite(observation, self._headers[0].get('PROGRAM'))
+            program = self._headers[0].get('program')
+            if program is not None:
+                observation = cc.change_to_composite(observation, program)
 
         self._observation = observation
         idx = 0
@@ -3671,7 +3664,7 @@ def _repair_comment_provenance_value(value, obs_id):
             if 'Scan member' in entry:
                 temp = str(entry).split('member=')
                 prov_prod_id = temp[1].split()[0]
-                prov_obs_id = cn.CFHTName(file_name=prov_prod_id).obs_id
+                prov_obs_id = cn.CFHTName.get_obs_id(file_id=prov_prod_id)
                 # 0 - observation
                 # 1 - plane
                 results.append([prov_obs_id, prov_prod_id])
@@ -3719,12 +3712,13 @@ def _repair_imcmb_provenance_value(value, obs_id):
             prov_prod_id = temp[0]
         else:
             prov_prod_id = temp[0][:-2]
-        prov_obs_id = cn.CFHTName(file_name=prov_prod_id).obs_id
+        prov_obs_id = cn.CFHTName.get_obs_id(file_id=prov_prod_id)
     logging.debug(f'End _repair_imcmb_provenance_value')
     return prov_obs_id, prov_prod_id
 
 
 def factory(headers, cfht_name, clients, observable):
+    set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
         temp = Espadons(headers, cfht_name, clients, observable)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
@@ -3753,4 +3747,5 @@ def factory(headers, cfht_name, clients, observable):
     else:
         observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
+    logging.debug(f'Created {temp.__class__.__name__} mapping.')
     return temp

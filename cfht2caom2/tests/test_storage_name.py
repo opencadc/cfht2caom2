@@ -284,7 +284,7 @@ def test_is_valid(test_config):
     assert test_subject.destination_uris[0] == 'cadc:CFHT/1013552p_flag.fits.fz', 'wrong destination uri'
     assert test_subject.thumb_uri == 'cadc:CFHT/1013552p_flag_preview_256.jpg', 'wrong thumb uri'
     assert test_subject.suffix == 'p', 'wrong suffix'
-    assert test_subject.obs_id == '1013552', 'wrong obs id'
+    assert test_subject.obs_id == '1013552', f'wrong obs id {test_subject.obs_id}'
 
     # flag/diag
     test_subject = CFHTName(

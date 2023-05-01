@@ -103,7 +103,6 @@ def pytest_generate_tests(metafunc):
 @patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config, tmp_path):
-    # logging.getLogger('root').setLevel(logging.DEBUG)
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = _vo_mock
@@ -122,7 +121,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
         id=storage_name.file_uri, file_type='application/fits'
     )
     headers = ac.make_headers_from_file(test_name)
-    metadata_reader = rdc.FileMetadataReader()
+    metadata_reader = rdc.Hdf5FileMetadataReader()
     metadata_reader._headers = {storage_name.file_uri: headers}
     metadata_reader._file_info = {storage_name.file_uri: file_info}
     test_config.rejected_file_name = 'rejected.yml'

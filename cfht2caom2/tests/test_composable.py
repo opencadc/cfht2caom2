@@ -67,6 +67,7 @@
 # ***********************************************************************
 #
 
+import h5py
 import os
 import shutil
 import warnings
@@ -97,26 +98,29 @@ import test_fits2caom2_augmentation
 TEST_DIR = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/composable_test'
 
 
+@patch('cfht2caom2.preview_augmentation.visit')
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
-@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
+@patch('caom2pipe.client_composable.ClientCollection')
 def test_run_by_builder(
-    repo_mock, access_mock, util_headers_mock, fits_mock, cache_mock
+    clients_mock, util_headers_mock, fits_mock, cache_mock, vo_mock, preview_mock
 ):
+    # use_local_files = True, INGEST + MODIFY
     util_headers_mock.side_effect = ac.make_headers_from_file
     # files are valid FITS
     fits_mock.return_value = True
+    # have a file with only header values, so preview generation will fail, make it look like it succeeds
+    preview_mock.side_effect = _visit_mock
 
     test_fqn = os.path.join(TEST_DIR, 'test_files')
     if not os.path.exists(test_fqn):
         os.mkdir(test_fqn)
     try:
-        access_mock.return_value = 'https://localhost'
-        # should attempt to run MetaVisit
-        repo_mock.return_value.read.side_effect = _mock_repo_read
-        repo_mock.return_value.create.side_effect = Mock()
+        # should attempt to run NoFheadVisit
+        clients_mock.return_value.metadata_client.read.side_effect = _mock_repo_read
+        clients_mock.return_value.metadata_client.create.side_effect = Mock()
         getcwd_orig = os.getcwd
         os.getcwd = Mock(return_value=TEST_DIR)
         try:
@@ -126,29 +130,22 @@ def test_run_by_builder(
         finally:
             os.getcwd = getcwd_orig
 
-        assert repo_mock.return_value.read.called, 'repo read not called'
-        assert repo_mock.return_value.create.called, 'repo create not called'
+        assert clients_mock.return_value.metadata_client.read.called, 'repo read not called'
+        assert clients_mock.return_value.metadata_client.create.called, 'repo create not called'
     finally:
         _cleanup(TEST_DIR, 'test_obs_id')
 
 
+@patch('cfht2caom2.preview_augmentation.visit')
 @patch('caom2pipe.manage_composable.ExecutionReporter')
 @patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fitsverify')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
-@patch('caom2pipe.client_composable.CadcTapClient')
+@patch('caom2pipe.client_composable.ClientCollection', autospec=True)
 def test_run_store(
-    tap_mock,
-    data_client_mock,
-    repo_client_mock,
-    check_fits_mock,
-    cache_mock,
-    headers_mock,
-    compression_mock,
-    reporter_mock,
+    clients_mock, check_fits_mock, cache_mock, vo_mock, headers_mock, compression_mock, reporter_mock, preview_mock,
 ):
     compression_mock.side_effect = _mock_fix_compression
     test_dir_fqn = os.path.join(
@@ -156,10 +153,12 @@ def test_run_store(
     )
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=test_dir_fqn)
-    repo_client_mock.return_value.read.side_effect = _mock_repo_read_not_none
-    data_client_mock.return_value.info.side_effect = _mock_get_file_info
+    clients_mock.return_value.metadata_client.read.side_effect = _mock_repo_read_not_none
+    clients_mock.return_value.data_client.info.side_effect = _mock_get_file_info
     headers_mock.side_effect = ac.make_headers_from_file
     check_fits_mock.return_value = True
+    # have a file with only header values, so preview generation will fail, make it look like it succeeds
+    preview_mock.side_effect = _visit_mock
 
     # make sure the rejected.yml file doesn't contain the file under test
     rejected_fqn = f'{test_dir_fqn}/rejected/rejected.yml'
@@ -173,31 +172,24 @@ def test_run_store(
     finally:
         os.getcwd = getcwd_orig
 
-    assert data_client_mock.return_value.put.called, 'expect a file put'
-    assert data_client_mock.return_value.put.call_count == 1, 'file put count'
-    data_client_mock.return_value.put.assert_called_with(
-        test_dir_fqn, 'cadc:CFHT/1000003f.fits.fz'
-    ), 'wrong put_file args'
+    assert clients_mock.return_value.data_client.put.called, 'expect a file put'
+    assert clients_mock.return_value.data_client.put.call_count == 1, 'file put count'
+    clients_mock.return_value.data_client.put.assert_called_with(test_dir_fqn, 'cadc:CFHT/1000003f.fits.fz'), 'put'
     assert reporter_mock.return_value.capture_success.called, 'capture_success'
     assert reporter_mock.return_value.capture_success.call_count == 1, 'capture_success call count'
     assert reporter_mock.return_value.capture_todo.called, 'capture_todo'
     reporter_mock.return_value.capture_todo.assert_called_with(1, 0, 0), 'wrong capture_todo args'
+    assert clients_mock.return_value.metadata_client.update.called, 'caom2 update'
+    assert clients_mock.return_value.metadata_client.read.called, 'caom2 read'
+    clients_mock.return_value.metadata_client.read.assert_called_with('CFHT', '1000003'), 'caom2 read'
 
 
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('caom2pipe.execute_composable.FitsForCADCCompressor.fix_compression')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fitsverify')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
-@patch('caom2pipe.client_composable.CadcTapClient')
-def test_run_store_retry(
-    tap_mock,
-    data_client_mock,
-    repo_client_mock,
-    check_fits_mock,
-    cache_mock,
-    compression_mock,
-):
+@patch('caom2pipe.client_composable.ClientCollection')
+def test_run_store_retry(clients_mock, check_fits_mock, cache_mock, compression_mock, vo_mock):
     compression_mock.side_effect = _mock_fix_compression
     test_dir_fqn = os.path.join(
         test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_retry_test'
@@ -213,20 +205,15 @@ def test_run_store_retry(
         if not os.path.exists(ii):
             os.mkdir(ii)
     test_failure_fqn = os.path.join(test_failure_dir, '1000003f.fits.fz')
-    test_success_fqn = os.path.join(test_success_dir, '1000003f.fits.fz')
 
     try:
         getcwd_orig = os.getcwd
         get_local_orig = data_util.get_local_headers_from_fits
         os.getcwd = Mock(return_value=test_dir_fqn)
-        repo_client_mock.return_value.read.side_effect = (
-            _mock_repo_read_not_none
-        )
-        data_client_mock.return_value.info.side_effect = _mock_get_file_info
-        data_client_mock.return_value.put.side_effect = OSError
-        data_util.get_local_headers_from_fits = Mock(
-            side_effect=_mock_header_read
-        )
+        clients_mock.return_value.metadata_client.read.side_effect = _mock_repo_read_not_none
+        clients_mock.return_value.data_client.info.side_effect = _mock_get_file_info
+        clients_mock.return_value.data_client.put.side_effect = OSError
+        data_util.get_local_headers_from_fits = Mock(side_effect=_mock_header_read)
         check_fits_mock.return_value = True
         try:
             # execution
@@ -236,8 +223,8 @@ def test_run_store_retry(
             os.getcwd = getcwd_orig
             data_util.get_local_headers_from_fits = get_local_orig
 
-        assert data_client_mock.return_value.put.called, 'expect a file put'
-        data_client_mock.return_value.put.assert_called_with(
+        assert clients_mock.return_value.data_client.put.called, 'expect a file put'
+        clients_mock.return_value.data_client.put.assert_called_with(
             f'{test_dir_fqn}/new', 'cadc:CFHT/1000003f.fits.fz'
         ), 'wrong put_file args'
         assert os.path.exists(test_failure_fqn), 'expect failure move'
@@ -251,7 +238,7 @@ def test_run_store_retry(
 
 
 @patch(
-    'caom2pipe.run_composable.StateRunner.end_time',
+    'cfht2caom2.cfht_data_source.CFHTLocalFilesDataSource.end_dt',
     new_callable=PropertyMock(return_value=datetime(year=2019, month=3, day=7, hour=19, minute=5))
 )
 @patch('caom2pipe.client_composable.ClientCollection')
@@ -460,6 +447,7 @@ def test_run_state_compression_cleanup(
     test_config.cleanup_files_when_storing = True
     test_config.cleanup_success_destination = '/test_files/success'
     test_config.cleanup_failure_destination = '/test_files/failure'
+    test_config.logging_level = 'DEBUG'
 
     cwd = os.getcwd()
     os.chdir(tmp_path)
@@ -479,7 +467,7 @@ def test_run_state_compression_cleanup(
                 meta_visitors=composable.META_VISITORS,
                 data_visitors=composable.DATA_VISITORS,
                 clients=test_clients,
-                source=test_source,
+                sources=[test_source],
                 metadata_reader=test_reader,
             )
             assert test_result == 0, 'expecting correct execution'
@@ -522,15 +510,11 @@ def test_run_state_compression_cleanup(
         clients_mock.return_value.data_client.get.assert_not_called()
 
         assert clients_mock.return_value.metadata_client.read.called, 'read'
-        assert clients_mock.return_value.metadata_client.read.call_count == 8, 'meta read call count, ingest + modify'
+        assert clients_mock.return_value.metadata_client.read.call_count == 4, 'meta read call count, ingest + modify'
         read_calls = [
             call('CFHT', '781920'),
-            call('CFHT', '781920'),
-            call('CFHT', '1681594'),
             call('CFHT', '1681594'),
             call('CFHT', '1028439'),
-            call('CFHT', '1028439'),
-            call('CFHT', '2359320'),
             call('CFHT', '2359320'),
         ]
         clients_mock.return_value.metadata_client.read.assert_has_calls(read_calls), 'wrong read args'
@@ -550,6 +534,7 @@ def test_run_state_compression_cleanup(
         os.chdir(cwd)
 
 
+@patch('cfht2caom2.preview_augmentation.visit')
 @patch('caom2pipe.astro_composable.get_vo_table')
 @patch('caom2pipe.manage_composable.exec_cmd_array')
 @patch('caom2pipe.client_composable.ClientCollection')
@@ -561,6 +546,7 @@ def test_run_state_compression_commands(
     clients_mock,
     exec_mock,
     vo_table_mock,
+    visit_mock,
     test_config,
     tmp_path,
 ):
@@ -571,7 +557,9 @@ def test_run_state_compression_commands(
 
     get_work_mock.side_effect = _mock_dir_list
     clients_mock.return_value.data_client.info.side_effect = info_returns
+    clients_mock.return_value.metadata_client.read.return_value = None
     vo_table_mock.side_effect = test_fits2caom2_augmentation._vo_mock
+    visit_mock.side_effect = _visit_mock
 
     def _mock_exec_cmd_array(arg1, arg2):
         exec_cmd_array(arg1, arg2)
@@ -580,7 +568,7 @@ def test_run_state_compression_commands(
 
     cwd = os.getcwd()
     test_config.change_working_directory(tmp_path)
-    test_config.task_types = [mc.TaskType.STORE]
+    test_config.task_types = [mc.TaskType.STORE, mc.TaskType.INGEST]
     test_config.proxy_file_name = 'cadcproxy.pem'
     test_config.proxy_fqn = f'{tmp_path}/cadcproxy.pem'
     test_config.use_local_files = True
@@ -611,7 +599,7 @@ def test_run_state_compression_commands(
                 meta_visitors=composable.META_VISITORS,
                 data_visitors=composable.DATA_VISITORS,
                 clients=test_clients,
-                source=test_source,
+                sources=[test_source],
                 metadata_reader=test_reader,
             )
             assert test_result == 0, 'expecting correct execution'
@@ -648,22 +636,20 @@ def test_run_state_compression_commands(
         ), 'info call count, only checking _post_store_check_md5sum'
         clients_mock.return_value.data_client.info.assert_has_calls(info_calls), 'wrong info args'
 
-        # LocalStore, get_head should not be called
+        # NoFheadStoreVisit, get_head should not be called
         clients_mock.return_value.data_client.get_head.assert_not_called()
-        # LocalStore, get should not be called
+        # NoFheadStoreVisit, get should be called
         clients_mock.return_value.data_client.get.assert_not_called()
-        assert not clients_mock.return_value.metadata_client.read.called, 'read'
+        assert clients_mock.return_value.metadata_client.read.called, 'read'
     finally:
         os.chdir(cwd)
 
 
+@patch('cfht2caom2.preview_augmentation.visit')
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.CadcTapClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
-def test_run_by_builder_hdf5_first(
-    data_mock, tap_mock, repo_mock, cache_mock
-):
+@patch('caom2pipe.client_composable.ClientCollection')
+def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mock):
     # create a new observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service
     #
@@ -673,37 +659,46 @@ def test_run_by_builder_hdf5_first(
     test_obs_id = '2384125'
     test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
     fits_fqn = f'{test_dir}/{test_obs_id}p.fits.header'
-    hdf5_fqn = f'{test_dir}/2384125z.hdf5'
+    hdf5_fqn = f'{test_dir}/{test_obs_id}z.hdf5'
     actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
+    reject_fqn = f'{test_dir}/rejected/rejected.yml'
     expected_hdf5_only_fqn = f'{test_dir}/hdf5_only.expected.xml'
+    preview_mock.side_effect = _visit_mock
 
     # clean up existing observation
     if os.path.exists(actual_fqn):
         os.unlink(actual_fqn)
     if os.path.exists(fits_fqn):
         os.unlink(fits_fqn)
+    if os.path.exists(reject_fqn):
+        os.unlink(reject_fqn)
 
     # make sure expected files are present
     if not os.path.exists(hdf5_fqn):
-        shutil.copy(f'/test_files/2384125z.hdf5', hdf5_fqn)
+        f_in = h5py.File('/test_files/2384125z.hdf5')
+        f_out = h5py.File(hdf5_fqn, 'w')
+        for k, v in f_in.attrs.items():
+            f_out.attrs.create(k, v)
 
-    try:
-        _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
-    finally:
-        _cleanup(test_dir, test_obs_id)
+    _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
+    # try:
+    #     _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
+    # finally:
+    #     _cleanup(test_dir, test_obs_id)
 
 
+@patch('cfht2caom2.preview_augmentation.visit')
+@patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_file_info')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.check_fitsverify')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.CadcTapClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
+@patch('caom2pipe.client_composable.ClientCollection')
 def test_run_by_builder_hdf5_added_to_existing(
-    data_mock, tap_mock, repo_mock, fits_check_mock, header_mock, file_info_mock, cache_mock
+    clients_mock, fits_check_mock, header_mock, file_info_mock, cache_mock, vo_mock, visit_mock
 ):
     test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
+    visit_mock.side_effect = _visit_mock
 
     def _make_headers(fqn):
         if not fqn.endswith('.header)'):
@@ -752,33 +747,45 @@ def test_run_by_builder_hdf5_added_to_existing(
         _cleanup(test_dir, test_obs_id)
 
 
-@patch('cadcutils.net.ws.WsCapabilities.get_access_url')
+@patch('cfht2caom2.cleanup_augmentation.visit')
+@patch('cfht2caom2.espadons_energy_augmentation.visit')
+@patch('cfht2caom2.preview_augmentation.visit')
+@patch('caom2pipe.astro_composable.get_vo_table')
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.execute_composable.CaomExecute._caom2_store')
 @patch('caom2pipe.execute_composable.CaomExecute._visit_meta')
 @patch('caom2pipe.data_source_composable.TodoFileDataSource.get_work')
-@patch('caom2pipe.client_composable.CAOM2RepoClient')
-@patch('caom2pipe.client_composable.StorageClientWrapper')
+@patch('caom2pipe.client_composable.ClientCollection')
 def test_run_ingest(
-    data_client_mock,
-    repo_client_mock,
+    clients_mock,
     data_source_mock,
     meta_visit_mock,
     caom2_store_mock,
-    access_url_mock,
+    cache_mock,
+    vo_mock,
+    visit_mock,
+    espadons_mock,
+    cleanup_mock,
     test_config,
     tmp_path,
 ):
-    access_url_mock.return_value = 'https://localhost:8080'
+    # access_url_mock.return_value = 'https://localhost:8080'
     temp_deque = deque()
     test_f_name = '1319558w.fits.fz'
     temp_deque.append(test_f_name)
+    visit_mock.side_effect = _visit_mock
+    espadons_mock.side_effect = _visit_mock
+    cleanup_mock.side_effect = _visit_mock
     data_source_mock.return_value = temp_deque
-    repo_client_mock.return_value.read.return_value = None
-    data_client_mock.return_value.get_head.return_value = [
-        {'INSTRUME': 'WIRCam'},
-    ]
+    clients_mock.return_value.metadata_client.read.return_value = None
+    clients_mock.return_value.data_client.get_head.return_value = [{'INSTRUME': 'WIRCam'}]
 
-    data_client_mock.return_value.info.return_value = FileInfo(
+    def _mock_get(arg1, arg2):
+        obs_id_dir = f'{tmp_path}/1319558'
+        shutil.copy(f'/test_files/{test_f_name}', obs_id_dir)
+    clients_mock.return_value.data_client.get.side_effect = _mock_get
+
+    clients_mock.return_value.data_client.info.return_value = FileInfo(
         id=test_f_name,
         file_type='application/fits',
         md5sum='abcdef',
@@ -788,29 +795,110 @@ def test_run_ingest(
     try:
         os.chdir(tmp_path)
         test_config.change_working_directory(tmp_path)
-        test_config.task_types = [mc.TaskType.INGEST]
+        test_config.task_types = [mc.TaskType.INGEST, mc.TaskType.MODIFY]
         test_config.proxy_file_name = 'cadcproxy.pem'
         test_config.proxy_fqn = f'{tmp_path}/cadcproxy.pem'
         test_config.use_local_files = False
+        test_config.logging_level = 'DEBUG'
         mc.Config.write_to_file(test_config)
         with open(test_config.proxy_fqn, 'w') as f:
             f.write('test content')
         test_result = composable._run_by_builder()
         assert test_result is not None, 'expect result'
         assert test_result == 0, 'expect success'
-        assert repo_client_mock.return_value.read.called, 'read called'
-        assert data_client_mock.return_value.info.called, 'info'
-        assert data_client_mock.return_value.info.call_count == 1, 'wrong number of info calls'
-        data_client_mock.return_value.info.assert_called_with(f'cadc:CFHT/{test_f_name}')
-        assert data_client_mock.return_value.get_head.called, 'get_head should be called'
-        assert data_client_mock.return_value.get_head.call_count == 1, 'wrong number of get_heads'
-        data_client_mock.return_value.get_head.assert_called_with(f'cadc:CFHT/{test_f_name}')
+        assert clients_mock.return_value.metadata_client.read.called, 'read called'
+        assert not clients_mock.return_value.data_client.info.called, 'no info'
+        assert not clients_mock.return_value.data_client.get_head.called, 'no get_head'
         assert meta_visit_mock.called, '_visit_meta call'
         assert meta_visit_mock.call_count == 1, '_visit_meta call count'
         assert caom2_store_mock.called, '_caom2_store call'
         assert caom2_store_mock.call_count == 1, '_caom2_store call count'
+        assert visit_mock.called, 'preview'
+        assert espadons_mock.called, 'espadons'
+        assert cleanup_mock.called, 'cleanup'
     finally:
         os.chdir(cwd)
+
+
+@patch('cfht2caom2.preview_augmentation.visit')
+@patch('caom2pipe.astro_composable.get_vo_table')
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
+@patch('caom2pipe.client_composable.ClientCollection')
+def test_store_ingest_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test_config, tmp_path):
+    # create a new observation with an hdf5 file that has attributes
+    test_input_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_with_metadata_test'
+    test_config.change_working_directory(tmp_path)
+    test_config.use_local_files = True
+    test_config.task_types = [mc.TaskType.STORE, mc.TaskType.INGEST]
+    test_config.data_sources = [test_input_dir]
+    test_config.data_source_extensions = ['.hdf5']
+    test_config.logging_level = 'INFO'
+    # test_config.logging_level = 'DEBUG'
+
+    test_hdf5_obs = mc.read_obs_from_file(f'{test_input_dir}/hdf5.xml')
+    clients_mock.return_value.metadata_client.read.side_effect = [None, test_hdf5_obs]
+    # preview generation will fail because there's no data in the test hdf5 file
+    preview_mock.side_effect = _visit_mock
+
+    orig_cwd = os.getcwd()
+    try:
+        os.chdir(tmp_path)
+        mc.Config.write_to_file(test_config)
+
+        # execution
+        test_result = composable._run_by_builder()
+        assert test_result == 0, 'wrong result'
+        assert clients_mock.return_value.data_client.put.called, 'STORE'
+        clients_mock.return_value.data_client.put.assert_called_with(test_input_dir, 'cadc:CFHT/testz.hdf5'), 'STORE'
+        assert clients_mock.return_value.metadata_client.create.called, 'STORE metadata'
+
+    finally:
+        os.chdir(orig_cwd)
+
+
+@patch('cfht2caom2.preview_augmentation.visit')
+@patch('caom2pipe.astro_composable.get_vo_table')
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
+@patch('caom2pipe.client_composable.ClientCollection')
+def test_ingest_modify_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test_config, tmp_path):
+    # update an observation with an hdf5 file that has attributes
+    test_input_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_with_metadata_test'
+    test_config.change_working_directory(tmp_path)
+    test_config.task_types = [mc.TaskType.INGEST, mc.TaskType.MODIFY]
+    test_config.logging_level = 'INFO'
+    test_config.logging_level = 'DEBUG'
+
+    test_hdf5_obs = mc.read_obs_from_file(f'{test_input_dir}/hdf5.xml')
+    clients_mock.return_value.metadata_client.read.return_value = test_hdf5_obs
+
+    def _get_mock(working_directory, ign1):
+        import logging
+        logging.error('when is this called')
+        shutil.copy(f'{test_input_dir}/testz.hdf5', working_directory)
+    clients_mock.return_value.data_client.get.side_effect = _get_mock
+
+    preview_mock.side_effect = _visit_mock
+
+    orig_cwd = os.getcwd()
+    try:
+        os.chdir(tmp_path)
+        mc.Config.write_to_file(test_config)
+        with open(test_config.work_fqn, 'w') as f_out:
+            f_out.write('testz.hdf5')
+
+        # execution
+        test_result = composable._run_by_builder()
+        assert test_result == 0, 'wrong result'
+        assert clients_mock.return_value.data_client.get.called, 'MODIFY'
+        clients_mock.return_value.data_client.get.assert_called_with(
+            f'{tmp_path}/testz', 'cadc:CFHT/testz.hdf5',
+        ), 'MODIFY args'
+        assert clients_mock.return_value.metadata_client.read.called, 'MODIFY metadata'
+        clients_mock.return_value.metadata_client.read.assert_called_with('CFHT', 'testz'), 'MODIFY metadata'
+        assert clients_mock.return_value.metadata_client.update.called, 'MODIFY metadata'
+
+    finally:
+        os.chdir(orig_cwd)
 
 
 def _cleanup(test_dir_fqn, obs_id):
@@ -865,6 +953,11 @@ def _mock_repo_read_not_none(arg1, arg2):
         algorithm=Algorithm(name='exposure'),
         instrument=Instrument(name=metadata.Inst.MEGAPRIME.value),
     )
+
+
+def _visit_mock(arg1, **kwargs):
+    # return the unchanged observation
+    return arg1
 
 
 def _mock_repo_update(ignore1):

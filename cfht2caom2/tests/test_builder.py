@@ -70,69 +70,59 @@
 import os
 
 from caom2pipe import astro_composable as ac
-from caom2pipe.manage_composable import Config, StorageName
-from cfht2caom2 import CFHTBuilder, metadata
+from cfht2caom2.cfht_builder import CFHTBuilder, CFHTLocalBuilder, set_storage_name_values
+from cfht2caom2 import metadata
 
 from mock import Mock
 import cfht_mocks
 
 
-test_fqn = os.path.join(
-    cfht_mocks.TEST_DATA_DIR,
-    'composable_test/test_files/2281792p.fits.fz',
-)
+test_fqn = os.path.join(cfht_mocks.TEST_DATA_DIR, 'composable_test/test_files/2281792p.fits.fz')
 
 
-def test_cfht_builder(test_config):
+def test_cfht_local_builder(test_config):
     headers_mock = Mock(autospec=True)
     headers_mock.headers.get.side_effect = _mock_get
     test_config.use_local_files = True
-    test_subject = CFHTBuilder(test_config.collection, test_config.use_local_files, headers_mock)
+    test_subject = CFHTLocalBuilder(test_config.collection, test_config.use_local_files, headers_mock)
     assert test_subject is not None, 'ctor failure'
 
     test_result = test_subject.build('123p.hdf5')
     assert test_result is not None, 'expect a result'
     assert test_result.file_name == '123p.hdf5', 'wrong local hdf5 name'
-    assert (
-        test_result.instrument == metadata.Inst.SITELLE
-    ), 'wrong hdf5 instrument'
+    assert (test_result.instrument == metadata.Inst.SITELLE), 'wrong hdf5 instrument'
 
     test_result = test_subject.build(test_fqn)
     assert test_result is not None, 'local fits file failed'
-    assert test_result.file_name == os.path.basename(
-        test_fqn
-    ), 'wrong local file name'
+    assert test_result.file_name == os.path.basename(test_fqn), 'wrong local file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
 
+
+def test_cfht_builder(test_config):
     test_config.use_local_files = False
-    test_subject = CFHTBuilder(test_config.collection, test_config.use_local_files, headers_mock)
+    test_subject = CFHTBuilder(test_config.collection)
     assert test_subject is not None, 'ctor failure 2'
     test_result = test_subject.build(test_fqn)
     assert test_result is not None, 'remote fits file failed'
-    assert test_result.file_name == os.path.basename(
-        test_fqn
-    ), 'wrong remote file name'
+    assert test_result.file_name == os.path.basename(test_fqn), 'wrong remote file name'
+    headers = _mock_get(test_fqn)
+    set_storage_name_values(test_result, headers)
     assert test_result.instrument == metadata.Inst.WIRCAM
     test_uri = 'cadc:CFHT/2281792p.fits.fz'
-    assert headers_mock.set.called, 'set should be called'
-    args, kwargs = headers_mock.set.call_args
-    assert isinstance(args[0], StorageName), 'wrong param type'
-    assert args[0].source_names[0] == test_fqn, 'wrong file name'
-    assert args[0].destination_uris[0] == test_uri, 'wrong uri'
+    assert test_result.source_names[0] == test_fqn, 'wrong file name'
+    assert test_result.destination_uris[0] == test_uri, 'wrong uri'
 
 
 def test_diag(test_config):
-    headers_mock = Mock(autospec=True)
-    headers_mock.headers.get.side_effect = _mock_get
-    test_subject = CFHTBuilder(test_config.collection, use_local_files=False, metadata_reader=headers_mock)
-    test_result = test_subject.build('695816p_diag.fits')
-    assert test_result.instrument == metadata.Inst.MEGAPRIME
+    test_subject = CFHTBuilder(test_config.collection)
+    test_storage_name = test_subject.build('695816p_diag.fits')
+    headers = _mock_get('cadc:CFHT/695816p_diag.fits')
+    set_storage_name_values(test_storage_name, headers)
+    assert test_storage_name.instrument == metadata.Inst.MEGAPRIME
 
 
 def _mock_get(uri):
     if uri == 'cadc:CFHT/695816p_diag.fits':
-        return ac.make_headers_from_file(
-            f'{cfht_mocks.TEST_DATA_DIR}/single_plane/695816p_diag.fits.header'
-        )
+        return ac.make_headers_from_file(f'{cfht_mocks.TEST_DATA_DIR}/single_plane/695816p_diag.fits.header')
     else:
         return ac.make_headers_from_file(test_fqn)

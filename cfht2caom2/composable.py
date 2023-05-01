@@ -72,13 +72,14 @@ import sys
 import traceback
 
 from caom2pipe import client_composable as clc
-from caom2pipe.manage_composable import CadcException, Config, get_keyword, StorageName
-from caom2pipe.reader_composable import FileMetadataReader, StorageClientReader
+from caom2pipe.execute_composable import can_use_single_visit
+from caom2pipe.manage_composable import CadcException, Config, get_keyword, StorageName, TaskType
+from caom2pipe.reader_composable import FileMetadataReader, Hdf5FileMetadataReader, StorageClientReader
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
 from cfht2caom2 import fits2caom2_augmentation
-from cfht2caom2.cfht_builder import CFHTBuilder
+from cfht2caom2.cfht_builder import CFHTBuilder, CFHTLocalBuilder
 from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
 
 
@@ -96,12 +97,15 @@ def _common_init():
     StorageName.collection = config.collection
     StorageName.scheme = config.scheme
     clients = clc.ClientCollection(config)
-    if config.use_local_files:
-        reader = FileMetadataReader()
+    if can_use_single_visit(config.task_types):
+        reader = Hdf5FileMetadataReader()
     else:
-        reader = StorageClientReader(clients.data_client)
-    builder = CFHTBuilder(config.collection, config.use_local_files, reader)
-    source = None
+        raise CadcException(f'cfht2caom2 does not work with these task types: {config.task_types}')
+    if config.use_local_files:
+        builder = CFHTLocalBuilder(config.collection, config.working_directory, reader)
+    else:
+        builder = CFHTBuilder(config.collection)
+    sources = []
     if config.use_local_files:
         source = CFHTLocalFilesDataSource(
             config,
@@ -110,18 +114,19 @@ def _common_init():
             recursive=config.recurse_data_sources,
             builder=builder,
         )
-    return config, clients, reader, builder, source
+        sources.append(source)
+    return config, clients, reader, builder, sources
 
 
 def _run_state():
-    config, clients, reader, builder, source = _common_init()
+    config, clients, reader, builder, sources = _common_init()
     return rc.run_by_state(
         config=config,
         name_builder=builder,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
-        source=source,
+        sources=sources,
         metadata_reader=reader,
     )
 
@@ -147,14 +152,14 @@ def _run_by_builder():
     :return 0 if successful, -1 if there's any sort of failure. Return status
         is used by airflow for task instance management and reporting.
     """
-    config, clients, reader, builder, source = _common_init()
+    config, clients, reader, builder, sources = _common_init()
     return rc.run_by_todo(
         config,
         builder,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
-        source=source,
+        sources=sources,
         metadata_reader=reader,
     )
 
