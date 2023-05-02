@@ -674,11 +674,16 @@ def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mo
         os.unlink(reject_fqn)
 
     # make sure expected files are present
+    # this file does not have the necessary attrs key/value pairs to set the metadata, but is has a few, so it's
+    # a test case all on its own
     if not os.path.exists(hdf5_fqn):
         f_in = h5py.File('/test_files/2384125z.hdf5')
         f_out = h5py.File(hdf5_fqn, 'w')
         for k, v in f_in.attrs.items():
             f_out.attrs.create(k, v)
+        f_in.close()
+        f_out.close()
+
     try:
         _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
     finally:
