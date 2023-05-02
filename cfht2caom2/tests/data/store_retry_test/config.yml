@@ -48,11 +48,6 @@ cleanup_failure_destination: /usr/src/app/cfht2caom2/cfht2caom2/tests/data/store
 #
 # this file is created in the logs directory, default is 'progress.txt'
 progress_file_name: progress.txt
-#
-# ad stream value - sorry
-# set stream to 'default', if using TaskType STORE or PULL
-stream: default
-archive: CFHT
 collection: CFHT
 #
 # CADC service execution metrics

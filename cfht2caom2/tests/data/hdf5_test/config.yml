@@ -81,3 +81,4 @@ interval: 600
 # - pull - put a file retrieved from a URL
 task_types: 
   - scrape
+  - modify

@@ -82,16 +82,12 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
 
     def _get_parser(self, headers, blueprint, uri):
         if self._storage_name.hdf5 and len(headers) > 0:
-            self._logger.debug(
-                f'No headers, using a GenericParser for '
-                f'{self._storage_name.file_uri}'
-            )
-            f_in = h5py.File(self._storage_name.source_names[0])
-            parser = caom2blueprint.Hdf5Parser(blueprint, uri, f_in)
+            parser = caom2blueprint.Hdf5Parser(blueprint, uri, self._metadata_reader.descriptors.get(uri))
         elif '_diag' in self._storage_name.file_name:
             parser = caom2blueprint.BlueprintParser(blueprint, uri)
         else:
             parser = super()._get_parser(headers, blueprint, uri)
+        self._logger.debug(f'Using a {parser.__class__.__name__} for {self._storage_name.file_uri}')
         return parser
 
 

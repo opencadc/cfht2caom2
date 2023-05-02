@@ -76,16 +76,18 @@ from cfht2caom2.cfht_name import CFHTName
 from cfht2caom2.metadata import Inst
 
 
-__all__ = ['CFHTBuilder']
+__all__ = ['CFHTBuilder', 'CFHTLocalBuilder', 'set_storage_name_values']
 
 
 class CFHTBuilder(nbc.StorageNameBuilder):
-    def __init__(self, collection, use_local_files, metadata_reader):
+    """
+    Use this when building CFHTName instances for files that exist at CADC. Split out the header keyword
+    dependent handling, so it can be called after files are retrieved.
+    """
+
+    def __init__(self, collection):
         super(CFHTBuilder, self).__init__()
-        self._metadata_reader = metadata_reader
         self._collection = collection
-        self._use_local_files = use_local_files
-        self._logger = logging.getLogger(__name__)
 
     def build(self, entry):
         """
@@ -93,32 +95,17 @@ class CFHTBuilder(nbc.StorageNameBuilder):
         compression extension, that is sufficient to retrieve file header
         information from CADC's storage system.
         """
-
-        # retrieve the header information, extract the instrument name
         self._logger.debug(f'Build a StorageName instance for {entry}.')
-        bitpix = None
-        if StorageName.is_hdf5(entry):
-            instrument = Inst.SITELLE
-        else:
-            entry = entry.replace('.header', '')
-            file_name = os.path.basename(entry)
-            # the separate construction of file name for the uri supports
-            # unit testing
-            storage_name = StorageName(
-                file_name=file_name, source_names=[entry]
-            )
-            self._metadata_reader.set(storage_name)
-            headers = self._metadata_reader.headers.get(storage_name.file_uri)
-            instrument = CFHTBuilder.get_instrument(headers, entry)
-            bitpix = get_keyword(headers, 'BITPIX')
-        result = CFHTName(
-            file_name=os.path.basename(entry),
-            source_names=[entry],
-            instrument=instrument,
-            bitpix=bitpix,
-        )
+        entry = entry.replace('.header', '')
+        file_name = os.path.basename(entry)
+        # the separate construction of file name for the uri supports unit testing
+        result = CFHTName(file_name=os.path.basename(file_name), source_names=[entry])
+        self.add_keyword_values(entry, result)
         self._logger.debug('End build.')
         return result
+
+    def add_keyword_values(self, entry, storage_name):
+        pass
 
     @staticmethod
     def get_instrument(headers, entry):
@@ -201,3 +188,29 @@ class CFHTBuilder(nbc.StorageNameBuilder):
                         raise CadcException(msg)
         logging.debug(f'Instrument is {inst}')
         return inst
+
+
+class CFHTLocalBuilder(CFHTBuilder):
+    """
+    Use this when building CFHTName instances for files that exist on disk.
+    """
+
+    def __init__(self, collection, working_directory, metadata_reader):
+        super().__init__(collection)
+        self._metadata_reader = metadata_reader
+        self._working_directory = working_directory
+
+    def add_keyword_values(self, entry, storage_name):
+        # retrieve the header information, extract the instrument name
+        self._metadata_reader.working_directory = self._working_directory
+        self._metadata_reader.set(storage_name)
+        headers = self._metadata_reader.headers.get(storage_name.file_uri)
+        set_storage_name_values(storage_name, headers)
+
+
+def set_storage_name_values(storage_name, headers):
+    storage_name.instrument = CFHTBuilder.get_instrument(headers, storage_name.file_name)
+    if not storage_name.hdf5:
+        storage_name.bitpix = get_keyword(headers, 'BITPIX')
+    # ensure the destination uris have the correct extensions based on BITPIX values
+    storage_name.set_destination_uris()

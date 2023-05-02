@@ -69,7 +69,6 @@
 
 import aplpy
 import h5py
-import logging
 import os
 
 import matplotlib as mpl
@@ -108,7 +107,6 @@ class CFHTPreview(mc.PreviewVisitor):
         self._target_name = (
             target.name if target is not None else self._storage_name.file_id
         )
-        self._logger = logging.getLogger(__name__)
 
     def generate_plots(self, obs_id):
         self._logger.debug(f'Begin generate_plots for {obs_id}')

@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:type="caom2:DerivedObservation" caom2:id="901a7a26-207c-4465-8099-586ed308a4c8" caom2:metaChecksum="md5:02ae68f60e408ec896e13fad2deb59d9" caom2:accMetaChecksum="md5:1696f836cfac2b4b9ade47afc7aaf48c" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
-  <caom2:observationID>2752885p</caom2:observationID>
+  <caom2:observationID>2384125</caom2:observationID>
   <caom2:metaRelease>2022-06-28T00:00:00.000</caom2:metaRelease>
   <caom2:algorithm>
     <caom2:name>scan</caom2:name>
@@ -24,7 +24,7 @@
   </caom2:instrument>
   <caom2:planes>
     <caom2:plane caom2:id="915b04ea-147b-468f-b9bd-6a6112fb2fed" caom2:metaProducer="cfht2caom2/0.4">
-      <caom2:productID>2752885z</caom2:productID>
+      <caom2:productID>2384125z</caom2:productID>
       <caom2:metaRelease>2022-06-28T00:00:00.000</caom2:metaRelease>
       <caom2:dataRelease>2022-06-28T00:00:00.000</caom2:dataRelease>
       <caom2:dataProductType>image</caom2:dataProductType>
@@ -38,7 +38,7 @@
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="2ccd704a-dab1-440d-9ae5-54487b40727c" caom2:metaProducer="cfht2caom2/0.4">
-          <caom2:uri>cadc:CFHT/2752885z.hdf5</caom2:uri>
+          <caom2:uri>cadc:CFHT/2384125z.hdf5</caom2:uri>
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/x-hdf5</caom2:contentType>

@@ -71,7 +71,7 @@ from logging import getLogger
 from os.path import basename
 from urllib.parse import urlparse
 
-from caom2pipe.manage_composable import build_uri, StorageName
+from caom2pipe.manage_composable import build_uri, CadcException, StorageName
 from cfht2caom2.metadata import Inst
 
 
@@ -128,7 +128,7 @@ class CFHTName(StorageName):
         return (
             f'\n'
             f'      instrument: {self.instrument}\n'
-            f'          bitpix: {self._bitpix}\n'
+            f'          bitpix: {self.bitpix}\n'
             f'          obs_id: {self.obs_id}\n'
             f'         file_id: {self.file_id}\n'
             f'       file_name: {self.file_name}\n'
@@ -180,6 +180,14 @@ class CFHTName(StorageName):
         return True
 
     @property
+    def bitpix(self):
+        return self._bitpix
+
+    @bitpix.setter
+    def bitpix(self, value):
+        self._bitpix = value
+
+    @property
     def file_uri(self):
         """
         The CADC Storage URI for the file.
@@ -189,6 +197,10 @@ class CFHTName(StorageName):
     @property
     def instrument(self):
         return self._instrument
+
+    @instrument.setter
+    def instrument(self, value):
+        self._instrument = value
 
     @property
     def prev(self):
@@ -333,12 +345,11 @@ class CFHTName(StorageName):
         return self._suffix
 
     def set_destination_uris(self):
+
         def _set_extension(for_entry):
             temp = basename(urlparse(for_entry).path)
             if self._bitpix is None or self._bitpix in [-32, -64]:
-                result = self._get_uri(
-                    temp, StorageName.scheme
-                ).replace('.header', '').replace('.gz', '')
+                result = self._get_uri(temp, StorageName.scheme).replace('.header', '').replace('.gz', '')
             else:
                 result = self._get_uri(temp, StorageName.scheme).replace('.gz', '.fz')
             return result
@@ -347,7 +358,13 @@ class CFHTName(StorageName):
             self._destination_uris.append(self.file_uri)
         else:
             for entry in self._source_names:
-                self._destination_uris.append(_set_extension(entry))
+                temp = _set_extension(entry)
+                if temp.endswith('.fz'):
+                    temp2 = temp.replace('.fz', '')
+                    if temp2 in self.destination_uris:
+                        self._destination_uris.remove(temp2)
+                if temp not in self.destination_uris:
+                    self._destination_uris.append(temp)
 
     def set_file_id(self):
         self._file_id = CFHTName.remove_extensions(self._file_name)
@@ -355,6 +372,24 @@ class CFHTName(StorageName):
         self._suffix = self._file_id.split('_')[0][-1]
 
     def set_obs_id(self):
+        self._obs_id = CFHTName.get_obs_id(self._file_id)
+        if self._obs_id == self._file_id and self.sequence_number is not None:
+            self._obs_id = self.sequence_number
+
+    def set_product_id(self, **kwargs):
+        if '_diag' in self._file_name:
+            # SF 16-03-23
+            # artifact of the *p ones
+            self._product_id = self._file_id.split('_')[0]
+        else:
+            super().set_product_id(**kwargs)
+
+    @staticmethod
+    def get_obs_id(file_id):
+        """
+        This function is used a lot for provenance obs id finding, so make a more-efficient version that avoids
+        all the source/destination handling.
+
         # SF - 14-09-22
         # observation ID should be run ID
         # Laurie Rosseau-Nepton - 11-08-22 - remove the 'p'
@@ -367,23 +402,13 @@ class CFHTName(StorageName):
         # if i understand their data acquisition. b,f,d,x should be 1
         # plane observations. - my assumption is that the b,f,d,x have
         # no reason to have a processed equivalent.
-
+        """
         try:
-            ignore = int(self._file_id[:-1])
-            self._obs_id = self._file_id[:-1]
+            ignore = int(file_id[:-1])
+            obs_id = file_id[:-1]
         except ValueError as e:
-            if self.sequence_number is None:
-                self._obs_id = self._file_id
-            else:
-                self._obs_id = self.sequence_number
-
-    def set_product_id(self, **kwargs):
-        if '_diag' in self._file_name:
-            # SF 16-03-23
-            # artifact of the *p ones
-            self._product_id = self._file_id.split('_')[0]
-        else:
-            super().set_product_id(**kwargs)
+            obs_id = file_id
+        return obs_id
 
     @staticmethod
     def remove_extensions(name):
