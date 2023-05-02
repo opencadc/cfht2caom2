@@ -679,12 +679,10 @@ def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mo
         f_out = h5py.File(hdf5_fqn, 'w')
         for k, v in f_in.attrs.items():
             f_out.attrs.create(k, v)
-
-    _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
-    # try:
-    #     _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
-    # finally:
-    #     _cleanup(test_dir, test_obs_id)
+    try:
+        _common_execution(test_dir, actual_fqn, expected_hdf5_only_fqn)
+    finally:
+        _cleanup(test_dir, test_obs_id)
 
 
 @patch('cfht2caom2.preview_augmentation.visit')

@@ -16,7 +16,7 @@
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/x-hdf5</caom2:contentType>
-          <caom2:contentLength>96</caom2:contentLength>
+          <caom2:contentLength>6144</caom2:contentLength>
           <caom2:contentChecksum>md5:1ca4483aac2b46e6281a80d41b36aa39</caom2:contentChecksum>
           <caom2:parts/>
         </caom2:artifact>
