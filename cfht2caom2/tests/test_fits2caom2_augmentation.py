@@ -229,6 +229,7 @@ def _identify_inst_mock(ignore_headers, uri):
             '2515413',
             '2466133',
             '2584185',
+            '2446124',
         ],
         md.Inst.WIRCAM: [
             '840066',
