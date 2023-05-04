@@ -381,6 +381,11 @@ class AuxiliaryType(cc.TelescopeMapping):
             and not self._storage_name.simple_by_suffix
             and not self._storage_name.is_master_cal
         ):
+        # if (
+        #     (self._storage_name.simple and not self._storage_name.is_master_cal)
+        #     and not ('_diag' in self._storage_name.file_uri)
+        # ):
+            self._logger.error(f'heelo wrf? {self._storage_name.file_uri} {"_diag" not in self._storage_name.file_uri}')
             result = CalibrationLevel.RAW_STANDARD
         return result
 
@@ -733,10 +738,15 @@ class AuxiliaryType(cc.TelescopeMapping):
                     f'Treating {obs_id} with filetype {file_type} as derived. '
                 )
                 result = True
+
                 derived_type = ProvenanceType.COMMENT
+
+        # self._logger.error(self._storage_name)
+        self._logger.error(f'result {result} is simple {self._storage_name.simple}')
         if not result and not self._storage_name.is_simple:
             result = True
             derived_type = ProvenanceType.FILENAME
+        self._logger.info(f'Using {derived_type} to look for Plane.provenance.inputs.')
         return result, derived_type
 
     def _update_sitelle_plane(self, observation):
@@ -1039,27 +1049,16 @@ class InstrumentType(AuxiliaryType):
 
         # TODO - this is really really wrong that is_simple is not sufficient
         # to make the distinction between the appropriate implementations.
-        if (
-            self._storage_name.is_simple
-            and not self._storage_name.is_master_cal
-        ):
-            bp.set(
-                'Chunk.time.axis.function.delta',
-                'get_time_refcoord_delta_simple()',
-            )
-            bp.set(
-                'Chunk.time.axis.function.refCoord.val',
-                'get_time_refcoord_val_simple()',
-            )
+        # if (
+        #     self._storage_name.is_simple
+        #     and not self._storage_name.is_master_cal
+        # ):
+        if self._storage_name.is_simple and not self._storage_name.is_master_cal:
+            bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta_simple()')
+            bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val_simple()')
         else:
-            bp.set(
-                'Chunk.time.axis.function.delta',
-                'get_time_refcoord_delta_derived()',
-            )
-            bp.set(
-                'Chunk.time.axis.function.refCoord.val',
-                'get_time_refcoord_val_derived()',
-            )
+            bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta_derived()')
+            bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val_derived()')
         bp.set('Chunk.time.axis.function.refCoord.pix', 0.5)
 
     def get_bandpass_name(self, ext):
@@ -1886,7 +1885,7 @@ class Espadons(InstrumentType):
         )
 
     def update_observation(self):
-        super(Espadons, self).update_observation()
+        super().update_observation()
         if self._observation.target_position is not None:
             if self._observation.target_position.equinox is not None:
                 self._observation.target_position.equinox = (
@@ -1904,7 +1903,7 @@ class Espadons(InstrumentType):
                 )
 
     def update_plane(self):
-        super(Espadons, self).update_plane()
+        super().update_plane()
         # caom2IngestEspadons.py, l714
         if self._storage_name.suffix == 'i':
             self._update_plane_provenance()
@@ -2048,7 +2047,7 @@ class Mega(InstrumentType):
                 self._chunk.energy.axis.error = CoordError(1.0, 1.0)
 
     def update_plane(self):
-        super(Mega, self).update_plane()
+        super().update_plane()
         # caom2IngestMegacam.py, l142
         if self._storage_name.suffix == 'p':
             self._update_plane_provenance()
@@ -3184,7 +3183,11 @@ class Wircam(InstrumentType):
         """
         super().accumulate_blueprint(bp)
 
-        bp.set('Plane.provenance.keywords', 'get_provenance_keywords()')
+        # caom2IngestWircam.py, l1063
+        if self._storage_name.suffix == 'p':
+            bp.set('Plane.provenance.keywords', 'skysubtraction=yes')
+        elif self._storage_name.suffix == 's':
+            bp.set('Plane.provenance.keywords', 'skysubtraction=no')
         bp.set_default('Plane.provenance.name', 'IIWI')
         bp.set_default(
             'Plane.provenance.reference',
@@ -3218,18 +3221,6 @@ class Wircam(InstrumentType):
             or 'deadpix' in self._storage_name.file_uri
         ):
             result = 'BPM'
-        elif self._storage_name.suffix == 'g' and result is None:
-            result = 'GUIDE'
-        return result
-
-    def get_provenance_keywords(self, ext):
-        result = None
-        if self._storage_name.suffix in ['p', 's']:
-            # caom2IngestWircam.py, l1063
-            if self._storage_name.suffix == 'p':
-                result = 'skysubtraction=yes'
-            else:
-                result = 'skysubtraction=no'
         return result
 
     def _update_plane_post(self, observation):
@@ -3328,12 +3319,6 @@ class Wircam(InstrumentType):
             self._chunk.time_axis = None
             self._chunk.energy_axis = None
 
-    def reset_energy(self):
-        if self._storage_name.suffix == 'g':
-            temp_bandpass_name = self._headers[self._extension].get('FILTER')
-            if temp_bandpass_name == 'FakeBlank':
-                cc.reset_energy(self._chunk)
-
     def reset_position(self):
         if (
             self._chunk.position is not None
@@ -3362,8 +3347,6 @@ class Wircam(InstrumentType):
             self._chunk, updated_filter_name, filter_md
         )
         if self._chunk.energy is not None:
-            from caom2 import CoordError
-
             self._chunk.energy.ssysobs = 'TOPOCENT'
             self._chunk.energy.ssyssrc = 'TOPOCENT'
             # values from caom2megacam.default, caom2megacamdetrend.default
@@ -3398,7 +3381,7 @@ class Wircam(InstrumentType):
         self._logger.debug('End update_observation.')
 
     def update_plane(self):
-        super(Wircam, self).update_plane()
+        super().update_plane()
         # caom2IngestWircam.py, l193
         # CW 09-01-20
         # Only the 'o' is input
@@ -3406,110 +3389,8 @@ class Wircam(InstrumentType):
             self._update_plane_provenance()
 
     def update_position(self):
-        if self._storage_name.suffix == 'g':
-            self._update_position_g()
-        elif self._storage_name.suffix == 'o':
+        if self._storage_name.suffix == 'o':
             self._update_position_o()
-
-    def _update_position_g(self):
-        """'g' file position handling."""
-        self._logger.debug(
-            f'Begin _update_position_g for {self._storage_name.obs_id}'
-        )
-        header = self._headers[self._extension]
-        obj_name = header.get('OBJNAME')
-        part_index = mc.to_int(self.part.name)
-        if obj_name == 'zenith' or part_index >= 5:
-            # SGo - the second clause is here, because there are only four
-            # sets of position information in headers (RA/DEC of guide start
-            # on arrays 1 2 3 4), and that's the only thing that is calculated
-            # in the original code. Values for HDU 5+ are not written as part
-            # of the override file, and thus default to 0, which fails
-            # ingestion to the service.
-            self._logger.warning(
-                f'obj_name is {obj_name}. part_num is {part_index} No '
-                f'position for {self._storage_name.obs_id}'
-            )
-            cc.reset_position(self._chunk)
-            return
-
-        header = self._headers[part_index]
-        cd1_1 = None
-        cd2_2 = None
-        if (
-            header.get('CRVAL2') is not None
-            or self._headers[0].get('CRVAL2') is not None
-        ):
-            cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
-            cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
-
-        if cd1_1 is None or cd2_2 is None:
-            self._logger.warning(
-                f'cd1_1 is {cd1_1}, cd2_2 is {cd2_2}, part_index is '
-                f'{part_index}. No position for this part for {self._storage_name.obs_id}.'
-            )
-            cc.reset_position(self._chunk)
-            return
-
-        wcgd_ra = header.get(f'WCGDRA{self._part.name}')
-        if wcgd_ra is None:
-            wcgd_ra = self._headers[0].get(f'WCGDRA{self._part.name}')
-        wcgd_dec = header.get(f'WCGDDEC{self._part.name}')
-        if wcgd_dec is None:
-            wcgd_dec = self._headers[0].get(f'WCGDDEC{self._part.name}')
-        if wcgd_ra is None or wcgd_dec is None:
-            self._logger.warning(
-                f'WCGDRA{self._part.name} and WCGDDEC{self._part.name} are '
-                f'undefined. No position.'
-            )
-            cc.reset_position(self._chunk)
-            return
-        cr_val1, cr_val2 = ac.build_ra_dec_as_deg(
-            wcgd_ra, wcgd_dec, frame='fk5'
-        )
-        if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
-            self._logger.warning(
-                f'WCGDRA{self._part.name} and WCGDDEC{self._part.name} are '
-                f'close to 0. No position.'
-            )
-            cc.reset_position(self._chunk)
-            return
-
-        naxis_1 = header.get('NAXIS1')
-        if naxis_1 is None:
-            naxis_1 = header.get('ZNAXIS1')
-        naxis_2 = header.get('NAXIS2')
-        if naxis_2 is None:
-            naxis_2 = header.get('ZNAXIS2')
-
-        if mc.to_float(self._storage_name.obs_id) < 980000:
-            cr_val2 *= 15.0
-
-        # caom2IngestWircam.py, l367
-        header['NAXIS1'] = naxis_1
-        header['NAXIS2'] = naxis_2
-        header['CRPIX1'] = naxis_1 / 2.0
-        header['CRPIX2'] = naxis_2 / 2.0
-        header['CRVAL1'] = cr_val1
-        header['CRVAL2'] = cr_val2
-        header['CD1_1'] = -1.0 * cd1_1
-        header['CD1_2'] = 0.0
-        header['CD2_1'] = 0.0
-        header['CD2_2'] = cd2_2
-
-        wcs_parser = FitsWcsParser(
-            header, self._storage_name.obs_id, self._extension
-        )
-        if self._chunk is None:
-            self._chunk = Chunk()
-        wcs_parser.augment_position(self._chunk)
-        if self._chunk.position is not None:
-            self._chunk.naxis = 2
-            self._chunk.position_axis_1 = 1
-            self._chunk.position_axis_2 = 2
-        self._logger.debug(
-            f'End _update_position_g for {self._storage_name.obs_id}'
-        )
 
     def _update_position_o(self):
         self._logger.debug(
@@ -3545,111 +3426,189 @@ class Wircam(InstrumentType):
         self._logger.debug(f'End _update_position_o')
 
     def update_time(self):
-        self._logger.debug(
-            f'Begin _update_time for {self._storage_name.obs_id}'
-        )
-        if self._storage_name.suffix == 'g':
-            # construct TemporalWCS for 'g' files from the CAOM2 pieces
-            # because the structure of 'g' files is so varied, it's not
-            # possible to hand over even part of the construction to the
-            # blueprint.
-
-            # SF - 07-05-20
-            # so NAXIS here (where 'here' is a 'g' file) is ZNAXIS=3: time
-            # sequence of images of the guiding camera => this means try
-            # ZNAXIS* keyword values before trying NAXIS*, hence the header
-            # lookup code
-
-            ref_coord_val = ac.to_mjd(mc.get_keyword(self._headers, 'MJD-OBS'))
-            part_index = mc.to_int(self.part.name)
-            part_header = self._headers[part_index]
-
-            if self._chunk.time is None:
-                self._chunk.time = TemporalWCS(
-                    CoordAxis1D(Axis('TIME', 'd')), timesys='UTC'
-                )
-
-            if self._chunk.time.axis is None:
-                self._chunk.time.axis = CoordAxis1D(
-                    axis=Axis('TIME', 'd'),
-                    error=None,
-                    range=None,
-                    bounds=None,
-                    function=None,
-                )
-
-            if self._chunk.time.axis.error is None:
-                self._chunk.time.axis.error = CoordError(
-                    rnder=0.0000001, syser=0.0000001
-                )
-
-            if (
-                self._chunk.time.axis.function is None
-                and ref_coord_val is not None
-            ):
-                ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val.value))
-
-                time_index = part_header.get('ZNAXIS')
-                if time_index is None:
-                    time_index = part_header.get('NAXIS')
-                naxis_key = f'ZNAXIS{time_index}'
-                time_naxis = part_header.get(naxis_key)
-                if time_naxis is None:
-                    naxis_key = f'NAXIS{time_index}'
-                    time_naxis = part_header.get(naxis_key)
-
-                if (
-                    time_naxis is not None
-                    and time_index is not None
-                    and time_index == 3
-                ):
-                    # caom2.4 wcs validation conformance
-                    self._chunk.time_axis = 3
-
-                # CW
-                # Define time samples for guidecube data
-                # Guiding time doesn't seem to match up very well, so just
-                # say that use MJD-OBS gnaxis3 and WCPERIOD
-                #
-                # code from caom2IngestWircam.py, l876+
-                wcgdra1_0 = self._headers[0].get('WCGDRA1')
-                wc_period_0 = self._headers[0].get('WCPERIOD')
-                wc_period = None
-                if wcgdra1_0 is not None and wc_period_0 is not None:
-                    wc_period = wc_period_0
-                else:
-                    wcgdra1_1 = self._headers[1].get('WCGDRA1')
-                    wc_period_1 = self._headers[1].get('WCPERIOD')
-                    if wcgdra1_1 is not None and wc_period_1 is not None:
-                        wc_period = wc_period_1
-
-                time_delta = None
-                if wc_period is not None:
-                    if wc_period < 0.0:
-                        wc_period = 100.0
-                    # caom2IngestWircam.py, l375
-                    self._chunk.time.exposure = wc_period / 1000.0
-                    self._chunk.time.resolution = self._chunk.time.exposure
-                    time_delta = self._chunk.time.exposure / 86400.0
-                self._chunk.time.axis.function = CoordFunction1D(
-                    naxis=time_naxis, delta=time_delta, ref_coord=ref_coord
-                )
-
-        # fits2caom2 prefers ZNAXIS to NAXIS, but the originating scripts
-        # seem to prefer NAXIS, so odd as this placement seems, do not rely
-        # on function execution, because it affects NAXIS, not ZNAXIS - sigh
-        if (
-            self._observation.type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT']
-            and self._storage_name.suffix != 'g'
-        ):
+        self._logger.debug(f'Begin update_time for {self._storage_name.obs_id}')
+        if self._observation.type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT']:
             n_exp = self._headers[self._extension].get('NEXP')
             if n_exp is not None:
                 # caom2IngestWircam.py, l843
                 self._chunk.time.axis.function.naxis = mc.to_int(n_exp)
+        self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
-        self._logger.debug(
-            f'End _update_time for {self._storage_name.obs_id}'
-        )
+
+class WircamG(Wircam):
+    """suffix == 'g'"""
+    def __init__(self, headers, cfht_name, clients, observable):
+        super().__init__(headers, cfht_name, clients, observable)
+
+    def get_obs_type(self, ext):
+        result = super().get_obs_type(ext)
+        if result is None:
+            result = 'GUIDE'
+        return result
+
+    def reset_energy(self):
+        temp_bandpass_name = self._headers[self._extension].get('FILTER')
+        if temp_bandpass_name == 'FakeBlank':
+            cc.reset_energy(self._chunk)
+
+    def update_position(self):
+        """'g' file position handling."""
+        self._logger.debug(f'Begin update_position for {self._storage_name.obs_id}')
+        header = self._headers[self._extension]
+        obj_name = header.get('OBJNAME')
+        part_index = mc.to_int(self.part.name)
+        if obj_name == 'zenith' or part_index >= 5:
+            # SGo - the second clause is here, because there are only four
+            # sets of position information in headers (RA/DEC of guide start
+            # on arrays 1 2 3 4), and that's the only thing that is calculated
+            # in the original code. Values for HDU 5+ are not written as part
+            # of the override file, and thus default to 0, which fails
+            # ingestion to the service.
+            self._logger.warning(
+                f'obj_name is {obj_name}. part_num is {part_index} No position for {self._storage_name.obs_id}'
+            )
+            cc.reset_position(self._chunk)
+            return
+
+        header = self._headers[part_index]
+        cd1_1 = None
+        cd2_2 = None
+        if header.get('CRVAL2') is not None or self._headers[0].get('CRVAL2') is not None:
+            cd1_1 = mc.to_float(header.get('PIXSCAL1')) / 3600.0
+            cd2_2 = mc.to_float(header.get('PIXSCAL2')) / 3600.0
+
+        if cd1_1 is None or cd2_2 is None:
+            self._logger.warning(
+                f'cd1_1 is {cd1_1}, cd2_2 is {cd2_2}, part_index is {part_index}. No position for this part for '
+                f'{self._storage_name.obs_id}.'
+            )
+            cc.reset_position(self._chunk)
+            return
+
+        wcgd_ra = header.get(f'WCGDRA{self._part.name}')
+        if wcgd_ra is None:
+            wcgd_ra = self._headers[0].get(f'WCGDRA{self._part.name}')
+        wcgd_dec = header.get(f'WCGDDEC{self._part.name}')
+        if wcgd_dec is None:
+            wcgd_dec = self._headers[0].get(f'WCGDDEC{self._part.name}')
+        if wcgd_ra is None or wcgd_dec is None:
+            self._logger.warning(f'WCGDRA{self._part.name} and WCGDDEC{self._part.name} are undefined. No position.')
+            cc.reset_position(self._chunk)
+            return
+        cr_val1, cr_val2 = ac.build_ra_dec_as_deg(wcgd_ra, wcgd_dec, frame='fk5')
+        if math.isclose(cr_val1, 0.0) and math.isclose(cr_val2, 0.0):
+            self._logger.warning(f'WCGDRA{self._part.name} and WCGDDEC{self._part.name} are close to 0. No position.')
+            cc.reset_position(self._chunk)
+            return
+
+        naxis_1 = header.get('NAXIS1')
+        if naxis_1 is None:
+            naxis_1 = header.get('ZNAXIS1')
+        naxis_2 = header.get('NAXIS2')
+        if naxis_2 is None:
+            naxis_2 = header.get('ZNAXIS2')
+
+        if mc.to_float(self._storage_name.obs_id) < 980000:
+            cr_val2 *= 15.0
+
+        # caom2IngestWircam.py, l367
+        header['NAXIS1'] = naxis_1
+        header['NAXIS2'] = naxis_2
+        header['CRPIX1'] = naxis_1 / 2.0
+        header['CRPIX2'] = naxis_2 / 2.0
+        header['CRVAL1'] = cr_val1
+        header['CRVAL2'] = cr_val2
+        header['CD1_1'] = -1.0 * cd1_1
+        header['CD1_2'] = 0.0
+        header['CD2_1'] = 0.0
+        header['CD2_2'] = cd2_2
+
+        wcs_parser = FitsWcsParser(header, self._storage_name.obs_id, self._extension)
+        if self._chunk is None:
+            self._chunk = Chunk()
+        wcs_parser.augment_position(self._chunk)
+        if self._chunk.position is not None:
+            self._chunk.naxis = 2
+            self._chunk.position_axis_1 = 1
+            self._chunk.position_axis_2 = 2
+        self._logger.debug(f'End update_position for {self._storage_name.obs_id}')
+
+    def update_time(self):
+        self._logger.debug(f'Begin update_time for {self._storage_name.obs_id}')
+        # construct TemporalWCS for 'g' files from the CAOM2 pieces
+        # because the structure of 'g' files is so varied, it's not
+        # possible to hand over even part of the construction to the
+        # blueprint.
+
+        # SF - 07-05-20
+        # so NAXIS here (where 'here' is a 'g' file) is ZNAXIS=3: time
+        # sequence of images of the guiding camera => this means try
+        # ZNAXIS* keyword values before trying NAXIS*, hence the header
+        # lookup code
+
+        ref_coord_val = ac.to_mjd(mc.get_keyword(self._headers, 'MJD-OBS'))
+        part_index = mc.to_int(self.part.name)
+        part_header = self._headers[part_index]
+
+        if self._chunk.time is None:
+            self._chunk.time = TemporalWCS(CoordAxis1D(Axis('TIME', 'd')), timesys='UTC')
+
+        if self._chunk.time.axis is None:
+            self._chunk.time.axis = CoordAxis1D(
+                axis=Axis('TIME', 'd'),
+                error=None,
+                range=None,
+                bounds=None,
+                function=None,
+            )
+
+        if self._chunk.time.axis.error is None:
+            self._chunk.time.axis.error = CoordError(rnder=0.0000001, syser=0.0000001)
+
+        if self._chunk.time.axis.function is None and ref_coord_val is not None:
+            ref_coord = RefCoord(pix=0.5, val=mc.to_float(ref_coord_val.value))
+
+            time_index = part_header.get('ZNAXIS')
+            if time_index is None:
+                time_index = part_header.get('NAXIS')
+            naxis_key = f'ZNAXIS{time_index}'
+            time_naxis = part_header.get(naxis_key)
+            if time_naxis is None:
+                naxis_key = f'NAXIS{time_index}'
+                time_naxis = part_header.get(naxis_key)
+
+            if time_naxis is not None and time_index is not None and time_index == 3:
+                # caom2.4 wcs validation conformance
+                self._chunk.time_axis = 3
+
+            # CW
+            # Define time samples for guidecube data
+            # Guiding time doesn't seem to match up very well, so just
+            # say that use MJD-OBS gnaxis3 and WCPERIOD
+            #
+            # code from caom2IngestWircam.py, l876+
+            wcgdra1_0 = self._headers[0].get('WCGDRA1')
+            wc_period_0 = self._headers[0].get('WCPERIOD')
+            wc_period = None
+            if wcgdra1_0 is not None and wc_period_0 is not None:
+                wc_period = wc_period_0
+            else:
+                wcgdra1_1 = self._headers[1].get('WCGDRA1')
+                wc_period_1 = self._headers[1].get('WCPERIOD')
+                if wcgdra1_1 is not None and wc_period_1 is not None:
+                    wc_period = wc_period_1
+
+            time_delta = None
+            if wc_period is not None:
+                if wc_period < 0.0:
+                    wc_period = 100.0
+                # caom2IngestWircam.py, l375
+                self._chunk.time.exposure = wc_period / 1000.0
+                self._chunk.time.resolution = self._chunk.time.exposure
+                time_delta = self._chunk.time.exposure / 86400.0
+            self._chunk.time.axis.function = CoordFunction1D(naxis=time_naxis, delta=time_delta, ref_coord=ref_coord)
+
+        self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
 def _repair_comment_provenance_value(value, obs_id):
@@ -3723,13 +3682,16 @@ def factory(headers, cfht_name, clients, observable):
         temp = Espadons(headers, cfht_name, clients, observable)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         if '_diag' in cfht_name.file_name:
+            # SF 16-03-23 record the diag ones as catalogues,  artifact of the *p ones - same behaviour as for the
+            # preview images
             temp = AuxiliaryType(headers, cfht_name, clients, observable)
         else:
             temp = Mega(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.hdf5:
             if len(headers) > 0:
-                # len => could be an h5 file with no attrs
+                # len => could be an h5 file with no attrs, in which case the metadata gets copied from the 'p'
+                # artifact
                 temp = SitelleHdf5(headers, cfht_name, clients, observable)
             else:
                 temp = SitelleNoHdf5Metadata(headers, cfht_name, clients, observable)
@@ -3743,7 +3705,10 @@ def factory(headers, cfht_name, clients, observable):
         else:
             temp = Spirou(headers, cfht_name, clients, observable)
     elif cfht_name.instrument is md.Inst.WIRCAM:
-        temp = Wircam(headers, cfht_name, clients, observable)
+        if cfht_name.suffix == 'g':
+            temp = WircamG(headers, cfht_name, clients, observable)
+        else:
+            temp = Wircam(headers, cfht_name, clients, observable)
     else:
         observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
