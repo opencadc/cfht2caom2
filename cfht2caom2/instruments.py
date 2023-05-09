@@ -2311,8 +2311,7 @@ class SitelleHdf5(InstrumentType):
         """
         bp.configure_position_axes((1, 2))
         bp.configure_time_axis(3)
-        if self._storage_name.has_energy:
-            bp.configure_energy_axis(4)
+        bp.configure_energy_axis(4)
 
         bp.set('Observation.metaRelease', (['OBS_DATE'], None))
         # Laurie Rousseau-Nepton - 12-08-22
@@ -2348,7 +2347,6 @@ class SitelleHdf5(InstrumentType):
         bp.set('Chunk.energy.bandpassName', (['filter_name'], None))
         bp.set('Chunk.energy.resolvingPower', '_get_energy_resolving_power()')
         bp.set('Chunk.energy.specsys', 'TOPOCENT')
-        bp.set('Chunk.energy.axis.function.naxis', 1)
         bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
         bp.set('Chunk.energy.axis.axis.cunit', 'nm')
         bp.set('Chunk.energy.axis.range.start.pix', 0.5)

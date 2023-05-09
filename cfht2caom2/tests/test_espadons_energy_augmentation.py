@@ -81,10 +81,7 @@ TEST_FILES_DIR = '/test_files'
 def test_visit(test_config):
     product_id = '2460606i'
     f_name = f'{product_id}.fits.gz'
-    obs_fqn = (
-        f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/'
-        f'multi_plane/2460606.expected.xml'
-    )
+    obs_fqn = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/espadons/2460606.expected.xml'
     obs = read_obs_from_file(obs_fqn)
 
     # pre-conditions

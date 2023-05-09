@@ -120,7 +120,7 @@ def test_cfht_builder(fqn, test_config):
 def test_diag(test_data_dir, test_config):
     test_subject = CFHTBuilder(test_config.collection)
     test_storage_name = test_subject.build('695816p_diag.fits')
-    headers = ac.make_headers_from_file(f'{test_data_dir}/single_plane/695816p_diag.fits.header')
+    headers = ac.make_headers_from_file(f'{test_data_dir}/single_plane/mega/695816p_diag.fits.header')
     set_storage_name_values(test_storage_name, headers)
     assert test_storage_name.instrument == metadata.Inst.MEGAPRIME
 
@@ -128,27 +128,28 @@ def test_diag(test_data_dir, test_config):
 def test_suffixes(test_data_dir, test_config):
     # ensure every test file can be identified as Simple or Derived
     for plane_name in ['single_plane', 'multi_plane']:
-        headers_mock = Mock(autospec=True)
+        for instrument in ['sitelle']:
+            headers_mock = Mock(autospec=True)
 
-        def _mock_get(uri):
-            fqn = f'{test_data_dir}/{plane_name}/{basename(uri)}.header'
-            return ac.make_headers_from_file(fqn)
+            def _mock_get(uri):
+                fqn = f'{test_data_dir}/{plane_name}/{instrument}/{basename(uri)}.header'
+                return ac.make_headers_from_file(fqn)
 
-        headers_mock.headers.get.side_effect = _mock_get
-        test_config.use_local_files = True
-        test_builder = CFHTLocalBuilder(test_config.collection, test_config.use_local_files, headers_mock)
-        assert test_builder is not None, 'ctor failure'
+            headers_mock.headers.get.side_effect = _mock_get
+            test_config.use_local_files = True
+            test_builder = CFHTLocalBuilder(test_config.collection, test_config.use_local_files, headers_mock)
+            assert test_builder is not None, 'ctor failure'
 
-        plane_list = glob(f'{test_data_dir}/{plane_name}/*.header')
-        for entry in plane_list:
-            test_subject = test_builder.build(entry.replace('.header', ''))
-            assert test_subject is not None, 'ctor'
-            found_one = False
-            if test_subject.simple:
-                assert not test_subject.derived, f'not derived {entry}'
-                found_one = True
-            if test_subject.derived:
-                assert not test_subject.simple, f'not simple {entry}'
-                found_one = True
+            plane_list = glob(f'{test_data_dir}/{plane_name}/{instrument}/*.header')
+            for entry in plane_list:
+                test_subject = test_builder.build(entry.replace('.header', ''))
+                assert test_subject is not None, 'ctor'
+                found_one = False
+                if test_subject.simple:
+                    assert not test_subject.derived, f'not derived {entry}'
+                    found_one = True
+                if test_subject.derived:
+                    assert not test_subject.simple, f'not simple {entry}'
+                    found_one = True
 
-            assert found_one, f'{entry} neither derived nor simple {test_subject.is_master_cal}'
+                assert found_one, f'{entry} neither derived nor simple {test_subject.is_master_cal}'
