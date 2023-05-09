@@ -57,7 +57,7 @@
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Upena/</caom2:reference>
-        <caom2:lastExecuted>2019-11-22T05:39:42.000</caom2:lastExecuted>
+        <caom2:lastExecuted>2019-11-22T15:39:42.000</caom2:lastExecuted>
         <caom2:keywords>
           <caom2:keyword>reduction=Intensity</caom2:keyword>
         </caom2:keywords>
@@ -71,16 +71,13 @@
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentLength>46251</caom2:contentLength>
           <caom2:contentChecksum>md5:a3129bd6c64659e07a26e10ba82c54f6</caom2:contentChecksum>
           <caom2:parts>
             <caom2:part caom2:id="03217517-4cbc-47fc-a2c8-14f6bb4bf1ab" caom2:lastModified="2019-11-22T18:59:12.972" caom2:maxLastModified="2019-11-22T18:59:12.972" caom2:metaChecksum="md5:b730bc0da4a26bfa22fd4cad3ca57f31" caom2:accMetaChecksum="md5:6422a4450bb0342298ee5e03720c953e">
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="2e608841-dc38-4768-818e-08e8417e820d" caom2:lastModified="2019-11-22T18:59:12.972" caom2:maxLastModified="2019-11-22T18:59:12.972" caom2:metaChecksum="md5:8ebb51d16554c24377727b28ca42cd15" caom2:accMetaChecksum="md5:aa5d6ac741539cb1e24ac06d9899ae68" caom2:metaProducer="cfht2caom2/0.3.2">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:observableAxis>2</caom2:observableAxis>
-                  <caom2:positionAxis1>3</caom2:positionAxis1>
-                  <caom2:positionAxis2>4</caom2:positionAxis2>
                   <caom2:observable>
                     <caom2:dependent>
                       <caom2:axis>
@@ -186,15 +183,17 @@
           <caom2:productType>science</caom2:productType>
           <caom2:releaseType>data</caom2:releaseType>
           <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentLength>34101</caom2:contentLength>
           <caom2:contentChecksum>md5:3d29f0edd984065a044d1376a11c6f08</caom2:contentChecksum>
           <caom2:parts>
-            <caom2:part caom2:id="d0eb8bd7-250e-47ab-9e37-31cbdc815e08" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2019-11-22T05:24:14.414" caom2:metaChecksum="md5:8f0e9e17fbbfba7f1268c2ea2b072dbc" caom2:accMetaChecksum="md5:64ec06d057f793936f4b7125c4664915">
+            <caom2:part caom2:id="dc717621-db40-4e9a-b55f-3e1b189e5f44">
               <caom2:name>0</caom2:name>
+              <caom2:chunks/>
+            </caom2:part>
+            <caom2:part caom2:id="98448a06-78f7-4295-8837-d1c4fbb639b8">
+              <caom2:name>1</caom2:name>
               <caom2:chunks>
-                <caom2:chunk caom2:id="fc6ad26b-4dff-4bca-ad60-12546e5b2d7d" caom2:lastModified="2019-11-22T05:24:14.414" caom2:maxLastModified="2019-11-22T05:24:14.414" caom2:metaChecksum="md5:eba456d6fec76bdbe4edc2e1b69a0d99" caom2:accMetaChecksum="md5:5d077022b52a8b8d7da2d4b46e4bd377" caom2:metaProducer="cfht2caom2/0.3.2">
-                  <caom2:naxis>2</caom2:naxis>
-                  <caom2:positionAxis1>3</caom2:positionAxis1>
-                  <caom2:positionAxis2>4</caom2:positionAxis2>
+                <caom2:chunk caom2:id="6513536a-69d7-4742-ac5c-e666eb8ec6a9" caom2:metaProducer="cfht2caom2/0.6.1">
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -215,8 +214,8 @@
                       </caom2:error2>
                       <caom2:function>
                         <caom2:dimension>
-                          <caom2:naxis1>1</caom2:naxis1>
-                          <caom2:naxis2>1</caom2:naxis2>
+                          <caom2:naxis1>2088</caom2:naxis1>
+                          <caom2:naxis2>4608</caom2:naxis2>
                         </caom2:dimension>
                         <caom2:refCoord>
                           <caom2:coord1>
@@ -270,7 +269,7 @@
                       </caom2:error>
                       <caom2:function>
                         <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>0.0100347222222</caom2:delta>
+                        <caom2:delta>0.01003472222222222</caom2:delta>
                         <caom2:refCoord>
                           <caom2:pix>0.5</caom2:pix>
                           <caom2:val>58809.1990172</caom2:val>

@@ -1,0 +1,421 @@
+SIMPLE  =                    T / file does conform to FITS standard             
+BITPIX  =                   16 / number of bits per data pixel                  
+NAXIS   =                    0 / number of data axes                            
+EXTEND  =                    T / FITS dataset may contain extensions            
+COMMENT FITS (Flexible Image Transport System) format is defined in 'Astronomy  
+COMMENT and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H   
+END                                                                             
+XTENSION= 'BINTABLE'           / binary table extension                         
+BITPIX  =                    8 / 8-bit bytes                                    
+NAXIS   =                    2 / 2-dimensional binary table                     
+NAXIS1  =                    8 / width of table in bytes                        
+NAXIS2  =                 4608 / number of rows in table                        
+PCOUNT  =              5248417 / size of special data area                      
+GCOUNT  =                    1 / one data group (required keyword)              
+TFIELDS =                    1 / number of fields in each row                   
+TTYPE1  = 'COMPRESSED_DATA'    / label for field   1                            
+TFORM1  = '1PB(1241)'          / data format of field: variable length array    
+ZIMAGE  =                    T / extension contains compressed image            
+ZSIMPLE =                    T / file does conform to FITS standard             
+ZBITPIX =                   16 / data type of original image                    
+ZNAXIS  =                    2 / dimension of original image                    
+ZNAXIS1 =                 2088 / length of original image axis                  
+ZNAXIS2 =                 4608 / length of original image axis                  
+ZTILE1  =                 2088 / size of tiles to be compressed                 
+ZTILE2  =                    1 / size of tiles to be compressed                 
+ZCMPTYPE= 'RICE_1  '           / compression algorithm                          
+ZNAME1  = 'BLOCKSIZE'          / compression block size                         
+ZVAL1   =                   32 / pixels per block                               
+ZNAME2  = 'BYTEPIX '           / bytes per pixel (1, 2, 4, or 8)                
+ZVAL2   =                    2 / bytes per pixel (1, 2, 4, or 8)                
+EXTNAME = 'COMPRESSED_IMAGE'   / name of this binary table extension            
+INHERIT =                    F / No need to inherit global keywords             
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+COMMENT                                                                         
+COMMENT Observation Summary                                                     
+COMMENT -------------------                                                     
+COMMENT                                                                         
+CMMTOBS = 'N/A     '                                                            
+CMMTSEQ = 'V exposure 3, sequence 1 of 1'                                       
+OBJECT  = 'WD1953-011'                                                          
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'John Landstreet'                                                     
+RUNID   = '19BC98  '                                                            
+COMMENT                                                                         
+COMMENT General                                                                 
+COMMENT -------                                                                 
+COMMENT                                                                         
+FILENAME= '2460606o'           / Base filename at acquisition                   
+PATHNAME= '/data/sessions/espadons/19BQ11-Nov21' / Original directory name at ac
+DATE    = '2019-11-22T05:01:12' / UTC Date of file creation                     
+HSTTIME = 'Thu Nov 21 19:01:12 HST 2019' / Local time in Hawaii                 
+IMAGESWV= 'CFHT DetCom v3.6018 (Aug 17 2018)' / Image creation software version 
+OBSTYPE = 'OBJECT  '           / Observation / Exposure type                    
+EXPTYPE = 'OBJECT  '           / See OBSTYPE                                    
+EXPNUM  =              2460606 / CFHT odometer number                           
+OBSID   =              2460606 / See EXPNUM                                     
+EXPTIME =              867.000 / [sec] Integration time                         
+DARKTIME=              867.000 / [sec] Dark current time                        
+SHUTOPEN= '2019-11-22T4:46:45.138' / Shutter blade opening time (UTC)           
+SHUTCLOS= '2019-11-22T5:01:12.167' / Shutter blade closing time (UTC)           
+COMMENT                                                                         
+COMMENT Detector                                                                
+COMMENT --------                                                                
+COMMENT                                                                         
+COMMENT file 2460606o00, raster FULL, etype OBJECT, etime 867                   
+COMMENT Image data for chip 00                                                  
+DETECTOR= 'OLAPA   '           / Science Detector                               
+CCD     = 'Unknown '           / Science Detector (use DETECTOR)                
+IMAGEID =                    0 / CCD chip number                                
+CHIPID  =                    0 / Use IMAGEID instead                            
+DETSIZE = '[1:2048,1:4608]'    / Total data pixels in full mosaic               
+RASTER  = 'FULL    '           / Active raster description                      
+CCDSUM  = '1 1     '           / Binning factors                                
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+PIXSIZE =                 13.5 / Pixel size for both axes (microns)             
+AMPLIST = 'a,b     '           / List of amplifiers for this image              
+CCDSIZE = '[1:2048,1:4608]'    / Detector imaging area size                     
+CCDSEC  = '[21:2068,1:4608]'   / Read out area of the detector (unbinned)       
+DATASEC = '[21:2068,1:4608]'   / Imaging area of the detector                   
+TRIMSEC = '[21:2068,4:4605]'   / Useful imaging area of the detector            
+BSECA   = '[1:20,1:4608]'      / Overscan/prescan (bias) area from Amp A        
+BSECB   = '[2069:2088,1:4608]' / Overscan/prescan (bias) area from Amp B        
+CSECA   = '[21:1044,1:4608]'   / Section in full CCD for DSECA                  
+CSECB   = '[1045:2068,1:4608]' / Section in full CCD for DSECB                  
+DSECA   = '[21:1044,1:4608]'   / Imaging area from Amp A                        
+DSECB   = '[1045:2068,1:4608]' / Imaging area from Amp B                        
+TSECA   = '[21:1044,4:4605]'   / Trim section for Amp A                         
+TSECB   = '[1045:2068,4:4605]' / Trim section for Amp B                         
+MAXLIN  =                65535 / Maximum linearity value (ADU)                  
+SATURATE=                65535 / Saturation value (ADU)                         
+GAINA   =                 1.10 / Amp A gain (electrons/ADU)                     
+GAINB   =                 1.20 / Amp B gain (electrons/ADU)                     
+RDNOISEA=                 2.90 / Amp A read noise (electrons)                   
+RDNOISEB=                 2.90 / Amp B read noise (electrons)                   
+DARKCUR =                    0 / Dark current (e-/pixel/hour)                   
+RDTIME  =                30.00 / Read out time (sec)                            
+MDCOORDS=                    1 / Sequence number within the exposure sequence   
+MDREPEAT=                    1 / Total number of sequences                      
+CMPLTEXP=                    3 / Exposure number within the exposure sequence   
+NEXP    =                    4 / Total number of exposures within the sequence  
+CONSWV  = 'olD=137,DCU=49'     / Controller software DSPID and SERNO versions   
+DETSTAT = 'ok      '           / Detector temp range (-105..-90)                
+DETTEM  =               -100.2 / Detector temp deg C = 745.502 + -0.278 * 3042  
+COMMENT                                                                         
+COMMENT Telescope                                                               
+COMMENT ---------                                                               
+COMMENT                                                                         
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'auto_guide'         / Telescope Control System status                
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+DATE-OBS= '2019-11-22'         / Date at start of observation (UTC)             
+UTIME   = '4:46:35.08'         / Time at start of observation (UTC)             
+UTC-OBS = '4:46:35.08'         / Time at start of observation (UTC)             
+TIME-OBS= '4:46:45.138'        / Time at start of observation (UTC)             
+MJDATE  =        58809.1990172 / Modified Julian Date at start of observation   
+MJD-OBS =        58809.1990172 / Modified Julian Date at start of observation   
+SIDTIME = '22:28:16.65'        / Sidereal time at start of observation          
+LST-OBS = '22:28:16.65'        / Sidereal time at start of exposure             
+DATEEND = '2019-11-22'         / Date at end of observation (UTC)               
+UTCEND  = '5:01:44.00'         / Time at end of observation (UTC)               
+TIMEEND = '5:01:12.167'        / Time at end of observation (UTC)               
+MJDEND  =        58809.2095370 / Modified Julian Date at end of observation     
+LSTEND  = '22:43:28.06'        / Sidereal time at end of exposure               
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+COMMENT RA/DEC are current actual telescope position                            
+COMMENT including handset corrections                                           
+RA      = '19:56:28.64'        / Telescope right ascension                      
+DEC     = '-1:02:46.7'         / Telescope declination                          
+HA      = '2:31:48.01'         / Telescope hour angle at start of exposure      
+HAEND   = '2:46:59.42'         / Telescope hour angle at end of exposure        
+INSTZRA =                 0.00 / Instrument zero for RA in arc seconds          
+INSTZDEC=                 0.00 / Instrument zero for Dec in arc seconds         
+RA_DEG  =           299.119333 / Telescope right ascension in degrees           
+DEC_DEG =            -1.046306 / Telescope declination in degrees               
+COMMENT OBJxxx are original target position                                     
+COMMENT plus proper motion and precession                                       
+OBJNAME = 'WD1953-011'         / Target name                                    
+OBJMAG  =                 13.7 / Target magnitude                               
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '19:56:28.64'        / Target right ascension                         
+OBJDEC  = '-1:02:46.7'         / Target declination                             
+OBJRAPM =                -0.44 / Target right ascension proper motion in as/yr  
+OBJDECPM=                -0.71 / Target declination proper motion in as/yr      
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'Cass    '           / TCS guider name                                
+GUIEQUIN=               2000.0 / TCS guider equinox                             
+GUIRADEC= 'FK5     '           / TCS guider system for equinox                  
+GUIRA   = '19:57:47.75'        / TCS guider right ascension                     
+GUIDEC  = '-0:56:06.5'         / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = 'auto GSC: 0'        / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =             -161.000 / Telescope bonnette guide probe X position      
+YPROBE  =              -57.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =              385.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.354 / Airmass at start of observation                
+TELALT  =              47.5906 / Telescope altitude at start of observation, deg
+TELAZ   =             244.9912 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                243.1 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=               117.50 / Angle from object to moon at start in degrees  
+MOONPHAS=                -0.22 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'False   '           / Moon up? True or False                         
+MOONALT =               -55.60 / Moon altitude at start in degrees              
+MOONAZ  =               311.60 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+CALFOCUS=               11.962 / Telescope focus calculated from model in mm    
+DEFOCUS =                0.000 / Telescope defocus from calculated in mm        
+FOCUSPOS=                11962 / Telescope focus encoder readout in microns     
+TELFOCUS=                11962 / Telescope focus encoder readout in microns     
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= '0098 04:37:42.629484' / TCS GPS read out in BCD                      
+TCSGPSTM=              4.62851 / TCS GPS clock time in decimal hours            
+TCSRBUSS= '18:05:00.000'       / TCS RBUSS clock time                           
+TCSEPICS= '20191122 04:37:07.635' / TCS EPICS clock time                        
+TCSAMODE= 'O       '           / TCS acquire mode - T/O/G/g/P for t/o/g coords  
+TCSMJD  =        58809.1928541 / TCS MJD                                        
+TCSLST  =             22.32297 / TCS LST in decimal hours                       
+TCSAPHA =             35.47640 / TCS apparent hour angle in degrees             
+TCSAPDEC=             -0.99172 / TCS apparent declination in degrees            
+TCSOBHA =             35.46906 / TCS observed hour angle in degrees             
+TCSOBDEC=             -0.98698 / TCS observed declination in degrees            
+TCSENHA =                    0 / TCS hour angle absolute encoder in bits        
+TCSENDEC=                    0 / TCS declination absolute encoder in bits       
+TCSEDHA =             35.46199 / TCS hour angle absolute encoder in degrees     
+TCSEDDEC=             -1.01546 / TCS declination absolute encoder in degrees    
+TCSINHA =                   35 / TCS hour angle incremental encoder in bits     
+TCSINDEC=                   -1 / TCS declination incremental encoder in bits    
+TCSSEHA =                -0.18 / TCS hour angle servo error in arcsec           
+TCSSEDEC=                 0.00 / TCS declination servo error in arcsec          
+TCSGEHA =                 0.00 / TCS hour angle guider error in arcsec          
+TCSGEDEC=                 0.00 / TCS declination guider error in arcsec         
+TCSPMHA =              285.324 / TCS hour angle pointing model output in arcsec 
+TCSPMDEC=               37.528 / TCS declination pointing model output in arcsec
+TCSAMHA =                0.000 / TCS hour angle encoder model in arcsec         
+TCSAMDEC=               17.241 / TCS declination encoder model in arcsec        
+TCSVMHA =                0.000 / TCS hour angle virtual encoder model in arcsec 
+TCSVMDEC=                0.000 / TCS declination virtual encoder model in arcsec
+TCSCREEP=                0.000 / TCS declination creep model in arcsec          
+TCSMVRA =              -1.6600 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=             -12.0700 / TCS declination acquisition move in arcsec     
+TCSMVX  =            -9999.900 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =            -9999.900 / TCS secondary guider acquisition y move in mm  
+FFLAMPON= 'OFF     '           / flatfield lamp status ON/OFF                   
+FFLAMP1 =                    3 / flatfield lamp 1 intensity                     
+FFLAMP2 =                   12 / flatfield lamp 2 intensity                     
+CLAMPON = 'OFF     '           / comparison lamp status ON/OFF                  
+COMMENT                                                                         
+COMMENT Instrument Description                                                  
+COMMENT ----------------------                                                  
+COMMENT                                                                         
+INSTRUME= 'ESPaDOnS'           / Instrument Name                                
+INSTMODE= 'Polarimetry, R=65,000' / Instrument Mode                             
+FILTERID=                   -1 / wheel position                                 
+FILTER  = 'Unknown '           / description of filter                          
+COMMENT                                                                         
+COMMENT ESPaDOnS Cassegrain Unit                                                
+COMMENT ------------------------                                                
+COMMENT                                                                         
+EADCPOS = 'IN      '           / ESPaDOnS ADC position IN/OUT of beam           
+EADC1BEG= '126.811278113867'   / ADC prism 1 position at start of exposure      
+EADC2BEG= '10.0799777667984'   / ADC prism 2 position at start of exposure      
+EADC1END= '126.146907598022'   / ADC prism 1 position at end of exposure        
+EADC2END= '5.48326333992095'   / ADC prism 2 position at end of exposure        
+ECALIBWH= 'P1      '           / ESPaDOnS calibration wheel position (# and deg)
+ERHOMB1 = 'P3      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB2 = 'P2      '           / ESPaDOnS rhomb 2 position (# and deg)          
+EFABPERO= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EWEDWOL = 'WOL     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+ETEMPPOL=               -43.36 / ESPaDOnS polarimeter temperature deg C         
+ETEMPCB =                 5.86 / ESPaDOnS calibration box temperature deg C     
+COMMENT                                                                         
+COMMENT ESPaDOnS Guider                                                         
+COMMENT ---------------                                                         
+COMMENT                                                                         
+EGUIDING= 'GO      '           / ESPaDOnS guiding state ON/OFF                  
+EGUISEE =             -9999.90 / ESPaDOnS guider seeing estimate                
+COMMENT                                                                         
+COMMENT ESPaDOnS Spectrograph                                                   
+COMMENT ---------------------                                                   
+COMMENT                                                                         
+ECAMFOC =                -3.57 / ESPaDOnS camera focus position (mm)            
+EHARTPOS= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+ESLIPOS = 'P2      '           / ESPaDOnS slicer bench position (# and mm)      
+EHALOPOS= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOGEN= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+ESLICER = 'P2      '           / ESPaDOnS slicer position (# and deg)           
+EDEKKER = 'P4      '           / ESPaDOnS dekker position (# and mm)            
+EEMSHUT = 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSTATE= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMCNTS =                   13 / ESPaDOnS exposure meter count average          
+EEMSTD  =                 3.32 / ESPaDOnS exposure meter count std deviation    
+EEMSNR  =                34.90 / ESPaDOnS exposure meter SNR (calib at 730nm)   
+ETSP1BEG=                18.29 / ESPaDOnS down mirror temp at start (deg C)     
+ETSP2BEG=                18.50 / ESPaDOnS camera temp at start (deg C)          
+ETSP3BEG=                18.45 / ESPaDOnS up mirror temp at start (deg C)       
+ETSP4BEG=                17.61 / ESPaDOnS hygrometer temp at start (deg C)      
+EPRSPBEG=                -0.86 / ESPaDOnS relative pressure at start (mb)       
+ERHSPBEG=                16.80 / ESPaDOnS relative humidity at start (%)        
+ETSP1END=                18.32 / ESPaDOnS down mirror temp at end (deg C)       
+ETSP2END=                18.50 / ESPaDOnS camera temp at end (deg C)            
+ETSP3END=                18.45 / ESPaDOnS up mirror temp at end (deg C)         
+ETSP4END=                17.91 / ESPaDOnS hygrometer temp at end (deg C)        
+EPRSPEND=                -0.81 / ESPaDOnS relative pressure at end (mb)         
+ERHSPEND=                16.80 / ESPaDOnS relative humidity at end (%)          
+EREADSPD= 'Slow: 2.90e noise, 1.15e/ADU, 30s' / ESPaDOnS det read out xslow/slow
+COMMENT                                                                         
+COMMENT Observatory configuration                                               
+COMMENT -------------------------                                               
+COMMENT                                                                         
+DOMESHUT= 'OPEN    '           / Dome shutter state (OPEN/CLOSED)               
+MIRRCOV = 'OPEN    '           / Mirror cover state (OPEN/CLOSED)               
+WINDSCR =                    0 / Windscreen elevation in degrees                
+DOMELOUV= 'CLOSED  '           / Dome louver state (OPEN/CLOSED)                
+VENTMODE= 'MANUAL  '           / Dome venting control mode                      
+VENTL1  = 'CLOSED:0:0:0'       / Dome vent L1 door and vane configuration       
+VENTL2  = 'UNKNOWN:-9999:-9999:-9999' / Dome vent L2 door and vane configuration
+VENTL3  = 'CLOSED:0:0:0'       / Dome vent L3 door and vane configuration       
+VENTL4  = 'CLOSED:0:0:0'       / Dome vent L4 door and vane configuration       
+VENTL5  = 'CLOSED:0:0:0'       / Dome vent L5 door and vane configuration       
+VENTL6  = 'CLOSED:0:0:0'       / Dome vent L6 door and vane configuration       
+VENTR1  = 'CLOSED:0:0:0'       / Dome vent R1 door and vane configuration       
+VENTR2  = 'UNKNOWN:-9999:-9999:-9999' / Dome vent R2 door and vane configuration
+VENTR3  = 'CLOSED:0:0:0'       / Dome vent R3 door and vane configuration       
+VENTR4  = 'CLOSED:0:0:0'       / Dome vent R4 door and vane configuration       
+VENTR5  = 'CLOSED:0:0:0'       / Dome vent R5 door and vane configuration       
+VENTR6  = 'CLOSED:0:0:0'       / Dome vent R6 door and vane configuration       
+TESPMIRE=                -2.30 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 1.90 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 2.11 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 1.30 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=               851.29 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 1.90 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=             -9999.90 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 3.66 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 1.90 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 1.18 / 06 temp, air, top ring west deg C              
+TEANRLSB=                12.06 / 19 temp, air, north rail support beam deg C    
+TESHRSET=                17.49 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 2.90 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 2.48 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 5.22 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 2.75 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 2.12 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 2.47 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                -1.40 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                -1.50 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=               849.80 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 2.19 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 1.30 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 1.23 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                 3.15 / 61 temp, surface, floor above control room degC
+TESPIERN=                 4.40 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 3.40 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 0.20 / 35 temp, air, weathertron deg C                
+TEMPERAT=                -0.75 / 86 temp, air, weather tower deg C              
+WINDSPED=                11.57 / 84 wind speed, weather tower knots             
+WINDDIR =                64.87 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                48.77 / 87 relative humidity, weather tower %          
+PRESSURE=               617.37 / 31 barometric pressure, control room mb        
+DDSEEMEN=             -9999.90 / Dome DIMM mean seeing, arc seconds             
+DDSEEMED=             -9999.90 / Dome DIMM median seeing, arc seconds           
+DDSEEMOD=             -9999.90 / Dome DIMM mode seeing, arc seconds             
+DDSEESTD=             -9999.90 / Dome DIMM seeing deviation, arc seconds        
+WMSEEMEN=               -49.35 / Weather tower MASS mean seeing, arc seconds    
+WMSEEMED=               -49.35 / Weather tower MASS median seeing, arc seconds  
+WMSEEMOD=               -49.35 / Weather tower MASS mode seeing, arc seconds    
+WMSEESTD=                49.65 / Weather tower MASS seeing deviation, arc second
+WDSEEMEN=                 0.90 / Weather tower DIMM mean seeing, arc seconds    
+WDSEEMED=                 0.91 / Weather tower DIMM median seeing, arc seconds  
+WDSEEMOD=                 1.02 / Weather tower DIMM mode seeing, arc seconds    
+WDSEESTD=                 0.11 / Weather tower DIMM seeing deviation, arc second
+SPOZPMEN=                 2.12 / SkyProbe (orig) mean absorption, magnitude     
+SPOZPMED=                 2.18 / SkyProbe (orig) median absorption, magnitude   
+SPOZPMOD=                 2.30 / SkyProbe (orig) mode absorption, magnitude     
+SPOZPSTD=                 0.26 / SkyProbe (orig) absorption deviation, magnitude
+QRUNID  = '19BQ11  '           / queue run id                                   
+QOBSERVE= 'Callie Crowder'     / queue observer                                 
+QCOORD  = 'Nadine Manset'      / queue coordinator                              
+QID     = 55700500000000068760 / queue id                                       
+QOBSEQID= 55301400000000296130 / queue ob sequence id                           
+QICSEQID= 55351200000000328669 / queue ic sequence id                           
+QOBITER =                    1 / queue ob iteration                             
+REL_DATE= '2021-02-28T00:00:00' / queue release date                            
+MET_DATE= '2019-11-22T00:00:00' / queue metadata release date                   
+QICLABEL= 'IC2     '           / queue instrument configuration label           
+SNRGOAL =                25.20 / Goal SNR per pixel per frame                   
+SNRWAVE =                  730 / Wavelength of goal SNR [nm]                    
+OBJTEMP =                 6740 / Object effective temperature                   
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+COMMENT Reserved space.  This line can be used to add a new FITS card.          
+END                                                                             
