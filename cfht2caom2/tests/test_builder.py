@@ -128,7 +128,7 @@ def test_diag(test_data_dir, test_config):
 def test_suffixes(test_data_dir, test_config):
     # ensure every test file can be identified as Simple or Derived
     for plane_name in ['single_plane', 'multi_plane']:
-        for instrument in ['sitelle']:
+        for instrument in ['espadons', 'mega', 'sitelle', 'spirou' ,'wircam']:
             headers_mock = Mock(autospec=True)
 
             def _mock_get(uri):
@@ -146,10 +146,10 @@ def test_suffixes(test_data_dir, test_config):
                 assert test_subject is not None, 'ctor'
                 found_one = False
                 if test_subject.simple:
-                    assert not test_subject.derived, f'not derived {entry}'
+                    assert not test_subject.derived, f'not derived {test_subject}'
                     found_one = True
                 if test_subject.derived:
-                    assert not test_subject.simple, f'not simple {entry}'
+                    assert not test_subject.simple, f'not simple {test_subject}'
                     found_one = True
 
                 assert found_one, f'{entry} neither derived nor simple {test_subject.is_master_cal}'

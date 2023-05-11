@@ -69,6 +69,7 @@
 
 from logging import getLogger
 from os.path import basename
+from re import match
 from urllib.parse import urlparse
 
 from caom2pipe.manage_composable import build_uri, CadcException, StorageName
@@ -97,6 +98,25 @@ class CFHTName(StorageName):
     - product id == file id
     - the file_name attribute has ALL the extensions, including compression
       type.
+
+    Decisions to make based on the name:
+    - Simple vs Derived
+    - Calibration Level (RAW vs CALIBRATED)
+    - Data Product Type (image, cube, eventlist, spectrum, timeseries, visibility, measurements, catalog, event, sed)
+    - Product Type (SCIENCE, CALIBRATION, AUXILIARY, PREVIEW, THUMBNAIL)
+    - Algorithm Name (exposure, scan, master_detrend, polarization)
+    - WCS Axes to configure
+    - Time WCS Axis calculation
+    - Espadons/Mega Energy participation
+    - Espadons Polarization participation
+    - Espadons/Mega/WIRCam Position resetting
+    - Sitelle Derived
+    - Sitelle energy definition
+    - Sitelle data_release value
+    - SPIRou 'r' file handling
+    - WIRCam OBSTYPE
+    - WIRCam ingestion order
+    - WIRCam provenance
     """
 
     CFHT_NAME_PATTERN = '*'
@@ -216,12 +236,9 @@ class CFHTName(StorageName):
         # exposure and does not update the EXPNUM.
         #
         # SGo - because of this, as a secondary measure, try the file name for the sequence number
-        if (
-            self.is_simple and not self.is_master_cal
-        ) or (
-            self.instrument in [Inst.ESPADONS, Inst.SITELLE, Inst.SPIROU] and self.suffix == 'p'
-        ):
-            result = self._file_id.split(self._suffix)[0]
+        temp = match('^[0-9]{5,7}', self._file_name)
+        if temp:
+            result = self._file_name[:temp.end()]
         return result
 
     @property
@@ -240,24 +257,6 @@ class CFHTName(StorageName):
         return self._get_uri(self.zoom, StorageName.scheme)
 
     @property
-    def is_master_cal(self):
-        return (
-            'weight' in self._file_id
-            or 'master' in self._file_id
-            or 'hotpix' in self._file_id
-            or 'badpix' in self._file_id
-            or 'deadpix' in self._file_id
-            or 'dark' in self._file_id
-            or 'scatter' in self._file_id
-        )
-
-    @property
-    def has_energy(self):
-        return not (
-            self._instrument is Inst.ESPADONS and self._suffix in ['i', 'p']
-        )
-
-    @property
     def has_different_destination_name(self):
         if len(self._source_names) == 0:
             result = (
@@ -271,21 +270,6 @@ class CFHTName(StorageName):
         return result
 
     @property
-    def has_polarization(self):
-        return self._suffix in ['p'] and self._instrument in [
-            Inst.ESPADONS,
-            Inst.SPIROU,
-        ]
-
-    @property
-    def is_derived_sitelle(self):
-        return self._instrument == Inst.SITELLE and self._suffix in [
-            'p',
-            'v',
-            'z',
-        ]
-
-    @property
     def is_feasible(self):
         """
         Executing parts of the pipeline is not feasible for hdf5 files at this
@@ -296,49 +280,65 @@ class CFHTName(StorageName):
         return not StorageName.is_hdf5(self._file_name)
 
     @property
-    def is_simple(self):
-        result = False
-        if (
-            self._suffix
-            in [
-                'a',
-                'b',
-                'c',
-                'd',
-                'f',
-                'g',
-                'l',
-                'm',
-                'o',
-                's',
-                'w',
-                'x',
-                'y',
-            ]
-            or self.simple_by_suffix
-            or self.is_master_cal
-            or (
-                self._instrument is Inst.SPIROU
-                and self._suffix in ['a', 'c', 'd', 'e', 'f', 'o', 'r', 'v']
-            )
-        ):
+    def simple(self):
+        """
+        :return: True if the file should be represented as a SimpleObservation, False otherwise
+        """
+        mega_suffix_list = ['b', 'd', 'f', 'l', 'o', 'x']
+        s = {
+            Inst.ESPADONS: ['a', 'b', 'c', 'd', 'f', 'o', 'x'],
+            Inst.MEGACAM: mega_suffix_list,
+            Inst.MEGAPRIME: mega_suffix_list,
+            Inst.SITELLE: ['a', 'b', 'c', 'd', 'f', 'o', 'x'],
+            Inst.SPIROU: ['a', 'c', 'd', 'f', 'g', 'o', 'r', 'x'],
+            Inst.WIRCAM: ['a', 'd', 'f', 'g', 'm', 'o', 'x', 'w', 'v'],
+        }
+        if self._suffix is not None and self._suffix in s.get(self._instrument):
             result = True
+        else:
+            # _flag has inputs/members metadata
+            result = '_' in self._file_id and '_flag' not in self._file_id
         return result
 
     @property
-    def simple_by_suffix(self):
-        return (
-            (
-                self._suffix in ['p', 's']
-                and self._instrument
-                in [Inst.MEGACAM, Inst.MEGAPRIME, Inst.WIRCAM]
-            )
-            or (self._suffix == 'i' and self._instrument is Inst.ESPADONS)
-            or (
-                self._suffix in ['e', 's', 't', 'v']
-                and self._instrument is Inst.SPIROU
-            )
-        )
+    def derived(self):
+        """
+        Prefer !simple, as this method is here for testing completeness.
+
+        :return: True if the file should be represented in a DerivedObservation, False otherwise
+        """
+        d = {
+            Inst.ESPADONS: ['i', 'p'],
+            # caom2IngestMegacam.py, l142 provenance.inputs = caom:CFHT/%s/%so
+            Inst.MEGAPRIME: ['p'],
+            Inst.SITELLE: ['p', 'v', 'z'],
+            Inst.SPIROU: ['e', 'p', 's', 't', 'v'],
+            Inst.WIRCAM: ['p', 's', 'y'],
+        }
+        # diag is not Derived because it's treated as an Auxiliary file, and has no inputs/members metadata
+        if self._suffix is not None and self._suffix in d.get(self._instrument) and '_diag' not in self._file_id:
+            result = True
+        else:
+            result = '.' in self._file_id
+        return result
+
+    @property
+    def raw_time(self):
+        """
+        :return: True for those processed file naming patterns with Temporal WCS defined according to raw keywords.
+        """
+        d = {
+            Inst.ESPADONS: ['i'],
+            Inst.MEGACAM: ['p', 's'],
+            Inst.MEGAPRIME: ['p', 's'],
+            Inst.SPIROU: ['e', 's', 't', 'v'],
+            Inst.WIRCAM: ['p', 's', 'y'],
+        }
+        if self.simple:
+            result = '_' not in self._file_id
+        else:
+            result = self._instrument in d and self._suffix is not None and self._suffix in d.get(self._instrument)
+        return result
 
     @property
     def suffix(self):
@@ -368,8 +368,10 @@ class CFHTName(StorageName):
 
     def set_file_id(self):
         self._file_id = CFHTName.remove_extensions(self._file_name)
-        # for file names that have _flag or _diag in them
-        self._suffix = self._file_id.split('_')[0][-1]
+        self._suffix = None
+        if self.sequence_number is not None:
+            # for file names that have _flag or _diag in them
+            self._suffix = self._file_id.split('_')[0][-1]
 
     def set_obs_id(self):
         self._obs_id = CFHTName.get_obs_id(self._file_id)

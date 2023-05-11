@@ -81,6 +81,8 @@ def test_is_valid(test_config):
     assert test_subject.source_names == [], 'not local'
     assert test_subject.simple, f'should be simple {test_subject}'
     assert test_subject.suffix == 'o', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     StorageName.scheme = 'cadc'
     test_subject = CFHTName(file_name='1944968p.fits.fz', instrument='SITELLE')
@@ -89,6 +91,8 @@ def test_is_valid(test_config):
     assert test_subject.file_uri == 'cadc:CFHT/1944968p.fits.fz', 'uri'
     assert not test_subject.simple, 'should be composite'
     assert test_subject.suffix == 'p', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     StorageName.scheme = 'cadc'
     test_subject = CFHTName(file_name='2460503p.fits.gz', instrument='ESPaDOnS')
@@ -98,6 +102,8 @@ def test_is_valid(test_config):
     assert not test_subject.simple, 'should be composite'
     assert test_subject.file_name == '2460503p.fits.gz', 'no decomp'
     assert test_subject.suffix == 'p', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2452990p.fits.fz', instrument='MegaPrime')
     assert test_subject.obs_id == '2452990', 'wrong obs id'
@@ -105,6 +111,8 @@ def test_is_valid(test_config):
     assert (test_subject.file_uri == 'cadc:CFHT/2452990p.fits.fz'), 'wrong uri'
     assert not test_subject.simple, 'should be derived'
     assert test_subject.suffix == 'p', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2384125z.hdf5', instrument='SITELLE')
     assert test_subject.obs_id == '2384125', 'wrong obs id'
@@ -112,6 +120,8 @@ def test_is_valid(test_config):
     assert test_subject.file_uri == 'cadc:CFHT/2384125z.hdf5', 'wrong uri'
     assert not test_subject.simple, 'should be derived'
     assert test_subject.suffix == 'z', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2384125p.fits.fz', instrument='SITELLE')
     assert test_subject.obs_id == '2384125', 'wrong obs id'
@@ -119,6 +129,8 @@ def test_is_valid(test_config):
     assert (test_subject.file_uri == 'cadc:CFHT/2384125p.fits.fz'), 'wrong uri'
     assert not test_subject.simple, 'should be derived'
     assert test_subject.suffix == 'p', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='979412p.fits.fz', instrument='MegaPrime')
     assert test_subject.obs_id == '979412', 'wrong obs id'
@@ -126,6 +138,8 @@ def test_is_valid(test_config):
     assert test_subject.file_uri == 'cadc:CFHT/979412p.fits.fz', 'wrong uri'
     assert not test_subject.simple, 'should be derived'
     assert test_subject.suffix == 'p', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='979412b.fits.fz', instrument='MegaPrime')
     assert test_subject.obs_id == '979412', 'wrong obs id'
@@ -133,26 +147,45 @@ def test_is_valid(test_config):
     assert test_subject.file_uri == 'cadc:CFHT/979412b.fits.fz', 'wrong uri'
     assert test_subject.simple, 'should be simple'
     assert test_subject.suffix == 'b', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2003A.frpts.z.36.00.fits.fz', instrument='MegaPrime')
     assert test_subject.obs_id == '2003A.frpts.z.36.00', 'wrong obs id'
     assert test_subject.file_id == '2003A.frpts.z.36.00', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/2003A.frpts.z.36.00.fits.fz', 'wrong uri'
-    assert not test_subject.is_master_cal, 'should not be master cal'
-    assert not test_subject.simple, 'should be derived'
+    assert not test_subject.simple, 'should not be simple'
+    assert test_subject.derived, 'should be derived'
     assert test_subject.suffix is None, f'suffix {test_subject}'
+    assert test_subject.sequence_number is None, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
+
+    test_subject = CFHTName(file_name='02AE10.bias.0.36.00.fits', instrument='MegaPrime')
+    assert test_subject.obs_id == '02AE10.bias.0.36.00', 'wrong obs id'
+    assert test_subject.file_id == '02AE10.bias.0.36.00', 'wrong file id'
+    assert test_subject.file_uri == 'cadc:CFHT/02AE10.bias.0.36.00.fits', 'wrong uri'
+    assert not test_subject.simple, 'should not be simple'
+    assert test_subject.derived, 'should be derived'
+    assert test_subject.suffix is None, f'suffix {test_subject}'
+    assert test_subject.sequence_number is None, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2455409p.fits', instrument='SPIRou')
     assert test_subject.obs_id == '2455409', 'wrong obs id'
     assert test_subject.file_id == '2455409p', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/2455409p.fits', 'wrong uri'
-    assert not test_subject.is_master_cal, 'should not be master cal'
     assert not test_subject.simple, 'should be derived'
     assert test_subject.suffix == 'p', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2238502i.fits.fz', instrument='ESPaDOnS')
     assert test_subject.obs_id == '2238502', 'wrong obs id'
     assert test_subject.suffix == 'i', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.simple, 'should not be simple'
+    assert test_subject.derived, 'should be derived'
+    assert test_subject.raw_time, 'raw time'
 
     StorageName.scheme = 'cadc'
     test_subject = CFHTName(
@@ -169,6 +202,10 @@ def test_is_valid(test_config):
     assert test_subject.zoom_uri == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg', 'wrong zoom uri'
     assert not test_subject.has_different_destination_name, f'de/re'
     assert test_subject.suffix == 'r', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.simple, 'should be simple'
+    assert not test_subject.derived, 'should not be derived'
+    assert test_subject.raw_time, 'raw time'
 
     # decompression, no recompression
     StorageName.scheme = 'cadc'
@@ -185,6 +222,8 @@ def test_is_valid(test_config):
     assert test_subject.zoom_uri == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg', 'wrong zoom uri'
     assert test_subject.has_different_destination_name, 'de/re'
     assert test_subject.suffix == 'r', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     # decompression plus recompression
     test_subject = CFHTName(
@@ -200,6 +239,8 @@ def test_is_valid(test_config):
     assert test_subject.zoom_uri == 'cadc:CFHT/2602045r_preview_zoom_1024.jpg', 'wrong zoom uri'
     assert test_subject.has_different_destination_name, f'de/re'
     assert test_subject.suffix == 'r', f'suffix {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     # flag/diag
     test_subject = CFHTName(
@@ -210,7 +251,10 @@ def test_is_valid(test_config):
     assert test_subject.thumb_uri == 'cadc:CFHT/1013552p_flag_preview_256.jpg', 'wrong thumb uri'
     assert test_subject.suffix == 'p', 'wrong suffix'
     assert test_subject.obs_id == '1013552', f'wrong obs id {test_subject}'
-    assert not test_subject.simple, f'should be derived {test_subject}'
+    assert not test_subject.simple, f'should not be simple {test_subject}'
+    assert test_subject.derived, f'should be derived {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'
 
     # flag/diag
     test_subject = CFHTName(
@@ -223,6 +267,8 @@ def test_is_valid(test_config):
     assert test_subject.obs_id == '695816', 'wrong obs id'
     assert test_subject.product_id == '695816p', 'wrong product id'
     assert test_subject.simple, f'should be simple {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert not test_subject.raw_time, 'raw time'
 
     test_subject = CFHTName(file_name='2513728g.fits', instrument='SPIRou')
     assert test_subject.file_uri == 'cadc:CFHT/2513728g.fits', 'wrong file uri'
@@ -232,3 +278,5 @@ def test_is_valid(test_config):
     assert test_subject.obs_id == '2513728', 'wrong obs id'
     assert test_subject.product_id == '2513728g', 'wrong product id'
     assert test_subject.simple, f'should be simple {test_subject}'
+    assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
+    assert test_subject.raw_time, 'raw time'

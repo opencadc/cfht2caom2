@@ -71,11 +71,11 @@ import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
+from caom2pipe.manage_composable import Observable, Rejected
 from caom2pipe import reader_composable as rdc
 from cfht2caom2 import cfht_name, fits2caom2_augmentation, metadata
 from glob import glob
-from os import unlink
-from os.path import basename, dirname, exists
+from os.path import basename, dirname
 
 from mock import patch
 import test_fits2caom2_augmentation
@@ -169,9 +169,13 @@ def test_visitor(
             metadata_reader.file_info[
                 storage_name.file_uri
             ].file_type = 'application/fits'
+        test_config.rejected_file_name = 'rejected.yml'
+        test_config.rejected_directory = test_data_dir
+        test_observable = Observable(rejected=Rejected(test_config.rejected_fqn), metrics=None)
         kwargs = {
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,
+            'observable': test_observable,
         }
 
         observation = fits2caom2_augmentation.visit(observation, **kwargs)

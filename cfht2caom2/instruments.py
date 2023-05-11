@@ -184,6 +184,7 @@ from astropy import units
 from astropy.io import fits
 from dateutil import tz
 from enum import Enum
+from re import match
 
 from caom2 import Axis, Slice, ObservableAxis, Chunk, DataProductType
 from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
@@ -361,8 +362,13 @@ class AuxiliaryType(cc.TelescopeMapping):
         bp.set('Observation.telescope.geoLocationY', y)
         bp.set('Observation.telescope.geoLocationZ', z)
 
-        bp.set('Plane.dataProductType', 'get_plane_data_product_type()')
-        bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+        # caom2wircam.default
+        # caom2wircamdetrend.default
+        bp.set('Plane.dataProductType', DataProductType.IMAGE)
+        calibration_level = CalibrationLevel.CALIBRATED
+        if self._storage_name.simple and '_' not in self._storage_name.file_id:
+            calibration_level = CalibrationLevel.RAW_STANDARD
+        bp.set('Plane.calibrationLevel', calibration_level)
         bp.set('Plane.dataRelease', 'get_plane_data_release()')
         bp.set('Plane.metaRelease', 'get_meta_release()')
         bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
@@ -374,26 +380,6 @@ class AuxiliaryType(cc.TelescopeMapping):
 
         bp.set('Artifact.productType', 'get_product_type()')
         bp.set('Artifact.releaseType', 'data')
-
-    def get_calibration_level(self, ext):
-        result = CalibrationLevel.CALIBRATED
-        if (
-            self._storage_name.is_simple
-            and not self._storage_name.simple_by_suffix
-            and not self._storage_name.is_master_cal
-        ):
-        # if (
-        #     (self._storage_name.simple and not self._storage_name.is_master_cal)
-        #     and not ('_diag' in self._storage_name.file_uri)
-        # ):
-            self._logger.error(f'heelo wrf? {self._storage_name.file_uri} {"_diag" not in self._storage_name.file_uri}')
-            result = CalibrationLevel.RAW_STANDARD
-        return result
-
-    def get_plane_data_product_type(self, ext):
-        # caom2wircam.default
-        # caom2wircamdetrend.default
-        return DataProductType.IMAGE
 
     def get_environment_elevation(self, ext):
         elevation = mc.to_float(self._headers[ext].get('TELALT'))
@@ -723,29 +709,24 @@ class AuxiliaryType(cc.TelescopeMapping):
                     )
         return result
 
-    def _is_derived(self, obs_id):
+    def _find_derived_type(self, obs_id):
+        """
+        Determine how to identify Provenance.inputs.
+        """
         result = False
-        derived_type = ''
+        derived_type = ProvenanceType.UNDEFINED
         if cc.is_composite(self._headers):
             result = True
             derived_type = ProvenanceType.IMCMB
         else:
             file_type = self._headers[0].get('FILETYPE')
             if file_type is not None and 'alibrat' in file_type:
-                self._logger.info(
-                    f'Treating {obs_id} with filetype {file_type} as derived. '
-                )
                 result = True
-
                 derived_type = ProvenanceType.COMMENT
-
-        # self._logger.error(self._storage_name)
-        self._logger.error(f'result {result} is simple {self._storage_name.simple}')
-        if not result and not self._storage_name.is_simple:
-            result = True
+        if not result and self._storage_name.derived:
             derived_type = ProvenanceType.FILENAME
         self._logger.info(f'Using {derived_type} to look for Plane.provenance.inputs.')
-        return result, derived_type
+        return derived_type
 
     def _update_sitelle_plane(self, observation):
         pass
@@ -790,14 +771,18 @@ class AuxiliaryType(cc.TelescopeMapping):
             self._logger.debug('Done hdf5 update.')
             return observation
 
-        is_derived, derived_type = self._is_derived(observation.observation_id)
-        if is_derived and not isinstance(observation, DerivedObservation):
+        derived_type = self._find_derived_type(observation.observation_id)
+        if self._storage_name.derived and not isinstance(observation, DerivedObservation):
             self._logger.info(f'{observation.observation_id} will be changed to a Derived Observation.')
-            algorithm_name = 'master_detrend'
-            if self._storage_name.has_polarization:
+            algorithm_name = observation.algorithm.name
+            if self._storage_name.instrument != md.Inst.ESPADONS and self._storage_name.suffix != 'i':
+                algorithm_name = 'master_detrend'
+            if self._storage_name.suffix == 'p' and self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
                 algorithm_name = 'polarization'
-            elif self._storage_name.is_derived_sitelle:
+            elif self._storage_name.instrument is md.Inst.SITELLE:
                 algorithm_name = 'scan'
+            elif self._storage_name.instrument is md.Inst.SPIROU:
+                algorithm_name = 'drs'
             observation = cc.change_to_composite(observation, algorithm_name)
 
         if (
@@ -822,7 +807,7 @@ class AuxiliaryType(cc.TelescopeMapping):
                 update_artifact_meta(artifact, file_info)
 
                 for part in artifact.parts.values():
-                    if self.get_calibration_level(idx) == CalibrationLevel.RAW_STANDARD:
+                    if plane.calibration_level == CalibrationLevel.RAW_STANDARD:
                         time_delta = self.get_time_refcoord_delta_simple(idx)
                     else:
                         time_delta = self.get_time_refcoord_delta_derived(idx)
@@ -832,7 +817,7 @@ class AuxiliaryType(cc.TelescopeMapping):
                         self.chunk = chunk
                         self.update_chunk()
 
-            if isinstance(observation, DerivedObservation):
+            if isinstance(observation, DerivedObservation) and plane.provenance is not None:
                 if derived_type is ProvenanceType.IMCMB:
                     cc.update_plane_provenance(
                         plane,
@@ -1049,13 +1034,7 @@ class InstrumentType(AuxiliaryType):
             bp.set('Chunk.time.axis.error.syser', 0.0000001)
             bp.set('Chunk.time.axis.function.naxis', 1)
 
-        # TODO - this is really really wrong that is_simple is not sufficient
-        # to make the distinction between the appropriate implementations.
-        # if (
-        #     self._storage_name.is_simple
-        #     and not self._storage_name.is_master_cal
-        # ):
-        if self._storage_name.is_simple and not self._storage_name.is_master_cal:
+        if self._storage_name.raw_time:
             bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta_simple()')
             bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val_simple()')
         else:
@@ -1120,7 +1099,7 @@ class InstrumentType(AuxiliaryType):
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
         # units are seconds
         if exptime is None:
-            if self._storage_name.is_simple:
+            if self._storage_name.raw_time:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
         return exptime
@@ -1509,6 +1488,7 @@ class Espadons(InstrumentType):
         super().accumulate_blueprint(bp)
 
         # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
+        bp.set('Observation.algorithm.name', 'get_algorithm_name()')
         bp.add_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
         bp.set('Plane.dataProductType', DataProductType.SPECTRUM)
@@ -1585,6 +1565,15 @@ class Espadons(InstrumentType):
 
         self._logger.debug('Done accumulate_blueprint.')
 
+    def get_algorithm_name(self, ext):
+        """
+        Can't do the repair of the value with CFHTValueRepair, because algorithm.name is immutable.
+        """
+        result = self._headers[ext].get('REDUCTIO', 'exposure')
+        if result == 'Polar':
+            result = 'polarization'
+        return result.lower()
+
     def get_energy_resolving_power(self, ext):
         result = None
         if self._has_energy(ext):
@@ -1616,7 +1605,7 @@ class Espadons(InstrumentType):
                 exptime += mc.to_float(self._headers[ext].get(f'EXPTIME{ii}'))
         # units are seconds
         if exptime is None:
-            if self._storage_name.is_simple:
+            if self._storage_name.raw_time:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
         return exptime
@@ -1891,16 +1880,13 @@ class Mega(InstrumentType):
         bp.set('Chunk.energy.axis.function.naxis', 1)
         self._logger.debug('Done accumulate_blueprint.')
 
-    def _is_derived(self, obs_id):
-        if self._storage_name.suffix == 'p':
-            # 'p' files are processed and do have IMCMB inputs, but they are
-            # additional planes on SimpleObservations, not Derived. See header
-            # discussion.
-            result = False
-            derived_type = ''
+    def _find_derived_type(self, obs_id):
+        if self._storage_name.suffix == 'p' and '_flag' not in self._storage_name.file_name:
+            # 'p' files are processed and do have IMCMB inputs, but they are additional planes on Observations
+            derived_type = ProvenanceType.FILENAME
         else:
-            result, derived_type = super()._is_derived(obs_id)
-        return result, derived_type
+            derived_type = super()._find_derived_type(obs_id)
+        return derived_type
 
     def get_obs_type(self, ext):
         result = self._headers[ext].get('OBSTYPE')
@@ -1994,19 +1980,23 @@ class Sitelle(InstrumentType):
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
         self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
 
-    def _is_derived(self, obs_id):
+    def _find_derived_type(self, obs_id):
         if self._storage_name.suffix == 'z':
-            result = True
             derived_type = ProvenanceType.UNDEFINED
         else:
-            result, derived_type = super()._is_derived(obs_id)
-        return result, derived_type
+            derived_type = super()._find_derived_type(obs_id)
+        return derived_type
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
         Observation level.
         """
         super().accumulate_blueprint(bp)
+        data_product_type = DataProductType.IMAGE
+        if self._storage_name.derived:
+            data_product_type = DataProductType.CUBE
+        bp.set('Plane.dataProductType', data_product_type)
+
         if self._storage_name.suffix == 'v':
             bp.set('Observation.intent', ObservationIntentType.SCIENCE)
             bp.set(
@@ -2070,21 +2060,6 @@ class Sitelle(InstrumentType):
                     cdelt3 = mc.to_float(self._headers[ext].get('FILTERBW'))
                     if crval3 is not None and cdelt3 is not None:
                         result = crval3 / cdelt3
-        return result
-
-    def get_exptime(self, ext):
-        exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
-        # units are seconds
-        if exptime is None:
-            if self._storage_name.is_simple:
-                # caom2IngestMegacaomdetrend.py, l438
-                exptime = 0.0
-        return exptime
-
-    def get_plane_data_product_type(self, ext):
-        result = DataProductType.IMAGE
-        if self._storage_name.is_derived_sitelle:
-            result = DataProductType.CUBE
         return result
 
     def get_plane_data_release(self, ext):
@@ -2330,7 +2305,7 @@ class SitelleHdf5(InstrumentType):
         bp.set('Observation.target_position.point.cval1', (['target_x'], None))
         bp.set('Observation.target_position.point.cval2', (['target_y'], None))
 
-        bp.set('Plane.calibrationLevel', 'get_calibration_level()')
+        bp.set('Plane.calibrationLevel', CalibrationLevel.CALIBRATED)
         bp.set('Plane.dataProductType', DataProductType.CUBE)
         bp.set('Plane.dataRelease', '_get_plane_data_release()')
         bp.set('Plane.metaRelease', (['OBS_DATE'], None))
@@ -2699,9 +2674,16 @@ class Spirou(InstrumentType):
         Add in WCS for 's' files, and spatial WCS for 'g' files.
         """
         super().accumulate_blueprint(bp)
+        algorithm_name = 'exposure'
+        if self._storage_name.derived:
+            algorithm_name = 'drs'
+        bp.set('Observation.algorithm.name', algorithm_name)
+
         bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.add_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
+        # caom2spirou.default
+        bp.set('Plane.dataProductType', DataProductType.SPECTRUM)
         if self._storage_name.suffix == 'r':
             pass
         elif self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
@@ -2793,7 +2775,7 @@ class Spirou(InstrumentType):
 
     def get_exptime(self, ext):
         # caom2IngestSpirou.py, l530+
-        if self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'r', 'x']:
+        if self._storage_name.simple:
             result = self._headers[ext].get('EXPTIME')
         else:
             result = self._headers[ext].get('DARKTIME')
@@ -2803,10 +2785,6 @@ class Spirou(InstrumentType):
                 f'{self._storage_name.file_uri}.'
             )
         return result
-
-    def get_plane_data_product_type(self, ext):
-        # caom2spirou.default
-        return DataProductType.SPECTRUM
 
     def get_provenance_name(self, ext):
         result = None
@@ -2932,9 +2910,6 @@ class SpirouG(Spirou):
     def _get_dec(self, ext):
         ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
         return dec
-
-    def get_exptime(self, ext):
-        return super().get_exptime(ext)
 
     def reset_position(self):
         pass
@@ -3585,14 +3560,22 @@ def _repair_comment_provenance_value(value, obs_id):
 
 def _repair_filename_provenance_value(value, obs_id):
     logging.debug(f'Begin _repair_filename_provenance_value for {obs_id}')
-    # values require no repairing, because they look like:
+    prov_obs_id = None
+    prov_prod_id = None
+    # some values require no repairing, because they look like:
     # FILENAME= '2460503p'
     # FILENAM1= '2460503o'           / Base filename at acquisition
     # FILENAM2= '2460504o'           / Base filename at acquisition
-    # FILENAM3= '2460505o'           / Base filename at acquisition
-    # FILENAM4= '2460506o'           / Base filename at acquisition
-    prov_prod_id = value
-    prov_obs_id = value[:-1]
+    #
+    # skip values that look like this:
+    # FILENAME= '2452990p39'         / Current filename after processing
+    #
+    # repair values that look like this:
+    # FILENAME= '2401734o.fits'      / Base filename at acquisition
+    temp = value.replace('.fits', '')
+    if match('[0-9]{5,7}o', temp):
+        prov_prod_id = temp
+        prov_obs_id = temp[:-1]
     logging.debug(f'End _repair_filename_provenance_value')
     return prov_obs_id, prov_prod_id
 

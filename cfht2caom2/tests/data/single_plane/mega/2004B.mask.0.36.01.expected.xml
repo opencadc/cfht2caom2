@@ -37,44 +37,6 @@
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://www.cfht.hawaii.edu/Instruments/Elixir/</caom2:reference>
-        <caom2:inputs>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.33.0/2004B.mask.0.33.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.19.0/2004B.mask.0.19.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.18.0/2004B.mask.0.18.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.32.0/2004B.mask.0.32.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.06.0/2004B.mask.0.06.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.09.0/2004B.mask.0.09.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.23.0/2004B.mask.0.23.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.16.0/2004B.mask.0.16.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.02.0/2004B.mask.0.02.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.34.0/2004B.mask.0.34.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.04.0/2004B.mask.0.04.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.31.0/2004B.mask.0.31.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.20.0/2004B.mask.0.20.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.14.0/2004B.mask.0.14.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.00.0/2004B.mask.0.00.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.10.0/2004B.mask.0.10.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.08.0/2004B.mask.0.08.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.27.0/2004B.mask.0.27.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.01.0/2004B.mask.0.01.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.28.0/2004B.mask.0.28.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.26.0/2004B.mask.0.26.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.25.0/2004B.mask.0.25.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.13.0/2004B.mask.0.13.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.29.0/2004B.mask.0.29.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.07.0/2004B.mask.0.07.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.35.0/2004B.mask.0.35.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.17.0/2004B.mask.0.17.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.11.0/2004B.mask.0.11.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.21.0/2004B.mask.0.21.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.15.0/2004B.mask.0.15.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.24.0/2004B.mask.0.24.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.22.0/2004B.mask.0.22.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.30.0/2004B.mask.0.30.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.03.0/2004B.mask.0.03.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.12.0/2004B.mask.0.12.01</caom2:planeURI>
-          <caom2:planeURI>caom:CFHT/2004B.mask.0.05.0/2004B.mask.0.05.01</caom2:planeURI>
-        </caom2:inputs>
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="479d336f-e641-45e6-ae37-2f24e13e796e" caom2:metaProducer="cfht2caom2/0.3.2">
@@ -1100,42 +1062,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.16.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.02.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.30.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.03.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.10.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.08.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.31.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.29.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.06.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.05.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.28.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.24.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.22.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.25.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.11.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.14.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.01.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.07.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.20.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.04.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.18.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.15.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.00.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.13.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.27.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.09.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.21.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.33.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.32.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.17.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.26.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.35.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.23.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.12.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.34.0</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2004B.mask.0.19.0</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

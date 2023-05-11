@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="5baba519-f093-41a4-8c2a-03d7e8b07ebf" caom2:metaProducer="cfht2caom2/0.3.6">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="5baba519-f093-41a4-8c2a-03d7e8b07ebf" caom2:metaProducer="cfht2caom2/0.3.6">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2661571</caom2:observationID>
   <caom2:sequenceNumber>2661571</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>exposure</caom2:name>
+    <caom2:name>master_detrend</caom2:name>
   </caom2:algorithm>
   <caom2:intent>science</caom2:intent>
   <caom2:telescope>
@@ -20,7 +20,7 @@
     <caom2:plane caom2:id="e2a9f203-556e-45fc-a3a6-e0f05bfa1768" caom2:metaProducer="cfht2caom2/0.3.6">
       <caom2:productID>2661571y</caom2:productID>
       <caom2:dataProductType>image</caom2:dataProductType>
-      <caom2:calibrationLevel>1</caom2:calibrationLevel>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
       <caom2:provenance>
         <caom2:name>IIWI</caom2:name>
         <caom2:project>STANDARD PIPELINE</caom2:project>

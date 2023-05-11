@@ -703,7 +703,6 @@
   <caom2:members>
     <caom2:observationURI>caom:CFHT/2460504</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2460505</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2460503</caom2:observationURI>
     <caom2:observationURI>caom:CFHT/2460506</caom2:observationURI>
   </caom2:members>
 </caom2:Observation>
