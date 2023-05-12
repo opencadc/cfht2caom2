@@ -739,7 +739,10 @@ def test_run_by_builder_hdf5_added_to_existing(
                 os.mkdir(os.path.join(test_dir, 'logs'))
             shutil.copy(expected_hdf5_only_fqn, actual_fqn)
         if not os.path.exists(fits_fqn):
-            shutil.copy(f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/{test_obs_id}p.fits.header', fits_fqn)
+            shutil.copy(
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/sitelle/{test_obs_id}p.fits.header',
+                fits_fqn,
+            )
 
         # clean up unexpected files
         if os.path.exists(hdf5_fqn):

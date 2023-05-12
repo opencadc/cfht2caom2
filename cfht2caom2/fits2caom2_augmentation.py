@@ -67,7 +67,6 @@
 # ***********************************************************************
 #
 
-import h5py
 from caom2utils import caom2blueprint
 from caom2pipe import caom_composable as cc
 from cfht2caom2.instruments import factory

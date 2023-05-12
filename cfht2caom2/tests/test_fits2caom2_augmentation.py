@@ -95,7 +95,7 @@ SINGLE_PLANE_DIR = join(TEST_DATA_DIR, 'single_plane')
 
 
 def pytest_generate_tests(metafunc):
-    obs_id_list = glob.glob(f'{SINGLE_PLANE_DIR}/*.fits.header')
+    obs_id_list = glob.glob(f'{SINGLE_PLANE_DIR}/**/*.fits.header')
     metafunc.parametrize('test_name', obs_id_list)
 
 
@@ -110,11 +110,18 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     # but during testing want to use headers and built-in Python file
     # operations
     local_headers_mock.side_effect = _local_headers
-    # cache_mock there so there are no update cache calls - so the tests
-    # work without a network connection
+    # cache_mock there so there are no update cache calls - so the tests work without a network connection
+    instr = dirname(basename(test_name))
+    instrument = {
+        'espadons': md.Inst.ESPADONS,
+        'mega': md.Inst.MEGAPRIME,
+        'sitelle': md.Inst.SITELLE,
+        'spirou': md.Inst.SPIROU,
+        'wircam': md.Inst.WIRCAM,
+    }.get(instr)
     storage_name = CFHTName(
         file_name=basename(test_name).replace('.header', ''),
-        instrument=_identify_inst_mock(None, test_name),
+        instrument=instrument,
         source_names=[test_name],
     )
     file_info = FileInfo(
@@ -136,12 +143,12 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     observation = None
     observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    _compare(observation, storage_name.obs_id, 'single_plane')
+    _compare(test_name, observation, storage_name.obs_id)
     # assert False
 
 
-def _compare(observation, obs_id, dir_name):
-    expected_fqn = f'{TEST_DATA_DIR}/{dir_name}/{obs_id}.expected.xml'
+def _compare(test_name, observation, obs_id):
+    expected_fqn = f'{dirname(test_name)}/{obs_id}.expected.xml'
     actual_fqn = expected_fqn.replace('expected', 'actual')
     expected = read_obs_from_file(expected_fqn)
     compare_result = get_differences(expected, observation)
@@ -161,113 +168,7 @@ def _compare(observation, obs_id, dir_name):
         raise AssertionError(msg)
 
 
-def _identify_inst_mock(ignore_headers, uri):
-    lookup = {
-        md.Inst.MEGAPRIME: [
-            '2452990p',
-            '979412',
-            '1927963f',
-            '1927963o',
-            '1927963p',
-            '675258o',
-            '2003A.frpts.z.36.00',
-            '02Bm05.scatter.g.36.00',
-            '1257365',
-            '02AE10.bias.0.36.00',
-            '11Bm04.flat.z.36.02',
-            '2463796o',
-            '676000',
-            '1013337',
-            '2463857',
-            '2004B.mask',
-            '19Bm03.bias',
-            '718955',
-            '07Bm06.flat',
-            '2463854',
-            '03Am02.dark',
-            '1000003',
-            '03Am05.fringe',
-            '1265044',
-            '688231',
-            '19BMfr.fringe.gri.40.00',
-            '695816p_diag',
-            '1013552p_flag',
-        ],
-        md.Inst.ESPADONS: [
-            '2460606',
-            '769448b',
-            '1605366x',
-            '881395a',
-            '2238502i',
-            '2554967',
-            '781920',
-            '945987',
-            '1001063b',
-            '1001836x',
-            '1003681',
-            '1219059',
-            '1883829c',
-            '2460602a',
-            '760296f',
-            '881162d',
-            '979339',
-            '2460503p',
-            '963946',
-            '770380',
-            '881397',
-        ],
-        md.Inst.SPIROU: [
-            '2401727a',
-            '2401712f',
-            '2401728c',
-            '2401734',
-            '2401710d',
-            '2513728g',
-            '2515996g',
-            '2455409p',
-            '2602045r',
-            '2515413',
-            '2466133',
-            '2584185',
-        ],
-        md.Inst.WIRCAM: [
-            '840066',
-            '1019191',
-            '786586',
-            '1694261',
-            '787191',
-            '982871',
-            '1979958',
-            '2281792p',
-            '2157095o',
-            'weight',
-            '2281792',
-            '1681594',
-            '981337',
-            'master',
-            '1706150',
-            '1758254',
-            '2462928',
-            '1151210',
-            'hotpix',
-            '1007126',
-            'dark_003s_',
-            '2661571',
-        ],
-    }
-    result = md.Inst.SITELLE
-    for key, value in lookup.items():
-        for entry in value:
-            if entry in uri:
-                result = key
-                break
-        if result is not md.Inst.SITELLE:
-            break
-    return result
-
-
 def _local_headers(fqn):
-    logging.error(fqn)
     from urllib.parse import urlparse
     from astropy.io import fits
 

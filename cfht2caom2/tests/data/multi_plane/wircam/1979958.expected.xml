@@ -1,10 +1,10 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-b460-0156afa962e4" caom2:lastModified="2021-03-30T00:56:17.874" caom2:maxLastModified="2021-03-30T00:56:17.874" caom2:metaChecksum="md5:32d674529bad7056f67ef7513c3073b6" caom2:accMetaChecksum="md5:baae5acd3b45481507b2da36685d22a2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-b460-0156afa962e4" caom2:lastModified="2021-03-30T00:56:17.874" caom2:maxLastModified="2021-03-30T00:56:17.874" caom2:metaChecksum="md5:32d674529bad7056f67ef7513c3073b6" caom2:accMetaChecksum="md5:baae5acd3b45481507b2da36685d22a2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1979958</caom2:observationID>
   <caom2:metaRelease>2016-08-20T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>1979958</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>exposure</caom2:name>
+    <caom2:name>master_detrend</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>

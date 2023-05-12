@@ -1,0 +1,1594 @@
+SIMPLE  =                    T / conforms to FITS standard                      
+BITPIX  =                    8 / array data type                                
+NAXIS   =                    0 / number of array dimensions                     
+EXTEND  =                    T                                                  
+NEXTEND =                    4 / Number of extensions                           
+COMMENT This file contains the following extensions: FluxAB, WaveAB, BlazeAB,   
+COMMENT Recon                                                                   
+FILENAME= '2446124o'           / filename anticipated by fitspipe server        
+PATHNAME= '/data/sessions/spirou/19BQ07-Oct02' / Original directory name at acqu
+DATE    = '2019-10-03T07:46:58' / UTC Date of file creation                     
+HSTTIME = 'Wed Oct 02 21:46:58 HST 2019' / Local time in Hawaii                 
+IMAGESWV= 'DetCom-SPIRou v1.15 svn 13004 (compiled Jun 26 2019)' / Image creatio
+IMAGELBV= 'CFHT libdetcom v1.06 svn 13005 (compiled Jun 26 2019)' / Image creati
+RAMPSWV = 'fitspipe v2.12 (Jul 26 2018)' / RAMP fitting software version        
+OBSTYPE = 'OBJECT  '           / Observation / Exposure type                    
+EXPTYPE = 'OBJECT  '           / See OBSTYPE                                    
+EXPREQ  =              150.442 / [sec] Requested integration time               
+EXPTIME =              150.442 / [sec] Integration time                         
+INTTIME =              150.442 / See EXPTIME                                    
+DARKTIME=              156.014 / [sec] Dark current time                        
+FRMTIME =              5.57192 / [sec] Frame time, cadence of IR reads          
+NRESETS =                    1 / Number of resets before integration            
+NREADS  =                   28 / Number of reads in ramp sequence               
+HXRGVER = 'Not IDL '           / HXRG IDL software version number               
+FASTMODE=                    0 / SlowMode=0,FasMode=1                           
+NEXTRAP =                    0 / Number of extral pixels per row                
+NEXTRAL =                    0 / Number of extral line per frame                
+REFOUT  =                    0 / Reference output.0 disabled; 1 enabled with ref
+REFPIXEL=                    0 / Interleave reference pixel mode. 0 disabled    
+ASIC_NUM= '156     '           / ASIC serial number                             
+SCA_ID  = 'C001    '           / SCA number                                     
+MUXTYPE =                    4 / 1- H1RG; 2- H2RG; 4- H4RG                      
+NOUTPUTS=                   32 / Number of detector outputs                     
+NADCS   =                    1 / Number of averaged ADCs used per output        
+PDDECTOR=                    0 / Power down detector                            
+CLKOFF  =                    0 / Turn off clocks                                
+WARMTST =                    0 / 0- cold test; 1- warm test                     
+CLOCKING=                    1 / 0- normal clocking; 1- enhanced horizonal clock
+GLBRESET=                    0 / 0- pixel-by-pixel or line-by-line rest; 1- glob
+FRMODE  =                    0 / 0- full frame mode; 1- window mode             
+CAMLINK =                    0 / If Camlink readout enabled (1 enabled)         
+EXPMODE =                    0 / 0- Ramp mode; 1- Fowler sampling mode          
+MCLK    =              10.0000 / MHz. Master Clock                              
+ACQTYPE =                    2 / Dark Current Ramp Sequence(2)                  
+DATAMODE=                    5 / Parallel read, 8 bit bus, 16 bit data          
+DATLEVEL=                    1 / 0- CMO; 1- LVDS                                
+ASICGAIN=                   12 / 12 (18dB large Cin)                            
+NOMGAIN =                   12 / 12 (18dB large Cin)                            
+AMPRESET=                    0 / 0- Reset once per frame; 1- Reset once per row 
+KTCREMOV=                    0 / 0- No kTC Removal; 1- kTC Removal              
+SRCCUR  =                    0 / 0-No source current to inp ; 1 - Source current
+AMPINPUT=                    1 / 0- VREFMAIN as ref; 1- InPCommon as ref; 2- use
+SATURATE=                60000 / Saturation value (ADU)                         
+GAIN    =                0.999 / Amplifier gain (electrons/ADU)                 
+RDNOISE =                 10.9 / Read noise (electrons)                         
+INSTRUME= 'SPIRou  '           / Instrument Name                                
+CMMTOBS = 'N/A     '                                                            
+CMMTSEQ = 'V exposure 1, sequence 1 of 1'                                       
+OBJECT  = 'J20412815+5725473'                                                   
+OBSERVER= 'QSO Team'                                                            
+PI_NAME = 'Ryan Cloutier'                                                       
+RUNID   = '19BC25  '                                                            
+EXPNUM  =              2446124 / CFHT odometer number                           
+OBSID   =              2446124 / See EXPNUM                                     
+MDCOORDS=                    1 / Sequence number within the exposure sequence   
+MDREPEAT=                    1 / Total number of sequences                      
+CMPLTEXP=                    1 / Exposure number within the exposure sequence   
+NEXP    =                    4 / Total number of exposures within the sequence  
+TELESCOP= 'CFHT 3.6m'          / Hawaii Big Island, Mauna Kea                   
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+LATITUDE=            19.825252 / Latitude (degrees N)                           
+LONGITUD=          -155.468876 / Longitude (degrees E)                          
+TELSTAT = 'track   '           / Telescope Control System status                
+TIMESYS = 'UTC     '           / Time System for DATExxxx and TIMExxxx          
+DATE-OBS= '2019-10-03'         / Date at start of observation (UTC)             
+UTIME   = '7:44:09.43'         / Time at start of observation (UTC)             
+UTC-OBS = '7:44:09.43'         / Time at start of observation (UTC)             
+MJDATE  =        58759.3223313 / Modified Julian Date at start of observation   
+MJD-OBS =        58759.3223313 / Modified Julian Date at start of observation   
+SIDTIME = '22:09:12.40'        / Sidereal time at start of observation          
+LST-OBS = '22:09:12.40'        / Sidereal time at start of exposure             
+DATEEND = '2019-10-03'         / Date at end of observation (UTC)               
+UTCEND  = '7:47:02.62'         / Time at end of observation (UTC)               
+MJDEND  =        58759.3243359 / Modified Julian Date at end of observation     
+LSTEND  = '22:12:06.07'        / Sidereal time at end of exposure               
+EQUINOX =               2000.0 / Equinox of coordinates                         
+RADECSYS= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+RA      = '20:41:28.33'        / Telescope right ascension                      
+DEC     = '57:25:51.4'         / Telescope declination                          
+HA      = '1:27:44.07'         / Telescope hour angle at start of exposure      
+HAEND   = '1:30:37.74'         / Telescope hour angle at end of exposure        
+INSTZRA =                 0.00 / Instrument zero for RA in arc seconds          
+INSTZDEC=                 0.00 / Instrument zero for Dec in arc seconds         
+RA_DEG  =           310.368042 / Telescope right ascension in degrees           
+DEC_DEG =            57.430944 / Telescope declination in degrees               
+OBJNAME = 'J20412815+5725473'  / Target name                                    
+OBJMAG  =                 7.01 / Target magnitude                               
+OBJEQUIN=               2000.0 / Target equinox                                 
+OBJRADEC= 'FK5     '           / Coordinate system for equinox (FK4/FK5/GAPPT)  
+OBJRA   = '20:41:28.33'        / Target right ascension                         
+OBJDEC  = '57:25:51.4'         / Target declination                             
+OBJRAPM =                 0.10 / Target right ascension proper motion in as/yr  
+OBJDECPM=                 0.21 / Target declination proper motion in as/yr      
+NGUIDER =                    1 / TCS Number of guiders                          
+NGUISTAR=                    1 / TCS number of guide stars/probes in use        
+GUINAME = 'Cass    '           / TCS guider name                                
+GUIEQUIN=              2019.75 / TCS guider equinox                             
+GUIRADEC= 'GAPPT   '           / TCS guider system for equinox                  
+GUIRA   = '0:00:00.00'         / TCS guider right ascension                     
+GUIDEC  = '0:00:00.0'          / TCS guider declination                         
+GUIRAPM =                 0.00 / TCS guider right ascension proper motion arcsec
+GUIDECPM=                 0.00 / TCS guider declination proper motion arcsec    
+GUIOBJN = 'Null    '           / TCS guider object name                         
+GUIMAGN =              -9999.9 / TCS guider object magnitude                    
+XPROBE  =             -168.000 / Telescope bonnette guide probe X position      
+YPROBE  =              -26.000 / Telescope bonnette guide probe Y position      
+ZPROBE  =              372.000 / Telescope bonnette guide probe Z position      
+GUIFLUX =                -9999 / TCS guider flux                                
+GUIFWHX =             -9999.90 / TCS guider average x FWHM in pixels            
+GUIFWHY =             -9999.90 / TCS guider average y FWHM in pixels            
+SKYFLUX =                -9999 / TCS total sky flux                             
+AIRMASS =                1.324 / Airmass at start of observation                
+TELALT  =              49.0609 / Telescope altitude at start of observation, deg
+TELAZ   =             342.2361 / Telescope azimuth at start, deg, 0=N 90=E 270=W
+DOMEAZ  =                342.3 / Dome azimuth at start, deg, 0=N 90=E 270=W     
+MOONANGL=                91.00 / Angle from object to moon at start in degrees  
+MOONPHAS=                 0.27 / Moon phase @ 0 HST, 0..1 new>full, -1..0 >new  
+MOONUP  = 'False   '           / Moon up? True or False                         
+MOONALT =                -0.30 / Moon altitude at start in degrees              
+MOONAZ  =               248.90 / Moon azimuth at start in deg, 0=N 90=E 270=W   
+FOCUSID = 'Cass    '           / Telescope focus in use                         
+TELCONF = 'Cass    '           / Telescope focus in use                         
+CALFOCUS=               14.849 / Telescope focus calculated from model in mm    
+DEFOCUS =                0.000 / Telescope defocus from calculated in mm        
+FOCUSPOS=                14846 / Telescope focus encoder readout in microns     
+TELFOCUS=                14846 / Telescope focus encoder readout in microns     
+BONANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+ROTANGLE=                 0.00 / Telescope bonnette rotation angle in degrees   
+TCSGPSBC= '0048 07:44:04.110461' / TCS GPS read out in BCD                      
+TCSGPSTM=              7.73448 / TCS GPS clock time in decimal hours            
+TCSRBUSS= '18:05:00.000'       / TCS RBUSS clock time                           
+TCSEPICS= '20191003 07:43:58.106' / TCS EPICS clock time                        
+TCSAMODE= 'O       '           / TCS acquire mode - T/O/G/g/P for t/o/g coords  
+TCSMJD  =        58759.3222694 / TCS MJD                                        
+TCSLST  =             22.15195 / TCS LST in decimal hours                       
+TCSAPHA =             21.78639 / TCS apparent hour angle in degrees             
+TCSAPDEC=             57.50638 / TCS apparent declination in degrees            
+TCSOBHA =             21.77757 / TCS observed hour angle in degrees             
+TCSOBDEC=             57.49894 / TCS observed declination in degrees            
+TCSENHA =                    0 / TCS hour angle absolute encoder in bits        
+TCSENDEC=                    0 / TCS declination absolute encoder in bits       
+TCSEDHA =             21.81015 / TCS hour angle absolute encoder in degrees     
+TCSEDDEC=             57.50217 / TCS declination absolute encoder in degrees    
+TCSINHA =                   21 / TCS hour angle incremental encoder in bits     
+TCSINDEC=                   57 / TCS declination incremental encoder in bits    
+TCSSEHA =                -0.03 / TCS hour angle servo error in arcsec           
+TCSSEDEC=                 0.06 / TCS declination servo error in arcsec          
+TCSGEHA =                 0.00 / TCS hour angle guider error in arcsec          
+TCSGEDEC=                 0.00 / TCS declination guider error in arcsec         
+TCSPMHA =              346.809 / TCS hour angle pointing model output in arcsec 
+TCSPMDEC=              126.143 / TCS declination pointing model output in arcsec
+TCSAMHA =                0.000 / TCS hour angle encoder model in arcsec         
+TCSAMDEC=               70.309 / TCS declination encoder model in arcsec        
+TCSVMHA =                0.000 / TCS hour angle virtual encoder model in arcsec 
+TCSVMDEC=                0.000 / TCS declination virtual encoder model in arcsec
+TCSCREEP=                0.000 / TCS declination creep model in arcsec          
+TCSMVRA =              18.1300 / TCS right ascension acquisition move in arcsec 
+TCSMVDEC=               4.0100 / TCS declination acquisition move in arcsec     
+TCSMVX  =            -9999.900 / TCS secondary guider acquisition x move in mm  
+TCSMVY  =            -9999.900 / TCS secondary guider acquisition y move in mm  
+SB_ADC_S= 'ON      '           / SPIRou ADC tracking state (on/off)             
+SBADC1_P=                172.1 / SPIRou ADC 1 angle at start of exp (degrees)   
+SBADC2_P=                236.9 / SPIRou ADC 2 angle at start of exp (degrees)   
+SBCALI_P= 'P5      '           / SPIRou calibwh predefined position or angle    
+SBDENS_P=                  0.0 / SPIRou guiding density at start of exp         
+SBRHB1_P= 'P14     '           / SPIRou rhomb 1 predefined position or angle    
+SBRHB2_P= 'P16     '           / SPIRou rhomb 2 predefined position or angle    
+SBETEM_P= 'P2      '           / SPIRou eecalibpk predefined position or angle  
+SB_INJ_T=                 4.26 / SPIRou tinject temp at start of exp (deg C)    
+SB_POL_T=                 4.27 / SPIRou tpolar temp at start of exp (deg C)     
+SB_CS1_T=             -9999.00 / SPIRou tcoldstop 1 temp at start of exp (deg C)
+SB_CS2_T=             -9999.00 / SPIRou tcoldstop 2 temp at start of exp (deg C)
+SB_CB1_T=                 3.38 / SPIRou tcabinet 1 temp at start of exp (deg C) 
+SB_CB2_T=                 8.97 / SPIRou tcabinet 2 temp at start of exp (deg C) 
+SBIAVL1S= 'OFF     '           / SPIRou injection LED status (on/off)           
+SBIAVL2S= 'OFF     '           / SPIRou fiber LED status (on/off)               
+SBETEL_S= 'OFF     '           / SPIRou end to end halogen light status (on/off)
+SB_CSC_S= 'OFF     '           / SPIRou coldstop cell status (On / Off)         
+SEADC1_P=                170.9 / SPIRou ADC 1 angle at end of exp (degrees)     
+SEADC2_P=                237.8 / SPIRou ADC 2 angle at end of exp (degrees)     
+SEDENS_P=                  0.0 / SPIRou guiding density at end of exp           
+SE_INJ_T=                 4.23 / SPIRou tinject temp at end of exp (deg C)      
+SE_POL_T=                 4.31 / SPIRou tpolar temp at end of exp (deg C)       
+SE_CS1_T=             -9999.00 / SPIRou tcoldstop 1 temp at end of exp (deg C)  
+SE_CS2_T=             -9999.00 / SPIRou tcoldstop 2 temp at end of exp (deg C)  
+SE_CB1_T=                 3.28 / SPIRou tcabinet 1 temp at end of exp (deg C)   
+SE_CB2_T=                 8.87 / SPIRou tcabinet 2 temp at end of exp (deg C)   
+SBCREF_P= 'pos_fp  '           / SPIRou Reference Fiber Position (predefined)   
+SBCCAS_P= 'pos_pk  '           / SPIRou Cassegrain Fiber Position (predefined)  
+SBCDEN_P=                 2.83 / SPIRou Calib-Reference density (0 to 3.3)      
+SBAGIT_S= 'ON      '           / SPIRou fiber agitator state (On, Off)          
+SBCMIR_P= 'light   '           / SPIRou Mirror Position (predefined)            
+SBCLHC1S= 'OFF     '           / SPIRou Hollow Cathod Lamp#1 Status             
+SBCLHC1W= 'OFF     '           / SPIRou Hollow Cathod Lamp#1 Warming State      
+SBCLHC1C=                  0.0 / SPIRou Hollow Cathod Lamp#1 Current (mA)       
+SBCLHC2S= 'OFF     '           / SPIRou Hollow Cathod Lamp#2 Status             
+SBCLHC2W= 'OFF     '           / SPIRou Hollow Cathod Lamp#2 Warming State      
+SBCLHC2C=                  0.0 / SPIRou Hollow Cathod Lamp#2 Current (mA)       
+SBCLWL_S= 'OFF     '           / SPIRou White Lamp Status (On, Off, Err)        
+SBCLWL_C=                  0.0 / SPIRou White Lamp Current (mA)                 
+SBWLSH_S= 'CLOSED  '           / SPIRou White Lamp Shutter State (open, closed) 
+SBCTEC_S= 'ON      '           / SPIRou ColdSource Status (On, Off, Err)        
+SBCTECCT=               -25.05 / SPIRou ColdSource Cold Face Temp (deg C)       
+SBCTECHT=                12.48 / SPIRou ColdSource Hot Face Temp (deg C)        
+SBCCPRIT=                11.16 / SPIRou Cold plate Reg Input Temp (deg C)       
+SBCCCU_T=                19.82 / SPIRou Control Unit Temperature (deg C)        
+SBCCPROT=                11.43 / SPIRou Cold plate Reg Output Temp (deg C)      
+SBCFBI_T=                11.35 / SPIRou Flux Balance Input Temp (deg C)         
+SBCWLS_T=                12.82 / SPIRou White Lamp slot Temp (deg C)            
+SBCLSUAT=                13.57 / SPIRou Lamps Selection Unit Ambient Temp (deg C
+SBCFPI_T=               25.489 / SPIRou Fabry Perot Internal Temp: FPBody(deg C)
+SBCFPE_T=               25.498 / SPIRou Fabry Perot External Temp: FPCase(deg C)
+SBCFPB_P=                0.258 / SPIRou Fabry Perot Internal Pressure (mbar)    
+SBCFPP_V=               64.000 / SPIRou Fabry Perot Heater Power (%)            
+SBCFPR_S= 'LOW     '           / SPIRou Fabry Perot Heater Range                
+SECTECCT=               -25.00 / SPIRou ColdSource Cold Face Temp (deg C)       
+SECTECHT=                12.48 / SPIRou ColdSource Hot Face Temp (deg C)        
+SECCPRIT=                11.01 / SPIRou Cold plate Regulation Input Temp (deg C)
+SECCCU_T=                19.70 / SPIRou Control Unit Temp (degree C)            
+SECCPROT=                11.33 / SPIRou Cold plate regulation output Temp (deg C
+SECFBI_T=                11.30 / SPIRou Flux Balance Input Temp (deg C)         
+SECWLS_T=                12.84 / SPIRou White Lamp slot Temp (deg C)            
+SECLHC1C=                  0.0 / SPIRou Hollow Cathod Lamp#1 Current (mA)       
+SECLHC2C=                  0.0 / SPIRou Hollow Cathod Lamp#2 Current (mA)       
+SECLWL_C=                  0.0 / SPIRou White Lamp Current (A)                  
+SECLSUAT=                12.84 / SPIRou Lamps Selection Unit Ambient Temp (deg C
+SECFPI_T=               25.489 / SPIRou Fabry Perot Internal Temp: FPBody (deg C
+SECFPE_T=               25.499 / SPIRou Fabry Perot External Temp: FPCase (deg C
+SECFPB_P=                0.258 / SPIRou Fabry Perot Internal Pressure (mbar)    
+SECFPP_V=               64.100 / SPIRou Fabry Perot Heater Power (%)            
+SECFPR_S= 'LOW     '           / SPIRou Fabry Perot Heater Range                
+SBVGA_CP=             0.000500 / SPIRou Vacuum A CG Pressure at start (Torr)    
+SBVGA_IP=             4.50E-07 / SPIRou Vacuum A IG Pressure at start (Torr)    
+SBVGB_CP=             0.000500 / SPIRou Vacuum B CG Pressure at start (Torr)    
+SBVGB_IP=             4.47E-07 / SPIRou Vacuum B IG Pressure at start (Torr)    
+SBMK00_T=             73.50020 / SPIRou MicroK Temp #00 at start (deg K)        
+SBMK01_T=             73.50009 / SPIRou MicroK Temp #01 at start (deg K)        
+SBMK02_T=             73.50006 / SPIRou MicroK Temp #02 at start (deg K)        
+SBMK03_T=             73.92226 / SPIRou MicroK Temp #03 at start (deg K)        
+SBMK04_T=             73.62595 / SPIRou MicroK Temp #04 at start (deg K)        
+SBMK05_T=             73.37483 / SPIRou MicroK Temp #05 at start (deg K)        
+SBMK06_T=             73.51894 / SPIRou MicroK Temp #06 at start (deg K)        
+SBMK07_T=             73.72836 / SPIRou MicroK Temp #07 at start (deg K)        
+SBLS000T=              87.2753 / SPIRou Lakeshore 0 Temp #00 at start (deg K)   
+SBLS001T=              79.7296 / SPIRou Lakeshore 0 Temp #01 at start (deg K)   
+SBLS002T=              81.2909 / SPIRou Lakeshore 0 Temp #02 at start (deg K)   
+SBLS003T=              80.1620 / SPIRou Lakeshore 0 Temp #03 at start (deg K)   
+SBLS004T=              68.0265 / SPIRou Lakeshore 0 Temp #04 at start (deg K)   
+SBLS005T=              43.9998 / SPIRou Lakeshore 0 Temp #05 at start (deg K)   
+SBLS006T=              44.4980 / SPIRou Lakeshore 0 Temp #06 at start (deg K)   
+SBLS007T=              56.4047 / SPIRou Lakeshore 0 Temp #07 at start (deg K)   
+SBLS008T=             126.0610 / SPIRou Lakeshore 0 Temp #08 at start (deg K)   
+SBLS009T=              76.9997 / SPIRou Lakeshore 0 Temp #09 at start (deg K)   
+SBLS010T=              87.8708 / SPIRou Lakeshore 0 Temp #10 at start (deg K)   
+SBLS011T=              89.0894 / SPIRou Lakeshore 0 Temp #11 at start (deg K)   
+SBLS100T=              74.4144 / SPIRou Lakeshore 1 Temp #00 at start (deg K)   
+SBLS101T=              74.4564 / SPIRou Lakeshore 1 Temp #01 at start (deg K)   
+SBLS102T=              74.5428 / SPIRou Lakeshore 1 Temp #02 at start (deg K)   
+SBLS103T=              74.8071 / SPIRou Lakeshore 1 Temp #03 at start (deg K)   
+SBLS104T=              74.5080 / SPIRou Lakeshore 1 Temp #04 at start (deg K)   
+SBLS105T=              83.5224 / SPIRou Lakeshore 1 Temp #05 at start (deg K)   
+SBLS106T=              74.4050 / SPIRou Lakeshore 1 Temp #06 at start (deg K)   
+SBLS107T=              74.4921 / SPIRou Lakeshore 1 Temp #07 at start (deg K)   
+SBLS108T=             276.8250 / SPIRou Lakeshore 1 Temp #08 at start (deg K)   
+SBLS109T=              90.0000 / SPIRou Lakeshore 1 Temp #09 at start (deg K)   
+SBLS110T=              79.9969 / SPIRou Lakeshore 1 Temp #10 at start (deg K)   
+SBLS111T=              85.6562 / SPIRou Lakeshore 1 Temp #11 at start (deg K)   
+SBL00I_T=              73.5002 / SPIRou Loop #0 Temp at start (deg K)           
+SBL00H_V=               24.573 / SPIRou Loop #0 Heater Output at start (%)      
+SBL01I_T=              73.4998 / SPIRou Loop #1 Temp at start (deg K)           
+SBL01H_V=               25.026 / SPIRou Loop #1 Heater Output at start (%)      
+SBL02I_T=              73.5001 / SPIRou Loop #2 Temp at start (deg K)           
+SBL02H_V=               22.117 / SPIRou Loop #2 Heater Output at start (%)      
+SBL03I_T=              76.9997 / SPIRou Loop #3 Temp at start (deg K)           
+SBL03H_V=                7.950 / SPIRou Loop #3 Heater Output at start (%)      
+SBL04I_T=              87.2753 / SPIRou Loop #4 Temp at start (deg K)           
+SBL04H_V=               16.441 / SPIRou Loop #4 Heater Output at start (%)      
+SBL05I_T=              79.7301 / SPIRou Loop #5 Temp at start (deg K)           
+SBL05H_V=               16.015 / SPIRou Loop #5 Heater Output at start (%)      
+SBL06I_T=              81.2914 / SPIRou Loop #6 Temp at start (deg K)           
+SBL06H_V=               16.136 / SPIRou Loop #6 Heater Output at start (%)      
+SBL07I_T=              80.1617 / SPIRou Loop #7 Temp at start (deg K)           
+SBL07H_V=               15.572 / SPIRou Loop #7 Heater Output at start (%)      
+SBL08I_T=              79.9969 / SPIRou Loop #8 Temp at start (deg K)           
+SBL08H_V=                1.100 / SPIRou Loop #8 Heater Output at start (%)      
+SBL09I_T=              89.9977 / SPIRou Loop #9 Temp at start (deg K)           
+SBL09H_V=                5.639 / SPIRou Loop #9 Heater Output at start (%)      
+SBL10I_T=              44.0006 / SPIRou Loop #10 Temp at start (deg K)          
+SBL10H_V=               29.608 / SPIRou Loop #10 Heater Output at start (%)     
+SBL11I_T=              44.4980 / SPIRou Loop #11 Temp at start (deg K)          
+SBL11H_V=               21.058 / SPIRou Loop #11 Heater Output at start (%)     
+SBL12I_T=              89.0894 / SPIRou Loop #12 Temp at start (deg K)          
+SBL12H_V=                4.785 / SPIRou Loop #12 Heater Output at start (%)     
+SBL13I_T=              87.8708 / SPIRou Loop #13 Temp at start (deg K)          
+SBL13H_V=                4.774 / SPIRou Loop #13 Heater Output at start (%)     
+SBENVCRT=                16.81 / SPIRou Coude Room Temp at start (deg C)        
+SBENVSRT=                13.00 / SPIRou Slit Room Temp at start (deg C)         
+SBENVRUT=                17.62 / SPIRou WarmUp Rear Under Heater (deg C)        
+SBENVFUT=                17.25 / SPIRou WarmUp Front Under Heater (deg C)       
+SBENVROT=                17.06 / SPIRou WarmUp Rear Outside Heater (deg C)      
+SBENVFOT=                16.56 / SPIRou WarmUp Front Outside Heater (deg C)     
+SEVGA_CP=             0.000600 / SPIRou Vacuum A CG Pressure at end (Torr)      
+SEVGA_IP=             4.50E-07 / SPIRou Vacuum A IG Pressure at end (Torr)      
+SEVGB_CP=             0.000500 / SPIRou Vacuum B CG Pressure at end (Torr)      
+SEVGB_IP=             4.47E-07 / SPIRou Vacuum B IG Pressure at end (Torr)      
+SEMK00_T=             73.49982 / SPIRou MicroK Temp #00 at end (deg K)          
+SEMK01_T=             73.49983 / SPIRou MicroK Temp #01 at end (deg K)          
+SEMK02_T=             73.49992 / SPIRou MicroK Temp #02 at end (deg K)          
+SEMK03_T=             73.92226 / SPIRou MicroK Temp #03 at end (deg K)          
+SEMK04_T=             73.62636 / SPIRou MicroK Temp #04 at end (deg K)          
+SEMK05_T=             73.37482 / SPIRou MicroK Temp #05 at end (deg K)          
+SEMK06_T=             73.51883 / SPIRou MicroK Temp #06 at end (deg K)          
+SEMK07_T=             73.72839 / SPIRou MicroK Temp #07 at end (deg K)          
+SELS000T=              87.2764 / SPIRou Lakeshore 0 Temp #00 at end (deg K)     
+SELS001T=              79.7300 / SPIRou Lakeshore 0 Temp #01 at end (deg K)     
+SELS002T=              81.2915 / SPIRou Lakeshore 0 Temp #02 at end (deg K)     
+SELS003T=              80.1618 / SPIRou Lakeshore 0 Temp #03 at end (deg K)     
+SELS004T=              68.0271 / SPIRou Lakeshore 0 Temp #04 at end (deg K)     
+SELS005T=              43.9994 / SPIRou Lakeshore 0 Temp #05 at end (deg K)     
+SELS006T=              44.4981 / SPIRou Lakeshore 0 Temp #06 at end (deg K)     
+SELS007T=              56.4041 / SPIRou Lakeshore 0 Temp #07 at end (deg K)     
+SELS008T=             126.0650 / SPIRou Lakeshore 0 Temp #08 at end (deg K)     
+SELS009T=              77.0059 / SPIRou Lakeshore 0 Temp #09 at end (deg K)     
+SELS010T=              87.8582 / SPIRou Lakeshore 0 Temp #10 at end (deg K)     
+SELS011T=              89.0868 / SPIRou Lakeshore 0 Temp #11 at end (deg K)     
+SELS100T=              74.4181 / SPIRou Lakeshore 1 Temp #00 at end (deg K)     
+SELS101T=              74.4552 / SPIRou Lakeshore 1 Temp #01 at end (deg K)     
+SELS102T=              74.5453 / SPIRou Lakeshore 1 Temp #02 at end (deg K)     
+SELS103T=              74.8089 / SPIRou Lakeshore 1 Temp #03 at end (deg K)     
+SELS104T=              74.5084 / SPIRou Lakeshore 1 Temp #04 at end (deg K)     
+SELS105T=              83.5242 / SPIRou Lakeshore 1 Temp #05 at end (deg K)     
+SELS106T=              74.4025 / SPIRou Lakeshore 1 Temp #06 at end (deg K)     
+SELS107T=              74.4920 / SPIRou Lakeshore 1 Temp #07 at end (deg K)     
+SELS108T=             276.8210 / SPIRou Lakeshore 1 Temp #08 at end (deg K)     
+SELS109T=              90.0022 / SPIRou Lakeshore 1 Temp #09 at end (deg K)     
+SELS110T=              80.0110 / SPIRou Lakeshore 1 Temp #10 at end (deg K)     
+SELS111T=              85.6709 / SPIRou Lakeshore 1 Temp #11 at end (deg K)     
+SEL00I_T=              73.4998 / SPIRou Loop #0 Temp at end (deg K)             
+SEL00H_V=               24.595 / SPIRou Loop #0 Heater Output at end (%)        
+SEL01I_T=              73.4998 / SPIRou Loop #1 Temp at end (deg K)             
+SEL01H_V=               25.086 / SPIRou Loop #1 Heater Output at end (%)        
+SEL02I_T=              73.4999 / SPIRou Loop #2 Temp at end (deg K)             
+SEL02H_V=               22.126 / SPIRou Loop #2 Heater Output at end (%)        
+SEL03I_T=              77.0059 / SPIRou Loop #3 Temp at end (deg K)             
+SEL03H_V=                7.880 / SPIRou Loop #3 Heater Output at end (%)        
+SEL04I_T=              87.2764 / SPIRou Loop #4 Temp at end (deg K)             
+SEL04H_V=               16.173 / SPIRou Loop #4 Heater Output at end (%)        
+SEL05I_T=              79.7300 / SPIRou Loop #5 Temp at end (deg K)             
+SEL05H_V=               15.940 / SPIRou Loop #5 Heater Output at end (%)        
+SEL06I_T=              81.2915 / SPIRou Loop #6 Temp at end (deg K)             
+SEL06H_V=               16.037 / SPIRou Loop #6 Heater Output at end (%)        
+SEL07I_T=              80.1618 / SPIRou Loop #7 Temp at end (deg K)             
+SEL07H_V=               15.611 / SPIRou Loop #7 Heater Output at end (%)        
+SEL08I_T=              80.0110 / SPIRou Loop #8 Temp at end (deg K)             
+SEL08H_V=                1.050 / SPIRou Loop #8 Heater Output at end (%)        
+SEL09I_T=              90.0022 / SPIRou Loop #9 Temp at end (deg K)             
+SEL09H_V=                5.629 / SPIRou Loop #9 Heater Output at end (%)        
+SEL10I_T=              43.9994 / SPIRou Loop #10 Temp at end (deg K)            
+SEL10H_V=               29.633 / SPIRou Loop #10 Heater Output at end (%)       
+SEL11I_T=              44.4981 / SPIRou Loop #11 Temp at end (deg K)            
+SEL11H_V=               21.022 / SPIRou Loop #11 Heater Output at end (%)       
+SEL12I_T=              89.0868 / SPIRou Loop #12 Temp at end (deg K)            
+SEL12H_V=                5.070 / SPIRou Loop #12 Heater Output at end (%)       
+SEL13I_T=              87.8582 / SPIRou Loop #13 Temp at end (deg K)            
+SEL13H_V=                6.130 / SPIRou Loop #13 Heater Output at end (%)       
+OBJRV   =               -24.00 / SPIRou object radial velocity km/s             
+REQRVP  =                 0.01 / SPIRou requested radial velocity precision m/s 
+SGISUST = 'ON      '           / SPIRou Guider ISU State                        
+SGGDST  = 'TCS     '           / SPIRou Guider Raster State (OFF, ON, TCS)      
+SGFRMRT =                49.48 / SPIRou Guider Frame Rate (Hz)                  
+SGETIME =              10.0000 / SPIRou Guider Exposure Time (ms)               
+SGNULLX =               348.89 / SPIRou Guider Null Position X location (pixel) 
+SGNULLY =               266.70 / SPIRou Guider Null Position Y location (pixel) 
+SGWINX0 =                  333 / SPIRou Guider X0 Hole Subraster coordinate     
+SGWINY0 =                  250 / SPIRou Guider Y0 Hole Subraster coordinate     
+SGWINX1 =                  364 / SPIRou Guider X1 Hole Subraster coordinate     
+SGWINY1 =                  281 / SPIRou Guider Y1 Hole Subraster coordinate     
+SGOFFX0 =                -9999 / SPIRou Guider X0 Offset Star Subraster coord   
+SGOFFY0 =                -9999 / SPIRou Guider Y0 Offset Star Subraster coord   
+SGOFFX1 =                -9999 / SPIRou Guider X1 Offset Star Subraster coord   
+SGOFFY1 =                -9999 / SPIRou Guider Y1 Offset Star Subraster coord   
+SGHOLEX =               348.89 / SPIRou Guider Hole Position X location (pixel) 
+SGHOLEY =               266.70 / SPIRou Guider Hole Position Y location (pixel) 
+SGCHOLEX=             348.8052 / SPIRou Guider Calculated Hole X loc (pixel)    
+SGCHOLEY=             266.6130 / SPIRou Guider Calculated Hole Y loc (pixel)    
+SGEHOLEX=               0.0220 / SPIRou Guider Calculated Hole X error (pixel)  
+SGEHOLEY=               0.0242 / SPIRou Guider Calculated Hole Y error (pixel)  
+SGCSTARX=             348.8785 / SPIRou Guider Calculated Star X loc (pixel)    
+SGCSTARY=             266.7105 / SPIRou Guider Calculated Star Y loc (pixel)    
+SGESTARX=               0.0225 / SPIRou Guider Calculated Star X error (pixel)  
+SGESTARY=               0.0219 / SPIRou Guider Calculated Star Y error (pixel)  
+SGCNOFFX=              -0.0115 / SPIRou Guider Calculated Null X offset (pixel  
+SGCNOFFY=               0.0105 / SPIRou Guider Calculated Null Y offset (pixel) 
+SGCSEE  =               1.0244 / SPIRou Guider Calculated Seeing                
+SGESEE  =               0.0067 / SPIRou Guider Calculated Seeing Error          
+SGCMAGN =               7.6108 / SPIRou Guider Calculated Magnitude             
+SGEMAGN =               0.0313 / SPIRou Guider Calculated Magnitude Error       
+SGSSEE  =             -9999.90 / SPIRou Guider Seeing Last Sequence Measurement 
+SPEMSNR =                85.40 / SPIRou Exposure Meter SNR Estimate             
+DOMESHUT= 'OPEN    '           / Dome shutter state (OPEN/CLOSED)               
+MIRRCOV = 'OPEN    '           / Mirror cover state (OPEN/CLOSED)               
+WINDSCR =                    0 / Windscreen elevation in degrees                
+DOMELOUV= 'CLOSED  '           / Dome louver state (OPEN/CLOSED)                
+VENTMODE= 'MANUAL  '           / Dome venting control mode                      
+VENTL1  = 'CLOSED:0:0:0'       / Dome vent L1 door and vane configuration       
+VENTL2  = 'UNKNOWN:-9999:-9999:-9999' / Dome vent L2 door and vane configuration
+VENTL3  = 'CLOSED:0:0:0'       / Dome vent L3 door and vane configuration       
+VENTL4  = 'CLOSED:0:0:0'       / Dome vent L4 door and vane configuration       
+VENTL5  = 'CLOSED:0:0:0'       / Dome vent L5 door and vane configuration       
+VENTL6  = 'CLOSED:0:0:0'       / Dome vent L6 door and vane configuration       
+VENTR1  = 'CLOSED:0:0:0'       / Dome vent R1 door and vane configuration       
+VENTR2  = 'UNKNOWN:-9999:-9999:-9999' / Dome vent R2 door and vane configuration
+VENTR3  = 'CLOSED:0:0:0'       / Dome vent R3 door and vane configuration       
+VENTR4  = 'CLOSED:0:0:0'       / Dome vent R4 door and vane configuration       
+VENTR5  = 'CLOSED:0:0:0'       / Dome vent R5 door and vane configuration       
+VENTR6  = 'CLOSED:0:0:0'       / Dome vent R6 door and vane configuration       
+TESPMIRE=                -1.10 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 3.11 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 3.31 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 2.60 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=               851.29 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 2.60 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=             -9999.90 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 4.86 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 2.90 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 2.48 / 06 temp, air, top ring west deg C              
+TEANRLSB=                15.16 / 19 temp, air, north rail support beam deg C    
+TESHRSET=                21.19 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 2.65 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 2.23 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 2.93 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 2.61 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 1.91 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 2.98 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                -0.70 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                -2.90 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=               849.80 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 3.79 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 3.10 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 3.73 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                 4.45 / 61 temp, surface, floor above control room degC
+TESPIERN=                 6.00 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 5.20 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 2.40 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 0.93 / 86 temp, air, weather tower deg C              
+WINDSPED=                17.30 / 84 wind speed, weather tower knots             
+WINDDIR =                45.79 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                35.44 / 87 relative humidity, weather tower %          
+PRESSURE=               617.70 / 31 barometric pressure, control room mb        
+DDSEEMEN=             -9999.90 / Dome DIMM mean seeing, arc seconds             
+DDSEEMED=             -9999.90 / Dome DIMM median seeing, arc seconds           
+DDSEEMOD=             -9999.90 / Dome DIMM mode seeing, arc seconds             
+DDSEESTD=             -9999.90 / Dome DIMM seeing deviation, arc seconds        
+WMSEEMEN=                 0.75 / Weather tower MASS mean seeing, arc seconds    
+WMSEEMED=                 0.73 / Weather tower MASS median seeing, arc seconds  
+WMSEEMOD=                 0.68 / Weather tower MASS mode seeing, arc seconds    
+WMSEESTD=                 0.07 / Weather tower MASS seeing deviation, arc second
+WDSEEMEN=                 1.30 / Weather tower DIMM mean seeing, arc seconds    
+WDSEEMED=                 1.24 / Weather tower DIMM median seeing, arc seconds  
+WDSEEMOD=                 1.27 / Weather tower DIMM mode seeing, arc seconds    
+WDSEESTD=                 0.04 / Weather tower DIMM seeing deviation, arc second
+SPOZPMEN=                 0.06 / SkyProbe (orig) mean absorption, magnitude     
+SPOZPMED=                 0.05 / SkyProbe (orig) median absorption, magnitude   
+SPOZPMOD=                 0.06 / SkyProbe (orig) mode absorption, magnitude     
+SPOZPSTD=                 0.01 / SkyProbe (orig) absorption deviation, magnitude
+QRUNID  = '19BQ07  '           / queue run id                                   
+QOBSERVE= 'Callie Crowder'     / queue observer                                 
+QCOORD  = 'Pascal Fouque'      / queue coordinator                              
+REL_DATE= '2021-02-28T00:00:00' / queue release date                            
+MET_DATE= '2019-10-03T07:40:28' / queue metadata release date                   
+QTOKEN  = '60cf0360-0fcf-489a-9d2b-209d337a8d3f' / queue id                     
+OBTOKEN = '19BC25-1563528694952-4' / queue ob id                                
+EXPTOKEN= '19BC25-Y4PD2SCRF9'  / queue exposure id                              
+OCTOKEN = '19BC25-5VNQQH611V'  / queue observing component id                   
+OCEXPNUM=                    0 / queue observing component exposure index       
+TRG_TYPE= 'TARGET  '           / target or sky object                           
+SNRGOAL =               100.00 / Goal SNR per pixel per frame                   
+OBJTEMP =              3700.00 / Object effective temperature                   
+CRUNID  = '19Bp03  '           / Elixir camera run ID                           
+DRSOBJN = 'J20412815+5725473'                                                   
+MJDMID  =    58759.32346528657 / Mid Observation time [mjd]                     
+MJDMIDMD= 'header  '           / Mid Observation time calc method               
+DPRTYPE = 'OBJ_FP  '           / The type of file (from pre-process)            
+PVERSION= '0.6.132 '           / DRS Pre-Processing version                     
+VERSION = '0.6.132 '           / DRS version                                    
+DRSVDATE= '2020-10-15'         / DRS Release date                               
+DRSPDATE= '2021-12-06 05:31:00.449' / DRS Processed date                        
+DETOFFDX=                    0 / Pixel offset in x from readout lag             
+DETOFFDY=                    0 / Pixel offset in y from readout lag             
+QSOVALID= 'VALIDATED'          / QSO validation state                           
+QSOGRADE=                    2 / QSO grade (1=good 5=unusable)                  
+END                                                                             
+XTENSION= 'IMAGE   '           / Image extension                                
+BITPIX  =                  -64 / array data type                                
+NAXIS   =                    2 / number of array dimensions                     
+NAXIS1  =                 4088                                                  
+NAXIS2  =                   49                                                  
+PCOUNT  =                    0 / number of parameters                           
+GCOUNT  =                    1 / number of groups                               
+EXTNAME = 'FluxAB  '                                                            
+FIBER   = 'AB      '           / The fiber name                                 
+CDBDARK = '2493625d_pp_dark_master.fits' / The calibration DARK file used       
+CDBBAD  = '244609F5T9f_pp_badpixel.fits' / The calibration BADPIX file used     
+CDBBACK = '244609F5T9f_pp_bmap.fits' / The calibration BKGRDMAP file used       
+CAL_FLIP= 'ALL     '           / Whether the image was flipped from pp          
+CAL_TOE =                    1 / Whether the flux was converted to e-           
+CAL_SIZE=                    1 / Whether the image was resized from pp          
+CDBORDP = '244609F0T4f_pp_order_profile_AB.fits' / The calibration ORDER_PROFILE
+CDBLOCO = '244609F0T4f_pp_loco_AB.fits' / The calibration LOC file used         
+CDBSHAPL= '244610F0T4a_pp_shapel.fits' / The calibration SHAPEL file used       
+CDBSHAPX= '24004F09T13a_pp_shapex.fits' / The calibration SHAPE DX file used    
+CDBSHAPY= '24004F09T13a_pp_shapey.fits' / The calibration SHAPE DX file used    
+CDBFLAT = '244609F5T9f_pp_flat_AB.fits' / The calibration FLAT file used        
+CDBBLAZE= '244609F5T9f_pp_blaze_AB.fits' / The calibration BLAZE file used      
+CDBTHERM= '2446084d_pp_thermal_e2ds_tel_AB.fits' / The calibration THERMAL file 
+CDBWAVE = '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / The calibration WAVE 
+CAL_FTYP= 'OBJ     '           / What this fiber was identified as              
+SHAPE_DX=  -0.7044174349930985 / Shape transform dx parameter                   
+SHAPE_DY=    2.301798063577468 / Shape transform dy parameter                   
+SHAPE_A =   0.9999518022781675 / Shape transform A parameter                    
+SHAPE_B = -1.1140473324584E-05 / Shape transform B parameter                    
+SHAPE_C = 4.94361646430375E-05 / Shape transform C parameter                    
+SHAPE_D =    1.000004691138032 / Shape transform D parameter                    
+EXT_TYPE= 'EXT_E2DS_FF'        / Extract type (E2DS or E2DSFF)                  
+EXTSN000=     7.37273274108023 / Extract: S_N order center order=0              
+EXTSN001=    11.14698433883508 / Extract: S_N order center order=1              
+EXTSN002=    14.65810264833445 / Extract: S_N order center order=2              
+EXTSN003=     17.4156394638895 / Extract: S_N order center order=3              
+EXTSN004=    19.99369973334426 / Extract: S_N order center order=4              
+EXTSN005=    22.36092525450218 / Extract: S_N order center order=5              
+EXTSN006=    23.95551212354915 / Extract: S_N order center order=6              
+EXTSN007=     25.3269337555879 / Extract: S_N order center order=7              
+EXTSN008=    26.73588779610285 / Extract: S_N order center order=8              
+EXTSN009=    28.69628231048249 / Extract: S_N order center order=9              
+EXTSN010=    27.11183068584739 / Extract: S_N order center order=10             
+EXTSN011=    24.50601932725968 / Extract: S_N order center order=11             
+EXTSN012=    27.38829666014541 / Extract: S_N order center order=12             
+EXTSN013=    32.83733767008565 / Extract: S_N order center order=13             
+EXTSN014=    35.19950440993724 / Extract: S_N order center order=14             
+EXTSN015=    38.84616781692302 / Extract: S_N order center order=15             
+EXTSN016=    41.59248866817303 / Extract: S_N order center order=16             
+EXTSN017=    44.32453924801803 / Extract: S_N order center order=17             
+EXTSN018=    45.67225208035654 / Extract: S_N order center order=18             
+EXTSN019=    49.52539037163276 / Extract: S_N order center order=19             
+EXTSN020=    53.60735300922004 / Extract: S_N order center order=20             
+EXTSN021=    55.78035334259874 / Extract: S_N order center order=21             
+EXTSN022=    37.09410568918963 / Extract: S_N order center order=22             
+EXTSN023=    20.91776497324328 / Extract: S_N order center order=23             
+EXTSN024=     33.5255952218847 / Extract: S_N order center order=24             
+EXTSN025=     43.0140597588686 / Extract: S_N order center order=25             
+EXTSN026=    55.03458322581442 / Extract: S_N order center order=26             
+EXTSN027=    58.45322143848465 / Extract: S_N order center order=27             
+EXTSN028=    71.54802029993162 / Extract: S_N order center order=28             
+EXTSN029=    75.01245927588242 / Extract: S_N order center order=29             
+EXTSN030=    77.73681318971947 / Extract: S_N order center order=30             
+EXTSN031=    78.62047599833171 / Extract: S_N order center order=31             
+EXTSN032=     89.1505664285383 / Extract: S_N order center order=32             
+EXTSN033=      89.132314916472 / Extract: S_N order center order=33             
+EXTSN034=    88.41666763314986 / Extract: S_N order center order=34             
+EXTSN035=    85.18823828152181 / Extract: S_N order center order=35             
+EXTSN036=    85.65820479262646 / Extract: S_N order center order=36             
+EXTSN037=    53.50968088093269 / Extract: S_N order center order=37             
+EXTSN038=    31.12296522668959 / Extract: S_N order center order=38             
+EXTSN039=    48.94803270021222 / Extract: S_N order center order=39             
+EXTSN040=    74.36321089971015 / Extract: S_N order center order=40             
+EXTSN041=    74.69200816096804 / Extract: S_N order center order=41             
+EXTSN042=    89.70210286077294 / Extract: S_N order center order=42             
+EXTSN043=    92.57122603962719 / Extract: S_N order center order=43             
+EXTSN044=    90.82204139198727 / Extract: S_N order center order=44             
+EXTSN045=    75.15206086720855 / Extract: S_N order center order=45             
+EXTSN046=    79.58904915402589 / Extract: S_N order center order=46             
+EXTSN047=    83.08899696865055 / Extract: S_N order center order=47             
+EXTSN048=     53.0588495241838 / Extract: S_N order center order=48             
+EXTSTART=                    0 / Extract: Start order for extraction            
+EXTR1   =                 16.0 / Extract: width1 for order extraction           
+EXTR2   =                 16.0 / Extract: width2 for order extraction           
+EXTCOS  =                    T / Extract: Whether cosmics were rejected         
+EXTCCUT =                 0.25 / Extract: cosmic cut criteria used              
+EXTCTHRE=                    5 / Extract: cosmic cut thres used                 
+EXTSATQC=              50000.0 / Extract: saturation limit criteria             
+EXTSMAX =    357.2909851153282 / Extract: maximum saturation level              
+WAVEFILE= '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / Wavelength solution f
+WAVETIME=    58759.14204285209 / Wavelength solution mid exptime                
+WAVESOUR= 'calibDB '           / Source of the wave solution used.              
+WAVEORDN=                   49 / nb orders in total                             
+WAVEDEGN=                    5 / degree of wave polyn fit                       
+WAVE0000=    955.7871170182925 / Wavelength coefficients order=0 coeffs=0       
+WAVE0001=  0.00834746697972683 / Wavelength coefficients order=0 coeffs=1       
+WAVE0002= -2.2912573349571E-07 / Wavelength coefficients order=0 coeffs=2       
+WAVE0003=   1.989660447904E-12 / Wavelength coefficients order=0 coeffs=3       
+WAVE0004= -3.1606789898839E-16 / Wavelength coefficients order=0 coeffs=4       
+WAVE0005= 2.19282284187598E-20 / Wavelength coefficients order=0 coeffs=5       
+WAVE0006=     968.087086395626 / Wavelength coefficients order=1 coeffs=0       
+WAVE0007= 0.008455241436408304 / Wavelength coefficients order=1 coeffs=1       
+WAVE0008= -2.3490610723369E-07 / Wavelength coefficients order=1 coeffs=2       
+WAVE0009=  3.3660857985785E-12 / Wavelength coefficients order=1 coeffs=3       
+WAVE0010= -6.1926614798117E-16 / Wavelength coefficients order=1 coeffs=4       
+WAVE0011= 4.84760790270923E-20 / Wavelength coefficients order=1 coeffs=5       
+WAVE0012=    980.7078963665743 / Wavelength coefficients order=2 coeffs=0       
+WAVE0013= 0.008557301292961192 / Wavelength coefficients order=2 coeffs=1       
+WAVE0014= -2.3203442795921E-07 / Wavelength coefficients order=2 coeffs=2       
+WAVE0015= 6.51845041961798E-13 / Wavelength coefficients order=2 coeffs=3       
+WAVE0016= -1.1600538154535E-17 / Wavelength coefficients order=2 coeffs=4       
+WAVE0017= -3.8090891003003E-21 / Wavelength coefficients order=2 coeffs=5       
+WAVE0018=    993.6562198646469 / Wavelength coefficients order=3 coeffs=0       
+WAVE0019= 0.008671202418322504 / Wavelength coefficients order=3 coeffs=1       
+WAVE0020= -2.3826263436755E-07 / Wavelength coefficients order=3 coeffs=2       
+WAVE0021=  2.1312092775907E-12 / Wavelength coefficients order=3 coeffs=3       
+WAVE0022= -3.2823491883352E-16 / Wavelength coefficients order=3 coeffs=4       
+WAVE0023= 2.22913480730265E-20 / Wavelength coefficients order=3 coeffs=5       
+WAVE0024=    1006.950359755816 / Wavelength coefficients order=4 coeffs=0       
+WAVE0025= 0.008782212172255364 / Wavelength coefficients order=4 coeffs=1       
+WAVE0026= -2.3878650434393E-07 / Wavelength coefficients order=4 coeffs=2       
+WAVE0027= 9.54278742132505E-13 / Wavelength coefficients order=4 coeffs=3       
+WAVE0028= -5.8422662048167E-17 / Wavelength coefficients order=4 coeffs=4       
+WAVE0029= -1.4602079474392E-21 / Wavelength coefficients order=4 coeffs=5       
+WAVE0030=    1020.601795416693 / Wavelength coefficients order=5 coeffs=0       
+WAVE0031= 0.008899106391287683 / Wavelength coefficients order=5 coeffs=1       
+WAVE0032= -2.4224924575565E-07 / Wavelength coefficients order=5 coeffs=2       
+WAVE0033= 1.16781819322304E-12 / Wavelength coefficients order=5 coeffs=3       
+WAVE0034= -1.2052739183012E-16 / Wavelength coefficients order=5 coeffs=4       
+WAVE0035= 4.96835270526772E-21 / Wavelength coefficients order=5 coeffs=5       
+WAVE0036=    1034.627184294769 / Wavelength coefficients order=6 coeffs=0       
+WAVE0037= 0.009015969855811415 / Wavelength coefficients order=6 coeffs=1       
+WAVE0038= -2.4256388005825E-07 / Wavelength coefficients order=6 coeffs=2       
+WAVE0039= -1.7078058518204E-13 / Wavelength coefficients order=6 coeffs=3       
+WAVE0040= 1.80756578429273E-16 / Wavelength coefficients order=6 coeffs=4       
+WAVE0041= -2.1085421702451E-20 / Wavelength coefficients order=6 coeffs=5       
+WAVE0042=    1049.039172702807 / Wavelength coefficients order=7 coeffs=0       
+WAVE0043= 0.009140015587278172 / Wavelength coefficients order=7 coeffs=1       
+WAVE0044= -2.4650870096207E-07 / Wavelength coefficients order=7 coeffs=2       
+WAVE0045= 9.03127322923499E-14 / Wavelength coefficients order=7 coeffs=3       
+WAVE0046= 1.36145186372756E-16 / Wavelength coefficients order=7 coeffs=4       
+WAVE0047= -1.8637159523369E-20 / Wavelength coefficients order=7 coeffs=5       
+WAVE0048=    1063.856921059338 / Wavelength coefficients order=8 coeffs=0       
+WAVE0049= 0.009265663864576945 / Wavelength coefficients order=8 coeffs=1       
+WAVE0050= -2.4906398375953E-07 / Wavelength coefficients order=8 coeffs=2       
+WAVE0051= -2.0480228126201E-13 / Wavelength coefficients order=8 coeffs=3       
+WAVE0052= 1.90297231720483E-16 / Wavelength coefficients order=8 coeffs=4       
+WAVE0053=  -2.235219403323E-20 / Wavelength coefficients order=8 coeffs=5       
+WAVE0054=    1079.097000124572 / Wavelength coefficients order=9 coeffs=0       
+WAVE0055= 0.009394129801689638 / Wavelength coefficients order=9 coeffs=1       
+WAVE0056= -2.5057882506689E-07 / Wavelength coefficients order=9 coeffs=2       
+WAVE0057= -1.2106376829438E-12 / Wavelength coefficients order=9 coeffs=3       
+WAVE0058= 4.36434282043798E-16 / Wavelength coefficients order=9 coeffs=4       
+WAVE0059= -4.4740436647906E-20 / Wavelength coefficients order=9 coeffs=5       
+WAVE0060=    1094.776559325086 / Wavelength coefficients order=10 coeffs=0      
+WAVE0061= 0.009529658334013339 / Wavelength coefficients order=10 coeffs=1      
+WAVE0062= -2.5577316784472E-07 / Wavelength coefficients order=10 coeffs=2      
+WAVE0063=  -2.989162001793E-13 / Wavelength coefficients order=10 coeffs=3      
+WAVE0064= 2.04328409601744E-16 / Wavelength coefficients order=10 coeffs=4      
+WAVE0065= -2.2842362465293E-20 / Wavelength coefficients order=10 coeffs=5      
+WAVE0066=    1110.916539770574 / Wavelength coefficients order=11 coeffs=0      
+WAVE0067= 0.009666749550455054 / Wavelength coefficients order=11 coeffs=1      
+WAVE0068= -2.5820050774845E-07 / Wavelength coefficients order=11 coeffs=2      
+WAVE0069= -9.5856323392304E-13 / Wavelength coefficients order=11 coeffs=3      
+WAVE0070= 3.77089925665675E-16 / Wavelength coefficients order=11 coeffs=4      
+WAVE0071= -3.9854306428043E-20 / Wavelength coefficients order=11 coeffs=5      
+WAVE0072=    1127.536825471585 / Wavelength coefficients order=12 coeffs=0      
+WAVE0073= 0.009809687797529351 / Wavelength coefficients order=12 coeffs=1      
+WAVE0074=  -2.626843206418E-07 / Wavelength coefficients order=12 coeffs=2      
+WAVE0075= -5.2459424803043E-13 / Wavelength coefficients order=12 coeffs=3      
+WAVE0076= 2.44859417081864E-16 / Wavelength coefficients order=12 coeffs=4      
+WAVE0077= -2.5207436107704E-20 / Wavelength coefficients order=12 coeffs=5      
+WAVE0078=    1144.660378432565 / Wavelength coefficients order=13 coeffs=0      
+WAVE0079= 0.009955438268492812 / Wavelength coefficients order=13 coeffs=1      
+WAVE0080= -2.6625499250209E-07 / Wavelength coefficients order=13 coeffs=2      
+WAVE0081= -5.6517378637097E-13 / Wavelength coefficients order=13 coeffs=3      
+WAVE0082= 2.51244527492603E-16 / Wavelength coefficients order=13 coeffs=4      
+WAVE0083= -2.5959674437705E-20 / Wavelength coefficients order=13 coeffs=5      
+WAVE0084=    1162.308308442766 / Wavelength coefficients order=14 coeffs=0      
+WAVE0085=   0.0101082948217642 / Wavelength coefficients order=14 coeffs=1      
+WAVE0086= -2.7162696092758E-07 / Wavelength coefficients order=14 coeffs=2      
+WAVE0087= 9.47478616828099E-14 / Wavelength coefficients order=14 coeffs=3      
+WAVE0088= 8.32623074077209E-17 / Wavelength coefficients order=14 coeffs=4      
+WAVE0089=  -1.003256879821E-20 / Wavelength coefficients order=14 coeffs=5      
+WAVE0090=    1180.506565122513 / Wavelength coefficients order=15 coeffs=0      
+WAVE0091=  0.01026537032058143 / Wavelength coefficients order=15 coeffs=1      
+WAVE0092= -2.7644116419313E-07 / Wavelength coefficients order=15 coeffs=2      
+WAVE0093= 3.92877365281476E-13 / Wavelength coefficients order=15 coeffs=3      
+WAVE0094= 2.35738282130708E-17 / Wavelength coefficients order=15 coeffs=4      
+WAVE0095= -5.8503412787479E-21 / Wavelength coefficients order=15 coeffs=5      
+WAVE0096=    1199.282402522972 / Wavelength coefficients order=16 coeffs=0      
+WAVE0097=  0.01042619425271773 / Wavelength coefficients order=16 coeffs=1      
+WAVE0098= -2.8070309386471E-07 / Wavelength coefficients order=16 coeffs=2      
+WAVE0099= 4.73990807469665E-13 / Wavelength coefficients order=16 coeffs=3      
+WAVE0100= -1.6048581775892E-17 / Wavelength coefficients order=16 coeffs=4      
+WAVE0101=  -1.040366486698E-21 / Wavelength coefficients order=16 coeffs=5      
+WAVE0102=    1218.662258384287 / Wavelength coefficients order=17 coeffs=0      
+WAVE0103=  0.01059336719443827 / Wavelength coefficients order=17 coeffs=1      
+WAVE0104=  -2.853674436164E-07 / Wavelength coefficients order=17 coeffs=2      
+WAVE0105= 4.62739678978782E-13 / Wavelength coefficients order=17 coeffs=3      
+WAVE0106= -2.4215610116361E-18 / Wavelength coefficients order=17 coeffs=4      
+WAVE0107= -3.0178809944881E-21 / Wavelength coefficients order=17 coeffs=5      
+WAVE0108=     1238.67690480738 / Wavelength coefficients order=18 coeffs=0      
+WAVE0109=  0.01076508546138318 / Wavelength coefficients order=18 coeffs=1      
+WAVE0110= -2.8991101787352E-07 / Wavelength coefficients order=18 coeffs=2      
+WAVE0111= 4.91951551284258E-13 / Wavelength coefficients order=18 coeffs=3      
+WAVE0112= -1.7046697669373E-17 / Wavelength coefficients order=18 coeffs=4      
+WAVE0113= -1.1879834816564E-21 / Wavelength coefficients order=18 coeffs=5      
+WAVE0114=    1259.357570737729 / Wavelength coefficients order=19 coeffs=0      
+WAVE0115=  0.01094290182554714 / Wavelength coefficients order=19 coeffs=1      
+WAVE0116= -2.9458949307249E-07 / Wavelength coefficients order=19 coeffs=2      
+WAVE0117= 3.85021562402651E-13 / Wavelength coefficients order=19 coeffs=3      
+WAVE0118= 2.94177540664655E-17 / Wavelength coefficients order=19 coeffs=4      
+WAVE0119= -7.1797122980265E-21 / Wavelength coefficients order=19 coeffs=5      
+WAVE0120=    1280.738960336541 / Wavelength coefficients order=20 coeffs=0      
+WAVE0121=  0.01112668941858342 / Wavelength coefficients order=20 coeffs=1      
+WAVE0122= -2.9993123626313E-07 / Wavelength coefficients order=20 coeffs=2      
+WAVE0123= 7.12087919018085E-13 / Wavelength coefficients order=20 coeffs=3      
+WAVE0124= -7.6866643550512E-17 / Wavelength coefficients order=20 coeffs=4      
+WAVE0125= 4.76119984636144E-21 / Wavelength coefficients order=20 coeffs=5      
+WAVE0126=    1302.856351378701 / Wavelength coefficients order=21 coeffs=0      
+WAVE0127=  0.01131658628054384 / Wavelength coefficients order=21 coeffs=1      
+WAVE0128=   -3.05245249921E-07 / Wavelength coefficients order=21 coeffs=2      
+WAVE0129= 8.41567896800153E-13 / Wavelength coefficients order=21 coeffs=3      
+WAVE0130= -7.9405145953948E-17 / Wavelength coefficients order=21 coeffs=4      
+WAVE0131= 2.42743546138894E-21 / Wavelength coefficients order=21 coeffs=5      
+WAVE0132=    1325.748766422075 / Wavelength coefficients order=22 coeffs=0      
+WAVE0133=  0.01151415482153203 / Wavelength coefficients order=22 coeffs=1      
+WAVE0134= -3.1177193443059E-07 / Wavelength coefficients order=22 coeffs=2      
+WAVE0135=  1.6639162905395E-12 / Wavelength coefficients order=22 coeffs=3      
+WAVE0136= -3.0499672324998E-16 / Wavelength coefficients order=22 coeffs=4      
+WAVE0137= 2.44560244741634E-20 / Wavelength coefficients order=22 coeffs=5      
+WAVE0138=    1349.458493583463 / Wavelength coefficients order=23 coeffs=0      
+WAVE0139=  0.01171684727489363 / Wavelength coefficients order=23 coeffs=1      
+WAVE0140= -3.1592409221203E-07 / Wavelength coefficients order=23 coeffs=2      
+WAVE0141= 9.14788143804038E-13 / Wavelength coefficients order=23 coeffs=3      
+WAVE0142= -9.7555770460866E-17 / Wavelength coefficients order=23 coeffs=4      
+WAVE0143= 3.66894384665638E-21 / Wavelength coefficients order=23 coeffs=5      
+WAVE0144=    1374.030443735322 / Wavelength coefficients order=24 coeffs=0      
+WAVE0145=  0.01192771770854069 / Wavelength coefficients order=24 coeffs=1      
+WAVE0146= -3.2241063309726E-07 / Wavelength coefficients order=24 coeffs=2      
+WAVE0147= 1.53926522441494E-12 / Wavelength coefficients order=24 coeffs=3      
+WAVE0148= -2.6615232118033E-16 / Wavelength coefficients order=24 coeffs=4      
+WAVE0149= 2.04569955029261E-20 / Wavelength coefficients order=24 coeffs=5      
+WAVE0150=    1399.510159231494 / Wavelength coefficients order=25 coeffs=0      
+WAVE0151=  0.01214573250906179 / Wavelength coefficients order=25 coeffs=1      
+WAVE0152= -3.2680685349519E-07 / Wavelength coefficients order=25 coeffs=2      
+WAVE0153= 7.48033005525894E-13 / Wavelength coefficients order=25 coeffs=3      
+WAVE0154= -5.7060886133354E-17 / Wavelength coefficients order=25 coeffs=4      
+WAVE0155= -2.2155281954071E-22 / Wavelength coefficients order=25 coeffs=5      
+WAVE0156=     1425.95099175558 / Wavelength coefficients order=26 coeffs=0      
+WAVE0157=  0.01237360835412838 / Wavelength coefficients order=26 coeffs=1      
+WAVE0158=  -3.341024021314E-07 / Wavelength coefficients order=26 coeffs=2      
+WAVE0159= 1.58884962043054E-12 / Wavelength coefficients order=26 coeffs=3      
+WAVE0160= -2.9844390177245E-16 / Wavelength coefficients order=26 coeffs=4      
+WAVE0161= 2.46673541235285E-20 / Wavelength coefficients order=26 coeffs=5      
+WAVE0162=    1453.408901934596 / Wavelength coefficients order=27 coeffs=0      
+WAVE0163=  0.01260800408530569 / Wavelength coefficients order=27 coeffs=1      
+WAVE0164= -3.3886018708386E-07 / Wavelength coefficients order=27 coeffs=2      
+WAVE0165= 6.77012464819821E-13 / Wavelength coefficients order=27 coeffs=3      
+WAVE0166= -4.3717178232151E-17 / Wavelength coefficients order=27 coeffs=4      
+WAVE0167= -6.8953794555768E-22 / Wavelength coefficients order=27 coeffs=5      
+WAVE0168=    1481.940714889253 / Wavelength coefficients order=28 coeffs=0      
+WAVE0169=  0.01285441339169462 / Wavelength coefficients order=28 coeffs=1      
+WAVE0170= -3.4636112036382E-07 / Wavelength coefficients order=28 coeffs=2      
+WAVE0171= 1.23273440279005E-12 / Wavelength coefficients order=28 coeffs=3      
+WAVE0172= -1.8500726505018E-16 / Wavelength coefficients order=28 coeffs=4      
+WAVE0173= 1.22453896752196E-20 / Wavelength coefficients order=28 coeffs=5      
+WAVE0174=    1511.614441607873 / Wavelength coefficients order=29 coeffs=0      
+WAVE0175=  0.01310975306378783 / Wavelength coefficients order=29 coeffs=1      
+WAVE0176= -3.5323220482295E-07 / Wavelength coefficients order=29 coeffs=2      
+WAVE0177= 1.08808722528967E-12 / Wavelength coefficients order=29 coeffs=3      
+WAVE0178= -1.1012806980243E-16 / Wavelength coefficients order=29 coeffs=4      
+WAVE0179= 2.31766769065162E-21 / Wavelength coefficients order=29 coeffs=5      
+WAVE0180=    1542.498601153471 / Wavelength coefficients order=30 coeffs=0      
+WAVE0181=  0.01337564989578575 / Wavelength coefficients order=30 coeffs=1      
+WAVE0182= -3.6124968061731E-07 / Wavelength coefficients order=30 coeffs=2      
+WAVE0183= 1.84599300032411E-12 / Wavelength coefficients order=30 coeffs=3      
+WAVE0184= -3.4294672707763E-16 / Wavelength coefficients order=30 coeffs=4      
+WAVE0185= 2.69513589270435E-20 / Wavelength coefficients order=30 coeffs=5      
+WAVE0186=    1574.668798090361 / Wavelength coefficients order=31 coeffs=0      
+WAVE0187=  0.01365189729832948 / Wavelength coefficients order=31 coeffs=1      
+WAVE0188=  -3.675613598003E-07 / Wavelength coefficients order=31 coeffs=2      
+WAVE0189= 1.14603803634798E-12 / Wavelength coefficients order=31 coeffs=3      
+WAVE0190= -1.6165199304419E-16 / Wavelength coefficients order=31 coeffs=4      
+WAVE0191= 1.00463040116388E-20 / Wavelength coefficients order=31 coeffs=5      
+WAVE0192=    1608.207345809591 / Wavelength coefficients order=32 coeffs=0      
+WAVE0193=  0.01394080141342107 / Wavelength coefficients order=32 coeffs=1      
+WAVE0194= -3.7618777586296E-07 / Wavelength coefficients order=32 coeffs=2      
+WAVE0195= 1.79540837411557E-12 / Wavelength coefficients order=32 coeffs=3      
+WAVE0196= -3.4164481812462E-16 / Wavelength coefficients order=32 coeffs=4      
+WAVE0197= 2.75506503491601E-20 / Wavelength coefficients order=32 coeffs=5      
+WAVE0198=    1643.204160611903 / Wavelength coefficients order=33 coeffs=0      
+WAVE0199=  0.01424111197042102 / Wavelength coefficients order=33 coeffs=1      
+WAVE0200= -3.8331316246596E-07 / Wavelength coefficients order=33 coeffs=2      
+WAVE0201= 1.18736024250891E-12 / Wavelength coefficients order=33 coeffs=3      
+WAVE0202= -1.7234598182115E-16 / Wavelength coefficients order=33 coeffs=4      
+WAVE0203= 1.10159577624977E-20 / Wavelength coefficients order=33 coeffs=5      
+WAVE0204=    1679.755207774073 / Wavelength coefficients order=34 coeffs=0      
+WAVE0205=  0.01455617923330435 / Wavelength coefficients order=34 coeffs=1      
+WAVE0206= -3.9242225113231E-07 / Wavelength coefficients order=34 coeffs=2      
+WAVE0207= 1.61835165238878E-12 / Wavelength coefficients order=34 coeffs=3      
+WAVE0208= -2.8898526320204E-16 / Wavelength coefficients order=34 coeffs=4      
+WAVE0209= 2.18840227284473E-20 / Wavelength coefficients order=34 coeffs=5      
+WAVE0210=    1717.966960115085 / Wavelength coefficients order=35 coeffs=0      
+WAVE0211=   0.0148852191974897 / Wavelength coefficients order=35 coeffs=1      
+WAVE0212= -4.0115217075743E-07 / Wavelength coefficients order=35 coeffs=2      
+WAVE0213= 1.51171883905442E-12 / Wavelength coefficients order=35 coeffs=3      
+WAVE0214= -2.6214418172094E-16 / Wavelength coefficients order=35 coeffs=4      
+WAVE0215= 1.97296416826264E-20 / Wavelength coefficients order=35 coeffs=5      
+WAVE0216=    1757.956526611329 / Wavelength coefficients order=36 coeffs=0      
+WAVE0217=  0.01522939767001447 / Wavelength coefficients order=36 coeffs=1      
+WAVE0218= -4.1149998153768E-07 / Wavelength coefficients order=36 coeffs=2      
+WAVE0219= 2.29177832025114E-12 / Wavelength coefficients order=36 coeffs=3      
+WAVE0220= -4.6893546821396E-16 / Wavelength coefficients order=36 coeffs=4      
+WAVE0221= 3.95893373228039E-20 / Wavelength coefficients order=36 coeffs=5      
+WAVE0222=    1799.850481820948 / Wavelength coefficients order=37 coeffs=0      
+WAVE0223=  0.01558789475776626 / Wavelength coefficients order=37 coeffs=1      
+WAVE0224= -4.1959733648156E-07 / Wavelength coefficients order=37 coeffs=2      
+WAVE0225= 1.46738826155047E-12 / Wavelength coefficients order=37 coeffs=3      
+WAVE0226= -2.5505731540443E-16 / Wavelength coefficients order=37 coeffs=4      
+WAVE0227= 2.00820757701835E-20 / Wavelength coefficients order=37 coeffs=5      
+WAVE0228=    1843.788597875904 / Wavelength coefficients order=38 coeffs=0      
+WAVE0229=  0.01596443902855534 / Wavelength coefficients order=38 coeffs=1      
+WAVE0230= -4.2922772660756E-07 / Wavelength coefficients order=38 coeffs=2      
+WAVE0231=  1.2502800728294E-12 / Wavelength coefficients order=38 coeffs=3      
+WAVE0232= -1.9633109478809E-16 / Wavelength coefficients order=38 coeffs=4      
+WAVE0233= 1.39131802266301E-20 / Wavelength coefficients order=38 coeffs=5      
+WAVE0234=    1889.921508574719 / Wavelength coefficients order=39 coeffs=0      
+WAVE0235=  0.01636121783122392 / Wavelength coefficients order=39 coeffs=1      
+WAVE0236= -4.3991837349417E-07 / Wavelength coefficients order=39 coeffs=2      
+WAVE0237= 1.15239077090923E-12 / Wavelength coefficients order=39 coeffs=3      
+WAVE0238= -1.5544515484349E-16 / Wavelength coefficients order=39 coeffs=4      
+WAVE0239= 9.41505196361664E-21 / Wavelength coefficients order=39 coeffs=5      
+WAVE0240=    1938.418580789365 / Wavelength coefficients order=40 coeffs=0      
+WAVE0241=  0.01677974066560326 / Wavelength coefficients order=40 coeffs=1      
+WAVE0242= -4.5280296166754E-07 / Wavelength coefficients order=40 coeffs=2      
+WAVE0243= 2.19444909734826E-12 / Wavelength coefficients order=40 coeffs=3      
+WAVE0244= -4.3704580687321E-16 / Wavelength coefficients order=40 coeffs=4      
+WAVE0245= 3.58205190846517E-20 / Wavelength coefficients order=40 coeffs=5      
+WAVE0246=    1989.469368233174 / Wavelength coefficients order=41 coeffs=0      
+WAVE0247=  0.01721814163925198 / Wavelength coefficients order=41 coeffs=1      
+WAVE0248= -4.6406502818513E-07 / Wavelength coefficients order=41 coeffs=2      
+WAVE0249= 1.86384902312631E-12 / Wavelength coefficients order=41 coeffs=3      
+WAVE0250= -3.4404907071395E-16 / Wavelength coefficients order=41 coeffs=4      
+WAVE0251= 2.69448470062302E-20 / Wavelength coefficients order=41 coeffs=5      
+WAVE0252=    2043.281125393497 / Wavelength coefficients order=42 coeffs=0      
+WAVE0253=  0.01767813385444661 / Wavelength coefficients order=42 coeffs=1      
+WAVE0254= -4.7666962535591E-07 / Wavelength coefficients order=42 coeffs=2      
+WAVE0255= 2.64220841643702E-12 / Wavelength coefficients order=42 coeffs=3      
+WAVE0256= -5.6060771483183E-16 / Wavelength coefficients order=42 coeffs=4      
+WAVE0257= 4.75359909256705E-20 / Wavelength coefficients order=42 coeffs=5      
+WAVE0258=      2100.0829071785 / Wavelength coefficients order=43 coeffs=0      
+WAVE0259=  0.01816353875548113 / Wavelength coefficients order=43 coeffs=1      
+WAVE0260= -4.8713291882314E-07 / Wavelength coefficients order=43 coeffs=2      
+WAVE0261= 9.51376077791152E-13 / Wavelength coefficients order=43 coeffs=3      
+WAVE0262= -1.2757760574755E-16 / Wavelength coefficients order=43 coeffs=4      
+WAVE0263= 8.46445418696343E-21 / Wavelength coefficients order=43 coeffs=5      
+WAVE0264=    2160.128998139229 / Wavelength coefficients order=44 coeffs=0      
+WAVE0265=  0.01867970921275373 / Wavelength coefficients order=44 coeffs=1      
+WAVE0266= -5.0275064672197E-07 / Wavelength coefficients order=44 coeffs=2      
+WAVE0267=  1.7533000892783E-12 / Wavelength coefficients order=44 coeffs=3      
+WAVE0268= -2.8227349656272E-16 / Wavelength coefficients order=44 coeffs=4      
+WAVE0269= 1.74829814229385E-20 / Wavelength coefficients order=44 coeffs=5      
+WAVE0270=    2223.707042827673 / Wavelength coefficients order=45 coeffs=0      
+WAVE0271=  0.01922298029824984 / Wavelength coefficients order=45 coeffs=1      
+WAVE0272= -5.1624489532941E-07 / Wavelength coefficients order=45 coeffs=2      
+WAVE0273= 1.54423025997102E-12 / Wavelength coefficients order=45 coeffs=3      
+WAVE0274= -2.8792602740944E-16 / Wavelength coefficients order=45 coeffs=4      
+WAVE0275= 2.33112454667534E-20 / Wavelength coefficients order=45 coeffs=5      
+WAVE0276=     2291.13566649392 / Wavelength coefficients order=46 coeffs=0      
+WAVE0277=  0.01980187341373665 / Wavelength coefficients order=46 coeffs=1      
+WAVE0278= -5.3209519456478E-07 / Wavelength coefficients order=46 coeffs=2      
+WAVE0279= 1.79362108651034E-12 / Wavelength coefficients order=46 coeffs=3      
+WAVE0280=   -3.34391080441E-16 / Wavelength coefficients order=46 coeffs=4      
+WAVE0281= 2.44802929642142E-20 / Wavelength coefficients order=46 coeffs=5      
+WAVE0282=    2362.780799846984 / Wavelength coefficients order=47 coeffs=0      
+WAVE0283=  0.02041599610013907 / Wavelength coefficients order=47 coeffs=1      
+WAVE0284= -5.5081452401614E-07 / Wavelength coefficients order=47 coeffs=2      
+WAVE0285= 3.49338173417924E-12 / Wavelength coefficients order=47 coeffs=3      
+WAVE0286= -7.9643289997893E-16 / Wavelength coefficients order=47 coeffs=4      
+WAVE0287= 6.95489069300987E-20 / Wavelength coefficients order=47 coeffs=5      
+WAVE0288=     2439.04932532515 / Wavelength coefficients order=48 coeffs=0      
+WAVE0289=  0.02106572514473928 / Wavelength coefficients order=48 coeffs=1      
+WAVE0290=  -5.620145120775E-07 / Wavelength coefficients order=48 coeffs=2      
+WAVE0291= -1.5223762084469E-12 / Wavelength coefficients order=48 coeffs=3      
+WAVE0292= 8.95543826689162E-16 / Wavelength coefficients order=48 coeffs=4      
+WAVE0293= -1.3289481276336E-19 / Wavelength coefficients order=48 coeffs=5      
+WFP_FILE= '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / WFP source file      
+WFPDRIFT=   0.2405605335959766 / Wavelength sol absolute CCF FP Drift [km/s]    
+WFPFWHM =    5.570000986039786 / FWHM of wave sol FP CCF [km/s]                 
+WFPCONT =    95.05453230076299 / wave sol FP Contrast of CCF (%)                
+WFPMASK = 'smart_fp_mask.mas'  / wave sol FP Mask filename                      
+WFPLINE =              19486.0 / wave sol FP nbr of lines used                  
+WFPTRV  =                      / wave sol FP target RV [km/s]                   
+WFPWIDTH=                  7.5 / wave sol FP CCF width [km/s]                   
+WFPSTEP =                  0.5 / wave sol FP CCF step [km/s]                    
+BERV    =   -3.187481166182335 / Barycentric Velocity calc. in BERVSRCE [km/s]  
+BJD     =      2458759.8262062 / Barycentric Julian data calc. in BERVSRCE      
+BERVMAX =    10.85686764454341 / Max BERV 1 yr calc. in BERVSRCE [km/s]         
+DBERV   = 1.78804421864242E-05 / Deviation in BERV in BERVSRCE [km/s/s]         
+BERVSRCE= 'barycorrpy'         / How BERV was calculated                        
+BERV_EST= 'NaN     '           / Barycentric Velocity estimate [km/s]           
+BJD_EST = 'NaN     '           / Barycentric Julian data estimate               
+BERVMAXE= 'NaN     '           / Max BERV 1 yr estimate [km/s]                  
+DBERVE  = 'NaN     '           / Deviation in BERV estimate [km/s/s]            
+BERVOBST=    2458759.823465287 / BERV observation time used [days]              
+BERVOBSM= 'header  '           / BERV method used to calc observation time      
+BC_GAIA =  2187263158355763072 / The Gaia ID used for BERV params               
+BC_OBJNM= 'J20412815+5725473'  / The OBJNAME used for BERV params               
+BC_RA   =    310.3681187019198 / Right Ascension used to calc. BERV             
+BC_DEC  =    57.43068271999451 / Declination used to calc. BERV                 
+BC_EPOCH=    2457205.999994213 / Epoch [JD] used to calc. BERV                  
+BC_PMRA =    97.73999574490419 / PMRA [mas/yr] used to calc. BERV               
+BC_PMDE =    205.7094338914069 / PMDE [mas/yr] used to calc. BERV               
+BC_LAT  =            19.825252 / OBS Latitude [deg] used to calc. BERV          
+BC_LONG =          -155.468876 / OBS Longitude [deg] used to calc. BERV         
+BC_ALT  =               4204.0 / OBS Altitude [m] used to calc. BERV            
+BC_PLX  =    40.30385734993578 / PLX [mas] used to calc. BERV                   
+BC_RV   =   -24.13582933942158 / RV [km/s] used to calc. BERV                   
+BC_PSRCE= 'GAIA [TABLE]'       / Source of BERV star params                     
+BC_GMAG =     9.63202953338623 / Gaia G mag for BERV calc.                      
+BC_BPMAG=    10.48800849914551 / Gaia BP mag for BERV calc.                     
+BC_RPMAG=    8.765338897705078 / Gaia RP mag for BERV calc.                     
+BC_MAG_L=                 15.0 / Gaia mag lim for BERV calc.                    
+BC_PLX_L=                  5.0 / Gaia plx lim for BERV calc.                    
+LEAKCORR=                    T / Whether DARK_FP leakage correction has been don
+LEAK_BPU=                  5.0 / LEAK bckgrd percentile used for leakage corr   
+LEAK_NPU=                 90.0 / LEAK norm percentile used for leakage corr     
+LEAK_LPU=                  1.0 / LEAK lower bound percentile used for leakage co
+LEAK_UPU=                 99.0 / LEAK upper bound percentile used for leakage co
+LEAKBADR=                  0.1 / LEAK bad ratio offset limit used for leakage co
+DRSPID  = 'PID-00016387686604492530-TUI4' / The process ID that outputted this f
+DRSOUTID= 'TELLU_OBJ'          / DRS output identification code                 
+INF1000 = '2446124o_pp_e2dsff_AB.fits' / Input file used to create output file=0
+QCC001N = 'EXTSNR  '           / Quality control parameter name                 
+QCC001V =    92.57122603962719 / Quality control measured value                 
+QCC001L = 'EXTSNR < 10.0'      / Quality control logic used                     
+QCC001P =                    1 / Quality control param passed QC                
+QCC002N = 'NUM_NAN_CCF'        / Quality control parameter name                 
+QCC002V =                    0 / Quality control measured value                 
+QCC002L = 'NUM_NAN_CCF > 0'    / Quality control logic used                     
+QCC002P =                    1 / Quality control param passed QC                
+QCC003N = 'EXPO_OTHERS L'      / Quality control parameter name                 
+QCC003V =    1.358883175093373 / Quality control measured value                 
+QCC003L = 'EXPO_OTHERS L < 0.8' / Quality control logic used                    
+QCC003P =                    1 / Quality control param passed QC                
+QCC004N = 'EXPO_OTHERS U'      / Quality control parameter name                 
+QCC004V =    1.358883175093373 / Quality control measured value                 
+QCC004L = 'EXPO_OTHERS U > 3.0' / Quality control logic used                    
+QCC004P =                    1 / Quality control param passed QC                
+QCC005N = 'EXPO_WATER L'       / Quality control parameter name                 
+QCC005V =   0.8319080148601787 / Quality control measured value                 
+QCC005L = 'EXPO_WATER L < 0.1' / Quality control logic used                     
+QCC005P =                    1 / Quality control param passed QC                
+QCC006N = 'EXPO_WATER U'       / Quality control parameter name                 
+QCC006V =   0.8319080148601787 / Quality control measured value                 
+QCC006L = 'EXPO_WATER U > 15.0' / Quality control logic used                    
+QCC006P =                    1 / Quality control param passed QC                
+QCC007N = 'ITERATIONS'         / Quality control parameter name                 
+QCC007V =                   10 / Quality control measured value                 
+QCC007L = 'ITERATIONS = 19'    / Quality control logic used                     
+QCC007P =                    1 / Quality control param passed QC                
+QCC008N = 'SNR[33] '           / Quality control parameter name                 
+QCC008V =      89.132314916472 / Quality control measured value                 
+QCC008L = 'SNR[33] < 15.00'    / Quality control logic used                     
+QCC008P =                    1 / Quality control param passed QC                
+QCC_ALL =                    T                                                  
+FTT_NPC =                    7 / ftellu Number of principal components used     
+FTT_ADPC=                    T / ftellu first deriv. was added to pc            
+FTT_FDPC=                    T / ftellu deriv. of pc was fit instead of pc      
+FTTABSOS= '[file] tellu_save_1633446309.2881105.npy' / ftellu source of the abso
+FTTFKNUM=                   20 / ftellu num of good pixels used per order       
+FTTMTRAN=                  0.2 / ftellu min transmission used                   
+FTTMINLL=               1000.0 / ftellu min wavelength used                     
+FTTMAXLL=               2100.0 / ftellu max wavelength used                     
+FTTSKERN=                 30.0 / ftellu smoothing kernal used [km/s]            
+FTTIMPXS=                 2.28 / ftellu image pixel size used                   
+FTTFITRS=                    4 / ftellu num iterations used for fit             
+FTTRCLIM=                 -0.5 / ftellu log limit in min absorption used        
+MKTTTFIT=                  0.3 / mktellu min transmission used                  
+MKTTTMAX=                  1.1 / mktellu max transmission used                  
+TLPEH2O =   0.8319080148601787 / tellu preclean expo water calculated           
+TLPEOTR =    1.358883175093373 / tellu preclean expo others calculated          
+TLPDVH2O=  -0.1096599192487512 / tellu preclean velocity water absorbers        
+TLPDVOTR= -0.00297648963189809 / tellu preclean velocity others absorbers       
+TLPDOCLN=                    T / tellu preclean done                            
+TLPDFH2O=                  4.0 / tellu preclean default h20 abso used           
+TLPSCRNG=                 20.0 / tellu preclean ccf scan range km/s             
+TLPCLORD=                    T / tellu preclean were OH lines were cleaned      
+TLPRORDS= '47, 48  '           / tellu preclean which orders were removed       
+TLPSNRMT=                 10.0 / tellu preclean snr min threshold               
+TLPDEXCT=               0.0001 / tellu preclean dexpo conv thres used           
+TLPMXITR=                   20 / tellu preclean max iterations used             
+TLPAEKTH=                1E-06 / tellu preclean abso expo kernel thres          
+TLPWAVES=                965.0 / tellu preclean wave start used [nm]            
+TLPWAVEF=               2500.0 / tellu preclean wave end used [nm]              
+TLPDVGRD=                  1.0 / tellu preclean dv wave grid used [km/s]        
+TLPAEKWD=                 4.95 / tellu preclean gauss width kernel used         
+TLPAEKEX=                  2.2 / tellu preclean gauss shape kernel used         
+TLPTRSTH=                 -1.0 / tellu preclean transmission thres used         
+TLPTRSLM=                 10.0 / tellu preclean transmission sig limit used     
+TLPFCARM=                    F / tellu preclean force airmass from hdr          
+TLP_OTHB= '0.8, 3.0'           / tellu preclean lower/upper bounds others       
+TLP_H2OB= '0.1, 15.0'          / tellu preclean lower/upper bounds water        
+FTTTEMPL= 'Template_J20412815+5725473_tellu_obj_AB.fits' / ftellu template used 
+AMPPC000=  -0.3885660748399231 / ftellu Principle Component Amplitudes amp=0    
+AMPPC001=  0.02271239719386254 / ftellu Principle Component Amplitudes amp=1    
+AMPPC002=  0.01858404204711189 / ftellu Principle Component Amplitudes amp=2    
+AMPPC003=  0.07434277027227568 / ftellu Principle Component Amplitudes amp=3    
+AMPPC004=  0.07017263532130462 / ftellu Principle Component Amplitudes amp=4    
+DV_TELL1=  -0.1823078298475423 / ftellu Principle Component second der.         
+ABSO_H2O=   0.8296729574774449 / Absorption in H2O                              
+ABSO_O3 =    1.338180155994331 / Absorption in O3                               
+ABSO_N2O=    1.338630905361954 / Absorption in N2O                              
+ABSO_O2 =    1.212772395547077 / Absorption in O2                               
+ABSO_CO2=     1.24150658640781 / Absorption in CO2                              
+ABSO_CH4=    1.901059244795864 / Absorption in CH4                              
+TAU_H2O =   0.8300688470002654 / ftellu TAPAS tau H2O                           
+TAU_OTHE=    1.327559655134856 / ftellu TAPAS tau for O2,O3,CH4,N2O,CO2         
+END                                                                             
+XTENSION= 'IMAGE   '           / Image extension                                
+BITPIX  =                  -64 / array data type                                
+NAXIS   =                    2 / number of array dimensions                     
+NAXIS1  =                 4088                                                  
+NAXIS2  =                   49                                                  
+PCOUNT  =                    0 / number of parameters                           
+GCOUNT  =                    1 / number of groups                               
+EXTNAME = 'WaveAB  '                                                            
+CDBDARK = '2493625d_pp_dark_master.fits' / The calibration DARK file used       
+CDBBAD  = '244609F5T9f_pp_badpixel.fits' / The calibration BADPIX file used     
+CDBBACK = '244609F5T9f_pp_bmap.fits' / The calibration BKGRDMAP file used       
+CDBORDP = '244609F0T4f_pp_order_profile_AB.fits' / The calibration ORDER_PROFILE
+CDBLOCO = '244609F0T4f_pp_loco_AB.fits' / The calibration LOC file used         
+CDBSHAPL= '244610F0T4a_pp_shapel.fits' / The calibration SHAPEL file used       
+CDBSHAPX= '24004F09T13a_pp_shapex.fits' / The calibration SHAPE DX file used    
+CDBSHAPY= '24004F09T13a_pp_shapey.fits' / The calibration SHAPE DX file used    
+CDBFLAT = '244609F5T9f_pp_flat_AB.fits' / The calibration FLAT file used        
+CDBBLAZE= '244609F5T9f_pp_blaze_AB.fits' / The calibration BLAZE file used      
+CDBTHERM= '2446082d_pp_thermal_e2ds_int_AB.fits' / The calibration THERMAL file 
+CDBWAVE = '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / The calibration WAVE 
+INF1000 = '2446109c_pp.fits'   / Input file used to create output file=0        
+INF1001 = '2446110c_pp.fits'   / Input file used to create output file=1        
+INF2000 = '2446100a_pp.fits'   / Input file used to create output file=0        
+INF2001 = '2446101a_pp.fits'   / Input file used to create output file=1        
+INF2002 = '2446102a_pp.fits'   / Input file used to create output file=2        
+INF2003 = '2446103a_pp.fits'   / Input file used to create output file=3        
+INF2004 = '2446104a_pp.fits'   / Input file used to create output file=4        
+END                                                                             
+XTENSION= 'IMAGE   '           / Image extension                                
+BITPIX  =                  -64 / array data type                                
+NAXIS   =                    2 / number of array dimensions                     
+NAXIS1  =                 4088                                                  
+NAXIS2  =                   49                                                  
+PCOUNT  =                    0 / number of parameters                           
+GCOUNT  =                    1 / number of groups                               
+EXTNAME = 'BlazeAB '                                                            
+INF1000 = '2446095f_pp.fits'   / Input file used to create output file=0        
+INF1001 = '2446096f_pp.fits'   / Input file used to create output file=1        
+INF1002 = '2446097f_pp.fits'   / Input file used to create output file=2        
+INF1003 = '2446098f_pp.fits'   / Input file used to create output file=3        
+INF1004 = '2446099f_pp.fits'   / Input file used to create output file=4        
+CDBDARK = '2493625d_pp_dark_master.fits' / The calibration DARK file used       
+CDBBAD  = '244609F5T9f_pp_badpixel.fits' / The calibration BADPIX file used     
+CDBBACK = '244609F5T9f_pp_bmap.fits' / The calibration BKGRDMAP file used       
+CDBORDP = '244609F0T4f_pp_order_profile_AB.fits' / The calibration ORDER_PROFILE
+CDBLOCO = '244609F0T4f_pp_loco_AB.fits' / The calibration LOC file used         
+CDBSHAPL= '244610F0T4a_pp_shapel.fits' / The calibration SHAPEL file used       
+CDBSHAPX= '24004F09T13a_pp_shapex.fits' / The calibration SHAPE DX file used    
+CDBSHAPY= '24004F09T13a_pp_shapey.fits' / The calibration SHAPE DX file used    
+END                                                                             
+XTENSION= 'IMAGE   '           / Image extension                                
+BITPIX  =                  -64 / array data type                                
+NAXIS   =                    2 / number of array dimensions                     
+NAXIS1  =                 4088                                                  
+NAXIS2  =                   49                                                  
+PCOUNT  =                    0 / number of parameters                           
+GCOUNT  =                    1 / number of groups                               
+EXTNAME = 'Recon   '                                                            
+FIBER   = 'AB      '           / The fiber name                                 
+CDBDARK = '2493625d_pp_dark_master.fits' / The calibration DARK file used       
+CDBBAD  = '244609F5T9f_pp_badpixel.fits' / The calibration BADPIX file used     
+CDBBACK = '244609F5T9f_pp_bmap.fits' / The calibration BKGRDMAP file used       
+CAL_FLIP= 'ALL     '           / Whether the image was flipped from pp          
+CAL_TOE =                    1 / Whether the flux was converted to e-           
+CAL_SIZE=                    1 / Whether the image was resized from pp          
+CDBORDP = '244609F0T4f_pp_order_profile_AB.fits' / The calibration ORDER_PROFILE
+CDBLOCO = '244609F0T4f_pp_loco_AB.fits' / The calibration LOC file used         
+CDBSHAPL= '244610F0T4a_pp_shapel.fits' / The calibration SHAPEL file used       
+CDBSHAPX= '24004F09T13a_pp_shapex.fits' / The calibration SHAPE DX file used    
+CDBSHAPY= '24004F09T13a_pp_shapey.fits' / The calibration SHAPE DX file used    
+CDBFLAT = '244609F5T9f_pp_flat_AB.fits' / The calibration FLAT file used        
+CDBBLAZE= '244609F5T9f_pp_blaze_AB.fits' / The calibration BLAZE file used      
+CDBTHERM= '2446084d_pp_thermal_e2ds_tel_AB.fits' / The calibration THERMAL file 
+CDBWAVE = '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / The calibration WAVE 
+CAL_FTYP= 'OBJ     '           / What this fiber was identified as              
+SHAPE_DX=  -0.7044174349930985 / Shape transform dx parameter                   
+SHAPE_DY=    2.301798063577468 / Shape transform dy parameter                   
+SHAPE_A =   0.9999518022781675 / Shape transform A parameter                    
+SHAPE_B = -1.1140473324584E-05 / Shape transform B parameter                    
+SHAPE_C = 4.94361646430375E-05 / Shape transform C parameter                    
+SHAPE_D =    1.000004691138032 / Shape transform D parameter                    
+EXT_TYPE= 'EXT_E2DS_FF'        / Extract type (E2DS or E2DSFF)                  
+EXTSN000=     7.37273274108023 / Extract: S_N order center order=0              
+EXTSN001=    11.14698433883508 / Extract: S_N order center order=1              
+EXTSN002=    14.65810264833445 / Extract: S_N order center order=2              
+EXTSN003=     17.4156394638895 / Extract: S_N order center order=3              
+EXTSN004=    19.99369973334426 / Extract: S_N order center order=4              
+EXTSN005=    22.36092525450218 / Extract: S_N order center order=5              
+EXTSN006=    23.95551212354915 / Extract: S_N order center order=6              
+EXTSN007=     25.3269337555879 / Extract: S_N order center order=7              
+EXTSN008=    26.73588779610285 / Extract: S_N order center order=8              
+EXTSN009=    28.69628231048249 / Extract: S_N order center order=9              
+EXTSN010=    27.11183068584739 / Extract: S_N order center order=10             
+EXTSN011=    24.50601932725968 / Extract: S_N order center order=11             
+EXTSN012=    27.38829666014541 / Extract: S_N order center order=12             
+EXTSN013=    32.83733767008565 / Extract: S_N order center order=13             
+EXTSN014=    35.19950440993724 / Extract: S_N order center order=14             
+EXTSN015=    38.84616781692302 / Extract: S_N order center order=15             
+EXTSN016=    41.59248866817303 / Extract: S_N order center order=16             
+EXTSN017=    44.32453924801803 / Extract: S_N order center order=17             
+EXTSN018=    45.67225208035654 / Extract: S_N order center order=18             
+EXTSN019=    49.52539037163276 / Extract: S_N order center order=19             
+EXTSN020=    53.60735300922004 / Extract: S_N order center order=20             
+EXTSN021=    55.78035334259874 / Extract: S_N order center order=21             
+EXTSN022=    37.09410568918963 / Extract: S_N order center order=22             
+EXTSN023=    20.91776497324328 / Extract: S_N order center order=23             
+EXTSN024=     33.5255952218847 / Extract: S_N order center order=24             
+EXTSN025=     43.0140597588686 / Extract: S_N order center order=25             
+EXTSN026=    55.03458322581442 / Extract: S_N order center order=26             
+EXTSN027=    58.45322143848465 / Extract: S_N order center order=27             
+EXTSN028=    71.54802029993162 / Extract: S_N order center order=28             
+EXTSN029=    75.01245927588242 / Extract: S_N order center order=29             
+EXTSN030=    77.73681318971947 / Extract: S_N order center order=30             
+EXTSN031=    78.62047599833171 / Extract: S_N order center order=31             
+EXTSN032=     89.1505664285383 / Extract: S_N order center order=32             
+EXTSN033=      89.132314916472 / Extract: S_N order center order=33             
+EXTSN034=    88.41666763314986 / Extract: S_N order center order=34             
+EXTSN035=    85.18823828152181 / Extract: S_N order center order=35             
+EXTSN036=    85.65820479262646 / Extract: S_N order center order=36             
+EXTSN037=    53.50968088093269 / Extract: S_N order center order=37             
+EXTSN038=    31.12296522668959 / Extract: S_N order center order=38             
+EXTSN039=    48.94803270021222 / Extract: S_N order center order=39             
+EXTSN040=    74.36321089971015 / Extract: S_N order center order=40             
+EXTSN041=    74.69200816096804 / Extract: S_N order center order=41             
+EXTSN042=    89.70210286077294 / Extract: S_N order center order=42             
+EXTSN043=    92.57122603962719 / Extract: S_N order center order=43             
+EXTSN044=    90.82204139198727 / Extract: S_N order center order=44             
+EXTSN045=    75.15206086720855 / Extract: S_N order center order=45             
+EXTSN046=    79.58904915402589 / Extract: S_N order center order=46             
+EXTSN047=    83.08899696865055 / Extract: S_N order center order=47             
+EXTSN048=     53.0588495241838 / Extract: S_N order center order=48             
+EXTSTART=                    0 / Extract: Start order for extraction            
+EXTR1   =                 16.0 / Extract: width1 for order extraction           
+EXTR2   =                 16.0 / Extract: width2 for order extraction           
+EXTCOS  =                    T / Extract: Whether cosmics were rejected         
+EXTCCUT =                 0.25 / Extract: cosmic cut criteria used              
+EXTCTHRE=                    5 / Extract: cosmic cut thres used                 
+EXTSATQC=              50000.0 / Extract: saturation limit criteria             
+EXTSMAX =    357.2909851153282 / Extract: maximum saturation level              
+WAVEFILE= '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / Wavelength solution f
+WAVETIME=    58759.14204285209 / Wavelength solution mid exptime                
+WAVESOUR= 'calibDB '           / Source of the wave solution used.              
+WAVEORDN=                   49 / nb orders in total                             
+WAVEDEGN=                    5 / degree of wave polyn fit                       
+WAVE0000=    955.7871170182925 / Wavelength coefficients order=0 coeffs=0       
+WAVE0001=  0.00834746697972683 / Wavelength coefficients order=0 coeffs=1       
+WAVE0002= -2.2912573349571E-07 / Wavelength coefficients order=0 coeffs=2       
+WAVE0003=   1.989660447904E-12 / Wavelength coefficients order=0 coeffs=3       
+WAVE0004= -3.1606789898839E-16 / Wavelength coefficients order=0 coeffs=4       
+WAVE0005= 2.19282284187598E-20 / Wavelength coefficients order=0 coeffs=5       
+WAVE0006=     968.087086395626 / Wavelength coefficients order=1 coeffs=0       
+WAVE0007= 0.008455241436408304 / Wavelength coefficients order=1 coeffs=1       
+WAVE0008= -2.3490610723369E-07 / Wavelength coefficients order=1 coeffs=2       
+WAVE0009=  3.3660857985785E-12 / Wavelength coefficients order=1 coeffs=3       
+WAVE0010= -6.1926614798117E-16 / Wavelength coefficients order=1 coeffs=4       
+WAVE0011= 4.84760790270923E-20 / Wavelength coefficients order=1 coeffs=5       
+WAVE0012=    980.7078963665743 / Wavelength coefficients order=2 coeffs=0       
+WAVE0013= 0.008557301292961192 / Wavelength coefficients order=2 coeffs=1       
+WAVE0014= -2.3203442795921E-07 / Wavelength coefficients order=2 coeffs=2       
+WAVE0015= 6.51845041961798E-13 / Wavelength coefficients order=2 coeffs=3       
+WAVE0016= -1.1600538154535E-17 / Wavelength coefficients order=2 coeffs=4       
+WAVE0017= -3.8090891003003E-21 / Wavelength coefficients order=2 coeffs=5       
+WAVE0018=    993.6562198646469 / Wavelength coefficients order=3 coeffs=0       
+WAVE0019= 0.008671202418322504 / Wavelength coefficients order=3 coeffs=1       
+WAVE0020= -2.3826263436755E-07 / Wavelength coefficients order=3 coeffs=2       
+WAVE0021=  2.1312092775907E-12 / Wavelength coefficients order=3 coeffs=3       
+WAVE0022= -3.2823491883352E-16 / Wavelength coefficients order=3 coeffs=4       
+WAVE0023= 2.22913480730265E-20 / Wavelength coefficients order=3 coeffs=5       
+WAVE0024=    1006.950359755816 / Wavelength coefficients order=4 coeffs=0       
+WAVE0025= 0.008782212172255364 / Wavelength coefficients order=4 coeffs=1       
+WAVE0026= -2.3878650434393E-07 / Wavelength coefficients order=4 coeffs=2       
+WAVE0027= 9.54278742132505E-13 / Wavelength coefficients order=4 coeffs=3       
+WAVE0028= -5.8422662048167E-17 / Wavelength coefficients order=4 coeffs=4       
+WAVE0029= -1.4602079474392E-21 / Wavelength coefficients order=4 coeffs=5       
+WAVE0030=    1020.601795416693 / Wavelength coefficients order=5 coeffs=0       
+WAVE0031= 0.008899106391287683 / Wavelength coefficients order=5 coeffs=1       
+WAVE0032= -2.4224924575565E-07 / Wavelength coefficients order=5 coeffs=2       
+WAVE0033= 1.16781819322304E-12 / Wavelength coefficients order=5 coeffs=3       
+WAVE0034= -1.2052739183012E-16 / Wavelength coefficients order=5 coeffs=4       
+WAVE0035= 4.96835270526772E-21 / Wavelength coefficients order=5 coeffs=5       
+WAVE0036=    1034.627184294769 / Wavelength coefficients order=6 coeffs=0       
+WAVE0037= 0.009015969855811415 / Wavelength coefficients order=6 coeffs=1       
+WAVE0038= -2.4256388005825E-07 / Wavelength coefficients order=6 coeffs=2       
+WAVE0039= -1.7078058518204E-13 / Wavelength coefficients order=6 coeffs=3       
+WAVE0040= 1.80756578429273E-16 / Wavelength coefficients order=6 coeffs=4       
+WAVE0041= -2.1085421702451E-20 / Wavelength coefficients order=6 coeffs=5       
+WAVE0042=    1049.039172702807 / Wavelength coefficients order=7 coeffs=0       
+WAVE0043= 0.009140015587278172 / Wavelength coefficients order=7 coeffs=1       
+WAVE0044= -2.4650870096207E-07 / Wavelength coefficients order=7 coeffs=2       
+WAVE0045= 9.03127322923499E-14 / Wavelength coefficients order=7 coeffs=3       
+WAVE0046= 1.36145186372756E-16 / Wavelength coefficients order=7 coeffs=4       
+WAVE0047= -1.8637159523369E-20 / Wavelength coefficients order=7 coeffs=5       
+WAVE0048=    1063.856921059338 / Wavelength coefficients order=8 coeffs=0       
+WAVE0049= 0.009265663864576945 / Wavelength coefficients order=8 coeffs=1       
+WAVE0050= -2.4906398375953E-07 / Wavelength coefficients order=8 coeffs=2       
+WAVE0051= -2.0480228126201E-13 / Wavelength coefficients order=8 coeffs=3       
+WAVE0052= 1.90297231720483E-16 / Wavelength coefficients order=8 coeffs=4       
+WAVE0053=  -2.235219403323E-20 / Wavelength coefficients order=8 coeffs=5       
+WAVE0054=    1079.097000124572 / Wavelength coefficients order=9 coeffs=0       
+WAVE0055= 0.009394129801689638 / Wavelength coefficients order=9 coeffs=1       
+WAVE0056= -2.5057882506689E-07 / Wavelength coefficients order=9 coeffs=2       
+WAVE0057= -1.2106376829438E-12 / Wavelength coefficients order=9 coeffs=3       
+WAVE0058= 4.36434282043798E-16 / Wavelength coefficients order=9 coeffs=4       
+WAVE0059= -4.4740436647906E-20 / Wavelength coefficients order=9 coeffs=5       
+WAVE0060=    1094.776559325086 / Wavelength coefficients order=10 coeffs=0      
+WAVE0061= 0.009529658334013339 / Wavelength coefficients order=10 coeffs=1      
+WAVE0062= -2.5577316784472E-07 / Wavelength coefficients order=10 coeffs=2      
+WAVE0063=  -2.989162001793E-13 / Wavelength coefficients order=10 coeffs=3      
+WAVE0064= 2.04328409601744E-16 / Wavelength coefficients order=10 coeffs=4      
+WAVE0065= -2.2842362465293E-20 / Wavelength coefficients order=10 coeffs=5      
+WAVE0066=    1110.916539770574 / Wavelength coefficients order=11 coeffs=0      
+WAVE0067= 0.009666749550455054 / Wavelength coefficients order=11 coeffs=1      
+WAVE0068= -2.5820050774845E-07 / Wavelength coefficients order=11 coeffs=2      
+WAVE0069= -9.5856323392304E-13 / Wavelength coefficients order=11 coeffs=3      
+WAVE0070= 3.77089925665675E-16 / Wavelength coefficients order=11 coeffs=4      
+WAVE0071= -3.9854306428043E-20 / Wavelength coefficients order=11 coeffs=5      
+WAVE0072=    1127.536825471585 / Wavelength coefficients order=12 coeffs=0      
+WAVE0073= 0.009809687797529351 / Wavelength coefficients order=12 coeffs=1      
+WAVE0074=  -2.626843206418E-07 / Wavelength coefficients order=12 coeffs=2      
+WAVE0075= -5.2459424803043E-13 / Wavelength coefficients order=12 coeffs=3      
+WAVE0076= 2.44859417081864E-16 / Wavelength coefficients order=12 coeffs=4      
+WAVE0077= -2.5207436107704E-20 / Wavelength coefficients order=12 coeffs=5      
+WAVE0078=    1144.660378432565 / Wavelength coefficients order=13 coeffs=0      
+WAVE0079= 0.009955438268492812 / Wavelength coefficients order=13 coeffs=1      
+WAVE0080= -2.6625499250209E-07 / Wavelength coefficients order=13 coeffs=2      
+WAVE0081= -5.6517378637097E-13 / Wavelength coefficients order=13 coeffs=3      
+WAVE0082= 2.51244527492603E-16 / Wavelength coefficients order=13 coeffs=4      
+WAVE0083= -2.5959674437705E-20 / Wavelength coefficients order=13 coeffs=5      
+WAVE0084=    1162.308308442766 / Wavelength coefficients order=14 coeffs=0      
+WAVE0085=   0.0101082948217642 / Wavelength coefficients order=14 coeffs=1      
+WAVE0086= -2.7162696092758E-07 / Wavelength coefficients order=14 coeffs=2      
+WAVE0087= 9.47478616828099E-14 / Wavelength coefficients order=14 coeffs=3      
+WAVE0088= 8.32623074077209E-17 / Wavelength coefficients order=14 coeffs=4      
+WAVE0089=  -1.003256879821E-20 / Wavelength coefficients order=14 coeffs=5      
+WAVE0090=    1180.506565122513 / Wavelength coefficients order=15 coeffs=0      
+WAVE0091=  0.01026537032058143 / Wavelength coefficients order=15 coeffs=1      
+WAVE0092= -2.7644116419313E-07 / Wavelength coefficients order=15 coeffs=2      
+WAVE0093= 3.92877365281476E-13 / Wavelength coefficients order=15 coeffs=3      
+WAVE0094= 2.35738282130708E-17 / Wavelength coefficients order=15 coeffs=4      
+WAVE0095= -5.8503412787479E-21 / Wavelength coefficients order=15 coeffs=5      
+WAVE0096=    1199.282402522972 / Wavelength coefficients order=16 coeffs=0      
+WAVE0097=  0.01042619425271773 / Wavelength coefficients order=16 coeffs=1      
+WAVE0098= -2.8070309386471E-07 / Wavelength coefficients order=16 coeffs=2      
+WAVE0099= 4.73990807469665E-13 / Wavelength coefficients order=16 coeffs=3      
+WAVE0100= -1.6048581775892E-17 / Wavelength coefficients order=16 coeffs=4      
+WAVE0101=  -1.040366486698E-21 / Wavelength coefficients order=16 coeffs=5      
+WAVE0102=    1218.662258384287 / Wavelength coefficients order=17 coeffs=0      
+WAVE0103=  0.01059336719443827 / Wavelength coefficients order=17 coeffs=1      
+WAVE0104=  -2.853674436164E-07 / Wavelength coefficients order=17 coeffs=2      
+WAVE0105= 4.62739678978782E-13 / Wavelength coefficients order=17 coeffs=3      
+WAVE0106= -2.4215610116361E-18 / Wavelength coefficients order=17 coeffs=4      
+WAVE0107= -3.0178809944881E-21 / Wavelength coefficients order=17 coeffs=5      
+WAVE0108=     1238.67690480738 / Wavelength coefficients order=18 coeffs=0      
+WAVE0109=  0.01076508546138318 / Wavelength coefficients order=18 coeffs=1      
+WAVE0110= -2.8991101787352E-07 / Wavelength coefficients order=18 coeffs=2      
+WAVE0111= 4.91951551284258E-13 / Wavelength coefficients order=18 coeffs=3      
+WAVE0112= -1.7046697669373E-17 / Wavelength coefficients order=18 coeffs=4      
+WAVE0113= -1.1879834816564E-21 / Wavelength coefficients order=18 coeffs=5      
+WAVE0114=    1259.357570737729 / Wavelength coefficients order=19 coeffs=0      
+WAVE0115=  0.01094290182554714 / Wavelength coefficients order=19 coeffs=1      
+WAVE0116= -2.9458949307249E-07 / Wavelength coefficients order=19 coeffs=2      
+WAVE0117= 3.85021562402651E-13 / Wavelength coefficients order=19 coeffs=3      
+WAVE0118= 2.94177540664655E-17 / Wavelength coefficients order=19 coeffs=4      
+WAVE0119= -7.1797122980265E-21 / Wavelength coefficients order=19 coeffs=5      
+WAVE0120=    1280.738960336541 / Wavelength coefficients order=20 coeffs=0      
+WAVE0121=  0.01112668941858342 / Wavelength coefficients order=20 coeffs=1      
+WAVE0122= -2.9993123626313E-07 / Wavelength coefficients order=20 coeffs=2      
+WAVE0123= 7.12087919018085E-13 / Wavelength coefficients order=20 coeffs=3      
+WAVE0124= -7.6866643550512E-17 / Wavelength coefficients order=20 coeffs=4      
+WAVE0125= 4.76119984636144E-21 / Wavelength coefficients order=20 coeffs=5      
+WAVE0126=    1302.856351378701 / Wavelength coefficients order=21 coeffs=0      
+WAVE0127=  0.01131658628054384 / Wavelength coefficients order=21 coeffs=1      
+WAVE0128=   -3.05245249921E-07 / Wavelength coefficients order=21 coeffs=2      
+WAVE0129= 8.41567896800153E-13 / Wavelength coefficients order=21 coeffs=3      
+WAVE0130= -7.9405145953948E-17 / Wavelength coefficients order=21 coeffs=4      
+WAVE0131= 2.42743546138894E-21 / Wavelength coefficients order=21 coeffs=5      
+WAVE0132=    1325.748766422075 / Wavelength coefficients order=22 coeffs=0      
+WAVE0133=  0.01151415482153203 / Wavelength coefficients order=22 coeffs=1      
+WAVE0134= -3.1177193443059E-07 / Wavelength coefficients order=22 coeffs=2      
+WAVE0135=  1.6639162905395E-12 / Wavelength coefficients order=22 coeffs=3      
+WAVE0136= -3.0499672324998E-16 / Wavelength coefficients order=22 coeffs=4      
+WAVE0137= 2.44560244741634E-20 / Wavelength coefficients order=22 coeffs=5      
+WAVE0138=    1349.458493583463 / Wavelength coefficients order=23 coeffs=0      
+WAVE0139=  0.01171684727489363 / Wavelength coefficients order=23 coeffs=1      
+WAVE0140= -3.1592409221203E-07 / Wavelength coefficients order=23 coeffs=2      
+WAVE0141= 9.14788143804038E-13 / Wavelength coefficients order=23 coeffs=3      
+WAVE0142= -9.7555770460866E-17 / Wavelength coefficients order=23 coeffs=4      
+WAVE0143= 3.66894384665638E-21 / Wavelength coefficients order=23 coeffs=5      
+WAVE0144=    1374.030443735322 / Wavelength coefficients order=24 coeffs=0      
+WAVE0145=  0.01192771770854069 / Wavelength coefficients order=24 coeffs=1      
+WAVE0146= -3.2241063309726E-07 / Wavelength coefficients order=24 coeffs=2      
+WAVE0147= 1.53926522441494E-12 / Wavelength coefficients order=24 coeffs=3      
+WAVE0148= -2.6615232118033E-16 / Wavelength coefficients order=24 coeffs=4      
+WAVE0149= 2.04569955029261E-20 / Wavelength coefficients order=24 coeffs=5      
+WAVE0150=    1399.510159231494 / Wavelength coefficients order=25 coeffs=0      
+WAVE0151=  0.01214573250906179 / Wavelength coefficients order=25 coeffs=1      
+WAVE0152= -3.2680685349519E-07 / Wavelength coefficients order=25 coeffs=2      
+WAVE0153= 7.48033005525894E-13 / Wavelength coefficients order=25 coeffs=3      
+WAVE0154= -5.7060886133354E-17 / Wavelength coefficients order=25 coeffs=4      
+WAVE0155= -2.2155281954071E-22 / Wavelength coefficients order=25 coeffs=5      
+WAVE0156=     1425.95099175558 / Wavelength coefficients order=26 coeffs=0      
+WAVE0157=  0.01237360835412838 / Wavelength coefficients order=26 coeffs=1      
+WAVE0158=  -3.341024021314E-07 / Wavelength coefficients order=26 coeffs=2      
+WAVE0159= 1.58884962043054E-12 / Wavelength coefficients order=26 coeffs=3      
+WAVE0160= -2.9844390177245E-16 / Wavelength coefficients order=26 coeffs=4      
+WAVE0161= 2.46673541235285E-20 / Wavelength coefficients order=26 coeffs=5      
+WAVE0162=    1453.408901934596 / Wavelength coefficients order=27 coeffs=0      
+WAVE0163=  0.01260800408530569 / Wavelength coefficients order=27 coeffs=1      
+WAVE0164= -3.3886018708386E-07 / Wavelength coefficients order=27 coeffs=2      
+WAVE0165= 6.77012464819821E-13 / Wavelength coefficients order=27 coeffs=3      
+WAVE0166= -4.3717178232151E-17 / Wavelength coefficients order=27 coeffs=4      
+WAVE0167= -6.8953794555768E-22 / Wavelength coefficients order=27 coeffs=5      
+WAVE0168=    1481.940714889253 / Wavelength coefficients order=28 coeffs=0      
+WAVE0169=  0.01285441339169462 / Wavelength coefficients order=28 coeffs=1      
+WAVE0170= -3.4636112036382E-07 / Wavelength coefficients order=28 coeffs=2      
+WAVE0171= 1.23273440279005E-12 / Wavelength coefficients order=28 coeffs=3      
+WAVE0172= -1.8500726505018E-16 / Wavelength coefficients order=28 coeffs=4      
+WAVE0173= 1.22453896752196E-20 / Wavelength coefficients order=28 coeffs=5      
+WAVE0174=    1511.614441607873 / Wavelength coefficients order=29 coeffs=0      
+WAVE0175=  0.01310975306378783 / Wavelength coefficients order=29 coeffs=1      
+WAVE0176= -3.5323220482295E-07 / Wavelength coefficients order=29 coeffs=2      
+WAVE0177= 1.08808722528967E-12 / Wavelength coefficients order=29 coeffs=3      
+WAVE0178= -1.1012806980243E-16 / Wavelength coefficients order=29 coeffs=4      
+WAVE0179= 2.31766769065162E-21 / Wavelength coefficients order=29 coeffs=5      
+WAVE0180=    1542.498601153471 / Wavelength coefficients order=30 coeffs=0      
+WAVE0181=  0.01337564989578575 / Wavelength coefficients order=30 coeffs=1      
+WAVE0182= -3.6124968061731E-07 / Wavelength coefficients order=30 coeffs=2      
+WAVE0183= 1.84599300032411E-12 / Wavelength coefficients order=30 coeffs=3      
+WAVE0184= -3.4294672707763E-16 / Wavelength coefficients order=30 coeffs=4      
+WAVE0185= 2.69513589270435E-20 / Wavelength coefficients order=30 coeffs=5      
+WAVE0186=    1574.668798090361 / Wavelength coefficients order=31 coeffs=0      
+WAVE0187=  0.01365189729832948 / Wavelength coefficients order=31 coeffs=1      
+WAVE0188=  -3.675613598003E-07 / Wavelength coefficients order=31 coeffs=2      
+WAVE0189= 1.14603803634798E-12 / Wavelength coefficients order=31 coeffs=3      
+WAVE0190= -1.6165199304419E-16 / Wavelength coefficients order=31 coeffs=4      
+WAVE0191= 1.00463040116388E-20 / Wavelength coefficients order=31 coeffs=5      
+WAVE0192=    1608.207345809591 / Wavelength coefficients order=32 coeffs=0      
+WAVE0193=  0.01394080141342107 / Wavelength coefficients order=32 coeffs=1      
+WAVE0194= -3.7618777586296E-07 / Wavelength coefficients order=32 coeffs=2      
+WAVE0195= 1.79540837411557E-12 / Wavelength coefficients order=32 coeffs=3      
+WAVE0196= -3.4164481812462E-16 / Wavelength coefficients order=32 coeffs=4      
+WAVE0197= 2.75506503491601E-20 / Wavelength coefficients order=32 coeffs=5      
+WAVE0198=    1643.204160611903 / Wavelength coefficients order=33 coeffs=0      
+WAVE0199=  0.01424111197042102 / Wavelength coefficients order=33 coeffs=1      
+WAVE0200= -3.8331316246596E-07 / Wavelength coefficients order=33 coeffs=2      
+WAVE0201= 1.18736024250891E-12 / Wavelength coefficients order=33 coeffs=3      
+WAVE0202= -1.7234598182115E-16 / Wavelength coefficients order=33 coeffs=4      
+WAVE0203= 1.10159577624977E-20 / Wavelength coefficients order=33 coeffs=5      
+WAVE0204=    1679.755207774073 / Wavelength coefficients order=34 coeffs=0      
+WAVE0205=  0.01455617923330435 / Wavelength coefficients order=34 coeffs=1      
+WAVE0206= -3.9242225113231E-07 / Wavelength coefficients order=34 coeffs=2      
+WAVE0207= 1.61835165238878E-12 / Wavelength coefficients order=34 coeffs=3      
+WAVE0208= -2.8898526320204E-16 / Wavelength coefficients order=34 coeffs=4      
+WAVE0209= 2.18840227284473E-20 / Wavelength coefficients order=34 coeffs=5      
+WAVE0210=    1717.966960115085 / Wavelength coefficients order=35 coeffs=0      
+WAVE0211=   0.0148852191974897 / Wavelength coefficients order=35 coeffs=1      
+WAVE0212= -4.0115217075743E-07 / Wavelength coefficients order=35 coeffs=2      
+WAVE0213= 1.51171883905442E-12 / Wavelength coefficients order=35 coeffs=3      
+WAVE0214= -2.6214418172094E-16 / Wavelength coefficients order=35 coeffs=4      
+WAVE0215= 1.97296416826264E-20 / Wavelength coefficients order=35 coeffs=5      
+WAVE0216=    1757.956526611329 / Wavelength coefficients order=36 coeffs=0      
+WAVE0217=  0.01522939767001447 / Wavelength coefficients order=36 coeffs=1      
+WAVE0218= -4.1149998153768E-07 / Wavelength coefficients order=36 coeffs=2      
+WAVE0219= 2.29177832025114E-12 / Wavelength coefficients order=36 coeffs=3      
+WAVE0220= -4.6893546821396E-16 / Wavelength coefficients order=36 coeffs=4      
+WAVE0221= 3.95893373228039E-20 / Wavelength coefficients order=36 coeffs=5      
+WAVE0222=    1799.850481820948 / Wavelength coefficients order=37 coeffs=0      
+WAVE0223=  0.01558789475776626 / Wavelength coefficients order=37 coeffs=1      
+WAVE0224= -4.1959733648156E-07 / Wavelength coefficients order=37 coeffs=2      
+WAVE0225= 1.46738826155047E-12 / Wavelength coefficients order=37 coeffs=3      
+WAVE0226= -2.5505731540443E-16 / Wavelength coefficients order=37 coeffs=4      
+WAVE0227= 2.00820757701835E-20 / Wavelength coefficients order=37 coeffs=5      
+WAVE0228=    1843.788597875904 / Wavelength coefficients order=38 coeffs=0      
+WAVE0229=  0.01596443902855534 / Wavelength coefficients order=38 coeffs=1      
+WAVE0230= -4.2922772660756E-07 / Wavelength coefficients order=38 coeffs=2      
+WAVE0231=  1.2502800728294E-12 / Wavelength coefficients order=38 coeffs=3      
+WAVE0232= -1.9633109478809E-16 / Wavelength coefficients order=38 coeffs=4      
+WAVE0233= 1.39131802266301E-20 / Wavelength coefficients order=38 coeffs=5      
+WAVE0234=    1889.921508574719 / Wavelength coefficients order=39 coeffs=0      
+WAVE0235=  0.01636121783122392 / Wavelength coefficients order=39 coeffs=1      
+WAVE0236= -4.3991837349417E-07 / Wavelength coefficients order=39 coeffs=2      
+WAVE0237= 1.15239077090923E-12 / Wavelength coefficients order=39 coeffs=3      
+WAVE0238= -1.5544515484349E-16 / Wavelength coefficients order=39 coeffs=4      
+WAVE0239= 9.41505196361664E-21 / Wavelength coefficients order=39 coeffs=5      
+WAVE0240=    1938.418580789365 / Wavelength coefficients order=40 coeffs=0      
+WAVE0241=  0.01677974066560326 / Wavelength coefficients order=40 coeffs=1      
+WAVE0242= -4.5280296166754E-07 / Wavelength coefficients order=40 coeffs=2      
+WAVE0243= 2.19444909734826E-12 / Wavelength coefficients order=40 coeffs=3      
+WAVE0244= -4.3704580687321E-16 / Wavelength coefficients order=40 coeffs=4      
+WAVE0245= 3.58205190846517E-20 / Wavelength coefficients order=40 coeffs=5      
+WAVE0246=    1989.469368233174 / Wavelength coefficients order=41 coeffs=0      
+WAVE0247=  0.01721814163925198 / Wavelength coefficients order=41 coeffs=1      
+WAVE0248= -4.6406502818513E-07 / Wavelength coefficients order=41 coeffs=2      
+WAVE0249= 1.86384902312631E-12 / Wavelength coefficients order=41 coeffs=3      
+WAVE0250= -3.4404907071395E-16 / Wavelength coefficients order=41 coeffs=4      
+WAVE0251= 2.69448470062302E-20 / Wavelength coefficients order=41 coeffs=5      
+WAVE0252=    2043.281125393497 / Wavelength coefficients order=42 coeffs=0      
+WAVE0253=  0.01767813385444661 / Wavelength coefficients order=42 coeffs=1      
+WAVE0254= -4.7666962535591E-07 / Wavelength coefficients order=42 coeffs=2      
+WAVE0255= 2.64220841643702E-12 / Wavelength coefficients order=42 coeffs=3      
+WAVE0256= -5.6060771483183E-16 / Wavelength coefficients order=42 coeffs=4      
+WAVE0257= 4.75359909256705E-20 / Wavelength coefficients order=42 coeffs=5      
+WAVE0258=      2100.0829071785 / Wavelength coefficients order=43 coeffs=0      
+WAVE0259=  0.01816353875548113 / Wavelength coefficients order=43 coeffs=1      
+WAVE0260= -4.8713291882314E-07 / Wavelength coefficients order=43 coeffs=2      
+WAVE0261= 9.51376077791152E-13 / Wavelength coefficients order=43 coeffs=3      
+WAVE0262= -1.2757760574755E-16 / Wavelength coefficients order=43 coeffs=4      
+WAVE0263= 8.46445418696343E-21 / Wavelength coefficients order=43 coeffs=5      
+WAVE0264=    2160.128998139229 / Wavelength coefficients order=44 coeffs=0      
+WAVE0265=  0.01867970921275373 / Wavelength coefficients order=44 coeffs=1      
+WAVE0266= -5.0275064672197E-07 / Wavelength coefficients order=44 coeffs=2      
+WAVE0267=  1.7533000892783E-12 / Wavelength coefficients order=44 coeffs=3      
+WAVE0268= -2.8227349656272E-16 / Wavelength coefficients order=44 coeffs=4      
+WAVE0269= 1.74829814229385E-20 / Wavelength coefficients order=44 coeffs=5      
+WAVE0270=    2223.707042827673 / Wavelength coefficients order=45 coeffs=0      
+WAVE0271=  0.01922298029824984 / Wavelength coefficients order=45 coeffs=1      
+WAVE0272= -5.1624489532941E-07 / Wavelength coefficients order=45 coeffs=2      
+WAVE0273= 1.54423025997102E-12 / Wavelength coefficients order=45 coeffs=3      
+WAVE0274= -2.8792602740944E-16 / Wavelength coefficients order=45 coeffs=4      
+WAVE0275= 2.33112454667534E-20 / Wavelength coefficients order=45 coeffs=5      
+WAVE0276=     2291.13566649392 / Wavelength coefficients order=46 coeffs=0      
+WAVE0277=  0.01980187341373665 / Wavelength coefficients order=46 coeffs=1      
+WAVE0278= -5.3209519456478E-07 / Wavelength coefficients order=46 coeffs=2      
+WAVE0279= 1.79362108651034E-12 / Wavelength coefficients order=46 coeffs=3      
+WAVE0280=   -3.34391080441E-16 / Wavelength coefficients order=46 coeffs=4      
+WAVE0281= 2.44802929642142E-20 / Wavelength coefficients order=46 coeffs=5      
+WAVE0282=    2362.780799846984 / Wavelength coefficients order=47 coeffs=0      
+WAVE0283=  0.02041599610013907 / Wavelength coefficients order=47 coeffs=1      
+WAVE0284= -5.5081452401614E-07 / Wavelength coefficients order=47 coeffs=2      
+WAVE0285= 3.49338173417924E-12 / Wavelength coefficients order=47 coeffs=3      
+WAVE0286= -7.9643289997893E-16 / Wavelength coefficients order=47 coeffs=4      
+WAVE0287= 6.95489069300987E-20 / Wavelength coefficients order=47 coeffs=5      
+WAVE0288=     2439.04932532515 / Wavelength coefficients order=48 coeffs=0      
+WAVE0289=  0.02106572514473928 / Wavelength coefficients order=48 coeffs=1      
+WAVE0290=  -5.620145120775E-07 / Wavelength coefficients order=48 coeffs=2      
+WAVE0291= -1.5223762084469E-12 / Wavelength coefficients order=48 coeffs=3      
+WAVE0292= 8.95543826689162E-16 / Wavelength coefficients order=48 coeffs=4      
+WAVE0293= -1.3289481276336E-19 / Wavelength coefficients order=48 coeffs=5      
+WFP_FILE= '24461F09T10c_pp_e2dsff_AB_wave_night_AB.fits' / WFP source file      
+WFPDRIFT=   0.2405605335959766 / Wavelength sol absolute CCF FP Drift [km/s]    
+WFPFWHM =    5.570000986039786 / FWHM of wave sol FP CCF [km/s]                 
+WFPCONT =    95.05453230076299 / wave sol FP Contrast of CCF (%)                
+WFPMASK = 'smart_fp_mask.mas'  / wave sol FP Mask filename                      
+WFPLINE =              19486.0 / wave sol FP nbr of lines used                  
+WFPTRV  =                      / wave sol FP target RV [km/s]                   
+WFPWIDTH=                  7.5 / wave sol FP CCF width [km/s]                   
+WFPSTEP =                  0.5 / wave sol FP CCF step [km/s]                    
+BERV    =   -3.187481166182335 / Barycentric Velocity calc. in BERVSRCE [km/s]  
+BJD     =      2458759.8262062 / Barycentric Julian data calc. in BERVSRCE      
+BERVMAX =    10.85686764454341 / Max BERV 1 yr calc. in BERVSRCE [km/s]         
+DBERV   = 1.78804421864242E-05 / Deviation in BERV in BERVSRCE [km/s/s]         
+BERVSRCE= 'barycorrpy'         / How BERV was calculated                        
+BERV_EST= 'NaN     '           / Barycentric Velocity estimate [km/s]           
+BJD_EST = 'NaN     '           / Barycentric Julian data estimate               
+BERVMAXE= 'NaN     '           / Max BERV 1 yr estimate [km/s]                  
+DBERVE  = 'NaN     '           / Deviation in BERV estimate [km/s/s]            
+BERVOBST=    2458759.823465287 / BERV observation time used [days]              
+BERVOBSM= 'header  '           / BERV method used to calc observation time      
+BC_GAIA =  2187263158355763072 / The Gaia ID used for BERV params               
+BC_OBJNM= 'J20412815+5725473'  / The OBJNAME used for BERV params               
+BC_RA   =    310.3681187019198 / Right Ascension used to calc. BERV             
+BC_DEC  =    57.43068271999451 / Declination used to calc. BERV                 
+BC_EPOCH=    2457205.999994213 / Epoch [JD] used to calc. BERV                  
+BC_PMRA =    97.73999574490419 / PMRA [mas/yr] used to calc. BERV               
+BC_PMDE =    205.7094338914069 / PMDE [mas/yr] used to calc. BERV               
+BC_LAT  =            19.825252 / OBS Latitude [deg] used to calc. BERV          
+BC_LONG =          -155.468876 / OBS Longitude [deg] used to calc. BERV         
+BC_ALT  =               4204.0 / OBS Altitude [m] used to calc. BERV            
+BC_PLX  =    40.30385734993578 / PLX [mas] used to calc. BERV                   
+BC_RV   =   -24.13582933942158 / RV [km/s] used to calc. BERV                   
+BC_PSRCE= 'GAIA [TABLE]'       / Source of BERV star params                     
+BC_GMAG =     9.63202953338623 / Gaia G mag for BERV calc.                      
+BC_BPMAG=    10.48800849914551 / Gaia BP mag for BERV calc.                     
+BC_RPMAG=    8.765338897705078 / Gaia RP mag for BERV calc.                     
+BC_MAG_L=                 15.0 / Gaia mag lim for BERV calc.                    
+BC_PLX_L=                  5.0 / Gaia plx lim for BERV calc.                    
+LEAKCORR=                    T / Whether DARK_FP leakage correction has been don
+LEAK_BPU=                  5.0 / LEAK bckgrd percentile used for leakage corr   
+LEAK_NPU=                 90.0 / LEAK norm percentile used for leakage corr     
+LEAK_LPU=                  1.0 / LEAK lower bound percentile used for leakage co
+LEAK_UPU=                 99.0 / LEAK upper bound percentile used for leakage co
+LEAKBADR=                  0.1 / LEAK bad ratio offset limit used for leakage co
+DRSPID  = 'PID-00016387686604492530-TUI4' / The process ID that outputted this f
+DRSOUTID= 'TELLU_RECON'        / DRS output identification code                 
+INF1000 = '2446124o_pp_e2dsff_AB.fits' / Input file used to create output file=0
+QCC001N = 'EXTSNR  '           / Quality control parameter name                 
+QCC001V =    92.57122603962719 / Quality control measured value                 
+QCC001L = 'EXTSNR < 10.0'      / Quality control logic used                     
+QCC001P =                    1 / Quality control param passed QC                
+QCC002N = 'NUM_NAN_CCF'        / Quality control parameter name                 
+QCC002V =                    0 / Quality control measured value                 
+QCC002L = 'NUM_NAN_CCF > 0'    / Quality control logic used                     
+QCC002P =                    1 / Quality control param passed QC                
+QCC003N = 'EXPO_OTHERS L'      / Quality control parameter name                 
+QCC003V =    1.358883175093373 / Quality control measured value                 
+QCC003L = 'EXPO_OTHERS L < 0.8' / Quality control logic used                    
+QCC003P =                    1 / Quality control param passed QC                
+QCC004N = 'EXPO_OTHERS U'      / Quality control parameter name                 
+QCC004V =    1.358883175093373 / Quality control measured value                 
+QCC004L = 'EXPO_OTHERS U > 3.0' / Quality control logic used                    
+QCC004P =                    1 / Quality control param passed QC                
+QCC005N = 'EXPO_WATER L'       / Quality control parameter name                 
+QCC005V =   0.8319080148601787 / Quality control measured value                 
+QCC005L = 'EXPO_WATER L < 0.1' / Quality control logic used                     
+QCC005P =                    1 / Quality control param passed QC                
+QCC006N = 'EXPO_WATER U'       / Quality control parameter name                 
+QCC006V =   0.8319080148601787 / Quality control measured value                 
+QCC006L = 'EXPO_WATER U > 15.0' / Quality control logic used                    
+QCC006P =                    1 / Quality control param passed QC                
+QCC007N = 'ITERATIONS'         / Quality control parameter name                 
+QCC007V =                   10 / Quality control measured value                 
+QCC007L = 'ITERATIONS = 19'    / Quality control logic used                     
+QCC007P =                    1 / Quality control param passed QC                
+QCC008N = 'SNR[33] '           / Quality control parameter name                 
+QCC008V =      89.132314916472 / Quality control measured value                 
+QCC008L = 'SNR[33] < 15.00'    / Quality control logic used                     
+QCC008P =                    1 / Quality control param passed QC                
+QCC_ALL =                    T                                                  
+FTT_NPC =                    7 / ftellu Number of principal components used     
+FTT_ADPC=                    T / ftellu first deriv. was added to pc            
+FTT_FDPC=                    T / ftellu deriv. of pc was fit instead of pc      
+FTTABSOS= '[file] tellu_save_1633446309.2881105.npy' / ftellu source of the abso
+FTTFKNUM=                   20 / ftellu num of good pixels used per order       
+FTTMTRAN=                  0.2 / ftellu min transmission used                   
+FTTMINLL=               1000.0 / ftellu min wavelength used                     
+FTTMAXLL=               2100.0 / ftellu max wavelength used                     
+FTTSKERN=                 30.0 / ftellu smoothing kernal used [km/s]            
+FTTIMPXS=                 2.28 / ftellu image pixel size used                   
+FTTFITRS=                    4 / ftellu num iterations used for fit             
+FTTRCLIM=                 -0.5 / ftellu log limit in min absorption used        
+MKTTTFIT=                  0.3 / mktellu min transmission used                  
+MKTTTMAX=                  1.1 / mktellu max transmission used                  
+TLPEH2O =   0.8319080148601787 / tellu preclean expo water calculated           
+TLPEOTR =    1.358883175093373 / tellu preclean expo others calculated          
+TLPDVH2O=  -0.1096599192487512 / tellu preclean velocity water absorbers        
+TLPDVOTR= -0.00297648963189809 / tellu preclean velocity others absorbers       
+TLPDOCLN=                    T / tellu preclean done                            
+TLPDFH2O=                  4.0 / tellu preclean default h20 abso used           
+TLPSCRNG=                 20.0 / tellu preclean ccf scan range km/s             
+TLPCLORD=                    T / tellu preclean were OH lines were cleaned      
+TLPRORDS= '47, 48  '           / tellu preclean which orders were removed       
+TLPSNRMT=                 10.0 / tellu preclean snr min threshold               
+TLPDEXCT=               0.0001 / tellu preclean dexpo conv thres used           
+TLPMXITR=                   20 / tellu preclean max iterations used             
+TLPAEKTH=                1E-06 / tellu preclean abso expo kernel thres          
+TLPWAVES=                965.0 / tellu preclean wave start used [nm]            
+TLPWAVEF=               2500.0 / tellu preclean wave end used [nm]              
+TLPDVGRD=                  1.0 / tellu preclean dv wave grid used [km/s]        
+TLPAEKWD=                 4.95 / tellu preclean gauss width kernel used         
+TLPAEKEX=                  2.2 / tellu preclean gauss shape kernel used         
+TLPTRSTH=                 -1.0 / tellu preclean transmission thres used         
+TLPTRSLM=                 10.0 / tellu preclean transmission sig limit used     
+TLPFCARM=                    F / tellu preclean force airmass from hdr          
+TLP_OTHB= '0.8, 3.0'           / tellu preclean lower/upper bounds others       
+TLP_H2OB= '0.1, 15.0'          / tellu preclean lower/upper bounds water        
+FTTTEMPL= 'Template_J20412815+5725473_tellu_obj_AB.fits' / ftellu template used 
+AMPPC000=  -0.3885660748399231 / ftellu Principle Component Amplitudes amp=0    
+AMPPC001=  0.02271239719386254 / ftellu Principle Component Amplitudes amp=1    
+AMPPC002=  0.01858404204711189 / ftellu Principle Component Amplitudes amp=2    
+AMPPC003=  0.07434277027227568 / ftellu Principle Component Amplitudes amp=3    
+AMPPC004=  0.07017263532130462 / ftellu Principle Component Amplitudes amp=4    
+DV_TELL1=  -0.1823078298475423 / ftellu Principle Component second der.         
+ABSO_H2O=   0.8296729574774449 / Absorption in H2O                              
+ABSO_O3 =    1.338180155994331 / Absorption in O3                               
+ABSO_N2O=    1.338630905361954 / Absorption in N2O                              
+ABSO_O2 =    1.212772395547077 / Absorption in O2                               
+ABSO_CO2=     1.24150658640781 / Absorption in CO2                              
+ABSO_CH4=    1.901059244795864 / Absorption in CH4                              
+TAU_H2O =   0.8300688470002654 / ftellu TAPAS tau H2O                           
+TAU_OTHE=    1.327559655134856 / ftellu TAPAS tau for O2,O3,CH4,N2O,CO2         
+END                                                                             

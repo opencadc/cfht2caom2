@@ -67,22 +67,25 @@
 # ***********************************************************************
 #
 
-import os
+from os.path import basename, join
 
+from glob import glob
 from caom2pipe import astro_composable as ac
 from cfht2caom2.cfht_builder import CFHTBuilder, CFHTLocalBuilder, set_storage_name_values
 from cfht2caom2 import metadata
 
 from mock import Mock
-import cfht_mocks
+import pytest
 
 
-test_fqn = os.path.join(cfht_mocks.TEST_DATA_DIR, 'composable_test/test_files/2281792p.fits.fz')
+@pytest.fixture()
+def fqn(test_data_dir):
+    return join(test_data_dir, 'composable_test/test_files/2281792p.fits.fz')
 
 
-def test_cfht_local_builder(test_config):
+def test_cfht_local_builder(fqn, test_config):
     headers_mock = Mock(autospec=True)
-    headers_mock.headers.get.side_effect = _mock_get
+    headers_mock.headers.get.side_effect = lambda ignore: ac.make_headers_from_file(fqn)
     test_config.use_local_files = True
     test_subject = CFHTLocalBuilder(test_config.collection, test_config.use_local_files, headers_mock)
     assert test_subject is not None, 'ctor failure'
@@ -92,37 +95,61 @@ def test_cfht_local_builder(test_config):
     assert test_result.file_name == '123p.hdf5', 'wrong local hdf5 name'
     assert (test_result.instrument == metadata.Inst.SITELLE), 'wrong hdf5 instrument'
 
-    test_result = test_subject.build(test_fqn)
+    test_result = test_subject.build(fqn)
     assert test_result is not None, 'local fits file failed'
-    assert test_result.file_name == os.path.basename(test_fqn), 'wrong local file name'
+    assert test_result.file_name == basename(fqn), 'wrong local file name'
     assert test_result.instrument == metadata.Inst.WIRCAM
 
 
-def test_cfht_builder(test_config):
+def test_cfht_builder(fqn, test_config):
     test_config.use_local_files = False
     test_subject = CFHTBuilder(test_config.collection)
     assert test_subject is not None, 'ctor failure 2'
-    test_result = test_subject.build(test_fqn)
+
+    test_result = test_subject.build(fqn)
     assert test_result is not None, 'remote fits file failed'
-    assert test_result.file_name == os.path.basename(test_fqn), 'wrong remote file name'
-    headers = _mock_get(test_fqn)
+    assert test_result.file_name == basename(fqn), 'wrong remote file name'
+    headers = ac.make_headers_from_file(fqn)
     set_storage_name_values(test_result, headers)
     assert test_result.instrument == metadata.Inst.WIRCAM
     test_uri = 'cadc:CFHT/2281792p.fits.fz'
-    assert test_result.source_names[0] == test_fqn, 'wrong file name'
+    assert test_result.source_names[0] == fqn, 'wrong file name'
     assert test_result.destination_uris[0] == test_uri, 'wrong uri'
 
 
-def test_diag(test_config):
+def test_diag(test_data_dir, test_config):
     test_subject = CFHTBuilder(test_config.collection)
     test_storage_name = test_subject.build('695816p_diag.fits')
-    headers = _mock_get('cadc:CFHT/695816p_diag.fits')
+    headers = ac.make_headers_from_file(f'{test_data_dir}/single_plane/mega/695816p_diag.fits.header')
     set_storage_name_values(test_storage_name, headers)
     assert test_storage_name.instrument == metadata.Inst.MEGAPRIME
 
 
-def _mock_get(uri):
-    if uri == 'cadc:CFHT/695816p_diag.fits':
-        return ac.make_headers_from_file(f'{cfht_mocks.TEST_DATA_DIR}/single_plane/695816p_diag.fits.header')
-    else:
-        return ac.make_headers_from_file(test_fqn)
+def test_suffixes(test_data_dir, test_config):
+    # ensure every test file can be identified as Simple or Derived
+    for plane_name in ['single_plane', 'multi_plane']:
+        for instrument in ['espadons', 'mega', 'sitelle', 'spirou' ,'wircam']:
+            headers_mock = Mock(autospec=True)
+
+            def _mock_get(uri):
+                fqn = f'{test_data_dir}/{plane_name}/{instrument}/{basename(uri)}.header'
+                return ac.make_headers_from_file(fqn)
+
+            headers_mock.headers.get.side_effect = _mock_get
+            test_config.use_local_files = True
+            test_builder = CFHTLocalBuilder(test_config.collection, test_config.use_local_files, headers_mock)
+            assert test_builder is not None, 'ctor failure'
+
+            plane_list = glob(f'{test_data_dir}/{plane_name}/{instrument}/*.header')
+            for entry in plane_list:
+                test_subject = test_builder.build(entry.replace('.header', ''))
+                assert test_subject is not None, 'ctor'
+                found_one = False
+                if test_subject.simple:
+                    assert not test_subject.derived, f'not derived {test_subject}'
+                    found_one = True
+                if test_subject.derived:
+                    assert not test_subject.simple, f'not simple {test_subject}'
+                    found_one = True
+
+                assert found_one, f'{entry} neither derived nor simple {test_subject.is_master_cal}'

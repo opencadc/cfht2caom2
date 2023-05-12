@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-8ad5-0140a4453573" caom2:lastModified="2017-11-02T16:23:59.527" caom2:maxLastModified="2018-05-12T02:03:47.253" caom2:metaChecksum="md5:a2cb75ec5aab28dc495a14e904c7d4a9" caom2:accMetaChecksum="md5:d87c7dfcc755ee37f5a2a20903f81cfe" caom2:metaProducer="cfht2caom2/0.3.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-8ad5-0140a4453573" caom2:lastModified="2017-11-02T16:23:59.527" caom2:maxLastModified="2018-05-12T02:03:47.253" caom2:metaChecksum="md5:a2cb75ec5aab28dc495a14e904c7d4a9" caom2:accMetaChecksum="md5:d87c7dfcc755ee37f5a2a20903f81cfe" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>02Bm05.scatter.g.36.00</caom2:observationID>
   <caom2:metaRelease>2002-12-01T00:00:00.000</caom2:metaRelease>
   <caom2:algorithm>
-    <caom2:name>exposure</caom2:name>
+    <caom2:name>master_detrend</caom2:name>
   </caom2:algorithm>
   <caom2:type>FLAT</caom2:type>
   <caom2:intent>calibration</caom2:intent>
@@ -94,8 +94,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -151,8 +149,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -208,8 +204,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -265,8 +259,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -322,8 +314,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -379,8 +369,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -436,8 +424,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -493,8 +479,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -550,8 +534,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -607,8 +589,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -664,8 +644,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -721,8 +699,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -778,8 +754,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -835,8 +809,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -892,8 +864,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -949,8 +919,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1006,8 +974,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1063,8 +1029,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1120,8 +1084,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1177,8 +1139,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1234,8 +1194,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1291,8 +1249,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1348,8 +1304,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1405,8 +1359,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1462,8 +1414,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1519,8 +1469,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1576,8 +1524,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1633,8 +1579,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1690,8 +1634,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1747,8 +1689,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1804,8 +1744,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1861,8 +1799,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1918,8 +1854,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -1975,8 +1909,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -2032,8 +1964,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>
@@ -2089,8 +2019,6 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>0.0</caom2:exposure>
-                    <caom2:resolution>0.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>

@@ -79,7 +79,7 @@ from cadcdata import FileInfo
 from caom2pipe.manage_composable import Observable, Rejected
 from caom2pipe.reader_composable import Hdf5FileMetadataReader
 from cfht2caom2 import CFHTName
-from cfht2caom2 import fits2caom2_augmentation
+from cfht2caom2 import fits2caom2_augmentation, metadata
 import test_fits2caom2_augmentation
 
 
@@ -103,7 +103,7 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config):
     # work without a network connection
     storage_name = CFHTName(
         file_name=basename(test_name),
-        instrument=test_fits2caom2_augmentation._identify_inst_mock(None, test_name),
+        instrument=metadata.Inst.SITELLE,
         source_names=[test_name],
     )
     file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
@@ -122,5 +122,5 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config):
     observation = None
     observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    test_fits2caom2_augmentation._compare(observation, storage_name.obs_id, 'sitelle')
+    test_fits2caom2_augmentation._compare(test_name, observation, storage_name.obs_id)
     # assert False

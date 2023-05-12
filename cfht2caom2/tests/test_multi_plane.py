@@ -71,12 +71,11 @@ import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
-from caom2pipe.manage_composable import StorageName
+from caom2pipe.manage_composable import Observable, Rejected
 from caom2pipe import reader_composable as rdc
-from cfht2caom2 import cfht_name
-from cfht2caom2 import fits2caom2_augmentation
-from os import unlink
-from os.path import exists
+from cfht2caom2 import cfht_name, fits2caom2_augmentation, metadata
+from glob import glob
+from os.path import basename, dirname
 
 from mock import patch
 import test_fits2caom2_augmentation
@@ -101,9 +100,7 @@ LOOKUP = {
     '979412': ['979412o.fits', '979412p.fits'],
     '1257365': ['1257365o.fits', '1257365p.fits'],
     '840066': ['840066o.fits', '840066g.fits'],
-    # '1927963': ['1927963f.fits.fz', '1927963o.fits.fz',
-    #             '1927963p.fits.fz'],
-    # '2384125': ['2384125p.fits.fz', '2384125v.fits.fz', '2384125z.hdf5']
+    '1927963': ['1927963f.fits', '1927963o.fits', '1927963p.fits'],
     '2384125': ['2384125p.fits', '2384125z.hdf5'],
     '2401734': [
         '2401734o.fits',
@@ -114,23 +111,22 @@ LOOKUP = {
         '2401734v.fits',
     ],
     '1979958': ['1979958p.fits', '1979958y.fits'],
-    # '2460606': ['2460606i.fits.gz', '2460606o.fits.gz']
-    # '2460606': ['2460606i.fits.gz']
+    '2460606': ['2460606i.fits', '2460606o.fits']
 }
 
 
 def pytest_generate_tests(metafunc):
-    obs_id_list = []
-    for ii in LOOKUP:
-        obs_id_list.append(ii)
-    metafunc.parametrize('test_name', obs_id_list)
+    dir_listing = glob(f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/**/*.expected.xml')
+    metafunc.parametrize('expected_fqn', dir_listing)
 
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, local_headers_mock1, local_headers_mock2, cache_mock, test_name, test_config):
+def test_visitor(
+    vo_mock, local_headers_mock1, local_headers_mock2, cache_mock, expected_fqn, test_data_dir, test_config
+):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = test_fits2caom2_augmentation._vo_mock
@@ -141,20 +137,26 @@ def test_visitor(vo_mock, local_headers_mock1, local_headers_mock2, cache_mock, 
     local_headers_mock2.side_effect = test_fits2caom2_augmentation._local_headers
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
+    instr = basename(dirname(expected_fqn))
+    instrument = {
+        'espadons': metadata.Inst.ESPADONS,
+        'mega': metadata.Inst.MEGAPRIME,
+        'sitelle': metadata.Inst.SITELLE,
+        'spirou': metadata.Inst.SPIROU,
+        'wircam': metadata.Inst.WIRCAM,
+    }.get(instr)
+    test_name = basename(expected_fqn).replace('.expected.xml', '')
     observation = None
     for f_name in LOOKUP[test_name]:
         if 'hdf5' in f_name:
             source_names = [f'/test_files/{f_name}']
         else:
             source_names = [
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-                f'{f_name}.header'
+                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/{instr}/{f_name}.header'
             ]
         storage_name = cfht_name.CFHTName(
             file_name=f_name,
-            instrument=test_fits2caom2_augmentation._identify_inst_mock(
-                None, test_name
-            ),
+            instrument=instrument,
             source_names=source_names,
         )
         metadata_reader = rdc.FileMetadataReader()
@@ -167,19 +169,15 @@ def test_visitor(vo_mock, local_headers_mock1, local_headers_mock2, cache_mock, 
             metadata_reader.file_info[
                 storage_name.file_uri
             ].file_type = 'application/fits'
+        test_config.rejected_file_name = 'rejected.yml'
+        test_config.rejected_directory = test_data_dir
+        test_observable = Observable(rejected=Rejected(test_config.rejected_fqn), metrics=None)
         kwargs = {
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,
+            'observable': test_observable,
         }
-        actual_fqn = (
-            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/'
-            f'{storage_name.obs_id}.actual.xml'
-        )
-        if exists(actual_fqn):
-            unlink(actual_fqn)
 
         observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    test_fits2caom2_augmentation._compare(
-        observation, test_name, 'multi_plane'
-    )
+    test_fits2caom2_augmentation._compare(expected_fqn, observation, test_name)
