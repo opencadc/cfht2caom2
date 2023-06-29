@@ -641,6 +641,16 @@ def test_run_state_compression_commands(
         # NoFheadStoreVisit, get should be called
         clients_mock.return_value.data_client.get.assert_not_called()
         assert clients_mock.return_value.metadata_client.read.called, 'read'
+        test_report_result = mc.ExecutionSummary.read_report_file(test_config.report_fqn)
+        assert test_report_result is not None, 'expect content'
+        # 0 is ok here, because the capture_todo call is in the mocked `get_time_box_work` call
+        assert test_report_result.entries == 0, f'entries {test_report_result}'
+        assert test_report_result.success == 4, f'success {test_report_result}'
+        assert test_report_result._errors_sum == 0, f'failure {test_report_result}'
+        assert test_report_result._rejected_sum == 0, f'rejected {test_report_result}'
+        assert test_report_result._retry_sum == 0, f'retry {test_report_result}'
+        assert test_report_result._skipped_sum == 0, f'skipped {test_report_result}'
+        assert test_report_result._timeouts_sum == 0, f'timeouts {test_report_result}'
     finally:
         os.chdir(cwd)
 
@@ -857,7 +867,15 @@ def test_store_ingest_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test
         assert clients_mock.return_value.data_client.put.called, 'STORE'
         clients_mock.return_value.data_client.put.assert_called_with(test_input_dir, 'cadc:CFHT/testz.hdf5'), 'STORE'
         assert clients_mock.return_value.metadata_client.create.called, 'STORE metadata'
-
+        test_report_result = mc.ExecutionSummary.read_report_file(test_config.report_fqn)
+        assert test_report_result is not None, 'expect content'
+        assert test_report_result.entries == 1, f'entries {test_report_result}'
+        assert test_report_result.success == 1, f'success {test_report_result}'
+        assert test_report_result._errors_sum == 0, f'failure {test_report_result}'
+        assert test_report_result._rejected_sum == 0, f'rejected {test_report_result}'
+        assert test_report_result._retry_sum == 0, f'retry {test_report_result}'
+        assert test_report_result._skipped_sum == 0, f'skipped {test_report_result}'
+        assert test_report_result._timeouts_sum == 0, f'timeouts {test_report_result}'
     finally:
         os.chdir(orig_cwd)
 
