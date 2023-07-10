@@ -133,7 +133,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     metadata_reader._file_info = {storage_name.file_uri: file_info}
     test_config.rejected_file_name = 'rejected.yml'
     test_config.rejected_directory = tmp_path.as_posix()
-    test_observable = Observable(rejected=Rejected(test_config.rejected_fqn), metrics=None)
+    test_observable = Observable(test_config)
     kwargs = {
         'storage_name': storage_name,
         'metadata_reader': metadata_reader,

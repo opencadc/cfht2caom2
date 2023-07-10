@@ -1100,6 +1100,7 @@ class InstrumentType(AuxiliaryType):
             if self._storage_name.raw_time:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
+        self._logger.error(f'exptime {exptime} ext {ext}')
         return exptime
 
     def get_time_refcoord_delta(self, ext):
@@ -1421,15 +1422,9 @@ class InstrumentType(AuxiliaryType):
                         f'{self._storage_name.file_name} in {self._observation.observation_id}'
                     )
                     if os.path.exists(self._storage_name.source_names[0]):
-                        # uri = self._storage_name.file_uri
-                        # this is the fits2caom2 implementation, which returns
-                        # a list structure
                         unmodified_headers = get_local_headers_from_fits(self._storage_name.source_names[0])
-                    else:
-                        # this is the fits2caom2 implementation, which returns
-                        # a list structure
-                        if self._clients is not None and self._clients.data_client is not None:
-                            unmodified_headers = self._clients.data_client.get_head(self._storage_name.file_uri)
+                    elif self._clients is not None and self._clients.data_client is not None:
+                        unmodified_headers = self._clients.data_client.get_head(self._storage_name.file_uri)
 
                     bp = ObsBlueprint(instantiated_class=self)
                     self.accumulate_blueprint(bp)
@@ -1965,7 +1960,7 @@ class Mega(InstrumentType):
     def update_plane(self):
         super().update_plane()
         # caom2IngestMegacam.py, l142
-        if self._storage_name.suffix == 'p':
+        if self._storage_name.suffix == 'p' and '_flag' not in self._storage_name.file_id:
             self._update_plane_provenance()
 
 

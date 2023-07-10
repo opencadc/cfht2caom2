@@ -447,7 +447,7 @@ def test_run_state_compression_cleanup(
     test_config.cleanup_files_when_storing = True
     test_config.cleanup_success_destination = '/test_files/success'
     test_config.cleanup_failure_destination = '/test_files/failure'
-    test_config.logging_level = 'DEBUG'
+    test_config.logging_level = 'INFO'
 
     cwd = os.getcwd()
     os.chdir(tmp_path)
