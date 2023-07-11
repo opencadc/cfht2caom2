@@ -171,7 +171,7 @@ def test_visitor(
             ].file_type = 'application/fits'
         test_config.rejected_file_name = 'rejected.yml'
         test_config.rejected_directory = test_data_dir
-        test_observable = Observable(rejected=Rejected(test_config.rejected_fqn), metrics=None)
+        test_observable = Observable(test_config)
         kwargs = {
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,

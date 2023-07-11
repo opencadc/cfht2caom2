@@ -90,8 +90,8 @@ def test_preview_augment(test_config):
     # this should result in three new artifacts being added to every plane:
     # one for a thumbnail and two for previews (one zoom)
 
-    test_rejected = mc.Rejected(REJECTED_FILE)
-    test_observable = mc.Observable(test_rejected, mc.Metrics(test_config))
+    test_config.rejected_fqn = '/tmp/rejected.yml'
+    test_observable = mc.Observable(test_config)
 
     test_files = {
         'visit_obs_start_wircam.xml': [
