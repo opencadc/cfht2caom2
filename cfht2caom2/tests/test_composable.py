@@ -189,18 +189,12 @@ def test_run_store(
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.ClientCollection')
-def test_run_store_retry(clients_mock, check_fits_mock, cache_mock, compression_mock, vo_mock):
+def test_run_store_retry(clients_mock, check_fits_mock, cache_mock, compression_mock, vo_mock, test_data_dir):
     compression_mock.side_effect = _mock_fix_compression
-    test_dir_fqn = os.path.join(
-        test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_retry_test'
-    )
-    test_failure_dir = os.path.join(
-        test_fits2caom2_augmentation.TEST_DATA_DIR,
-        'store_retry_test/failure',
-    )
-    test_success_dir = os.path.join(
-        test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_retry_test/success'
-    )
+    test_dir_fqn = os.path.join(test_data_dir, 'store_retry_test')
+    test_failure_dir = os.path.join(test_data_dir, 'store_retry_test/failure')
+    test_success_dir = os.path.join(test_data_dir, 'store_retry_test/success')
+    test_rejected_fqn = os.path.join(test_data_dir, 'store_retry_test/rejected/rejected.yml')
     for ii in [test_failure_dir, test_success_dir]:
         if not os.path.exists(ii):
             os.mkdir(ii)
@@ -230,11 +224,93 @@ def test_run_store_retry(clients_mock, check_fits_mock, cache_mock, compression_
         assert os.path.exists(test_failure_fqn), 'expect failure move'
         success_content = os.listdir(test_success_dir)
         assert len(success_content) == 0, 'should be no success files'
+        assert os.path.exists(test_rejected_fqn), 'should be an empty rejected file'
+        test_rejected = mc.Rejected(test_rejected_fqn)
+        for reason, f_name in test_rejected.content.items():
+            assert f_name != '1000003f.fits.fz', f'should be no {reason} failure'
     finally:
         if os.path.exists(test_failure_fqn):
             test_new_fqn = os.path.join(test_dir_fqn, 'new/1000003f.fits.fz')
             shutil.move(test_failure_fqn, test_new_fqn)
         _cleanup(test_dir_fqn, '1000003')
+
+
+@patch('caom2pipe.astro_composable.get_vo_table')
+@patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
+@patch('caom2pipe.client_composable.ClientCollection')
+def test_run_store_retry_rejected_entry(clients_mock, cache_mock, vo_mock, test_config, tmp_path):
+    # this was originally a test to determine why a file was ending up in the rejected.yml listing
+    # when it was in ok shape. It shook out an additional error in the blueprint handling,
+    # so now it's just here for regression
+
+    test_failure_dir = os.path.join(tmp_path, 'failure')
+    test_success_dir = os.path.join(tmp_path, 'success')
+
+    test_config.change_working_directory(tmp_path)
+    test_config.data_sources = [tmp_path.as_posix()]
+    test_config.data_source_extensions = ['.fits.gz']
+    test_config.use_local_files = True
+    test_config.store_modified_files_only = True
+    test_config.log_to_file = True
+    test_config.retry_failures = True
+    test_config.retry_decay = 0
+    test_config.cleanup_files_when_storing = True
+    test_config.cleanup_failure_destination = test_failure_dir
+    test_config.cleanup_success_destination = test_success_dir
+    test_config.task_types = [mc.TaskType.STORE, mc.TaskType.INGEST, mc.TaskType.MODIFY]
+    test_rejected_fqn = os.path.join(tmp_path, 'rejected/rejected.yml')
+    for ii in [test_failure_dir, test_success_dir]:
+        os.mkdir(ii)
+    test_f_name = '2615124g.fits.gz'
+    shutil.copyfile(f'/test_files/{test_f_name}', f'{tmp_path}/{test_f_name}')
+    test_failure_fqn = os.path.join(test_failure_dir, test_f_name)
+    test_success_fqn = os.path.join(test_success_dir, test_f_name)
+
+    try:
+        getcwd_orig = os.getcwd()
+        os.chdir(tmp_path)
+        mc.Config.write_to_file(test_config)
+        clients_mock.return_value.metadata_client.read.side_effect = _mock_repo_read_not_none
+        clients_mock.return_value.data_client.info.side_effect = _mock_get_file_info
+        clients_mock.return_value.data_client.put.side_effect = [
+            None, 
+            mc.CadcException(
+                'Failed to store data with Read timeout on '
+                'https://ws-uv.canfar.net/minoc/files/cadc:CFHT/2615124g_preview_1024.jpg'
+            ),
+            None,  # file retry
+            None,  # thumbnail
+            None,  # preview
+            None,  # zoom
+        ]
+        data_util.get_local_headers_from_fits = Mock(side_effect=_mock_header_read)
+
+        # execution
+        test_result = composable._run_by_builder()
+        assert test_result == -1, 'the first preview put should fail'
+
+        assert clients_mock.return_value.data_client.put.called, 'expect a file put'
+        assert clients_mock.return_value.data_client.put.call_count == 6, 'file put call count'
+        clients_mock.return_value.data_client.put.assert_has_calls(
+            [
+                call(f'{tmp_path}/2615124', f'cadc:CFHT/{test_f_name.replace(".gz", "")}'),
+                call(f'{tmp_path}/2615124', f'cadc:CFHT/2615124g_preview_256.jpg'),
+                call(f'{tmp_path}/2615124', f'cadc:CFHT/{test_f_name.replace(".gz", "")}'),
+                call(f'{tmp_path}/2615124', f'cadc:CFHT/2615124g_preview_256.jpg'),
+                call(f'{tmp_path}/2615124', f'cadc:CFHT/2615124g_preview_1024.jpg'),
+                call(f'{tmp_path}/2615124', f'cadc:CFHT/2615124g_preview_zoom_1024.jpg'),
+            ],
+        ), 'wrong put_file args'
+        assert not os.path.exists(test_failure_fqn), 'no failure move'
+        assert os.path.exists(test_success_fqn), 'expect success move'
+        success_content = os.listdir(test_success_dir)
+        assert len(success_content) == 1, 'expect success files'
+        assert os.path.exists(test_rejected_fqn), 'should be an empty rejected file'
+        test_rejected = mc.Rejected(test_rejected_fqn)
+        for reason, f_name in test_rejected.content.items():
+            assert f_name != test_f_name, f'should be no {reason} failure'
+    finally:
+        os.chdir(getcwd_orig)
 
 
 @patch(
@@ -997,6 +1073,14 @@ def _mock_get_file_info(file_id):
             file_type='image/jpeg',
             lastmod=datetime(year=2019, month=3, day=4, hour=19, minute=5),
         )
+    elif '2615124g' in file_id:
+        return FileInfo(
+        id=f'cadc:CFHT/2615124g.fits.fz',
+        size=1,
+        md5sum='e2f542abdc2712bc3bfac91137cba1d6',
+        file_type='application/fits',
+        encoding=None,
+    )
     else:
         return FileInfo(
             id=file_id,

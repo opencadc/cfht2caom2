@@ -390,6 +390,30 @@ class AuxiliaryType(cc.TelescopeMapping):
             elevation = None
         return elevation
 
+    def get_filter_md(self, filter_name):
+        filter_md = md.filter_cache.get_svo_filter(self._name, filter_name)
+        if not md.filter_cache.is_cached(self._name, filter_name):
+            # want to stop ingestion if the filter name is not expected
+            raise mc.CadcException(
+                f'Could not find filter metadata for {filter_name} in '
+                f'{self._storage_name.file_uri}.'
+            )
+        # CW - 15-05-20
+        # some flats like this have filter names like ‘i’, instead of
+        # ‘i.MP9701’. Even though there may only be a few of these, we want
+        # zero so they don’t appear in the filters picklist and confuse users.
+        # If the header doesn’t have the full filter name maybe you can hack
+        # it based on your knowledge of which i filter was used during this
+        # era.
+        #
+        # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
+        updated_filter_name = mc.reverse_lookup(
+            filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE)
+        )
+        if updated_filter_name is None:
+            updated_filter_name = filter_name
+        return filter_md, updated_filter_name
+
     def get_provenance_keywords(self, ext):
         pass
 
@@ -805,12 +829,14 @@ class AuxiliaryType(cc.TelescopeMapping):
                 update_artifact_meta(artifact, file_info)
 
                 for part in artifact.parts.values():
-                    if plane.calibration_level == CalibrationLevel.RAW_STANDARD:
-                        time_delta = self.get_time_refcoord_delta_simple(idx)
-                    else:
-                        time_delta = self.get_time_refcoord_delta_derived(idx)
                     for chunk in part.chunks:
-                        cc.undo_astropy_cdfix_call(chunk, time_delta)
+                        if chunk.time is not None and chunk.time.axis is not None and chunk.time.axis.function is not None:
+                            if plane.calibration_level == CalibrationLevel.RAW_STANDARD:
+                                time_delta = self.get_time_refcoord_delta_simple(idx)
+                            else:
+                                time_delta = self.get_time_refcoord_delta_derived(idx)
+
+                            cc.undo_astropy_cdfix_call(chunk, time_delta)
                         self.part = part
                         self.chunk = chunk
                         self.update_chunk()
@@ -880,9 +906,34 @@ class AuxiliaryType(cc.TelescopeMapping):
                     cc.copy_chunk(chunk)
                 )
 
+    def make_axes_consistent(self):
+        pass
+
+    def reset_energy(self):
+        pass
+
+    def reset_position(self):
+        pass
+
     def track_invalid_date(self, value, key):
         self._logger.warning(f'Invalid date of {value} for {key}.')
         self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
+
+    def update_chunk(self):
+        self.update_observable()
+        self.update_polarization()
+        self.update_time()
+        self.update_position()
+        self.update_energy()
+        self.reset_energy()
+        self.reset_position()
+        self.make_axes_consistent()
+
+    def update_energy(self):
+        pass
+
+    def update_observable(self):
+        pass
 
     def update_observation(self):
         if (
@@ -897,8 +948,11 @@ class AuxiliaryType(cc.TelescopeMapping):
             if self.plane.provenance is not None:
                 self.plane.provenance.last_executed = mc.make_datetime(self._headers[self._extension].get('DATE'))
 
-    def _update_observation_metadata(self):
+    def update_polarization(self):
         pass
+
+    def _update_observation_metadata(self):
+        return self._extension if self._extension is not None else 0
 
     def _update_plane_provenance(self):
         self._logger.debug(
@@ -912,35 +966,46 @@ class AuxiliaryType(cc.TelescopeMapping):
             f'End _update_plane_provenance for {self._storage_name.obs_id}'
         )
 
+    def _use_existing_observation(self, bp):
+        """Use values from an existing Observation to set Observation-level blueprint values."""
+        if self._observation is not None:
+            # for the cases where the blueprint keys are not the same as the Python class data member names
+            x = {
+                'ambientTemp': 'ambient_temp',
+                'geoLocationX': 'geo_location_x',
+                'geoLocationY': 'geo_location_y',
+                'geoLocationZ': 'geo_location_z',
+                'metaProducer': 'meta_producer',
+                'metaRelease': 'meta_release',
+                'observationID': 'observation_id',
+                'pi': 'pi_name',
+                'sequenceNumber': 'sequence_number',
+            }
+            for attribute in bp._plan:
+                if attribute.startswith('Observation'):
+                    attribute_names = attribute.split('.')
+                    y = x.get(attribute_names[1], attribute_names[1])
+                    if hasattr(self._observation, y):
+                        attribute_ptr = getattr(self._observation, y)
+                        if len(attribute_names) > 2:
+                            z = x.get(attribute_names[2], attribute_names[2])
+                            if hasattr(attribute_ptr, z):
+                                attribute_ptr = getattr(attribute_ptr, z)
+                                self._logger.debug(f'Reset blueprint value to {attribute_ptr} for {attribute}')
+                                bp.clear(attribute)
+                                bp.set(attribute, attribute_ptr)
+                        else:
+                            self._logger.debug(f'Reset blueprint value to {attribute_ptr} for {attribute}')
+                            bp.clear(attribute)
+                            bp.set(attribute, attribute_ptr)
+                    else:
+                        self._logger.warning(f'Did not find {attribute} in Observation.')
+
 
 class InstrumentType(AuxiliaryType):
 
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
-
-    def get_filter_md(self, filter_name):
-        filter_md = md.filter_cache.get_svo_filter(self._name, filter_name)
-        if not md.filter_cache.is_cached(self._name, filter_name):
-            # want to stop ingestion if the filter name is not expected
-            raise mc.CadcException(
-                f'Could not find filter metadata for {filter_name} in '
-                f'{self._storage_name.file_uri}.'
-            )
-        # CW - 15-05-20
-        # some flats like this have filter names like ‘i’, instead of
-        # ‘i.MP9701’. Even though there may only be a few of these, we want
-        # zero so they don’t appear in the filters picklist and confuse users.
-        # If the header doesn’t have the full filter name maybe you can hack
-        # it based on your knowledge of which i filter was used during this
-        # era.
-        #
-        # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
-        updated_filter_name = mc.reverse_lookup(
-            filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE)
-        )
-        if updated_filter_name is None:
-            updated_filter_name = filter_name
-        return filter_md, updated_filter_name
 
     def accumulate_blueprint(self, bp):
         """Configure the telescope-specific ObsBlueprint at the CAOM model
@@ -954,10 +1019,13 @@ class InstrumentType(AuxiliaryType):
         """
         self._logger.debug('Begin accumulate_blueprint.')
         super().accumulate_blueprint(bp)
+        if self._storage_name.instrument in [md.Inst.SITELLE]:
+            return
         bp.configure_position_axes((1, 2))
         if not (
             self._storage_name.suffix == 'p'
-            and self._storage_name.instrument in [md.Inst.SITELLE, md.Inst.SPIROU]
+            # and self._storage_name.instrument in [md.Inst.SITELLE, md.Inst.SPIROU]
+            and self._storage_name.instrument in [md.Inst.SPIROU]
         ):
             bp.configure_time_axis(3)
             bp.configure_energy_axis(4)
@@ -966,9 +1034,14 @@ class InstrumentType(AuxiliaryType):
 
         bp.configure_observable_axis(6)
 
-        if self._storage_name.instrument == md.Inst.SITELLE:
-            bp.configure_time_axis(4)
+        # if self._storage_name.instrument == md.Inst.SITELLE:
+        #     bp.configure_time_axis(4)
 
+        self.accumulate_spatial_chunk_blueprint(bp)
+        self.accumulate_spectral_chunk_blueprint(bp)
+        self.accumulate_time_chunk_blueprint(bp)
+
+    def accumulate_spectral_chunk_blueprint(self, bp):
         # hard-coded values from:
         # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
         # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
@@ -1011,6 +1084,8 @@ class InstrumentType(AuxiliaryType):
             bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
             bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
 
+    def accumulate_spatial_chunk_blueprint(self, bp):
+
         bp.set('Chunk.position.axis.axis1.cunit', 'deg')
         bp.set('Chunk.position.axis.axis2.cunit', 'deg')
 
@@ -1021,6 +1096,8 @@ class InstrumentType(AuxiliaryType):
 
         bp.clear('Chunk.position.coordsys')
         bp.add_attribute('Chunk.position.coordsys', 'RADECSYS')
+
+    def accumulate_time_chunk_blueprint(self, bp):
 
         if self._storage_name.suffix != 'g':
             bp.set('Chunk.time.exposure', 'get_exptime()')
@@ -1100,7 +1177,6 @@ class InstrumentType(AuxiliaryType):
             if self._storage_name.raw_time:
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
-        self._logger.error(f'exptime {exptime} ext {ext}')
         return exptime
 
     def get_time_refcoord_delta(self, ext):
@@ -1329,31 +1405,6 @@ class InstrumentType(AuxiliaryType):
     def _update_plane_post(self):
         pass
 
-    def make_axes_consistent(self):
-        pass
-
-    def reset_energy(self):
-        pass
-
-    def reset_position(self):
-        pass
-
-    def update_chunk(self):
-        self.update_observable()
-        self.update_polarization()
-        self.update_time()
-        self.update_position()
-        self.update_energy()
-        self.reset_energy()
-        self.reset_position()
-        self.make_axes_consistent()
-
-    def update_energy(self):
-        pass
-
-    def update_observable(self):
-        pass
-
     def _update_observation_metadata(self):
         """
         Why this method exists:
@@ -1455,9 +1506,6 @@ class InstrumentType(AuxiliaryType):
 
         self._logger.debug(f'End _update_observation_metadata.')
         return idx
-
-    def update_polarization(self):
-        pass
 
     def update_position(self):
         pass
@@ -2012,7 +2060,7 @@ class MegaFlag(Mega):
         self._logger.debug('Done accumulate_blueprint.')
 
 
-class Sitelle(InstrumentType):
+class SitelleTemporal(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
@@ -2031,6 +2079,10 @@ class Sitelle(InstrumentType):
         Observation level.
         """
         super().accumulate_blueprint(bp)
+
+        bp.configure_time_axis(4)
+        self.accumulate_time_chunk_blueprint(bp)
+
         data_product_type = DataProductType.IMAGE
         if self._storage_name.derived:
             data_product_type = DataProductType.CUBE
@@ -2057,49 +2109,7 @@ class Sitelle(InstrumentType):
         bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
         bp.set('Chunk.time.axis.function.refCoord.val', '_get_mjd_start()')
 
-        bp.set('Chunk.energy.axis.function.naxis', 1.0)
         self._logger.debug('End accumulate_blueprint.')
-
-    def get_energy_function_delta(self, ext):
-        result = None
-        if self._has_energy(ext):
-            # units in file are nm, units in blueprint are Angstroms
-            filter_bw = mc.to_float(self._headers[ext].get('FILTERBW'))
-            if filter_bw is not None:
-                result = 10.0 * filter_bw
-        return result
-
-    def get_energy_function_pix(self, ext):
-        result = None
-        if self._has_energy(ext):
-            result = 0.5
-        return result
-
-    def get_energy_function_val(self, ext):
-        result = None
-        if self._has_energy(ext):
-            # units in file are nm, units in blueprint are Angstroms
-            filter_lb = mc.to_float(self._headers[ext].get('FILTERLB'))
-            if filter_lb is not None:
-                result = 10.0 * filter_lb
-        return result
-
-    def get_energy_resolving_power(self, ext):
-        result = None
-        if self._has_energy(ext):
-            # from caom2IngestSitelle.py, l555+
-            sitresol = self._headers[ext].get('SITRESOL')
-            if sitresol is not None and sitresol > 0.0:
-                result = sitresol
-            if result is None:
-                result = 1.0
-                if self._storage_name.suffix in ['a', 'c', 'f', 'o', 'x']:
-                    # from caom2IngestSitelle.py, l596
-                    crval3 = mc.to_float(self._headers[ext].get('FILTERLB'))
-                    cdelt3 = mc.to_float(self._headers[ext].get('FILTERBW'))
-                    if crval3 is not None and cdelt3 is not None:
-                        result = crval3 / cdelt3
-        return result
 
     def get_plane_data_release(self, ext):
         if self._storage_name.suffix == 'v':
@@ -2224,12 +2234,7 @@ class Sitelle(InstrumentType):
 
     def reset_energy(self):
         if self._chunk.energy_axis is not None:
-            # CW, SF 18-12-19 - SITELLE biases and darks have
-            # no energy, all other observation types do
-            if self._observation.type in ['BIAS', 'DARK']:
-                cc.reset_energy(self._chunk)
-            else:
-                self._chunk.energy_axis = 3
+            self._chunk.energy_axis = 3
         if (
             self._chunk.energy is not None
             and self._chunk.energy.axis is not None
@@ -2248,76 +2253,146 @@ class Sitelle(InstrumentType):
             )
             cc.reset_energy(self._chunk)
 
-        if self._storage_name.suffix == 'v':
-            cc.reset_energy(self._chunk)
+
+class SitelleSpectralTemporal(SitelleTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the Sitelle-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+
+        bp.configure_energy_axis(3)
+        self.accumulate_spectral_chunk_blueprint(bp)
+
+        bp.set('Chunk.energy.axis.function.naxis', 1.0)
+        self._logger.debug('End accumulate_blueprint.')
+
+    def get_energy_function_delta(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # units in file are nm, units in blueprint are Angstroms
+            filter_bw = mc.to_float(self._headers[ext].get('FILTERBW'))
+            if filter_bw is not None:
+                result = 10.0 * filter_bw
+        return result
+
+    def get_energy_function_pix(self, ext):
+        result = None
+        if self._has_energy(ext):
+            result = 0.5
+        return result
+
+    def get_energy_function_val(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # units in file are nm, units in blueprint are Angstroms
+            filter_lb = mc.to_float(self._headers[ext].get('FILTERLB'))
+            if filter_lb is not None:
+                result = 10.0 * filter_lb
+        return result
+
+    def get_energy_resolving_power(self, ext):
+        result = None
+        if self._has_energy(ext):
+            # from caom2IngestSitelle.py, l555+
+            sitresol = self._headers[ext].get('SITRESOL')
+            if sitresol is not None and sitresol > 0.0:
+                result = sitresol
+            if result is None:
+                result = 1.0
+                if self._storage_name.suffix in ['a', 'c', 'f', 'o', 'x']:
+                    # from caom2IngestSitelle.py, l596
+                    crval3 = mc.to_float(self._headers[ext].get('FILTERLB'))
+                    cdelt3 = mc.to_float(self._headers[ext].get('FILTERBW'))
+                    if crval3 is not None and cdelt3 is not None:
+                        result = crval3 / cdelt3
+        return result
+
+
+class SitelleSpatialRangeSpectralTemporal(SitelleSpectralTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
 
     def update_position(self):
-        if (
-            self._storage_name.suffix in ['a', 'o', 'x']
-            and self._chunk.position is None
-        ):
-            self._update_range_position()
-
-    def _update_range_position(self):
-        self._logger.debug(
-            f'Begin _update_position for {self._storage_name.obs_id}'
-        )
-        # from caom2IngestSitelle.py l894
-        header = self._headers[self._extension]
-        obs_ra = header.get('RA_DEG')
-        obs_dec = header.get('DEC_DEG')
-        if obs_ra is None or obs_dec is None:
-            self._logger.error(
-                f'RA_DEG {obs_ra} DEC_DEG {obs_dec} for '
-                f'{self._storage_name.obs_id} are not set.'
+        if self._chunk.position is None:
+            self._logger.debug(
+                f'Begin _update_position for {self._storage_name.obs_id}'
             )
-            return
+            # from caom2IngestSitelle.py l894
+            header = self._headers[self._extension]
+            obs_ra = header.get('RA_DEG')
+            obs_dec = header.get('DEC_DEG')
+            if obs_ra is None or obs_dec is None:
+                self._logger.error(
+                    f'RA_DEG {obs_ra} DEC_DEG {obs_dec} for '
+                    f'{self._storage_name.obs_id} are not set.'
+                )
+                return
 
-        pix_scale2 = mc.to_float(header.get('PIXSCAL2'))
-        pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
+            pix_scale2 = mc.to_float(header.get('PIXSCAL2'))
+            pix_scale1 = mc.to_float(header.get('PIXSCAL1'))
 
-        if pix_scale1 is None or pix_scale2 is None:
-            self._logger.error(
-                f'PIXSCAL1 {pix_scale1} or PIXSCAL2 {pix_scale2} for '
-                f'{self._storage_name.obs_id} are not set.'
+            if pix_scale1 is None or pix_scale2 is None:
+                self._logger.error(
+                    f'PIXSCAL1 {pix_scale1} or PIXSCAL2 {pix_scale2} for '
+                    f'{self._storage_name.obs_id} are not set.'
+                )
+                return
+
+            delta_dec = (1024.0 * pix_scale2) / 3600.0
+            obs_dec_bl = obs_dec - delta_dec
+            obs_dec_tr = obs_dec + delta_dec
+
+            # obs_dec_tr == obs_dec_tl
+            delta_ra_top = (1024.0 * pix_scale1) / (
+                3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
             )
-            return
+            delta_ra_bot = (1024.0 * pix_scale1) / (
+                3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0))
+            )
+            obs_ra_bl = obs_ra + delta_ra_bot
+            obs_ra_tr = obs_ra - delta_ra_top
 
-        delta_dec = (1024.0 * pix_scale2) / 3600.0
-        obs_dec_bl = obs_dec - delta_dec
-        obs_dec_tr = obs_dec + delta_dec
+            axis = CoordAxis2D(Axis('RA', 'deg'), Axis('DEC', 'deg'))
+            axis.range = CoordRange2D(
+                Coord2D(RefCoord(0.5, obs_ra_bl), RefCoord(0.5, obs_dec_bl)),
+                Coord2D(
+                    RefCoord(2048.5, obs_ra_tr), RefCoord(2048.5, obs_dec_tr)
+                ),
+            )
+            position = SpatialWCS(axis)
+            position.coordsys = 'FK5'
+            position.equinox = 2000.0
+            self._chunk.position = position
+            self._chunk.position_axis_1 = 1
+            self._chunk.position_axis_2 = 2
+            self._logger.debug(
+                f'End _update_position for {self._storage_name.obs_id}'
+            )
 
-        # obs_dec_tr == obs_dec_tl
-        delta_ra_top = (1024.0 * pix_scale1) / (
-            3600.0 * (math.cos(obs_dec_tr * 3.14159 / 180.0))
-        )
-        delta_ra_bot = (1024.0 * pix_scale1) / (
-            3600.0 * (math.cos(obs_dec_bl * 3.14159 / 180.0))
-        )
-        obs_ra_bl = obs_ra + delta_ra_bot
-        obs_ra_tr = obs_ra - delta_ra_top
 
-        axis = CoordAxis2D(Axis('RA', 'deg'), Axis('DEC', 'deg'))
-        axis.range = CoordRange2D(
-            Coord2D(RefCoord(0.5, obs_ra_bl), RefCoord(0.5, obs_dec_bl)),
-            Coord2D(
-                RefCoord(2048.5, obs_ra_tr), RefCoord(2048.5, obs_dec_tr)
-            ),
-        )
-        position = SpatialWCS(axis)
-        position.coordsys = 'FK5'
-        position.equinox = 2000.0
-        self._chunk.position = position
-        self._chunk.position_axis_1 = 1
-        self._chunk.position_axis_2 = 2
-        self._logger.debug(
-            f'End _update_position for {self._storage_name.obs_id}'
-        )
+class SitelleSpatialFunctionSpectralTemporal(SitelleSpectralTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the Sitelle-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+        bp.configure_position_axes((1, 2))
+        self.accumulate_spatial_chunk_blueprint(bp)
 
 
 class SitelleHdf5(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
+        # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
+        # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
+        self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2544,7 +2619,7 @@ class SitelleHdf5(InstrumentType):
                     to_header['CD2_2'] = cd2_2
 
 
-class SitelleNoHdf5Metadata(Sitelle):
+class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
 
@@ -2591,7 +2666,8 @@ class SitelleNoHdf5Metadata(Sitelle):
         return self._observation
 
 
-class SitelleP(Sitelle):
+# class SitelleP(SitelleSpatialFunctionSpectralTemporal):
+class SitelleP(SitelleSpectralTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
 
@@ -2600,7 +2676,6 @@ class SitelleP(Sitelle):
         Observation level.
         """
         super().accumulate_blueprint(bp)
-
         # caom2IngestSitelle.py l590
         bp.clear('Chunk.energy.axis.axis.ctype')
         bp.add_attribute('Chunk.energy.axis.axis.ctype', 'CTYPE3')
@@ -2682,6 +2757,9 @@ class SitelleP(Sitelle):
         if self._chunk is None:
             self._chunk = Chunk()
         wcs_parser.augment_position(self._chunk)
+        if self._chunk.position is not None and self._chunk.position.axis is not None:
+            self._chunk.position.axis.error1 = CoordError(0.0000278, 0.0000278)
+            self._chunk.position.axis.error2 = CoordError(0.0000278, 0.0000278)
         self._logger.debug(f'End update_position for {self._storage_name.obs_id}')
 
 
@@ -3158,7 +3236,7 @@ class Wircam(InstrumentType):
             'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam',
         )
 
-        bp.set('Chunk.energy.bandpassName', 'get_bandpass_name(header)')
+        bp.set('Chunk.energy.bandpassName', 'get_bandpass_name()')
 
         self._logger.debug('Done accumulate_blueprint.')
 
@@ -3397,10 +3475,43 @@ class Wircam(InstrumentType):
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
-class WircamG(Wircam):
+class WircamG(AuxiliaryType):
     """suffix == 'g'"""
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the telescope-specific ObsBlueprint at the CAOM model Observation level.
+
+        This code captures the portion of the TDM->CAOM model mapping, where the relationship is one or many elements
+        of the TDM are required to set individual elements of the CAOM model. If the mapping cardinality is 1:1
+        generally, use add_attribute. If the mapping cardinality is n:1 use the set method to reference a function 
+        call. """
+        self._logger.debug('Begin accumulate_blueprint.')
+        super().accumulate_blueprint(bp)
+        # don't want GUIDE file Observation-level metadata 
+        self._use_existing_observation(bp)
+        bp.set_default('Plane.provenance.name', 'IIWI')
+        bp.set_default('Plane.provenance.producer', 'CFHT')
+        bp.set_default(
+            'Plane.provenance.reference', 'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'
+        )
+        bp.clear('Plane.provenance.runID')
+        bp.add_attribute('Plane.provenance.runID', 'CRUNID')
+        bp.configure_energy_axis(3)
+        bp.set('Chunk.energy.bandpassName', 'get_bandpass_name()')
+
+    def get_bandpass_name(self, ext):
+        wheel_a = self._headers[ext].get('WHEELADE')
+        wheel_b = self._headers[ext].get('WHEELBDE')
+        result = None
+        if wheel_a == 'Open' and wheel_b != 'Open':
+            result = wheel_b
+        elif wheel_b == 'Open' and wheel_a != 'Open':
+            result = wheel_a
+        elif wheel_a == 'Open' and wheel_b == 'Open':
+            result = 'Open'
+        return result
 
     def get_obs_type(self, ext):
         result = super().get_obs_type(ext)
@@ -3412,6 +3523,20 @@ class WircamG(Wircam):
         temp_bandpass_name = self._headers[self._extension].get('FILTER')
         if temp_bandpass_name == 'FakeBlank':
             cc.reset_energy(self._chunk)
+
+    def update_energy(self):
+        filter_name = self._headers[self._extension].get('FILTER')
+        if filter_name is None and len(self._headers) > self._extension + 1:
+            filter_name = self._headers[self._extension + 1].get('FILTER')
+        filter_md, updated_filter_name = self.get_filter_md(filter_name)
+        cc.build_chunk_energy_range(
+            self._chunk, updated_filter_name, filter_md
+        )
+        if self._chunk.energy is not None:
+            self._chunk.energy.ssysobs = 'TOPOCENT'
+            self._chunk.energy.ssyssrc = 'TOPOCENT'
+            # values from caom2megacam.default, caom2megacamdetrend.default
+            self._chunk.energy.axis.error = CoordError(1.0, 1.0)
 
     def update_position(self):
         """'g' file position handling."""
@@ -3463,12 +3588,12 @@ class WircamG(Wircam):
             cc.reset_position(self._chunk)
             return
 
-        naxis_1 = header.get('NAXIS1')
+        naxis_1 = header.get('ZNAXIS1')
         if naxis_1 is None:
-            naxis_1 = header.get('ZNAXIS1')
-        naxis_2 = header.get('NAXIS2')
+            naxis_1 = header.get('NAXIS1')
+        naxis_2 = header.get('ZNAXIS2')
         if naxis_2 is None:
-            naxis_2 = header.get('ZNAXIS2')
+            naxis_2 = header.get('NAXIS2')
 
         if mc.to_float(self._storage_name.obs_id) < 980000:
             cr_val2 *= 15.0
@@ -3493,7 +3618,20 @@ class WircamG(Wircam):
             self._chunk.naxis = 2
             self._chunk.position_axis_1 = 1
             self._chunk.position_axis_2 = 2
+            if self._chunk.position.axis is not None:
+                self._chunk.position.axis.error1 = CoordError(0.0000278, 0.0000278)
+                self._chunk.position.axis.error2 = CoordError(0.0000278, 0.0000278)
         self._logger.debug(f'End update_position for {self._storage_name.obs_id}')
+
+    def update_plane(self):
+        if self._observation is not None:
+            o_plane_id = self._storage_name.product_id.replace('g', 'o')
+            if o_plane_id in self._observation.planes.keys():
+                o_plane = self._observation.planes[o_plane_id]
+                self._plane.data_release = o_plane.data_release
+                self._plane.meta_release = o_plane.meta_release
+                if o_plane.provenance is not None and self._plane.provenance is not None:
+                    self._plane.provenance.run_id = o_plane.provenance.run_id
 
     def update_time(self):
         self._logger.debug(f'Begin update_time for {self._storage_name.obs_id}')
@@ -3539,10 +3677,6 @@ class WircamG(Wircam):
                 naxis_key = f'NAXIS{time_index}'
                 time_naxis = part_header.get(naxis_key)
 
-            if time_naxis is not None and time_index is not None and time_index == 3:
-                # caom2.4 wcs validation conformance
-                self._chunk.time_axis = 3
-
             # CW
             # Define time samples for guidecube data
             # Guiding time doesn't seem to match up very well, so just
@@ -3571,6 +3705,12 @@ class WircamG(Wircam):
             self._chunk.time.axis.function = CoordFunction1D(naxis=time_naxis, delta=time_delta, ref_coord=ref_coord)
 
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
+
+    def make_axes_consistent(self):
+        if self._chunk is not None and self._chunk.position is not None:
+            self._chunk.naxis = 2
+        else:
+            self._chunk.naxis = None
 
 
 def _repair_comment_provenance_value(value, obs_id):
@@ -3670,8 +3810,15 @@ def factory(headers, cfht_name, clients, observable, observation):
         else:
             if cfht_name.suffix == 'p':
                 temp = SitelleP(headers, cfht_name, clients, observable, observation)
+            elif cfht_name.suffix in ['a', 'o', 'x']:
+                temp = SitelleSpatialRangeSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            elif cfht_name.suffix in ['f']:
+                temp = SitelleSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            elif cfht_name.suffix in ['b', 'd']:
+                # CW, SF 18-12-19 - SITELLE biases and darks have no energy, all other observation types do
+                temp = SitelleTemporal(headers, cfht_name, clients, observable, observation)
             else:
-                temp = Sitelle(headers, cfht_name, clients, observable, observation)
+                temp = SitelleSpatialFunctionSpectralTemporal(headers, cfht_name, clients, observable, observation)
     elif cfht_name.instrument is md.Inst.SPIROU:
         if cfht_name.suffix == 'g':
             temp = SpirouG(headers, cfht_name, clients, observable, observation)
