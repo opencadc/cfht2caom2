@@ -226,6 +226,9 @@ class CFHTValueRepair(mc.ValueRepairCache):
             'FRPTS': 'FRINGE',
             'scatter': 'FLAT',
         },
+        # SF - 22-12-20 - fix the CAOM values, leave the headers be
+        'observation.target_position.coordsys': {'FKS': 'FK5'},
+        'observation.target_position.equinox': {'200.0': '2000.0'},
         # CW
         # If no or "open" filter then set filter name to
         # null
@@ -253,6 +256,8 @@ class CFHTValueRepair(mc.ValueRepairCache):
         'chunk.energy.axis.axis.cunit': {
             '1 / m': '/m',
         },
+        'chunk.position.coordsys': {'FKS': 'FK5'},
+        'chunk.position.equinox': {'200.0': '2000.0'},
     }
 
     def __init__(self):
@@ -1019,23 +1024,16 @@ class InstrumentType(AuxiliaryType):
         """
         self._logger.debug('Begin accumulate_blueprint.')
         super().accumulate_blueprint(bp)
-        if self._storage_name.instrument in [md.Inst.SITELLE]:
+        if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.SITELLE]:
             return
         bp.configure_position_axes((1, 2))
-        if not (
-            self._storage_name.suffix == 'p'
-            # and self._storage_name.instrument in [md.Inst.SITELLE, md.Inst.SPIROU]
-            and self._storage_name.instrument in [md.Inst.SPIROU]
-        ):
+        if self._storage_name.suffix == 'p' and self._storage_name.instrument is md.Inst.SPIROU:
+            bp.configure_energy_axis(3)
+        else:
             bp.configure_time_axis(3)
             bp.configure_energy_axis(4)
-        else:
-            bp.configure_energy_axis(3)
 
         bp.configure_observable_axis(6)
-
-        # if self._storage_name.instrument == md.Inst.SITELLE:
-        #     bp.configure_time_axis(4)
 
         self.accumulate_spatial_chunk_blueprint(bp)
         self.accumulate_spectral_chunk_blueprint(bp)
@@ -1514,7 +1512,7 @@ class InstrumentType(AuxiliaryType):
         pass
 
 
-class Espadons(InstrumentType):
+class EspadonsSpectralTemporal(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
         # SF 18-11-22 espadons is 2004
@@ -1525,6 +1523,12 @@ class Espadons(InstrumentType):
         Observation level.
         """
         super().accumulate_blueprint(bp)
+
+        bp.configure_time_axis(3)
+        self.accumulate_time_chunk_blueprint(bp)
+
+        bp.configure_energy_axis(4)
+        self.accumulate_spectral_chunk_blueprint(bp)
 
         # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.set('Observation.algorithm.name', 'get_algorithm_name()')
@@ -1537,46 +1541,9 @@ class Espadons(InstrumentType):
         bp.set('Plane.provenance.reference', 'get_provenance_reference()')
         bp.set('Plane.provenance.version', 'get_provenance_version()')
 
-        # constants from caom2espadons.config
-        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
-        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
-        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
-        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
-        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
-        bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
-        bp.add_attribute(
-            'Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG'
-        )
-        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
-        bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
-        bp.add_attribute(
-            'Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG'
-        )
-        # CW
-        # Fibre size is 1.6", i.e. 0.000444 deg
-        bp.set('Chunk.position.axis.function.cd11', -0.000444)
-        bp.set('Chunk.position.axis.function.cd12', 0.0)
-        bp.set('Chunk.position.axis.function.cd21', 0.0)
-        bp.set('Chunk.position.axis.function.cd22', 0.000444)
-
-        bp.add_attribute('Chunk.position.equinox', 'EQUINOX')
-
         bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
-        bp.set(
-            'Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()'
-        )
+        bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()')
 
-        if self._storage_name.suffix == 'p':
-            bp.configure_polarization_axis(6)
-            # caom2IngestEspadons.py, l209, lTODO
-            bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
-            bp.set('Chunk.polarization.axis.function.delta', 1)
-            bp.set('Chunk.polarization.axis.function.naxis', 1)
-            bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
-            bp.set(
-                'Chunk.polarization.axis.function.refCoord.val',
-                'get_polarization_function_val()',
-            )
         if self._storage_name.suffix is not None:
             # caom2IngestEspadons.py l636
             naxis1 = 213542
@@ -1777,9 +1744,7 @@ class Espadons(InstrumentType):
         return mjd_obs
 
     def make_axes_consistent(self):
-        if not (
-            self._chunk.naxis is not None and self._chunk.position is None
-        ):
+        if not (self._chunk.naxis is not None and self._chunk.position is None):
             if self._chunk.energy is not None:
                 self._chunk.energy_axis = None
             if self._chunk.time is not None:
@@ -1789,6 +1754,10 @@ class Espadons(InstrumentType):
                 self._chunk.observable_axis = None
             if self._chunk.polarization_axis is not None:
                 self._chunk.polarization_axis = None
+        else:
+            if self._chunk.time is not None and self._chunk.position is None:
+                self._chunk.naxis = None
+                self._chunk.time_axis = None
 
     def reset_position(self):
         if self._chunk.position is not None:
@@ -1796,14 +1765,10 @@ class Espadons(InstrumentType):
             self._chunk.position_axis_1 = None
             self._chunk.position_axis_2 = None
             self._chunk.naxis = None
-            # CW - Ignore position wcs if a calibration file
-            # suffix list from caom2IngestEspadons.py, l389
-            # 'b', 'd', 'c', 'f', 'x'
-            # with missing spatial indicator keywords
+            # CW - Ignore position wcs if missing spatial indicator keywords
             radecsys = self._headers[self._extension].get('RADECSYS')
             if not (
-                self._storage_name.suffix in ['a', 'i', 'o', 'p']
-                and (radecsys is None or radecsys.lower() != 'null')
+                (radecsys is None or radecsys.lower() != 'null')
                 and self._headers[self._extension].get('RA_DEG') is not None
                 and self._headers[self._extension].get('DEC_DEG') is not None
             ):
@@ -1848,42 +1813,64 @@ class Espadons(InstrumentType):
             f'End _update_observable for {self._storage_name.obs_id}'
         )
 
-    def update_observation(self):
-        super().update_observation()
-        if self._observation.target_position is not None:
-            if self._observation.target_position.equinox is not None:
-                self._observation.target_position.equinox = (
-                    md.cache.get_repair(
-                        'Observation.target_position.equinox',
-                        self._observation.target_position.equinox,
-                    )
-                )
-            if self._observation.target_position.coordsys is not None:
-                self._observation.target_position.coordsys = (
-                    md.cache.get_repair(
-                        'Observation.target_position.coordsys',
-                        self._observation.target_position.coordsys,
-                    )
-                )
-
     def update_plane(self):
         super().update_plane()
         # caom2IngestEspadons.py, l714
         if self._storage_name.suffix == 'i':
             self._update_plane_provenance()
 
-    def update_position(self):
-        if self._chunk.position is not None:
-            if self._chunk.position.equinox is not None:
-                self._chunk.position.equinox = md.cache.get_repair(
-                    'Chunk.position.equinox',
-                    self._chunk.position.equinox,
-                )
-            if self._chunk.position.coordsys is not None:
-                self._chunk.position.coordsys = md.cache.get_repair(
-                    'Chunk.position.coordsys',
-                    self._chunk.position.coordsys,
-                )
+
+class EspadonsSpatialSpectralTemporal(EspadonsSpectralTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+
+        bp.configure_position_axes((1, 2))
+        self.accumulate_spatial_chunk_blueprint(bp)
+
+        # constants from caom2espadons.config
+        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
+        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
+        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
+        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
+        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
+        bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
+        bp.add_attribute('Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG')
+        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
+        bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
+        bp.add_attribute('Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG')
+        # CW
+        # Fibre size is 1.6", i.e. 0.000444 deg
+        bp.set('Chunk.position.axis.function.cd11', -0.000444)
+        bp.set('Chunk.position.axis.function.cd12', 0.0)
+        bp.set('Chunk.position.axis.function.cd21', 0.0)
+        bp.set('Chunk.position.axis.function.cd22', 0.000444)
+
+        bp.add_attribute('Chunk.position.equinox', 'EQUINOX')
+
+        self._logger.debug('Done accumulate_blueprint.')
+
+
+class EspadonsPolarization(EspadonsSpatialSpectralTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model Observation level. """
+        super().accumulate_blueprint(bp)
+        bp.configure_polarization_axis(6)
+        # caom2IngestEspadons.py, l209
+        bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
+        bp.set('Chunk.polarization.axis.function.delta', 1)
+        bp.set('Chunk.polarization.axis.function.naxis', 1)
+        bp.set('Chunk.polarization.axis.function.refCoord.pix', 1)
+        bp.set('Chunk.polarization.axis.function.refCoord.val', 'get_polarization_function_val()')
+        self._logger.debug('Done accumulate_blueprint.')
 
 
 class Mega(InstrumentType):
@@ -3789,7 +3776,14 @@ def _repair_imcmb_provenance_value(value, obs_id):
 def factory(headers, cfht_name, clients, observable, observation):
     set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
-        temp = Espadons(headers, cfht_name, clients, observable, observation)
+        if cfht_name.suffix in ['b', 'c', 'd', 'f', 'x']:
+            # CW - Ignore position wcs if a calibration file - suffix list from caom2IngestEspadons.py, l389
+            # 'b', 'd', 'c', 'f', 'x'
+            temp = EspadonsSpectralTemporal(headers, cfht_name, clients, observable, observation)
+        elif cfht_name.suffix == 'p':
+            temp = EspadonsPolarization(headers, cfht_name, clients, observable, observation)
+        else:
+            temp = EspadonsSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         if '_diag' in cfht_name.file_name:
             # SF 16-03-23 record the diag ones as catalogues,  artifact of the *p ones - same behaviour as for the
@@ -3834,5 +3828,5 @@ def factory(headers, cfht_name, clients, observable, observation):
     else:
         observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
-    logging.debug(f'Created {temp.__class__.__name__} mapping.')
+    logging.error(f'Created {temp.__class__.__name__} mapping.')
     return temp
