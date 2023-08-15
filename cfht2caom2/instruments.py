@@ -395,30 +395,6 @@ class AuxiliaryType(cc.TelescopeMapping):
             elevation = None
         return elevation
 
-    def get_filter_md(self, filter_name):
-        filter_md = md.filter_cache.get_svo_filter(self._name, filter_name)
-        if not md.filter_cache.is_cached(self._name, filter_name):
-            # want to stop ingestion if the filter name is not expected
-            raise mc.CadcException(
-                f'Could not find filter metadata for {filter_name} in '
-                f'{self._storage_name.file_uri}.'
-            )
-        # CW - 15-05-20
-        # some flats like this have filter names like ‘i’, instead of
-        # ‘i.MP9701’. Even though there may only be a few of these, we want
-        # zero so they don’t appear in the filters picklist and confuse users.
-        # If the header doesn’t have the full filter name maybe you can hack
-        # it based on your knowledge of which i filter was used during this
-        # era.
-        #
-        # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
-        updated_filter_name = mc.reverse_lookup(
-            filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE)
-        )
-        if updated_filter_name is None:
-            updated_filter_name = filter_name
-        return filter_md, updated_filter_name
-
     def get_provenance_keywords(self, ext):
         pass
 
@@ -1024,7 +1000,7 @@ class InstrumentType(AuxiliaryType):
         """
         self._logger.debug('Begin accumulate_blueprint.')
         super().accumulate_blueprint(bp)
-        if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.SITELLE]:
+        if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE]:
             return
         bp.configure_position_axes((1, 2))
         if self._storage_name.suffix == 'p' and self._storage_name.instrument is md.Inst.SPIROU:
@@ -1136,8 +1112,8 @@ class InstrumentType(AuxiliaryType):
     def get_energy_function_delta(self, ext):
         result = None
         if self._has_energy(ext):
-            filter_name = self._headers[ext].get('FILTER')
-            temp, ignore = self._get_filter_md(filter_name)
+            filter_name = mc.get_keyword(self._headers, 'FILTER')
+            temp, ignore = get_filter_md(filter_name, self._storage_name)
             result = ac.FilterMetadataCache.get_fwhm(temp)
         return result
 
@@ -1153,8 +1129,8 @@ class InstrumentType(AuxiliaryType):
     def get_energy_function_val(self, ext):
         result = None
         if self._has_energy(ext):
-            filter_name = self._headers[ext].get('FILTER')
-            temp, ignore = self._get_filter_md(filter_name)
+            filter_name = mc.get_keyword(self._headers, 'FILTER')
+            temp, ignore = get_filter_md(filter_name, self._storage_name)
             result = ac.FilterMetadataCache.get_central_wavelength(temp)
         return result
 
@@ -1330,34 +1306,6 @@ class InstrumentType(AuxiliaryType):
         # also from caom2IngestEspadons.py, l393, despite an existing example
         # with energy information
         return obs_type not in ['BIAS', 'DARK']
-
-    def _get_filter_md(self, filter_name):
-        filter_md = md.filter_cache.get_svo_filter(
-            self._storage_name.instrument, filter_name
-        )
-        if not md.filter_cache.is_cached(
-            self._storage_name.instrument, filter_name
-        ):
-            # want to stop ingestion if the filter name is not expected
-            raise mc.CadcException(
-                f'Could not find filter metadata for {filter_name} in '
-                f'{self._storage_name.file_uri}.'
-            )
-        # CW - 15-05-20
-        # some flats like this have filter names like ‘i’, instead of
-        # ‘i.MP9701’. Even though there may only be a few of these, we want
-        # zero so they don’t appear in the filters picklist and confuse users.
-        # If the header doesn’t have the full filter name maybe you can hack
-        # it based on your knowledge of which i filter was used during this
-        # era.
-        #
-        # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
-        updated_filter_name = mc.reverse_lookup(
-            filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE)
-        )
-        if updated_filter_name is None:
-            updated_filter_name = filter_name
-        return filter_md, updated_filter_name
 
     def _get_gaia_target_id(self, ext):
         catalog_id = self._headers[ext].get('GAIAID')
@@ -1873,10 +1821,9 @@ class EspadonsPolarization(EspadonsSpatialSpectralTemporal):
         self._logger.debug('Done accumulate_blueprint.')
 
 
-class Mega(InstrumentType):
+class MegaTemporal(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
-        self._filter_name = None
         # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
         # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
         self._instrument_start_date = mc.make_datetime('2001-01-24 00:00:00')
@@ -1888,22 +1835,18 @@ class Mega(InstrumentType):
     @extension.setter
     def extension(self, value):
         self._extension = value
-        filter_name = self._headers[self._extension].get('FILTER')
-        if filter_name is None and len(self._headers) > self._extension + 1:
-            filter_name = self._headers[self._extension + 1].get('FILTER')
-        self._filter_name = filter_name
 
     def accumulate_blueprint(self, bp):
         """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
         Observation level.
         """
         super().accumulate_blueprint(bp)
+
+        bp.configure_time_axis(3)
+        self.accumulate_time_chunk_blueprint(bp)
+
         bp.set_default('Plane.provenance.name', 'ELIXIR')
-        bp.set_default(
-            'Plane.provenance.reference',
-            'http://www.cfht.hawaii.edu/Instruments/Elixir/',
-        )
-        bp.set('Chunk.energy.axis.function.naxis', 1)
+        bp.set_default('Plane.provenance.reference', 'http://www.cfht.hawaii.edu/Instruments/Elixir/')
         self._logger.debug('Done accumulate_blueprint.')
 
     def _find_derived_type(self, obs_id):
@@ -1935,22 +1878,15 @@ class Mega(InstrumentType):
         # metadata is in the FITS header
         if self._chunk.time_axis is not None:
             self._chunk.time_axis = None
-
-    def reset_energy(self):
-        # CW
-        # Ignore energy wcs if some type of calibration file
-        # or filter='None' or 'Open' or there is no filter
-        # match
-        filter_md, updated_filter_name = self.get_filter_md(self._filter_name)
         if (
-            self._filter_name is None
-            or self._filter_name in ['Open', 'NONE']
-            or ac.FilterMetadataCache.get_fwhm(filter_md) is None
-            or self._storage_name.suffix in ['b', 'l', 'd']
-            or self._observation.type in ['DARK']
-            or '_flag' in self._storage_name.file_id
+            self._chunk is not None 
+            and self._chunk.naxis is not None 
+            and self._chunk.naxis == 2 
+            and self._chunk.time is not None 
+            and self._chunk.position is None 
+            and self._chunk.polarization is None
         ):
-            cc.reset_energy(self._chunk)
+            self._chunk.naxis = None
 
     def reset_position(self):
         # CW
@@ -1960,37 +1896,9 @@ class Mega(InstrumentType):
         ccdbin = self._headers[self._extension].get('CCDBIN1')
         radecsys = self._headers[self._extension].get('RADECSYS')
         ctype1 = self._headers[self._extension].get('CTYPE1')
-        if (
-            self._storage_name.suffix in ['b', 'l', 'd', 'f']
-            or (ccdbin is not None and ccdbin == 8)
-            or radecsys is None
-            or ctype1 is None
-            # TODO - figure out if this should be called
-            # or self.observation_intent is ObservationIntentType.CALIBRATION
-            or '_flag' in self._storage_name.file_id
-        ):
+        if (ccdbin is not None and ccdbin == 8) or radecsys is None or ctype1 is None:
             cc.reset_position(self._chunk)
             self._chunk.naxis = None
-
-    def update_energy(self):
-        # SGo - use range for energy with filter information
-        filter_md, updated_filter_name = self.get_filter_md(self._filter_name)
-        if not (
-            self._filter_name is None
-            or self._filter_name in ['Open', 'NONE']
-            or ac.FilterMetadataCache.get_fwhm(filter_md) is None
-            or self._storage_name.suffix in ['b', 'l', 'd']
-            or self._observation.type in ['DARK']
-            or '_flag' in self._storage_name.file_id
-        ):
-            cc.build_chunk_energy_range(
-                self._chunk, updated_filter_name, filter_md
-            )
-            if self._chunk.energy is not None:
-                self._chunk.energy.ssysobs = 'TOPOCENT'
-                self._chunk.energy.ssyssrc = 'TOPOCENT'
-                # values from caom2megacam.default, caom2megacamdetrend.default
-                self._chunk.energy.axis.error = CoordError(1.0, 1.0)
 
     def update_plane(self):
         super().update_plane()
@@ -1999,7 +1907,41 @@ class Mega(InstrumentType):
             self._update_plane_provenance()
 
 
-class MegaFlag(Mega):
+class MegaSpectralRangeTemporal(MegaTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def update_energy(self):
+        # SGo - use range for energy with filter information
+        filter_name = mc.get_keyword(self._headers, 'FILTER')
+        filter_md, updated_filter_name = get_filter_md(filter_name, self._storage_name)
+        cc.build_chunk_energy_range(self._chunk, updated_filter_name, filter_md)
+        if self._chunk.energy is not None:
+            self._chunk.energy.ssysobs = 'TOPOCENT'
+            self._chunk.energy.ssyssrc = 'TOPOCENT'
+            # values from caom2megacam.default, caom2megacamdetrend.default
+            self._chunk.energy.axis.error = CoordError(1.0, 1.0)
+
+
+class Mega(MegaSpectralRangeTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+        self._filter_name = None
+
+    def accumulate_blueprint(self, bp):
+        """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+        bp.configure_position_axes((1, 2))
+        self.accumulate_spatial_chunk_blueprint(bp)
+
+        bp.configure_observable_axis(6)
+
+        self._logger.debug('Done accumulate_blueprint.')
+
+
+class MegaFlag(MegaTemporal):
     """
     Use this class when adding an Artifact for a '*p_flag.fits' file to an existing Observation instance.
     """
@@ -3366,10 +3308,8 @@ class Wircam(InstrumentType):
             self._chunk.naxis = None
 
     def update_energy(self):
-        filter_name = self._headers[self._extension].get('FILTER')
-        if filter_name is None and len(self._headers) > self._extension + 1:
-            filter_name = self._headers[self._extension + 1].get('FILTER')
-        filter_md, updated_filter_name = self.get_filter_md(filter_name)
+        filter_name = mc.get_keyword(self._headers, 'FILTER')
+        filter_md, updated_filter_name = get_filter_md(filter_name, self._storage_name)
         cc.build_chunk_energy_range(
             self._chunk, updated_filter_name, filter_md
         )
@@ -3512,10 +3452,8 @@ class WircamG(AuxiliaryType):
             cc.reset_energy(self._chunk)
 
     def update_energy(self):
-        filter_name = self._headers[self._extension].get('FILTER')
-        if filter_name is None and len(self._headers) > self._extension + 1:
-            filter_name = self._headers[self._extension + 1].get('FILTER')
-        filter_md, updated_filter_name = self.get_filter_md(filter_name)
+        filter_name = mc.get_keyword(self._headers, 'FILTER')
+        filter_md, updated_filter_name = get_filter_md(filter_name, self._storage_name)
         cc.build_chunk_energy_range(
             self._chunk, updated_filter_name, filter_md
         )
@@ -3773,6 +3711,46 @@ def _repair_imcmb_provenance_value(value, obs_id):
     return prov_obs_id, prov_prod_id
 
 
+def get_filter_md(filter_name, storage_name):
+    filter_md = md.filter_cache.get_svo_filter(storage_name.instrument.value, filter_name)
+    if not md.filter_cache.is_cached(storage_name.instrument.value, filter_name):
+        # want to stop ingestion if the filter name is not expected
+        raise mc.CadcException(
+            f'Could not find filter metadata for {filter_name} in {storage_name.file_uri}.'
+        )
+    # CW - 15-05-20
+    # some flats like this have filter names like ‘i’, instead of ‘i.MP9701’. Even though there may only be a few of
+    # these, we want zero so they don’t appear in the filters picklist and confuse users. If the header doesn’t have
+    # the full filter name maybe you can hack it based on your knowledge of which i filter was used during this era.
+    #
+    # SGo - hence the reverse lookup of FILTER_REPAIR CACHE
+    updated_filter_name = mc.reverse_lookup(filter_name, md.cache.get_from(md.FILTER_REPAIR_CACHE))
+    if updated_filter_name is None:
+        updated_filter_name = filter_name
+    return filter_md, updated_filter_name
+
+
+def is_mega_temporal(headers, storage_name):
+    # CW
+    # Ignore energy wcs if some type of calibration file or filter='None' or 'Open' or there is no filter match
+        # if not (
+        #     self._filter_name is None
+        #     or self._filter_name in ['Open', 'NONE']
+        #     or ac.FilterMetadataCache.get_fwhm(filter_md) is None
+        #     or self._observation.type in ['DARK']
+        # ):
+    filter_name = mc.get_keyword(headers, 'FILTER')
+    filter_md, updated_filter_name = get_filter_md(filter_name, storage_name)
+    obs_type = mc.get_keyword(headers, 'OBSTYPE')
+    result = (
+        updated_filter_name is None
+        or updated_filter_name in ['Open', 'NONE']
+        or ac.FilterMetadataCache.get_fwhm(filter_md) is None
+        or obs_type is not None and obs_type == 'DARK' and '_flag' not in storage_name.file_uri
+    )
+    return result
+
+
 def factory(headers, cfht_name, clients, observable, observation):
     set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
@@ -3789,8 +3767,15 @@ def factory(headers, cfht_name, clients, observable, observation):
             # SF 16-03-23 record the diag ones as catalogues,  artifact of the *p ones - same behaviour as for the
             # preview images
             temp = AuxiliaryType(headers, cfht_name, clients, observable, observation)
-        elif '_flag' in cfht_name.file_name and observation is not None:
-            temp = MegaFlag(headers, cfht_name, clients, observable, observation)
+        elif '_flag' in cfht_name.file_name:
+            if observation is None:
+                temp = MegaTemporal(headers, cfht_name, clients, observable, observation)
+            else:
+                temp = MegaFlag(headers, cfht_name, clients, observable, observation)
+        elif cfht_name.suffix in ['b', 'd', 'l'] or is_mega_temporal(headers, cfht_name):
+            temp = MegaTemporal(headers, cfht_name, clients, observable, observation)
+        elif cfht_name.suffix == 'f':
+            temp = MegaSpectralRangeTemporal(headers, cfht_name, clients, observable, observation)
         else:
             temp = Mega(headers, cfht_name, clients, observable, observation)
     elif cfht_name.instrument is md.Inst.SITELLE:
