@@ -1953,39 +1953,8 @@ class MegaFlag(MegaTemporal):
         Observation level.
         """
         super().accumulate_blueprint(bp)
-
-        # for the cases where the blueprint keys are not the same as the Python class data member names
-        x = {
-            'ambientTemp': 'ambient_temp',
-            'geoLocationX': 'geo_location_x',
-            'geoLocationY': 'geo_location_y',
-            'geoLocationZ': 'geo_location_z',
-            'metaProducer': 'meta_producer',
-            'metaRelease': 'meta_release',
-            'observationID': 'observation_id',
-            'pi': 'pi_name',
-            'sequenceNumber': 'sequence_number',
-        }
         bp.set('Chunk.energy.axis.function.naxis', 1)
-        for attribute in bp._plan:
-            if attribute.startswith('Observation'):
-                attribute_names = attribute.split('.')
-                y = x.get(attribute_names[1], attribute_names[1])
-                if hasattr(self._observation, y):
-                    attribute_ptr = getattr(self._observation, y)
-                    if len(attribute_names) > 2:
-                        z = x.get(attribute_names[2], attribute_names[2])
-                        if hasattr(attribute_ptr, z):
-                            attribute_ptr = getattr(attribute_ptr, z)
-                            self._logger.debug(f'Reset blueprint value to {attribute_ptr} for {attribute}')
-                            bp.clear(attribute)
-                            bp.set(attribute, attribute_ptr)
-                    else:
-                        self._logger.debug(f'Reset blueprint value to {attribute_ptr} for {attribute}')
-                        bp.clear(attribute)
-                        bp.set(attribute, attribute_ptr)
-                else:
-                    self._logger.warning(f'Did not find {attribute} in Observation.')
+        self._use_existing_observation(bp)
         self._logger.debug('Done accumulate_blueprint.')
 
 
