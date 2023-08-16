@@ -1000,7 +1000,7 @@ class InstrumentType(AuxiliaryType):
         """
         self._logger.debug('Begin accumulate_blueprint.')
         super().accumulate_blueprint(bp)
-        if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE]:
+        if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE, md.Inst.SPIROU]:
             return
         bp.configure_position_axes((1, 2))
         if self._storage_name.suffix == 'p' and self._storage_name.instrument is md.Inst.SPIROU:
@@ -2564,7 +2564,6 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
         return self._observation
 
 
-# class SitelleP(SitelleSpatialFunctionSpectralTemporal):
 class SitelleP(SitelleSpectralTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
@@ -2680,8 +2679,7 @@ class Spirou(InstrumentType):
         self._header = self._headers[value]
 
     def accumulate_blueprint(self, bp):
-        """Configure the SPIRou-specific ObsBlueprint at the CAOM model
-        Observation level.
+        """Configure the SPIRou-specific ObsBlueprint at the CAOM model Observation level.
 
         SF 03-03-23
         Add in WCS for 's' files, and spatial WCS for 'g' files.
@@ -2702,21 +2700,14 @@ class Spirou(InstrumentType):
         elif self._storage_name.suffix in ['a', 'c', 'd', 'f', 'o', 'x']:
             bp.set('Plane.provenance.name', 'get_provenance_name()')
             bp.set(
-                'Plane.provenance.reference',
-                'http://www.cfht.hawaii.edu/Instruments/SPIRou/',
+                'Plane.provenance.reference', 'http://www.cfht.hawaii.edu/Instruments/SPIRou/'
             )
-            bp.set(
-                'Plane.provenance.version',
-                'get_provenance_version()',
-            )
+            bp.set('Plane.provenance.version', 'get_provenance_version()')
         else:
             bp.set('Plane.provenance.name', 'DRS')
             bp.set(
                 'Plane.provenance.reference',
-                (
-                    'https://www.cfht.hawaii.edu/Instruments/SPIRou/'
-                    'SPIRou_pipeline.php'
-                ),
+                'https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_pipeline.php',
             )
             bp.clear('Plane.provenance.version')
             bp.add_attribute('Plane.provenance.version', 'VERSION')
@@ -2724,6 +2715,26 @@ class Spirou(InstrumentType):
         bp.clear('Plane.provenance.lastExecuted')
         bp.add_attribute('Plane.provenance.lastExecuted', 'DRSPDATE')
 
+    def _accumulate_spatial_chunk_blueprint(self, bp):
+        # values from caom2spirou.default
+        bp.configure_position_axes((1, 2))
+        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
+        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
+        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
+        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
+        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
+        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
+        bp.set('Chunk.position.axis.function.refCoord.coord1.val', 'get_ra_deg_from_0th_header()')
+        bp.set('Chunk.position.axis.function.refCoord.coord2.val', 'get_dec_deg_from_0th_header()')
+        bp.set('Chunk.position.axis.function.cd11', -0.00035833)
+        bp.set('Chunk.position.axis.function.cd12', 0.0)
+        bp.set('Chunk.position.axis.function.cd21', 0.0)
+        bp.set('Chunk.position.axis.function.cd22', 0.00035833)
+        bp.set('Chunk.position.coordsys', 'get_position_coordsys_from_0th_header()')
+        bp.set('Chunk.position.equinox', 'get_position_equinox_from_0th_header()')
+        self.accumulate_spatial_chunk_blueprint(bp)
+
+    def _accumulate_spectral_chunk_blueprint(self, bp, axis_index):
         # from caom2IngestSpirou.py, l654
         # CW - Do energy stuff for raw and calibrated data
         # Initial numbers to be updated once have some reduced spectra
@@ -2744,6 +2755,7 @@ class Spirou(InstrumentType):
         # H bands and so covers the bulk of the SPIRou wavelength range.
         #
         # use [0.98, 2.4], assume flat transmission
+        bp.configure_energy_axis(axis_index)
         bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
         bp.set('Chunk.energy.axis.axis.cunit', 'nm')
         bp.set('Chunk.energy.axis.function.delta', 1560.0)
@@ -2753,38 +2765,9 @@ class Spirou(InstrumentType):
         bp.set('Chunk.energy.axis.error.rnder', 0.001)
         bp.set('Chunk.energy.axis.error.syser', 0.001)
         bp.set('Chunk.energy.resolvingPower', 73000.0)
-
-        # values from caom2spirou.default
-        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
-        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
-        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
-        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
-        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
-        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
-        bp.set('Chunk.position.axis.function.refCoord.coord1.val', 'get_ra_deg_from_0th_header()')
-        bp.set('Chunk.position.axis.function.refCoord.coord2.val', 'get_dec_deg_from_0th_header()')
-        bp.set('Chunk.position.axis.function.cd11', -0.00035833)
-        bp.set('Chunk.position.axis.function.cd12', 0.0)
-        bp.set('Chunk.position.axis.function.cd21', 0.0)
-        bp.set('Chunk.position.axis.function.cd22', 0.00035833)
-
-        bp.set(
-            'Chunk.position.coordsys',
-            'get_position_coordsys_from_0th_header()',
-        )
-        bp.set(
-            'Chunk.position.equinox',
-            'get_position_equinox_from_0th_header()',
-        )
-
-        if self._storage_name.suffix not in ['g', 'p']:
-            bp.set(
-                'Chunk.time.axis.function.delta', 'get_time_refcoord_delta()'
-            )
-            bp.set(
-                'Chunk.time.axis.function.naxis', 'get_time_refcoord_naxis()'
-            )
-            bp.set('Chunk.time.resolution', 'get_time_resolution()')
+        bp.set('Chunk.energy.specsys', 'TOPOCENT')
+        bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
+        bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
 
     def get_exptime(self, ext):
         # caom2IngestSpirou.py, l530+
@@ -2861,33 +2844,14 @@ class Spirou(InstrumentType):
         self._chunk.naxis = None
         if self._chunk.energy is not None:
             self._chunk.energy_axis = None
-            if self._observation.type == 'DARK':
-                # caom2IngestSpirou.py, l514
-                self._chunk.energy = None
+        #     if self._observation.type == 'DARK':
+        #         # caom2IngestSpirou.py, l514
+        #         self._chunk.energy = None
         if self._chunk.time is not None:
             self._chunk.time_axis = None
         if self._chunk.position is not None:
             self._chunk.position_axis_1 = None
             self._chunk.position_axis_2 = None
-
-    def reset_position(self):
-        self._logger.debug(
-            f'Begin reset_position for {self._storage_name.obs_id}'
-        )
-        # from caom2IngestSpirou.py, l499+
-        # CW - ignore position wcs if a calibration file
-        ra_deg = self._header.get('RA_DEG')
-        dec_deg = self._header.get('DEC_DEG')
-        ra_dec_sys = self._header.get('RADECSYS')
-        if self._observation.type not in ['OBJECT', 'ALIGN'] or (
-            ra_deg is None
-            and dec_deg is None
-            and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
-        ):
-            cc.reset_position(self._chunk)
-        self._logger.debug(
-            f'End reset_position for {self._storage_name.obs_id}'
-        )
 
     def update_observation(self):
         super().update_observation()
@@ -2899,6 +2863,44 @@ class Spirou(InstrumentType):
         # caom2IngestSpirou.py, l584
         if self._storage_name.suffix in ['e', 's', 't']:
             self._update_plane_provenance()
+
+
+class SpirouTemporal(Spirou):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        super().accumulate_blueprint(bp)
+        bp.configure_time_axis(3)
+        super().accumulate_time_chunk_blueprint(bp)
+        bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
+        bp.set('Chunk.time.axis.function.naxis', 'get_time_refcoord_naxis()')
+        bp.set('Chunk.time.resolution', 'get_time_resolution()')
+
+
+class SpirouSpectralTemporal(SpirouTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        super().accumulate_blueprint(bp)
+        self._accumulate_spectral_chunk_blueprint(bp, 4)
+
+        # bp.configure_time_axis(3)
+        # super().accumulate_time_chunk_blueprint(bp)
+        # if self._storage_name.suffix not in ['g', 'p']:
+        #     bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
+        #     bp.set('Chunk.time.axis.function.naxis', 'get_time_refcoord_naxis()')
+        #     bp.set('Chunk.time.resolution', 'get_time_resolution()')
+
+
+class SpirouSpatialSpectralTemporal(SpirouSpectralTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        super().accumulate_blueprint(bp)
+        self._accumulate_spatial_chunk_blueprint(bp)
 
 
 class SpirouG(Spirou):
@@ -2913,8 +2915,13 @@ class SpirouG(Spirou):
         # SF 03-03-23 - use ETYPE, add Spatial WCS support
         bp.clear('Observation.type')
         bp.add_attribute('Observation.type', 'ETYPE')
+        bp.set('Plane.dataProductType', DataProductType.IMAGE)
+
+        self._accumulate_spatial_chunk_blueprint(bp)
         bp.set('Chunk.position.axis.function.refCoord.coord1.val', '_get_ra()')
         bp.set('Chunk.position.axis.function.refCoord.coord2.val', '_get_dec()')
+
+        self._accumulate_spectral_chunk_blueprint(bp, 4)
 
     def _get_ra(self, ext):
         ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
@@ -2924,11 +2931,8 @@ class SpirouG(Spirou):
         ra, dec = ac.build_ra_dec_as_deg(self._headers[0].get('RA'), self._headers[0].get('DEC'))
         return dec
 
-    def reset_position(self):
-        pass
-
     def update_plane(self):
-        self.plane.data_product_type = DataProductType.IMAGE
+        pass
 
     def update_time(self):
         self._logger.debug(
@@ -2984,7 +2988,7 @@ class SpirouG(Spirou):
         self._logger.debug(f'End _update_time_g for {self._storage_name.obs_id}')
 
 
-class SpirouP(Spirou):
+class SpirouPolarization(Spirou):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
 
@@ -2993,6 +2997,9 @@ class SpirouP(Spirou):
         Observation level.
         """
         super().accumulate_blueprint(bp)
+        self._accumulate_spatial_chunk_blueprint(bp)
+        self._accumulate_spectral_chunk_blueprint(bp, 3)
+
         bp.configure_polarization_axis(7)
         bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
         bp.set('Chunk.polarization.axis.function.naxis', 1)
@@ -3720,6 +3727,21 @@ def is_mega_temporal(headers, storage_name):
     return result
 
 
+def is_spirou_spectral_temporal(headers):
+    result = True
+    # from caom2IngestSpirou.py, l499+
+    # CW - ignore position wcs if a calibration file
+    ra_deg = mc.get_keyword(headers, 'RA_DEG')
+    dec_deg = mc.get_keyword(headers, 'DEC_DEG')
+    ra_dec_sys = mc.get_keyword(headers, 'RADECSYS')
+    obs_type = mc.get_keyword(headers, 'OBSTYPE')
+    if obs_type in ['OBJECT', 'ALIGN'] and not (
+        ra_deg is None and dec_deg is None and (ra_dec_sys is None or ra_dec_sys.lower() == 'null')
+    ):
+        result = False
+    return result
+
+
 def factory(headers, cfht_name, clients, observable, observation):
     set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
@@ -3771,9 +3793,13 @@ def factory(headers, cfht_name, clients, observable, observation):
         if cfht_name.suffix == 'g':
             temp = SpirouG(headers, cfht_name, clients, observable, observation)
         elif cfht_name.suffix == 'p':
-            temp = SpirouP(headers, cfht_name, clients, observable, observation)
+            temp = SpirouPolarization(headers, cfht_name, clients, observable, observation)
+        elif cfht_name.suffix == 'd':
+            temp = SpirouTemporal(headers, cfht_name, clients, observable, observation)
+        elif is_spirou_spectral_temporal(headers):
+            temp = SpirouSpectralTemporal(headers, cfht_name, clients, observable, observation)
         else:
-            temp = Spirou(headers, cfht_name, clients, observable, observation)
+            temp = SpirouSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation)
     elif cfht_name.instrument is md.Inst.WIRCAM:
         if cfht_name.suffix == 'g':
             temp = WircamG(headers, cfht_name, clients, observable, observation)
