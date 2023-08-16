@@ -2886,13 +2886,6 @@ class SpirouSpectralTemporal(SpirouTemporal):
         super().accumulate_blueprint(bp)
         self._accumulate_spectral_chunk_blueprint(bp, 4)
 
-        # bp.configure_time_axis(3)
-        # super().accumulate_time_chunk_blueprint(bp)
-        # if self._storage_name.suffix not in ['g', 'p']:
-        #     bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
-        #     bp.set('Chunk.time.axis.function.naxis', 'get_time_refcoord_naxis()')
-        #     bp.set('Chunk.time.resolution', 'get_time_resolution()')
-
 
 class SpirouSpatialSpectralTemporal(SpirouSpectralTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
