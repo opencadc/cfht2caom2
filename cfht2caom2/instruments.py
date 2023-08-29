@@ -1000,7 +1000,8 @@ class InstrumentType(AuxiliaryType):
         """
         self._logger.debug('Begin accumulate_blueprint.')
         super().accumulate_blueprint(bp)
-        if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE, md.Inst.SPIROU]:
+        if self._storage_name.instrument in [md.Inst.WIRCAM, md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE, md.Inst.SPIROU]:
+        # if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE, md.Inst.SPIROU]:
             return
         bp.configure_position_axes((1, 2))
         if self._storage_name.suffix == 'p' and self._storage_name.instrument is md.Inst.SPIROU:
@@ -3110,7 +3111,7 @@ class SpirouPolarization(Spirou):
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
-class Wircam(InstrumentType):
+class WircamSpectralTemporal(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
@@ -3134,6 +3135,8 @@ class Wircam(InstrumentType):
             'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam',
         )
 
+        bp.configure_time_axis(3)
+        self.accumulate_time_chunk_blueprint(bp)
         bp.set('Chunk.energy.bandpassName', 'get_bandpass_name()')
 
         self._logger.debug('Done accumulate_blueprint.')
@@ -3267,15 +3270,6 @@ class Wircam(InstrumentType):
             self._chunk.energy_axis = None
             self._chunk.time_axis = None
 
-        if self._storage_name.suffix in ['f'] or self._observation.type in [
-            'BPM',
-            'DARK',
-            'FLAT',
-            'WEIGHT',
-        ]:
-            cc.reset_position(self._chunk)
-            self._chunk.naxis = None
-
     def update_energy(self):
         filter_name = mc.get_keyword(self._headers, 'FILTER')
         filter_md, updated_filter_name = get_filter_md(filter_name, self._storage_name)
@@ -3288,34 +3282,6 @@ class Wircam(InstrumentType):
             # values from caom2megacam.default, caom2megacamdetrend.default
             self._chunk.energy.axis.error = CoordError(1.0, 1.0)
 
-    def update_observation(self):
-        self._logger.debug('Begin update_observation.')
-        super().update_observation()
-        # ensure the order of ingestion doesn't change the outcome
-        # at the observation level between 'o' and 'g' files
-        if (
-            self._storage_name.suffix in ['g', 'o']
-            and self._observation.type == 'GUIDE'
-            and self._observation.intent is ObservationIntentType.CALIBRATION
-        ):
-            g_plane_key = self._storage_name.product_id.replace('o', 'g')
-            o_plane_key = self._storage_name.product_id.replace('g', 'o')
-            if (
-                g_plane_key in self._observation.planes.keys()
-                and o_plane_key in self._observation.planes.keys()
-            ):
-                o_artifact_key = self._storage_name.file_uri.replace('g', 'o')
-                # undo what the 'g' file did at the Observation level
-                o_plane = self._observation.planes[o_plane_key]
-                o_artifact = o_plane.artifacts[o_artifact_key]
-                if o_artifact.product_type == ProductType.SCIENCE:
-                    self._logger.info(
-                        'Changing type to OBJECT, intent to SCIENCE'
-                    )
-                    self._observation.type = 'OBJECT'
-                    self._observation.intent = ObservationIntentType.SCIENCE
-        self._logger.debug('End update_observation.')
-
     def update_plane(self):
         super().update_plane()
         # caom2IngestWircam.py, l193
@@ -3325,45 +3291,14 @@ class Wircam(InstrumentType):
             self._update_plane_provenance()
 
     def update_position(self):
-        if self._storage_name.suffix == 'o':
-            self._update_position_o()
-
-    def _update_position_o(self):
-        self._logger.debug(
-            f'Begin _update_position_o for {self._storage_name.obs_id}'
-        )
-        part_index = mc.to_int(self.part.name)
-        header = self._headers[part_index]
-        ra_deg = header.get('RA_DEG')
-        dec_deg = header.get('DEC_DEG')
-        if (
-            self._chunk.position is None
-            and ra_deg is not None
-            and dec_deg is not None
-        ):
-            self._logger.info(
-                f'Adding position information for {self._storage_name.obs_id}'
-            )
-            header['CTYPE1'] = 'RA---TAN'
-            header['CTYPE2'] = 'DEC--TAN'
-            header['CUNIT1'] = 'deg'
-            header['CUNIT2'] = 'deg'
-            header['CRVAL1'] = ra_deg
-            header['CRVAL2'] = dec_deg
-            wcs_parser = FitsWcsParser(
-                header, self._storage_name.obs_id, self._extension
-            )
-            if self._chunk is None:
-                self._chunk = Chunk()
-            wcs_parser.augment_position(self._chunk)
-            if self._chunk.position is not None:
-                self._chunk.position_axis_1 = 1
-                self._chunk.position_axis_2 = 2
-        self._logger.debug(f'End _update_position_o')
+        pass
 
     def update_time(self):
         self._logger.debug(f'Begin update_time for {self._storage_name.obs_id}')
-        if self._observation.type not in ['BPM', 'DARK', 'FLAT', 'WEIGHT']:
+        self._chunk.time.axis.function.naxis = 1
+        if self._observation.type in ['BPM', 'DARK', 'FLAT', 'WEIGHT']:
+            self._chunk.naxis = None
+        else:
             n_exp = self._headers[self._extension].get('NEXP')
             if n_exp is not None:
                 # caom2IngestWircam.py, l843
@@ -3371,7 +3306,20 @@ class Wircam(InstrumentType):
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
-class WircamG(AuxiliaryType):
+class Wircam(WircamSpectralTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the WIRCam-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+        bp.configure_position_axes((1, 2))
+        self.accumulate_spatial_chunk_blueprint(bp)
+
+
+class WircamG(WircamSpectralTemporal):
     """suffix == 'g'"""
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
@@ -3387,15 +3335,6 @@ class WircamG(AuxiliaryType):
         super().accumulate_blueprint(bp)
         # don't want GUIDE file Observation-level metadata 
         self._use_existing_observation(bp)
-        bp.set_default('Plane.provenance.name', 'IIWI')
-        bp.set_default('Plane.provenance.producer', 'CFHT')
-        bp.set_default(
-            'Plane.provenance.reference', 'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam'
-        )
-        bp.clear('Plane.provenance.runID')
-        bp.add_attribute('Plane.provenance.runID', 'CRUNID')
-        bp.configure_energy_axis(3)
-        bp.set('Chunk.energy.bandpassName', 'get_bandpass_name()')
 
     def get_bandpass_name(self, ext):
         wheel_a = self._headers[ext].get('WHEELADE')
@@ -3419,18 +3358,6 @@ class WircamG(AuxiliaryType):
         temp_bandpass_name = self._headers[self._extension].get('FILTER')
         if temp_bandpass_name == 'FakeBlank':
             cc.reset_energy(self._chunk)
-
-    def update_energy(self):
-        filter_name = mc.get_keyword(self._headers, 'FILTER')
-        filter_md, updated_filter_name = get_filter_md(filter_name, self._storage_name)
-        cc.build_chunk_energy_range(
-            self._chunk, updated_filter_name, filter_md
-        )
-        if self._chunk.energy is not None:
-            self._chunk.energy.ssysobs = 'TOPOCENT'
-            self._chunk.energy.ssyssrc = 'TOPOCENT'
-            # values from caom2megacam.default, caom2megacamdetrend.default
-            self._chunk.energy.axis.error = CoordError(1.0, 1.0)
 
     def update_position(self):
         """'g' file position handling."""
@@ -3600,11 +3527,33 @@ class WircamG(AuxiliaryType):
 
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
-    def make_axes_consistent(self):
-        if self._chunk is not None and self._chunk.position is not None:
-            self._chunk.naxis = 2
-        else:
-            self._chunk.naxis = None
+
+class WircamO(Wircam):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def update_position(self):
+        self._logger.debug(f'Begin update_position for {self._storage_name.obs_id}')
+        part_index = mc.to_int(self.part.name)
+        header = self._headers[part_index]
+        ra_deg = header.get('RA_DEG')
+        dec_deg = header.get('DEC_DEG')
+        if self._chunk.position is None and ra_deg is not None and dec_deg is not None:
+            self._logger.info(f'Adding position information for {self._storage_name.obs_id}')
+            header['CTYPE1'] = 'RA---TAN'
+            header['CTYPE2'] = 'DEC--TAN'
+            header['CUNIT1'] = 'deg'
+            header['CUNIT2'] = 'deg'
+            header['CRVAL1'] = ra_deg
+            header['CRVAL2'] = dec_deg
+            wcs_parser = FitsWcsParser(header, self._storage_name.obs_id, self._extension)
+            if self._chunk is None:
+                self._chunk = Chunk()
+            wcs_parser.augment_position(self._chunk)
+            if self._chunk.position is not None:
+                self._chunk.position_axis_1 = 1
+                self._chunk.position_axis_2 = 2
+        self._logger.debug(f'End update_position')
 
 
 def _repair_comment_provenance_value(value, obs_id):
@@ -3735,6 +3684,19 @@ def is_spirou_spectral_temporal(headers):
     return result
 
 
+def is_wircam_spectral_temporal(storage_name, headers):
+    result = False
+    obs_type = mc.get_keyword(headers, 'OBSTYPE')
+    if (
+        storage_name.suffix == 'f' 
+        or obs_type in ['BPM', 'DARK', 'FLAT', 'WEIGHT']
+        or 'weight' in storage_name.file_uri 
+        or 'pix' in storage_name.file_uri
+    ):
+        result = True
+    return result
+
+
 def factory(headers, cfht_name, clients, observable, observation):
     set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
@@ -3797,9 +3759,14 @@ def factory(headers, cfht_name, clients, observable, observation):
         if cfht_name.suffix == 'g':
             temp = WircamG(headers, cfht_name, clients, observable, observation)
         else:
-            temp = Wircam(headers, cfht_name, clients, observable, observation)
+            if is_wircam_spectral_temporal(cfht_name, headers):
+                temp = WircamSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            elif cfht_name.suffix == 'o':
+                temp = WircamO(headers, cfht_name, clients, observable, observation)
+            else:
+                temp = Wircam(headers, cfht_name, clients, observable, observation)
     else:
         observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
-    logging.error(f'Created {temp.__class__.__name__} mapping.')
+    logging.debug(f'Created {temp.__class__.__name__} mapping.')
     return temp
