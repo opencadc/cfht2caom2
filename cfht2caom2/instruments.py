@@ -988,101 +988,46 @@ class InstrumentType(AuxiliaryType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
 
-    def accumulate_blueprint(self, bp):
-        """Configure the telescope-specific ObsBlueprint at the CAOM model
-        Observation level.
-
-        This code captures the portion of the TDM->CAOM model mapping, where
-        the relationship is one or many elements of the TDM are required to set
-        individual elements of the CAOM model. If the mapping cardinality is 1:1
-        generally, use add_attribute. If the mapping cardinality is n:1 use
-        the set method to reference a function call.
-        """
-        self._logger.debug('Begin accumulate_blueprint.')
-        super().accumulate_blueprint(bp)
-        if self._storage_name.instrument in [md.Inst.WIRCAM, md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE, md.Inst.SPIROU]:
-        # if self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.MEGACAM, md.Inst.MEGAPRIME, md.Inst.SITELLE, md.Inst.SPIROU]:
-            return
-        bp.configure_position_axes((1, 2))
-        if self._storage_name.suffix == 'p' and self._storage_name.instrument is md.Inst.SPIROU:
-            bp.configure_energy_axis(3)
-        else:
-            bp.configure_time_axis(3)
-            bp.configure_energy_axis(4)
-
-        bp.configure_observable_axis(6)
-
-        self.accumulate_spatial_chunk_blueprint(bp)
-        self.accumulate_spectral_chunk_blueprint(bp)
-        self.accumulate_time_chunk_blueprint(bp)
-
     def accumulate_spectral_chunk_blueprint(self, bp):
         # hard-coded values from:
         # - wcaom2archive/cfh2caom2/config/caom2megacam.default and
         # - wxaom2archive/cfht2ccaom2/config/caom2megacam.config
         #
-        # Gemini is all range, make Mega* range too, and WIRCam too
-        if self._storage_name.instrument not in [
-            md.Inst.MEGACAM,
-            md.Inst.MEGAPRIME,
-            md.Inst.WIRCAM,
-            md.Inst.ESPADONS,
-        ]:
-            # bp.configure_energy_axis(4)
-            bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype()')
-            bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit()')
-            bp.set('Chunk.energy.axis.error.rnder', 1.0)
-            bp.set('Chunk.energy.axis.error.syser', 1.0)
-            bp.set(
-                'Chunk.energy.axis.function.delta',
-                'get_energy_function_delta()',
-            )
-            bp.set(
-                'Chunk.energy.axis.function.naxis',
-                'get_energy_function_naxis()',
-            )
-            bp.set(
-                'Chunk.energy.axis.function.refCoord.pix',
-                'get_energy_function_pix()',
-            )
-            bp.set(
-                'Chunk.energy.axis.function.refCoord.val',
-                'get_energy_function_val()',
-            )
-            bp.clear('Chunk.energy.bandpassName')
-            bp.add_attribute('Chunk.energy.bandpassName', 'FILTER')
-            bp.set(
-                'Chunk.energy.resolvingPower',
-                'get_energy_resolving_power()',
-            )
-            bp.set('Chunk.energy.specsys', 'TOPOCENT')
-            bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
-            bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
+        # Gemini is all range, make CFHT range too where possible
+        bp.set('Chunk.energy.axis.axis.ctype', 'get_energy_ctype()')
+        bp.set('Chunk.energy.axis.axis.cunit', 'get_energy_cunit()')
+        bp.set('Chunk.energy.axis.error.rnder', 1.0)
+        bp.set('Chunk.energy.axis.error.syser', 1.0)
+        bp.set('Chunk.energy.axis.function.delta', 'get_energy_function_delta()')
+        bp.set('Chunk.energy.axis.function.naxis', 'get_energy_function_naxis()')
+        bp.set('Chunk.energy.axis.function.refCoord.pix', 'get_energy_function_pix()')
+        bp.set('Chunk.energy.axis.function.refCoord.val', 'get_energy_function_val()')
+        bp.clear('Chunk.energy.bandpassName')
+        bp.add_attribute('Chunk.energy.bandpassName', 'FILTER')
+        bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power()')
+        bp.set('Chunk.energy.specsys', 'TOPOCENT')
+        bp.set('Chunk.energy.ssysobs', 'TOPOCENT')
+        bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
 
     def accumulate_spatial_chunk_blueprint(self, bp):
-
         bp.set('Chunk.position.axis.axis1.cunit', 'deg')
         bp.set('Chunk.position.axis.axis2.cunit', 'deg')
-
         bp.set('Chunk.position.axis.error1.rnder', 0.0000278)
         bp.set('Chunk.position.axis.error1.syser', 0.0000278)
         bp.set('Chunk.position.axis.error2.rnder', 0.0000278)
         bp.set('Chunk.position.axis.error2.syser', 0.0000278)
-
         bp.clear('Chunk.position.coordsys')
         bp.add_attribute('Chunk.position.coordsys', 'RADECSYS')
 
     def accumulate_time_chunk_blueprint(self, bp):
-
-        if self._storage_name.suffix != 'g':
-            bp.set('Chunk.time.exposure', 'get_exptime()')
-            bp.set('Chunk.time.resolution', 'get_exptime()')
-            bp.set('Chunk.time.timesys', 'UTC')
-            bp.set('Chunk.time.axis.axis.ctype', 'TIME')
-            bp.set('Chunk.time.axis.axis.cunit', 'd')
-            bp.set('Chunk.time.axis.error.rnder', 0.0000001)
-            bp.set('Chunk.time.axis.error.syser', 0.0000001)
-            bp.set('Chunk.time.axis.function.naxis', 1)
+        bp.set('Chunk.time.exposure', 'get_exptime()')
+        bp.set('Chunk.time.resolution', 'get_exptime()')
+        bp.set('Chunk.time.timesys', 'UTC')
+        bp.set('Chunk.time.axis.axis.ctype', 'TIME')
+        bp.set('Chunk.time.axis.axis.cunit', 'd')
+        bp.set('Chunk.time.axis.error.rnder', 0.0000001)
+        bp.set('Chunk.time.axis.error.syser', 0.0000001)
+        bp.set('Chunk.time.axis.function.naxis', 1)
 
         if self._storage_name.raw_time:
             bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta_simple()')
@@ -1461,11 +1406,33 @@ class InstrumentType(AuxiliaryType):
         pass
 
 
-class EspadonsSpectralTemporal(InstrumentType):
+class EspadonsTemporal(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
         # SF 18-11-22 espadons is 2004
         self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
+
+    def accumulate_spatial_chunk_blueprint(self, bp):
+        super().accumulate_spatial_chunk_blueprint(bp)
+        # constants from caom2espadons.config
+        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
+        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
+        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
+        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
+        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
+        bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
+        bp.add_attribute('Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG')
+        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
+        bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
+        bp.add_attribute('Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG')
+        # CW
+        # Fibre size is 1.6", i.e. 0.000444 deg
+        bp.set('Chunk.position.axis.function.cd11', -0.000444)
+        bp.set('Chunk.position.axis.function.cd12', 0.0)
+        bp.set('Chunk.position.axis.function.cd21', 0.0)
+        bp.set('Chunk.position.axis.function.cd22', 0.000444)
+
+        bp.add_attribute('Chunk.position.equinox', 'EQUINOX')
 
     def accumulate_blueprint(self, bp):
         """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model
@@ -1475,9 +1442,6 @@ class EspadonsSpectralTemporal(InstrumentType):
 
         bp.configure_time_axis(3)
         self.accumulate_time_chunk_blueprint(bp)
-
-        bp.configure_energy_axis(4)
-        self.accumulate_spectral_chunk_blueprint(bp)
 
         # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.set('Observation.algorithm.name', 'get_algorithm_name()')
@@ -1492,31 +1456,6 @@ class EspadonsSpectralTemporal(InstrumentType):
 
         bp.set('Chunk.time.axis.function.delta', 'get_time_refcoord_delta()')
         bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()')
-
-        if self._storage_name.suffix is not None:
-            # caom2IngestEspadons.py l636
-            naxis1 = 213542
-            # caom2IngestEspadons.py l639
-            cdelt1 = 0.0031764
-            # caom2IngestEspadons.py l638
-            crval1 = 370.0
-            if self._storage_name.suffix in ['a', 'c', 'f', 'o', 'x']:
-                bp.configure_energy_axis(4)
-                bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
-                bp.set('Chunk.energy.axis.axis.cunit', 'nm')
-                bp.set('Chunk.energy.axis.range.start.pix', 0.5)
-                bp.set('Chunk.energy.axis.range.start.val', crval1)
-                bp.set('Chunk.energy.axis.range.end.pix', 1.5)
-                bp.set('Chunk.energy.axis.range.end.val', crval1 + float(naxis1) * cdelt1)
-                bp.set('Chunk.energy.specsys', 'TOPOCENT')
-                bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
-                bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power()')
-                bp.set('Chunk.energy.bandpassName', None)
-            else:
-                bp.set('Chunk.energy.axis.function.delta', cdelt1)
-                bp.set('Chunk.energy.axis.function.naxis', naxis1)
-                bp.set('Chunk.energy.axis.function.refCoord.pix', 0.5)
-                bp.set('Chunk.energy.axis.function.refCoord.val', crval1)
 
         self._logger.debug('Done accumulate_blueprint.')
 
@@ -1769,49 +1708,75 @@ class EspadonsSpectralTemporal(InstrumentType):
             self._update_plane_provenance()
 
 
+class EspadonsSpectralTemporal(EspadonsTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+        # SF 18-11-22 espadons is 2004
+        self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
+
+    def accumulate_blueprint(self, bp):
+        super().accumulate_blueprint(bp)
+        if self._storage_name.suffix is not None:
+            bp.configure_energy_axis(4)
+            # caom2IngestEspadons.py l636
+            naxis1 = 213542
+            # caom2IngestEspadons.py l639
+            cdelt1 = 0.0031764
+            # caom2IngestEspadons.py l638
+            crval1 = 370.0
+            if self._storage_name.suffix in ['a', 'c', 'f', 'o', 'x']:
+                # bp.configure_energy_axis(4)
+                bp.set('Chunk.energy.axis.axis.ctype', 'WAVE')
+                bp.set('Chunk.energy.axis.axis.cunit', 'nm')
+                bp.set('Chunk.energy.axis.range.start.pix', 0.5)
+                bp.set('Chunk.energy.axis.range.start.val', crval1)
+                bp.set('Chunk.energy.axis.range.end.pix', 1.5)
+                bp.set('Chunk.energy.axis.range.end.val', crval1 + float(naxis1) * cdelt1)
+                bp.set('Chunk.energy.specsys', 'TOPOCENT')
+                bp.set('Chunk.energy.ssyssrc', 'TOPOCENT')
+                bp.set('Chunk.energy.resolvingPower', 'get_energy_resolving_power()')
+                bp.set('Chunk.energy.bandpassName', None)
+            else:
+                self.accumulate_spectral_chunk_blueprint(bp)
+                bp.set('Chunk.energy.axis.function.delta', cdelt1)
+                bp.set('Chunk.energy.axis.function.naxis', naxis1)
+                bp.set('Chunk.energy.axis.function.refCoord.pix', 0.5)
+                bp.set('Chunk.energy.axis.function.refCoord.val', crval1)
+
+        self._logger.debug('Done accumulate_blueprint.')
+
+
 class EspadonsSpatialSpectralTemporal(EspadonsSpectralTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
 
     def accumulate_blueprint(self, bp):
-        """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model
-        Observation level.
-        """
         super().accumulate_blueprint(bp)
-
         bp.configure_position_axes((1, 2))
         self.accumulate_spatial_chunk_blueprint(bp)
-
-        # constants from caom2espadons.config
-        bp.set('Chunk.position.axis.axis1.ctype', 'RA---TAN')
-        bp.set('Chunk.position.axis.axis2.ctype', 'DEC--TAN')
-        bp.set('Chunk.position.axis.function.dimension.naxis1', 1)
-        bp.set('Chunk.position.axis.function.dimension.naxis2', 1)
-        bp.set('Chunk.position.axis.function.refCoord.coord1.pix', 1.0)
-        bp.clear('Chunk.position.axis.function.refCoord.coord1.val')
-        bp.add_attribute('Chunk.position.axis.function.refCoord.coord1.val', 'RA_DEG')
-        bp.set('Chunk.position.axis.function.refCoord.coord2.pix', 1.0)
-        bp.clear('Chunk.position.axis.function.refCoord.coord2.val')
-        bp.add_attribute('Chunk.position.axis.function.refCoord.coord2.val', 'DEC_DEG')
-        # CW
-        # Fibre size is 1.6", i.e. 0.000444 deg
-        bp.set('Chunk.position.axis.function.cd11', -0.000444)
-        bp.set('Chunk.position.axis.function.cd12', 0.0)
-        bp.set('Chunk.position.axis.function.cd21', 0.0)
-        bp.set('Chunk.position.axis.function.cd22', 0.000444)
-
-        bp.add_attribute('Chunk.position.equinox', 'EQUINOX')
-
         self._logger.debug('Done accumulate_blueprint.')
 
 
-class EspadonsPolarization(EspadonsSpatialSpectralTemporal):
+class EspadonsI(EspadonsTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
 
     def accumulate_blueprint(self, bp):
-        """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model Observation level. """
         super().accumulate_blueprint(bp)
+        bp.configure_position_axes((1, 2))
+        self.accumulate_spatial_chunk_blueprint(bp)
+        self._logger.debug('Done accumulate_blueprint.')
+
+
+class EspadonsPolarization(EspadonsTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        super().accumulate_blueprint(bp)
+        bp.configure_position_axes((1, 2))
+        self.accumulate_spatial_chunk_blueprint(bp)
+
         bp.configure_polarization_axis(6)
         # caom2IngestEspadons.py, l209
         bp.set('Chunk.polarization.axis.axis.ctype', 'STOKES')
@@ -3111,7 +3076,7 @@ class SpirouPolarization(Spirou):
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
-class WircamSpectralTemporal(InstrumentType):
+class WircamTemporal(InstrumentType):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
@@ -3135,8 +3100,8 @@ class WircamSpectralTemporal(InstrumentType):
             'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam',
         )
 
-        bp.configure_time_axis(3)
-        self.accumulate_time_chunk_blueprint(bp)
+        # bp.configure_time_axis(3)
+        # self.accumulate_time_chunk_blueprint(bp)
         bp.set('Chunk.energy.bandpassName', 'get_bandpass_name()')
 
         self._logger.debug('Done accumulate_blueprint.')
@@ -3306,6 +3271,19 @@ class WircamSpectralTemporal(InstrumentType):
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
 
+class WircamSpectralTemporal(WircamTemporal):
+    def __init__(self, headers, cfht_name, clients, observable, observation):
+        super().__init__(headers, cfht_name, clients, observable, observation)
+
+    def accumulate_blueprint(self, bp):
+        """Configure the WIRCam-specific ObsBlueprint at the CAOM model
+        Observation level.
+        """
+        super().accumulate_blueprint(bp)
+        bp.configure_time_axis(3)
+        self.accumulate_time_chunk_blueprint(bp)
+
+
 class Wircam(WircamSpectralTemporal):
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
@@ -3319,7 +3297,7 @@ class Wircam(WircamSpectralTemporal):
         self.accumulate_spatial_chunk_blueprint(bp)
 
 
-class WircamG(WircamSpectralTemporal):
+class WircamG(WircamTemporal):
     """suffix == 'g'"""
     def __init__(self, headers, cfht_name, clients, observable, observation):
         super().__init__(headers, cfht_name, clients, observable, observation)
@@ -3335,6 +3313,7 @@ class WircamG(WircamSpectralTemporal):
         super().accumulate_blueprint(bp)
         # don't want GUIDE file Observation-level metadata 
         self._use_existing_observation(bp)
+        bp.configure_time_axis(3)
 
     def get_bandpass_name(self, ext):
         wheel_a = self._headers[ext].get('WHEELADE')
@@ -3706,6 +3685,8 @@ def factory(headers, cfht_name, clients, observable, observation):
             temp = EspadonsSpectralTemporal(headers, cfht_name, clients, observable, observation)
         elif cfht_name.suffix == 'p':
             temp = EspadonsPolarization(headers, cfht_name, clients, observable, observation)
+        elif cfht_name.suffix == 'i':
+            temp = EspadonsI(headers, cfht_name, clients, observable, observation)
         else:
             temp = EspadonsSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
