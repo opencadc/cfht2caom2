@@ -145,42 +145,36 @@ class CFHTPreview(mc.PreviewVisitor):
         # Polarization scale factor
         pScale = 5.0
 
-        espadons = fits.open(self._science_fqn)
-        ext = 0
+        self._hdu_list = fits.open(self._science_fqn)
+        self._ext = 0
         try:
-            ignore = espadons[0].header.get('OBJECT')
+            ignore = self._hdu_list[self._ext].header.get('OBJECT')
         except LookupError:
-            ext = 1
-            ignore = espadons[1].header.get('OBJECT')
+            self._ext = 1
+            ignore = self._hdu_list[self._ext].header.get('OBJECT')
 
-        hdr = espadons[ext].header.copy()
+        hdr = self._hdu_list[self._ext].header.copy()
         bzero = hdr.get('BZERO')
         bscale = hdr.get('BSCALE')
 
         if bzero is not None and bzero > 0.0:
-            data_0 = espadons[ext].data[0].copy()
-            data_1 = espadons[ext].data[1].copy()
+            data_0 = self._hdu_list[self._ext].data[0].copy()
+            data_1 = self._hdu_list[self._ext].data[1].copy()
             # wavelength array (nm)
             sw = bscale * data_0 - bzero
             # intensity array (normalized)
             si = bscale * data_1 - bzero
             if self._storage_name.suffix == 'p':
                 # Stokes array
-                data_2 = espadons[ext].data[2].copy()
-                del espadons[ext].data
+                data_2 = self._hdu_list[self._ext].data[2].copy()
                 sp = bscale * data_2 - bzero
         else:
-            sw = espadons[ext].data[0].copy()  # wavelength array (nm)
-            si = espadons[ext].data[1].copy()  # intensity array (normalized)
+            sw = self._hdu_list[self._ext].data[0].copy()  # wavelength array (nm)
+            si = self._hdu_list[self._ext].data[1].copy()  # intensity array (normalized)
             if self._storage_name.suffix == 'p':
-                sp = espadons[ext].data[2].copy()  # Stokes array
-                del espadons[ext].data
+                sp = self._hdu_list[self._ext].data[2].copy()  # Stokes array
 
-        espadons.close(self._science_fqn)
-        del espadons[ext].data
-        del espadons
         self._logger.debug(f'{sw.shape} {sw}, {si}')
-
         npix = sw.shape[0]
 
         swa = 10.0 * sw
@@ -569,6 +563,7 @@ class CFHTPreview(mc.PreviewVisitor):
 
     def _do_spirou_bintable(self):
         label = f'{self._storage_name.product_id}: {self._target_name}'
+        self._logger.debug(f'Generating {label} plot')
 
         df = Table.read(self._science_fqn)
         plt.figure(figsize=(10.24, 10.24), dpi=100)
@@ -581,29 +576,27 @@ class CFHTPreview(mc.PreviewVisitor):
         return self._save_figure()
 
     def _do_spirou_intensity_spectrum(self):
+        self._logger.debug('Begin _do_spirou_intensity_spectrum')
+        self._hdu_list = fits.open(self._science_fqn)
+        self._ext = 0
 
-        spirou = fits.open(self._science_fqn)
         # Polarization scale factor
 
         if self._storage_name.suffix in ['e', 't']:
-            sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
-            si2d = spirou[
-                'FluxAB'
-            ].data.copy()  # intensity array (normalized)
-            del spirou['WaveAB'].data
-            del spirou['FluxAB'].data
+            sw2d = self._hdu_list['WaveAB'].data.copy()  # wavelength array (nm)
+            si2d = self._hdu_list['FluxAB'].data.copy()  # intensity array (normalized)
+            del self._hdu_list['WaveAB'].data
+            del self._hdu_list['FluxAB'].data
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
 
         if self._storage_name.suffix == 'p':
-            sw2d = spirou['WaveAB'].data.copy()  # wavelength array (nm)
-            si2d = spirou[
-                'StokesI'
-            ].data.copy()  # intensity array (normalized)
-            sp2d = spirou['Pol'].data.copy()  # Pol Stokes array
-            del spirou['WaveAB'].data
-            del spirou['StokesI'].data
-            del spirou['Pol'].data
+            sw2d = self._hdu_list['WaveAB'].data.copy()  # wavelength array (nm)
+            si2d = self._hdu_list['StokesI'].data.copy()  # intensity array (normalized)
+            sp2d = self._hdu_list['Pol'].data.copy()  # Pol Stokes array
+            del self._hdu_list['WaveAB'].data
+            del self._hdu_list['StokesI'].data
+            del self._hdu_list['Pol'].data
             sw = np.ravel(sw2d)
             si = np.ravel(si2d)
             sp = np.ravel(sp2d)
@@ -611,17 +604,11 @@ class CFHTPreview(mc.PreviewVisitor):
 
         if self._storage_name.suffix == 's':
             # using uniform wavelength bins
-            sw = spirou[1].data.copy().field(0)
-            si = spirou[1].data.copy().field(1)
-            del spirou[1].data
+            self._ext = 1
+            sw = self._hdu_list[self._ext].data.copy().field(0)
+            si = self._hdu_list[self._ext].data.copy().field(1)
 
-        spirou.close(self._science_fqn)
-        # astropy says
-        # https://docs.astropy.org/en/stable/io/
-        # fits/index.html#working-with-large-files
-        del spirou
         npix = sw.shape[0]
-
         swa = 10.0 * sw
         sia = np.arange(0.0, npix, 1.0)
         spa = None
@@ -760,15 +747,13 @@ class CFHTPreview(mc.PreviewVisitor):
             f'{self._science_fqn}'
         )
         # from genSiteprevperplane.py
-        sitelle = fits.open(self._science_fqn)
+        self._hdu_list = fits.open(self._science_fqn)
+        self._ext = 0
 
         # Make a RGB colour image if it's a calibrated 3D cube
         # scan through cube to look for strongest lines
-        data = sitelle[0].data.copy()
-        head = sitelle[0].header
-        sitelle.close(self._science_fqn)
-        del sitelle[0].data
-        del sitelle
+        data = self._hdu_list[self._ext].data.copy()
+        head = self._hdu_list[self._ext].header
         self._logger.debug(f'{data.shape}, {data.size}')
 
         # trim off ends to make 2048x2048
