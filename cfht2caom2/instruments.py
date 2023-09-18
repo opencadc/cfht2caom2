@@ -459,7 +459,7 @@ class AuxiliaryType(cc.TelescopeMapping):
             result = None
         elif obs_type == 'OBJECT':
             run_id = self._get_run_id(ext)
-            if run_id is not None and run_id[3].lower() != 'q':
+            if run_id is not None and len(run_id) >= 4 and run_id[3].lower() != 'q':
                 result = ObservationIntentType.SCIENCE
         return result
 
@@ -491,7 +491,7 @@ class AuxiliaryType(cc.TelescopeMapping):
                 if run_id == 'SMEARING':
                     result = self._headers[ext].get('DATE')
                 elif (
-                    run_id[3].lower() == 'e' or run_id[3].lower() == 'q'
+                    len(run_id) >= 4 and (run_id[3].lower() == 'e' or run_id[3].lower() == 'q')
                 ) and date_obs is not None:
                     result = f'{date_obs}T00:00:00'
                 else:
@@ -594,7 +594,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         obs_type = self.get_obs_type(ext)
         run_id = self._get_run_id(ext)
         result = None
-        if run_id is not None:
+        if run_id is not None and len(run_id) >= 4:
             run_id_type = run_id[3].lower()
             if run_id_type == 'q' and obs_type == 'OBJECT':
                 obj_name = self._headers[ext].get('OBJECT').lower()

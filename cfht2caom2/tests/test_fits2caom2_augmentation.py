@@ -148,24 +148,28 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
 
 
 def _compare(test_name, observation, obs_id):
-    expected_fqn = f'{dirname(test_name)}/{obs_id}.expected.xml'
-    actual_fqn = expected_fqn.replace('expected', 'actual')
-    expected = read_obs_from_file(expected_fqn)
-    compare_result = get_differences(expected, observation)
-    if compare_result is None:
-        if exists(actual_fqn):
-            unlink(actual_fqn)
+    if observation is None:
+        assert False, f'No observation for {obs_id}'
     else:
-        if observation is None:
-            msg = f'No observation for {expected.observation_id}'
+        expected_fqn = f'{dirname(test_name)}/{obs_id}.expected.xml'
+        actual_fqn = expected_fqn.replace('expected', 'actual')
+        if exists(expected_fqn):
+            expected = read_obs_from_file(expected_fqn)
+            compare_result = get_differences(expected, observation)
+            if compare_result is None:
+                if exists(actual_fqn):
+                    unlink(actual_fqn)
+            else:
+                write_obs_to_file(observation, actual_fqn)
+                compare_text = '\n'.join([r for r in compare_result])
+                if observation.instrument is None:
+                    msg = f'Differences found in {expected.observation_id}\n{compare_text}'
+                else:
+                    msg = f'Differences found in {expected.observation_id} {observation.instrument.name}\n{compare_text}'
+                raise AssertionError(msg)
         else:
             write_obs_to_file(observation, actual_fqn)
-            compare_text = '\n'.join([r for r in compare_result])
-            if observation.instrument is None:
-                msg = f'Differences found in {expected.observation_id}\n{compare_text}'
-            else:
-                msg = f'Differences found in {expected.observation_id} {observation.instrument.name}\n{compare_text}'
-        raise AssertionError(msg)
+            assert False, f'No expected file {expected_fqn} for {obs_id}'
 
 
 def _local_headers(fqn):
