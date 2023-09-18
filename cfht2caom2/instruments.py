@@ -732,12 +732,6 @@ class AuxiliaryType(cc.TelescopeMapping):
         self._logger.info(f'Using {derived_type} to look for Plane.provenance.inputs.')
         return derived_type
 
-    def _update_sitelle_plane(self):
-        pass
-
-    def _update_plane_post(self):
-        pass
-
     def update(self, file_info):
         """Called to fill multiple CAOM model elements and/or attributes, must
         have this signature for import_module loading and execution.
@@ -771,7 +765,6 @@ class AuxiliaryType(cc.TelescopeMapping):
             # avoid all the code that references undefined headers variable
             if not isinstance(self._observation, DerivedObservation):
                 self._observation = cc.change_to_composite(self._observation, 'scan')
-            self._update_sitelle_plane()
             self._logger.debug('Done hdf5 update.')
             return self._observation
 
@@ -859,14 +852,10 @@ class AuxiliaryType(cc.TelescopeMapping):
                     plane.provenance.inputs.remove(entry)
 
             self.update_plane()
-            # this is here, because the bits that are being copied have been
-            # created/modified by the update_chunk call
-            self._update_sitelle_plane()
 
         # relies on update_plane_provenance being called
         if isinstance(self._observation, DerivedObservation):
             cc.update_observation_members(self._observation)
-        self._update_plane_post()
         InstrumentType.value_repair.repair(self._observation)
         self._logger.debug('Done update.')
         return self._observation
@@ -888,7 +877,7 @@ class AuxiliaryType(cc.TelescopeMapping):
                 )
 
     def make_axes_consistent(self):
-        pass
+        raise NotImplementedError
 
     def reset_energy(self):
         pass
@@ -931,6 +920,12 @@ class AuxiliaryType(cc.TelescopeMapping):
 
     def update_polarization(self):
         pass
+
+    def update_position(self):
+        raise NotImplementedError
+    
+    def update_time(self):
+        raise NotImplementedError
 
     def _update_observation_metadata(self):
         return self._extension if self._extension is not None else 0
@@ -1290,12 +1285,6 @@ class InstrumentType(AuxiliaryType):
                         f'Unexpected GAIAID value {catalog_id}.'
                     )
         return result
-
-    def _update_sitelle_plane(self):
-        pass
-
-    def _update_plane_post(self):
-        pass
 
     def _update_observation_metadata(self):
         """
@@ -2004,78 +1993,6 @@ class SitelleTemporal(InstrumentType):
             delta = exp_time / 86400.0
         return delta
 
-    def _update_sitelle_plane(self):
-        self._logger.debug(
-            f'Begin _update_sitelle_plane for {self._observation.observation_id}'
-        )
-        if self._storage_name.suffix not in ['p', 'z']:
-            return
-
-        # if the 'p' plane exists, copy the metadata to the 'z' plane
-        z_plane_key = self._storage_name.product_id.replace('p', 'z')
-        p_plane_key = self._storage_name.product_id.replace('z', 'p')
-        temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
-        z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
-
-        # fix the plane-level information for the z plane
-        if z_plane_key in self._observation.planes.keys():
-            z_plane = self._observation.planes[z_plane_key]
-            z_plane.data_product_type = DataProductType.CUBE
-            z_plane.calibration_level = CalibrationLevel.CALIBRATED
-            z_plane.meta_producer = mc.get_version('cfht2caom2')
-            self._observation.meta_producer = z_plane.meta_producer
-            z_plane.artifacts[
-                z_artifact_key
-            ].meta_producer = z_plane.meta_producer
-            if p_plane_key in self._observation.planes.keys():
-                # replicate the plane-level information from the p plane to the
-                # z plane
-                p_plane = self._observation.planes[p_plane_key]
-                temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
-                temp = temp.replace('z', 'p', 1)
-                if temp not in p_plane.artifacts.keys():
-                    temp = self._storage_name.file_uri.replace('.hdf5', '.fits')
-                p_artifact_key = temp
-
-                self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
-                if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits')
-                    if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = (
-                            self._storage_name.file_uri.replace(
-                                'z', 'p', 1
-                            ).replace('.hdf5', '.fits.header')
-                        )
-                        if p_artifact_key not in p_plane.artifacts.keys():
-                            raise mc.CadcException(
-                                f'Unexpected extension name pattern for '
-                                f'artifact URI {p_artifact_key} in '
-                                f'{self._observation.observation_id}.'
-                            )
-                features = mc.Features()
-                features.supports_latest_caom = True
-                for part in p_plane.artifacts[p_artifact_key].parts.values():
-                    z_plane.artifacts[z_artifact_key].parts.add(
-                        cc.copy_part(part)
-                    )
-                    for chunk in part.chunks:
-                        z_plane.artifacts[z_artifact_key].parts[
-                            part.name
-                        ].chunks.append(cc.copy_chunk(chunk, features))
-                z_plane.artifacts[
-                    z_artifact_key
-                ].meta_producer = p_plane.artifacts[
-                    p_artifact_key
-                ].meta_producer
-                z_plane.provenance = p_plane.provenance
-                z_plane.calibration_level = p_plane.calibration_level
-                z_plane.data_product_type = p_plane.data_product_type
-                z_plane.data_release = p_plane.data_release
-                z_plane.meta_producer = p_plane.meta_producer
-                z_plane.meta_release = p_plane.meta_release
-
-        self._logger.debug('End _update_sitelle_plane')
-
     def make_axes_consistent(self):
         self._chunk.time_axis = None
         if (
@@ -2506,6 +2423,67 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
         if self._storage_name.suffix == 'z':
             bp.set('Artifact.productType', ProductType.SCIENCE)
         self._logger.debug('End accumulate_blueprint.')
+
+    def _update_sitelle_plane(self):
+        self._logger.debug(f'Begin _update_sitelle_plane for {self._observation.observation_id}')
+        if self._storage_name.suffix not in ['p', 'z']:
+            return
+
+        # if the 'p' plane exists, copy the metadata to the 'z' plane
+        z_plane_key = self._storage_name.product_id.replace('p', 'z')
+        p_plane_key = self._storage_name.product_id.replace('z', 'p')
+        temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
+        z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
+
+        # fix the plane-level information for the z plane
+        if z_plane_key in self._observation.planes.keys():
+            z_plane = self._observation.planes[z_plane_key]
+            z_plane.data_product_type = DataProductType.CUBE
+            z_plane.calibration_level = CalibrationLevel.CALIBRATED
+            z_plane.meta_producer = mc.get_version('cfht2caom2')
+            self._observation.meta_producer = z_plane.meta_producer
+            z_plane.artifacts[
+                z_artifact_key
+            ].meta_producer = z_plane.meta_producer
+            if p_plane_key in self._observation.planes.keys():
+                # replicate the plane-level information from the p plane to the
+                # z plane
+                p_plane = self._observation.planes[p_plane_key]
+                temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
+                temp = temp.replace('z', 'p', 1)
+                if temp not in p_plane.artifacts.keys():
+                    temp = self._storage_name.file_uri.replace('.hdf5', '.fits')
+                p_artifact_key = temp
+
+                self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
+                if p_artifact_key not in p_plane.artifacts.keys():
+                    p_artifact_key = self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits')
+                    if p_artifact_key not in p_plane.artifacts.keys():
+                        p_artifact_key = (
+                            self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits.header')
+                        )
+                        if p_artifact_key not in p_plane.artifacts.keys():
+                            raise mc.CadcException(
+                                f'Unexpected extension name pattern for artifact URI {p_artifact_key} in '
+                                f'{self._observation.observation_id}.'
+                            )
+                features = mc.Features()
+                features.supports_latest_caom = True
+                for part in p_plane.artifacts[p_artifact_key].parts.values():
+                    z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
+                    for chunk in part.chunks:
+                        z_plane.artifacts[z_artifact_key].parts[
+                            part.name
+                        ].chunks.append(cc.copy_chunk(chunk, features))
+                z_plane.artifacts[z_artifact_key].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
+                z_plane.provenance = p_plane.provenance
+                z_plane.calibration_level = p_plane.calibration_level
+                z_plane.data_product_type = p_plane.data_product_type
+                z_plane.data_release = p_plane.data_release
+                z_plane.meta_producer = p_plane.meta_producer
+                z_plane.meta_release = p_plane.meta_release
+
+        self._logger.debug('End _update_sitelle_plane')
 
     def update(self, file_info):
         self._logger.debug('Begin update.')
@@ -3269,6 +3247,11 @@ class WircamTemporal(InstrumentType):
                 # caom2IngestWircam.py, l843
                 self._chunk.time.axis.function.naxis = mc.to_int(n_exp)
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
+
+    def update(self, file_info):
+        super().update(file_info)
+        self._update_plane_post()
+        return self._observation
 
 
 class WircamSpectralTemporal(WircamTemporal):
