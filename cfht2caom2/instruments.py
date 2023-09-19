@@ -561,7 +561,7 @@ class AuxiliaryType(cc.TelescopeMapping):
     def get_proposal_title(self, ext):
         result = None
         run_id = self._headers[ext].get('RUNID')
-        if run_id is not None:
+        if run_id is not None and len(run_id) >= 4:
             result = md.cache.get_title(run_id)
         return result
 
