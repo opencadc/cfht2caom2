@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -200,6 +199,7 @@ from caom2pipe import translate_composable as tc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 from cfht2caom2.cfht_builder import set_storage_name_values
+from cfht2caom2.espadons_energy_augmentation import get_energy_resolving_power
 
 __all__ = ['factory', 'InstrumentType']
 
@@ -270,8 +270,8 @@ class CFHTValueRepair(mc.ValueRepairCache):
 class AuxiliaryType(cc.TelescopeMapping):
     value_repair = CFHTValueRepair()
 
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(cfht_name, headers, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(cfht_name, headers, clients, observable, observation, config)
         # keep because of MegaCam/MegaPrime
         self._name = cfht_name.instrument.value
         self._storage_name = cfht_name
@@ -980,8 +980,8 @@ class AuxiliaryType(cc.TelescopeMapping):
 
 class InstrumentType(AuxiliaryType):
 
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_spectral_chunk_blueprint(self, bp):
         # hard-coded values from:
@@ -1396,8 +1396,8 @@ class InstrumentType(AuxiliaryType):
 
 
 class EspadonsTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # SF 18-11-22 espadons is 2004
         self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
 
@@ -1458,25 +1458,7 @@ class EspadonsTemporal(InstrumentType):
         return result.lower()
 
     def get_energy_resolving_power(self, ext):
-        result = None
-        if self._has_energy(ext):
-            instmode = self._headers[ext].get('INSTMODE')
-            if instmode is None or 'R=' not in instmode:
-                # CW - Default if resolving power value not in header
-                # caom2IngestEspadons.py, l377
-                result = 65000.0
-            else:
-                # CW - This string is already in instrument keywords but also
-                # need to extract resolving power from it:
-                # 'Spectroscopy, star only, R=80,000'
-                temp = instmode.split('R=')
-                values = temp[1].split(',')
-                if len(values) == 1:
-                    result = values[0]
-                else:
-                    result = f'{values[0]}{values[1]}'
-                result = mc.to_float(result)
-        return result
+        return get_energy_resolving_power(self._headers[ext])
 
     def get_exptime(self, ext):
         exptime = mc.to_float(self._headers[ext].get('EXPTIME'))
@@ -1698,8 +1680,8 @@ class EspadonsTemporal(InstrumentType):
 
 
 class EspadonsSpectralTemporal(EspadonsTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # SF 18-11-22 espadons is 2004
         self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
 
@@ -1736,8 +1718,8 @@ class EspadonsSpectralTemporal(EspadonsTemporal):
 
 
 class EspadonsSpatialSpectralTemporal(EspadonsSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -1747,8 +1729,8 @@ class EspadonsSpatialSpectralTemporal(EspadonsSpectralTemporal):
 
 
 class EspadonsI(EspadonsTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -1758,8 +1740,8 @@ class EspadonsI(EspadonsTemporal):
 
 
 class EspadonsPolarization(EspadonsTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -1777,8 +1759,8 @@ class EspadonsPolarization(EspadonsTemporal):
 
 
 class MegaTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
         # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
         self._instrument_start_date = mc.make_datetime('2001-01-24 00:00:00')
@@ -1863,8 +1845,8 @@ class MegaTemporal(InstrumentType):
 
 
 class MegaSpectralRangeTemporal(MegaTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def update_energy(self):
         # SGo - use range for energy with filter information
@@ -1879,8 +1861,8 @@ class MegaSpectralRangeTemporal(MegaTemporal):
 
 
 class Mega(MegaSpectralRangeTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         self._filter_name = None
 
     def accumulate_blueprint(self, bp):
@@ -1900,8 +1882,8 @@ class MegaFlag(MegaTemporal):
     """
     Use this class when adding an Artifact for a '*p_flag.fits' file to an existing Observation instance.
     """
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
@@ -1914,8 +1896,8 @@ class MegaFlag(MegaTemporal):
 
 
 class SitelleTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
         self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
@@ -2036,8 +2018,8 @@ class SitelleTemporal(InstrumentType):
 
 
 class SitelleSpectralTemporal(SitelleTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2094,8 +2076,8 @@ class SitelleSpectralTemporal(SitelleTemporal):
 
 
 class SitelleSpatialRangeSpectralTemporal(SitelleSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def update_position(self):
         if self._chunk.position is None:
@@ -2156,8 +2138,8 @@ class SitelleSpatialRangeSpectralTemporal(SitelleSpectralTemporal):
 
 
 class SitelleSpatialFunctionSpectralTemporal(SitelleSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2169,8 +2151,8 @@ class SitelleSpatialFunctionSpectralTemporal(SitelleSpectralTemporal):
 
 
 class SitelleHdf5(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
         self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
@@ -2401,8 +2383,8 @@ class SitelleHdf5(InstrumentType):
 
 
 class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2509,8 +2491,8 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
 
 
 class SitelleP(SitelleSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2605,8 +2587,8 @@ class SitelleP(SitelleSpectralTemporal):
 
 
 class Spirou(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # TODO self._header = headers[extension]
         self._header = None
         # https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_news.php says 2019-02-13 00:00:00.000
@@ -2810,8 +2792,8 @@ class Spirou(InstrumentType):
 
 
 class SpirouTemporal(Spirou):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -2823,8 +2805,8 @@ class SpirouTemporal(Spirou):
 
 
 class SpirouSpectralTemporal(SpirouTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -2832,8 +2814,8 @@ class SpirouSpectralTemporal(SpirouTemporal):
 
 
 class SpirouSpatialSpectralTemporal(SpirouSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -2841,8 +2823,8 @@ class SpirouSpatialSpectralTemporal(SpirouSpectralTemporal):
 
 
 class SpirouG(Spirou):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the SPIRou-specific ObsBlueprint at the CAOM model
@@ -2926,8 +2908,8 @@ class SpirouG(Spirou):
 
 
 class SpirouPolarization(Spirou):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the SPIRou-specific ObsBlueprint at the CAOM model
@@ -3055,8 +3037,8 @@ class SpirouPolarization(Spirou):
 
 
 class WircamTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
         # but existing metadata has a minimum value of 2000-07-21 00:00:00 for mastertwilightflat_Ks_13Aw01_v200.fits
         self._instrument_start_date = mc.make_datetime('2000-07-20 00:00:00.000')
@@ -3255,8 +3237,8 @@ class WircamTemporal(InstrumentType):
 
 
 class WircamSpectralTemporal(WircamTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3268,8 +3250,8 @@ class WircamSpectralTemporal(WircamTemporal):
 
 
 class Wircam(WircamSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3282,8 +3264,8 @@ class Wircam(WircamSpectralTemporal):
 
 class WircamG(WircamTemporal):
     """suffix == 'g'"""
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the telescope-specific ObsBlueprint at the CAOM model Observation level.
@@ -3491,8 +3473,8 @@ class WircamG(WircamTemporal):
 
 
 class WircamO(Wircam):
-    def __init__(self, headers, cfht_name, clients, observable, observation):
-        super().__init__(headers, cfht_name, clients, observable, observation)
+    def __init__(self, headers, cfht_name, clients, observable, observation, config):
+        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def update_position(self):
         self._logger.debug(f'Begin update_position for {self._storage_name.obs_id}')
@@ -3659,76 +3641,76 @@ def is_wircam_spectral_temporal(storage_name, headers):
     return result
 
 
-def factory(headers, cfht_name, clients, observable, observation):
+def factory(headers, cfht_name, clients, observable, observation, config):
     set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
         if cfht_name.suffix in ['b', 'c', 'd', 'f', 'x']:
             # CW - Ignore position wcs if a calibration file - suffix list from caom2IngestEspadons.py, l389
             # 'b', 'd', 'c', 'f', 'x'
-            temp = EspadonsSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            temp = EspadonsSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
         elif cfht_name.suffix == 'p':
-            temp = EspadonsPolarization(headers, cfht_name, clients, observable, observation)
+            temp = EspadonsPolarization(headers, cfht_name, clients, observable, observation, config)
         elif cfht_name.suffix == 'i':
-            temp = EspadonsI(headers, cfht_name, clients, observable, observation)
+            temp = EspadonsI(headers, cfht_name, clients, observable, observation, config)
         else:
-            temp = EspadonsSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            temp = EspadonsSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         if '_diag' in cfht_name.file_name:
             # SF 16-03-23 record the diag ones as catalogues,  artifact of the *p ones - same behaviour as for the
             # preview images
-            temp = AuxiliaryType(headers, cfht_name, clients, observable, observation)
+            temp = AuxiliaryType(headers, cfht_name, clients, observable, observation, config)
         elif '_flag' in cfht_name.file_name:
             if observation is None:
-                temp = MegaTemporal(headers, cfht_name, clients, observable, observation)
+                temp = MegaTemporal(headers, cfht_name, clients, observable, observation, config)
             else:
-                temp = MegaFlag(headers, cfht_name, clients, observable, observation)
+                temp = MegaFlag(headers, cfht_name, clients, observable, observation, config)
         elif cfht_name.suffix in ['b', 'd', 'l'] or is_mega_temporal(headers, cfht_name):
-            temp = MegaTemporal(headers, cfht_name, clients, observable, observation)
+            temp = MegaTemporal(headers, cfht_name, clients, observable, observation, config)
         elif cfht_name.suffix == 'f':
-            temp = MegaSpectralRangeTemporal(headers, cfht_name, clients, observable, observation)
+            temp = MegaSpectralRangeTemporal(headers, cfht_name, clients, observable, observation, config)
         else:
-            temp = Mega(headers, cfht_name, clients, observable, observation)
+            temp = Mega(headers, cfht_name, clients, observable, observation, config)
     elif cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.hdf5:
             if len(headers) > 0:
                 # len => could be an h5 file with no attrs, in which case the metadata gets copied from the 'p'
                 # artifact
-                temp = SitelleHdf5(headers, cfht_name, clients, observable, observation)
+                temp = SitelleHdf5(headers, cfht_name, clients, observable, observation, config)
             else:
-                temp = SitelleNoHdf5Metadata(headers, cfht_name, clients, observable, observation)
+                temp = SitelleNoHdf5Metadata(headers, cfht_name, clients, observable, observation, config)
         else:
             if cfht_name.suffix == 'p':
-                temp = SitelleP(headers, cfht_name, clients, observable, observation)
+                temp = SitelleP(headers, cfht_name, clients, observable, observation, config)
             elif cfht_name.suffix in ['a', 'o', 'x']:
-                temp = SitelleSpatialRangeSpectralTemporal(headers, cfht_name, clients, observable, observation)
+                temp = SitelleSpatialRangeSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
             elif cfht_name.suffix in ['f']:
-                temp = SitelleSpectralTemporal(headers, cfht_name, clients, observable, observation)
+                temp = SitelleSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
             elif cfht_name.suffix in ['b', 'd']:
                 # CW, SF 18-12-19 - SITELLE biases and darks have no energy, all other observation types do
-                temp = SitelleTemporal(headers, cfht_name, clients, observable, observation)
+                temp = SitelleTemporal(headers, cfht_name, clients, observable, observation, config)
             else:
-                temp = SitelleSpatialFunctionSpectralTemporal(headers, cfht_name, clients, observable, observation)
+                temp = SitelleSpatialFunctionSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
     elif cfht_name.instrument is md.Inst.SPIROU:
         if cfht_name.suffix == 'g':
-            temp = SpirouG(headers, cfht_name, clients, observable, observation)
+            temp = SpirouG(headers, cfht_name, clients, observable, observation, config)
         elif cfht_name.suffix == 'p':
-            temp = SpirouPolarization(headers, cfht_name, clients, observable, observation)
+            temp = SpirouPolarization(headers, cfht_name, clients, observable, observation, config)
         elif cfht_name.suffix == 'd':
-            temp = SpirouTemporal(headers, cfht_name, clients, observable, observation)
+            temp = SpirouTemporal(headers, cfht_name, clients, observable, observation, config)
         elif is_spirou_spectral_temporal(headers):
-            temp = SpirouSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            temp = SpirouSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
         else:
-            temp = SpirouSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation)
+            temp = SpirouSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
     elif cfht_name.instrument is md.Inst.WIRCAM:
         if cfht_name.suffix == 'g':
-            temp = WircamG(headers, cfht_name, clients, observable, observation)
+            temp = WircamG(headers, cfht_name, clients, observable, observation, config)
         else:
             if is_wircam_spectral_temporal(cfht_name, headers):
-                temp = WircamSpectralTemporal(headers, cfht_name, clients, observable, observation)
+                temp = WircamSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
             elif cfht_name.suffix == 'o':
-                temp = WircamO(headers, cfht_name, clients, observable, observation)
+                temp = WircamO(headers, cfht_name, clients, observable, observation, config)
             else:
-                temp = Wircam(headers, cfht_name, clients, observable, observation)
+                temp = Wircam(headers, cfht_name, clients, observable, observation, config)
     else:
         observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -71,7 +70,7 @@ import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
-from caom2pipe.manage_composable import Observable, Rejected
+from caom2pipe.manage_composable import Observable
 from caom2pipe import reader_composable as rdc
 from cfht2caom2 import cfht_name, fits2caom2_augmentation, metadata
 from glob import glob
@@ -176,6 +175,7 @@ def test_visitor(
             'storage_name': storage_name,
             'metadata_reader': metadata_reader,
             'observable': test_observable,
+            'config': test_config,
         }
 
         observation = fits2caom2_augmentation.visit(observation, **kwargs)

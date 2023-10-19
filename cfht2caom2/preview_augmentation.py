@@ -567,7 +567,18 @@ class CFHTPreview(mc.PreviewVisitor):
 
         df = Table.read(self._science_fqn)
         plt.figure(figsize=(10.24, 10.24), dpi=100)
-        plt.plot(df['Velocity'], df['Combined'])
+        found = False
+        for column_name in ['Velocity', 'RV']:
+            try:
+                plt.plot(df[column_name], df['Combined'])
+                found = True
+                break
+            except KeyError:
+                continue
+        if not found:
+            self._logger.debug(df.info())
+            raise mc.CadcException('Unexpected colulmn names.')
+
         plt.title(label, weight='bold', color='m')
         plt.xlabel('Radial Velocity (km/s)')
         plt.ylabel('Weighted mean echelle order')

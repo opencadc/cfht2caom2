@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -72,7 +71,6 @@ from astropy.io import fits
 from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
-from cfht2caom2 import instruments
 from cfht2caom2 import metadata as md
 
 
@@ -86,7 +84,6 @@ def visit(observation, **kwargs):
     clients = kwargs.get('clients')
     if clients is None:
         logging.warning(f'No clients for ESPaDoNS energy augmentation.')
-    observable = kwargs.get('observable')
     science_fqn = storage_name.get_file_fqn(working_dir)
     count = 0
     if (
@@ -100,7 +97,7 @@ def visit(observation, **kwargs):
         for plane in observation.planes.values():
             for artifact in plane.artifacts.values():
                 if storage_name.file_uri == artifact.uri:
-                    count += _do_energy(artifact, science_fqn, storage_name, clients, observable, observation)
+                    count += _do_energy(artifact, science_fqn, storage_name)
         logging.info(
             f'Completed ESPaDOnS energy augmentation for {count} artifacts in '
             f'{observation.observation_id}.'
@@ -108,7 +105,7 @@ def visit(observation, **kwargs):
     return observation
 
 
-def _do_energy(artifact, science_fqn, cfht_name, clients, observable, observation):
+def _do_energy(artifact, science_fqn, cfht_name):
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -150,12 +147,7 @@ def _do_energy(artifact, science_fqn, cfht_name, clients, observable, observatio
     axis = Axis('WAVE', 'nm')
     coord_bounds = ac.build_chunk_energy_bounds(wave)
     coord_axis = CoordAxis1D(axis=axis, bounds=coord_bounds)
-    if cfht_name.suffix == 'p':
-        espadons = instruments.EspadonsPolarization([hdr], cfht_name, clients, observable, observation)
-    else:
-        espadons = instruments.EspadonsSpatialSpectralTemporal([hdr], cfht_name, clients, observable, observation)
-    espadons.extension = 0
-    resolving_power = espadons.get_energy_resolving_power(0)
+    resolving_power = get_energy_resolving_power(hdr)
     chunk = artifact.parts['0'].chunks[0]
     chunk.energy = SpectralWCS(
         coord_axis,
@@ -178,3 +170,24 @@ def _do_energy(artifact, science_fqn, cfht_name, clients, observable, observatio
         if cfht_name.suffix != 'p':
             chunk.polarization_axis = None
     return 1
+
+
+def get_energy_resolving_power(header):
+    result = None
+    obstype = header.get('OBSTYPE')
+    if obstype and obstype not in ['BIAS', 'DARK']:
+        instmode = header.get('INSTMODE')
+        if instmode is None or 'R=' not in instmode:
+            # CW - Default if resolving power value not in header caom2IngestEspadons.py, l377
+            result = 65000.0
+        else:
+            # CW - This string is already in instrument keywords but also need to extract resolving power from it:
+            # 'Spectroscopy, star only, R=80,000'
+            temp = instmode.split('R=')
+            values = temp[1].split(',')
+            if len(values) == 1:
+                result = values[0]
+            else:
+                result = f'{values[0]}{values[1]}'
+            result = mc.to_float(result)
+    return result

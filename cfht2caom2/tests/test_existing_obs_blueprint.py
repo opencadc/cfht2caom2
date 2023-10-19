@@ -107,6 +107,7 @@ def test_kwargs(test_data_dir, test_config):
         'metadata_reader': reader,
         'observable': Observable(test_config),
         'storage_name': test_storage_name,
+        'config': test_config,
     }
     return kwargs
 

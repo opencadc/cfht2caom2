@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -73,8 +72,8 @@ import traceback
 
 from caom2pipe import client_composable as clc
 from caom2pipe.execute_composable import can_use_single_visit
-from caom2pipe.manage_composable import CadcException, Config, get_keyword, StorageName, TaskType
-from caom2pipe.reader_composable import FileMetadataReader, Hdf5FileMetadataReader, StorageClientReader
+from caom2pipe.manage_composable import CadcException, Config, StorageName
+from caom2pipe.reader_composable import Hdf5FileMetadataReader
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation

@@ -1,0 +1,74 @@
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="4a03c9bd-b29a-442e-abd7-e8698fd73546" caom2:lastModified="2023-10-16T22:22:34.496" caom2:maxLastModified="2023-10-16T22:22:34.496" caom2:metaChecksum="md5:690ca16e99c58f184ddc2166be1bfe82" caom2:accMetaChecksum="md5:a0b043cb82df6329ef2b87e93f4bd0a3" caom2:metaProducer="cfht2caom2/0.6.1">
+  <caom2:collection>CFHT</caom2:collection>
+  <caom2:observationID>2886318</caom2:observationID>
+  <caom2:metaRelease>2023-07-25T09:32:17.000</caom2:metaRelease>
+  <caom2:sequenceNumber>2886318</caom2:sequenceNumber>
+  <caom2:algorithm>
+    <caom2:name>drs</caom2:name>
+  </caom2:algorithm>
+  <caom2:type>OBJECT</caom2:type>
+  <caom2:intent>calibration</caom2:intent>
+  <caom2:proposal>
+    <caom2:id>23AQ57</caom2:id>
+    <caom2:pi>QSO Team</caom2:pi>
+  </caom2:proposal>
+  <caom2:target>
+    <caom2:name>Gl699</caom2:name>
+    <caom2:targetID>gaia:DR2/4472832130942575872</caom2:targetID>
+    <caom2:standard>true</caom2:standard>
+  </caom2:target>
+  <caom2:targetPosition>
+    <caom2:coordsys>FK5</caom2:coordsys>
+    <caom2:equinox>2000.0</caom2:equinox>
+    <caom2:coordinates>
+      <caom2:cval1>269.4468333333333</caom2:cval1>
+      <caom2:cval2>4.7611944444444445</caom2:cval2>
+    </caom2:coordinates>
+  </caom2:targetPosition>
+  <caom2:telescope>
+    <caom2:name>CFHT 3.6m</caom2:name>
+    <caom2:geoLocationX>-5464301.771353686</caom2:geoLocationX>
+    <caom2:geoLocationY>-2493489.8730419013</caom2:geoLocationY>
+    <caom2:geoLocationZ>2151085.1695058867</caom2:geoLocationZ>
+  </caom2:telescope>
+  <caom2:instrument>
+    <caom2:name>SPIRou</caom2:name>
+  </caom2:instrument>
+  <caom2:environment>
+    <caom2:humidity>12.3</caom2:humidity>
+    <caom2:elevation>64.1489</caom2:elevation>
+    <caom2:ambientTemp>2.94</caom2:ambientTemp>
+  </caom2:environment>
+  <caom2:planes>
+    <caom2:plane caom2:id="31d9ca70-62a0-4f88-b73c-07ee77c50d33" caom2:lastModified="2023-10-16T22:22:34.496" caom2:maxLastModified="2023-10-16T22:22:34.496" caom2:metaChecksum="md5:9c3bb6c2f891c8ed2c16acfff3cf86d3" caom2:accMetaChecksum="md5:c30c776fd18496474ec9dd052b6e48be" caom2:metaProducer="cfht2caom2/0.6.1">
+      <caom2:productID>2886318v</caom2:productID>
+      <caom2:metaRelease>2023-07-25T09:32:17.000</caom2:metaRelease>
+      <caom2:dataRelease>2023-01-31T00:00:00.000</caom2:dataRelease>
+      <caom2:dataProductType>spectrum</caom2:dataProductType>
+      <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:provenance>
+        <caom2:name>DRS</caom2:name>
+        <caom2:version>0.7.286</caom2:version>
+        <caom2:project>STANDARD PIPELINE</caom2:project>
+        <caom2:producer>CFHT</caom2:producer>
+        <caom2:runID>23Ap06</caom2:runID>
+        <caom2:reference>https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_pipeline.php</caom2:reference>
+        <caom2:lastExecuted>2023-09-13T06:29:00.000</caom2:lastExecuted>
+        <caom2:inputs>
+          <caom2:planeURI>caom:CFHT/2886318/2886318o</caom2:planeURI>
+        </caom2:inputs>
+      </caom2:provenance>
+      <caom2:artifacts>
+        <caom2:artifact caom2:id="137ca583-6ab6-4c56-9351-01cdf34ce40e" caom2:lastModified="2023-10-16T22:22:34.496" caom2:maxLastModified="2023-10-16T22:22:34.496" caom2:metaChecksum="md5:3cedf34b9715dd3c14472cfaebba9004" caom2:accMetaChecksum="md5:5ad2d23cb3d7687dc79e26741890e3b5" caom2:metaProducer="cfht2caom2/0.6.1">
+          <caom2:uri>cadc:CFHT/2886318v.fits</caom2:uri>
+          <caom2:productType>calibration</caom2:productType>
+          <caom2:releaseType>data</caom2:releaseType>
+          <caom2:contentType>application/fits</caom2:contentType>
+          <caom2:contentLength>633600</caom2:contentLength>
+          <caom2:contentChecksum>md5:7c6a9ca12fd1836b947f66217eeadf23</caom2:contentChecksum>
+          <caom2:parts/>
+        </caom2:artifact>
+      </caom2:artifacts>
+    </caom2:plane>
+  </caom2:planes>
+</caom2:Observation>

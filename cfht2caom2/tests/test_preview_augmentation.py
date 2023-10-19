@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -138,6 +137,7 @@ def test_preview_augment(test_config):
         'visit_obs_start_wircam_fits.xml': ['1334131g.fits'],
         'visit_obs_start_sitelle_hdf5.xml': ['2384125z.hdf5'],
         'visit_obs_start_spirou_p_bad_flux.xml': ['2446341p.fits'],
+        'visit_obs_start_spirou_new_v.xml': ['2886318v.fits'],
     }
 
     test_checksums = {

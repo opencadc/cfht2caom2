@@ -138,6 +138,7 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
         'storage_name': storage_name,
         'metadata_reader': metadata_reader,
         'observable': test_observable,
+        'config': test_config,
     }
     storage_name._bitpix = get_keyword(headers, 'BITPIX')
     observation = None
