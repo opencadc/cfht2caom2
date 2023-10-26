@@ -580,7 +580,7 @@ class CFHTPreview(mc.PreviewVisitor):
                 continue
         if not found:
             self._logger.debug(df.info())
-            raise mc.CadcException('Unexpected colulmn names.')
+            raise mc.CadcException('Unexpected column names.')
 
         plt.title(label, weight='bold', color='m')
         plt.xlabel('Radial Velocity (km/s)')
