@@ -126,7 +126,9 @@
                       </caom2:function>
                     </caom2:axis>
                     <caom2:timesys>UTC</caom2:timesys>
+                    <caom2:mjdref>0.0</caom2:mjdref>
                     <caom2:exposure>4600.0</caom2:exposure>
+                    <caom2:resolution>10.0</caom2:resolution>
                   </caom2:time>
                 </caom2:chunk>
               </caom2:chunks>

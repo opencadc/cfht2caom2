@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -152,4 +151,4 @@ def test_suffixes(test_data_dir, test_config):
                     assert not test_subject.simple, f'not simple {test_subject}'
                     found_one = True
 
-                assert found_one, f'{entry} neither derived nor simple {test_subject.is_master_cal}'
+                assert found_one, f'{entry} neither derived nor simple {test_subject}'

@@ -228,7 +228,6 @@ class CFHTValueRepair(mc.ValueRepairCache):
         },
         # SF - 22-12-20 - fix the CAOM values, leave the headers be
         'observation.target_position.coordsys': {'FKS': 'FK5'},
-        'observation.target_position.equinox': {'200.0': '2000.0'},
         # CW
         # If no or "open" filter then set filter name to
         # null
@@ -425,17 +424,17 @@ class AuxiliaryType(cc.TelescopeMapping):
         return result
 
     def get_meta_release(self, ext):
+        """Release dates can be very long in the past, so don't worry about checking that they're logical, only that
+        they're a valid date."""
         # order set from:
         # caom2IngestWircam.py, l777
         # caom2IngestEspadons.py, l625
         # caom2IngestMegadetrend.py, l445
         for keyword in ['MET_DATE', 'DATE-OBS', 'DATE-OB1', 'DATE', 'REL_DATE', 'TVSTART']:
             result = self._headers[ext].get(keyword)
-            # no end date check - CFHT has random metadata release rules that should be reflected in the keyword values
             if result in ['1970-00-01', '1970-00-01T0:00:00'] or result is None:
                 continue
-            temp = cfht_time_helper(result)
-            if ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
+            else:
                 break
         return result
 
@@ -467,6 +466,9 @@ class AuxiliaryType(cc.TelescopeMapping):
         return self._headers[ext].get('OBSTYPE')
 
     def get_plane_data_release(self, ext):
+        """Release dates can be very long in the past, so don't worry about checking that they're logical, only that
+        they're a valid date."""
+
         # order set from:
         # caom2IngestWircam.py, l756
         #
@@ -513,11 +515,6 @@ class AuxiliaryType(cc.TelescopeMapping):
                         else:
                             rel_year += 1
                             result = f'{rel_year}-02-28T00:00:00'
-        if result is not None:
-            temp = mc.make_datetime(result)
-            if not ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
-                self.track_invalid_date(result, 'Plane.dataRelease')
-                result = None
         return result
 
     def get_product_type(self, ext):
@@ -923,7 +920,7 @@ class AuxiliaryType(cc.TelescopeMapping):
 
     def update_position(self):
         raise NotImplementedError
-    
+
     def update_time(self):
         raise NotImplementedError
 
@@ -1421,7 +1418,7 @@ class EspadonsTemporal(InstrumentType):
         bp.set('Chunk.position.axis.function.cd21', 0.0)
         bp.set('Chunk.position.axis.function.cd22', 0.000444)
 
-        bp.add_attribute('Chunk.position.equinox', 'EQUINOX')
+        bp.set('Chunk.position.equinox', 'get_chunk_position_equinox()')
 
     def accumulate_blueprint(self, bp):
         """Configure the ESPaDOnS-specific ObsBlueprint at the CAOM model
@@ -1456,6 +1453,14 @@ class EspadonsTemporal(InstrumentType):
         if result == 'Polar':
             result = 'polarization'
         return result.lower()
+
+    def get_chunk_position_equinox(self, ext):
+        equinox = self._headers[ext].get('EQUINOX')
+        if equinox:
+            if equinox == 200.0:
+                # SF - 22-12-20 - fix the CAOM values, leave the headers be
+                equinox = 2000.0
+        return equinox
 
     def get_energy_resolving_power(self, ext):
         return get_energy_resolving_power(self._headers[ext])
@@ -1816,11 +1821,11 @@ class MegaTemporal(InstrumentType):
         if self._chunk.time_axis is not None:
             self._chunk.time_axis = None
         if (
-            self._chunk is not None 
-            and self._chunk.naxis is not None 
-            and self._chunk.naxis == 2 
-            and self._chunk.time is not None 
-            and self._chunk.position is None 
+            self._chunk is not None
+            and self._chunk.naxis is not None
+            and self._chunk.naxis == 2
+            and self._chunk.time is not None
+            and self._chunk.position is None
             and self._chunk.polarization is None
         ):
             self._chunk.naxis = None
@@ -1947,6 +1952,8 @@ class SitelleTemporal(InstrumentType):
         self._logger.debug('End accumulate_blueprint.')
 
     def get_plane_data_release(self, ext):
+        """Release dates can be very long in the past, so don't worry about checking that they're logical, only that
+        they're a valid date."""
         if self._storage_name.suffix == 'v':
             # REL_DATE not in header, RUN_ID not in header, derive from
             # DATE-OBS
@@ -1954,14 +1961,10 @@ class SitelleTemporal(InstrumentType):
             rel_date = self._headers[ext].get(
                 'REL_DATE', self._headers[ext].get('DATE-OBS')
             )
-            if rel_date is not None:
+            if rel_date:
                 temp = ac.get_datetime_mjd(rel_date) + 1 * units.year
                 temp.format = 'isot'
-                if ac.is_good_date(temp, self._instrument_start_date, check_end_date=False):
-                    result = temp.value
-                else:
-                    self.track_invalid_date(result, 'Plane.dataRelease')
-                    result = None
+                result = temp.value
         else:
             result = super().get_plane_data_release(ext)
         return result
@@ -2268,8 +2271,6 @@ class SitelleHdf5(InstrumentType):
                 temp = temp + 1 * units.year
             temp.format = 'isot'
             result = temp.value
-            if not ac.is_good_date(result, self._instrument_start_date, check_end_date=False):
-                self.track_invalid_date(result, 'Plane.dataRelease')
         return result
 
     def _get_proposal_id(self, ext):
@@ -3272,11 +3273,11 @@ class WircamG(WircamTemporal):
 
         This code captures the portion of the TDM->CAOM model mapping, where the relationship is one or many elements
         of the TDM are required to set individual elements of the CAOM model. If the mapping cardinality is 1:1
-        generally, use add_attribute. If the mapping cardinality is n:1 use the set method to reference a function 
+        generally, use add_attribute. If the mapping cardinality is n:1 use the set method to reference a function
         call. """
         self._logger.debug('Begin accumulate_blueprint.')
         super().accumulate_blueprint(bp)
-        # don't want GUIDE file Observation-level metadata 
+        # don't want GUIDE file Observation-level metadata
         self._use_existing_observation(bp)
         bp.configure_time_axis(3)
 
@@ -3632,9 +3633,9 @@ def is_wircam_spectral_temporal(storage_name, headers):
     result = False
     obs_type = mc.get_keyword(headers, 'OBSTYPE')
     if (
-        storage_name.suffix == 'f' 
+        storage_name.suffix == 'f'
         or obs_type in ['BPM', 'DARK', 'FLAT', 'WEIGHT']
-        or 'weight' in storage_name.file_uri 
+        or 'weight' in storage_name.file_uri
         or 'pix' in storage_name.file_uri
     ):
         result = True
