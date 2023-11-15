@@ -2415,6 +2415,7 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
         # if the 'p' plane exists, copy the metadata to the 'z' plane
         z_plane_key = self._storage_name.product_id.replace('p', 'z')
         p_plane_key = self._storage_name.product_id.replace('z', 'p')
+        o_plane_key = self._storage_name.product_id.replace('z', 'o')
         temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
         z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
 
@@ -2465,6 +2466,11 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
                 z_plane.data_release = p_plane.data_release
                 z_plane.meta_producer = p_plane.meta_producer
                 z_plane.meta_release = p_plane.meta_release
+            elif o_plane_key in self._observation.planes.keys():
+                self._logger.info(f'Copying release metadata from {o_plane_key}.')
+                o_plane = self._observation.planes[o_plane_key]
+                z_plane.data_release = o_plane.data_release
+                z_plane.meta_release = o_plane.meta_release
 
         self._logger.debug('End _update_sitelle_plane')
 
