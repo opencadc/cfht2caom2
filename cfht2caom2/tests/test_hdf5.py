@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -117,6 +116,7 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config):
         'storage_name': storage_name,
         'metadata_reader': metadata_reader,
         'observable': test_observable,
+        'config': test_config,
     }
     storage_name._bitpix = -32
     observation = None

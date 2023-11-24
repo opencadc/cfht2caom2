@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -81,8 +80,7 @@ from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
 from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
-from caom2pipe.manage_composable import Observable, Rejected, StorageName, read_obs_from_file
-from caom2pipe.manage_composable import get_keyword, write_obs_to_file
+from caom2pipe.manage_composable import Observable, read_obs_from_file, get_keyword, write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
 from cfht2caom2 import CFHTName, fits2caom2_augmentation
@@ -103,6 +101,7 @@ def pytest_generate_tests(metafunc):
 @patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config, tmp_path):
+    # cache_mock there so there are no update cache calls - so the tests work without a network connection
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = _vo_mock
@@ -110,7 +109,6 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     # but during testing want to use headers and built-in Python file
     # operations
     local_headers_mock.side_effect = _local_headers
-    # cache_mock there so there are no update cache calls - so the tests work without a network connection
     instr = dirname(basename(test_name))
     instrument = {
         'espadons': md.Inst.ESPADONS,
