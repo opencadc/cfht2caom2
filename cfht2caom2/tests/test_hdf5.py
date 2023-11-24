@@ -79,7 +79,7 @@ from caom2pipe.manage_composable import Observable
 from caom2pipe.reader_composable import Hdf5FileMetadataReader
 from cfht2caom2 import CFHTName
 from cfht2caom2 import fits2caom2_augmentation, metadata
-import test_fits2caom2_augmentation
+import test_caom_gen_visit
 
 
 THIS_DIR = dirname(realpath(__file__))
@@ -97,7 +97,7 @@ def pytest_generate_tests(metafunc):
 def test_visitor(vo_mock, cache_mock, test_name, test_config):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
-    vo_mock.side_effect = test_fits2caom2_augmentation._vo_mock
+    vo_mock.side_effect = test_caom_gen_visit._vo_mock
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
     storage_name = CFHTName(
@@ -122,5 +122,5 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config):
     observation = None
     observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    test_fits2caom2_augmentation._compare(test_name, observation, storage_name.obs_id)
+    test_caom_gen_visit._compare(test_name, observation, storage_name.obs_id)
     # assert False

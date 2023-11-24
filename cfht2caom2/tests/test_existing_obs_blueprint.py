@@ -77,11 +77,11 @@ from cfht2caom2 import fits2caom2_augmentation
 
 import pytest
 from mock import Mock, patch
-from test_fits2caom2_augmentation import _vo_mock
+from test_caom_gen_visit import _vo_mock
 
 
 @pytest.fixture()
-def test_kwargs(test_data_dir, test_config):    
+def test_kwargs(test_data_dir, test_config):
     test_f_name = '1013501p_flag.fits.fz'
     test_fqn = f'{test_data_dir}/{test_f_name}.txt'
     test_storage_name = CFHTName(

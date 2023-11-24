@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -71,13 +70,11 @@ from os import path
 from caom2pipe.caom_composable import get_all_artifact_keys
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cleanup_augmentation, cfht_name, Inst
-import test_fits2caom2_augmentation
+import test_caom_gen_visit
 
 
-def test_cleanup_augmentation():
-    test_obs = mc.read_obs_from_file(
-        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_start_cleanup.xml')
-    )
+def test_cleanup_augmentation(test_data_dir):
+    test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_start_cleanup.xml'))
     assert len(test_obs.planes) == 3, 'initial conditions failed'
     storage_name = cfht_name.CFHTName(file_name='abc.fits.fz')
     kwargs = {'storage_name': storage_name}
@@ -88,10 +85,8 @@ def test_cleanup_augmentation():
     assert '1927963og' not in test_obs.planes.keys(), 'wrong plane deleted'
 
 
-def test_cleanup_augmentation_png():
-    test_obs = mc.read_obs_from_file(
-        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_start_png_cleanup.xml')
-    )
+def test_cleanup_augmentation_png(test_data_dir):
+    test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_start_png_cleanup.xml'))
     assert len(test_obs.planes) == 5, 'initial conditions failed'
     storage_name = cfht_name.CFHTName(file_name='2368534s.fits')
     storage_name._instrument = Inst.SPIROU
@@ -106,10 +101,8 @@ def test_cleanup_augmentation_png():
     assert 'cadc:CFHT/2368534s_preview_1024.png' not in artifact_keys, 's 1024'
 
 
-def test_cleanup_augmentation_bad_artifact_uris():
-    test_obs = mc.read_obs_from_file(
-        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_duplicate_uris_cleanup.xml')
-    )
+def test_cleanup_augmentation_bad_artifact_uris(test_data_dir):
+    test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_duplicate_uris_cleanup.xml'))
     assert len(test_obs.planes) == 2, 'initial conditions failed'
     f1 = '2255229o.fits.fz'
     f2 = '2255229p.fits.fz'
@@ -133,10 +126,8 @@ def test_cleanup_augmentation_bad_artifact_uris():
     assert 'cadc:CFHT/2255229o_preview_256.jpg' in test_plane_1.artifacts.keys()
 
 
-def test_cleanup_edge_case():
-    test_obs = mc.read_obs_from_file(
-        path.join(test_fits2caom2_augmentation.TEST_DATA_DIR, 'visit/visit_obs_edge_case_cleanup.xml')
-    )
+def test_cleanup_edge_case(test_data_dir):
+    test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_edge_case_cleanup.xml'))
     storage_name = cfht_name.CFHTName(
         file_name='2014318p.fits.fz', instrument=Inst.WIRCAM
     )

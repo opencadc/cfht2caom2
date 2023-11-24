@@ -3066,9 +3066,6 @@ class WircamTemporal(InstrumentType):
             'Plane.provenance.reference',
             'http://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam',
         )
-
-        # bp.configure_time_axis(3)
-        # self.accumulate_time_chunk_blueprint(bp)
         bp.set('Chunk.energy.bandpassName', 'get_bandpass_name()')
 
         self._logger.debug('Done accumulate_blueprint.')
