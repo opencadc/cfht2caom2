@@ -92,9 +92,9 @@ from caom2pipe.manage_composable import exec_cmd_array
 from caom2pipe.run_composable import run_by_state
 from cfht2caom2 import composable, cfht_name, metadata
 from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
-import test_fits2caom2_augmentation
+import test_caom_gen_visit
 
-TEST_DIR = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/composable_test'
+TEST_DIR = f'{test_caom_gen_visit.TEST_DATA_DIR}/composable_test'
 
 
 @patch('cfht2caom2.preview_augmentation.visit')
@@ -144,12 +144,18 @@ def test_run_by_builder(
 @patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.ClientCollection', autospec=True)
 def test_run_store(
-    clients_mock, check_fits_mock, cache_mock, vo_mock, headers_mock, compression_mock, reporter_mock, preview_mock,
+    clients_mock,
+    check_fits_mock,
+    cache_mock,
+    vo_mock,
+    headers_mock,
+    compression_mock,
+    reporter_mock,
+    preview_mock,
+    test_data_dir,
 ):
     compression_mock.side_effect = _mock_fix_compression
-    test_dir_fqn = os.path.join(
-        test_fits2caom2_augmentation.TEST_DATA_DIR, 'store_test'
-    )
+    test_dir_fqn = os.path.join(test_data_dir, 'store_test')
     getcwd_orig = os.getcwd
     os.getcwd = Mock(return_value=test_dir_fqn)
     clients_mock.return_value.metadata_client.read.side_effect = _mock_repo_read_not_none
@@ -272,7 +278,7 @@ def test_run_store_retry_rejected_entry(clients_mock, cache_mock, vo_mock, test_
         clients_mock.return_value.metadata_client.read.side_effect = _mock_repo_read_not_none
         clients_mock.return_value.data_client.info.side_effect = _mock_get_file_info
         clients_mock.return_value.data_client.put.side_effect = [
-            None, 
+            None,
             mc.CadcException(
                 'Failed to store data with Read timeout on '
                 'https://ws-uv.canfar.net/minoc/files/cadc:CFHT/2615124g_preview_1024.jpg'
@@ -480,7 +486,7 @@ def test_run_state_compression_cleanup(
     get_work_mock.side_effect = _mock_dir_list
 
     clients_mock.return_value.data_client.info.side_effect = info_returns
-    vo_table_mock.side_effect = test_fits2caom2_augmentation._vo_mock
+    vo_table_mock.side_effect = test_caom_gen_visit._vo_mock
 
     def _check_uris(obs):
         file_info = uris.get(obs.observation_id)
@@ -633,7 +639,7 @@ def test_run_state_compression_commands(
     get_work_mock.side_effect = _mock_dir_list
     clients_mock.return_value.data_client.info.side_effect = info_returns
     clients_mock.return_value.metadata_client.read.return_value = None
-    vo_table_mock.side_effect = test_fits2caom2_augmentation._vo_mock
+    vo_table_mock.side_effect = test_caom_gen_visit._vo_mock
     visit_mock.side_effect = _visit_mock
 
     def _mock_exec_cmd_array(arg1, arg2):
@@ -734,7 +740,7 @@ def test_run_state_compression_commands(
 @patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.client_composable.ClientCollection')
-def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mock):
+def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mock, test_data_dir):
     # create a new observation with an hdf5 file, just using scrape
     # to make sure the observation is writable to an ams service
     #
@@ -742,7 +748,7 @@ def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mo
     # there's no need for credentials, or CADC library clients
 
     test_obs_id = '2384125'
-    test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
+    test_dir = f'{test_data_dir}/hdf5_test'
     fits_fqn = f'{test_dir}/{test_obs_id}p.fits.header'
     hdf5_fqn = f'{test_dir}/{test_obs_id}z.hdf5'
     actual_fqn = f'{test_dir}/logs/{test_obs_id}.xml'
@@ -783,9 +789,9 @@ def test_run_by_builder_hdf5_first(clients_mock, cache_mock, vo_mock, preview_mo
 @patch('caom2pipe.astro_composable.check_fitsverify')
 @patch('caom2pipe.client_composable.ClientCollection')
 def test_run_by_builder_hdf5_added_to_existing(
-    clients_mock, fits_check_mock, header_mock, file_info_mock, cache_mock, vo_mock, visit_mock
+    clients_mock, fits_check_mock, header_mock, file_info_mock, cache_mock, vo_mock, visit_mock, test_data_dir
 ):
-    test_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_test'
+    test_dir = f'{test_data_dir}/hdf5_test'
     visit_mock.side_effect = _visit_mock
 
     def _make_headers(fqn):
@@ -824,10 +830,7 @@ def test_run_by_builder_hdf5_added_to_existing(
                 os.mkdir(os.path.join(test_dir, 'logs'))
             shutil.copy(expected_hdf5_only_fqn, actual_fqn)
         if not os.path.exists(fits_fqn):
-            shutil.copy(
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/sitelle/{test_obs_id}p.fits.header',
-                fits_fqn,
-            )
+            shutil.copy(f'{test_data_dir}/multi_plane/sitelle/{test_obs_id}p.fits.header', fits_fqn)
 
         # clean up unexpected files
         if os.path.exists(hdf5_fqn):
@@ -915,9 +918,9 @@ def test_run_ingest(
 @patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.client_composable.ClientCollection')
-def test_store_ingest_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test_config, tmp_path):
+def test_store_ingest_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test_config, test_data_dir, tmp_path):
     # create a new observation with an hdf5 file that has attributes
-    test_input_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_with_metadata_test'
+    test_input_dir = f'{test_data_dir}/hdf5_with_metadata_test'
     test_config.change_working_directory(tmp_path)
     test_config.use_local_files = True
     test_config.task_types = [mc.TaskType.STORE, mc.TaskType.INGEST]
@@ -959,9 +962,9 @@ def test_store_ingest_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test
 @patch('caom2pipe.astro_composable.get_vo_table')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.client_composable.ClientCollection')
-def test_ingest_modify_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test_config, tmp_path):
+def test_ingest_modify_hdf5(clients_mock, cache_mock, vo_mock, preview_mock, test_config, test_data_dir, tmp_path):
     # update an observation with an hdf5 file that has attributes
-    test_input_dir = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/hdf5_with_metadata_test'
+    test_input_dir = f'{test_data_dir}/hdf5_with_metadata_test'
     test_config.change_working_directory(tmp_path)
     test_config.task_types = [mc.TaskType.INGEST, mc.TaskType.MODIFY]
     test_config.logging_level = 'INFO'
@@ -1102,7 +1105,7 @@ def _mock_dir_listing(
 
 
 def _mock_header_read(file_name):
-    x = """SIMPLE  =                    T / 
+    x = """SIMPLE  =                    T /
 BITPIX  =                  -32 / Bits per pixel
 NAXIS   =                    2 / Number of dimensions
 NAXIS1  =                 2048 /

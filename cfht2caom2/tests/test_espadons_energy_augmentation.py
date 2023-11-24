@@ -72,15 +72,13 @@ from cfht2caom2 import espadons_energy_augmentation
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
 
-import test_fits2caom2_augmentation
-
 TEST_FILES_DIR = '/test_files'
 
 
-def test_visit(test_config):
+def test_visit(test_config, test_data_dir):
     product_id = '2460606i'
     f_name = f'{product_id}.fits.gz'
-    obs_fqn = f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/espadons/2460606.expected.xml'
+    obs_fqn = f'{test_data_dir}/multi_plane/espadons/2460606.expected.xml'
     obs = read_obs_from_file(obs_fqn)
 
     # pre-conditions

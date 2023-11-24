@@ -76,15 +76,10 @@ from cfht2caom2 import metadata as md
 from cfht2caom2 import cfht_name
 from caom2pipe import manage_composable as mc
 
-import test_fits2caom2_augmentation
-
 TEST_FILES_DIR = '/test_files'
-REJECTED_FILE = os.path.join(
-    test_fits2caom2_augmentation.TEST_DATA_DIR, 'rejected.yml'
-)
 
 
-def test_preview_augment(test_config):
+def test_preview_augment(test_config, test_data_dir):
 
     # this should result in three new artifacts being added to every plane:
     # one for a thumbnail and two for previews (one zoom)
@@ -223,9 +218,7 @@ def test_preview_augment(test_config):
     checksum_failures = []
 
     for key, value in test_files.items():
-        obs = mc.read_obs_from_file(
-            f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/visit/{key}'
-        )
+        obs = mc.read_obs_from_file(f'{test_data_dir}/visit/{key}')
         if 'wircam' in key:
             instrument = md.Inst.WIRCAM
         elif 'mega' in key or 'scatter' in key:

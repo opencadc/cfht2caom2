@@ -77,7 +77,7 @@ from glob import glob
 from os.path import basename, dirname
 
 from mock import patch
-import test_fits2caom2_augmentation
+import test_caom_gen_visit
 
 
 # structured by observation id, list of file ids that make up a multi-plane
@@ -115,7 +115,7 @@ LOOKUP = {
 
 
 def pytest_generate_tests(metafunc):
-    dir_listing = glob(f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/**/*.expected.xml')
+    dir_listing = glob(f'{test_caom_gen_visit.TEST_DATA_DIR}/multi_plane/**/*.expected.xml')
     metafunc.parametrize('expected_fqn', dir_listing)
 
 
@@ -128,12 +128,12 @@ def test_visitor(
 ):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
-    vo_mock.side_effect = test_fits2caom2_augmentation._vo_mock
+    vo_mock.side_effect = test_caom_gen_visit._vo_mock
     # during cfht2caom2 operation, want to use astropy on FITS files
     # but during testing want to use headers and built-in Python file
     # operations
-    local_headers_mock1.side_effect = test_fits2caom2_augmentation._local_headers
-    local_headers_mock2.side_effect = test_fits2caom2_augmentation._local_headers
+    local_headers_mock1.side_effect = test_caom_gen_visit._local_headers
+    local_headers_mock2.side_effect = test_caom_gen_visit._local_headers
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
     instr = basename(dirname(expected_fqn))
@@ -151,7 +151,7 @@ def test_visitor(
             source_names = [f'/test_files/{f_name}']
         else:
             source_names = [
-                f'{test_fits2caom2_augmentation.TEST_DATA_DIR}/multi_plane/{instr}/{f_name}.header'
+                f'{test_caom_gen_visit.TEST_DATA_DIR}/multi_plane/{instr}/{f_name}.header'
             ]
         storage_name = cfht_name.CFHTName(
             file_name=f_name,
@@ -180,4 +180,4 @@ def test_visitor(
 
         observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
-    test_fits2caom2_augmentation._compare(expected_fqn, observation, test_name)
+    test_caom_gen_visit._compare(expected_fqn, observation, test_name)
