@@ -190,7 +190,9 @@ from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
 from caom2 import TemporalWCS, CoordAxis1D, CoordFunction1D, CoordError
 from caom2 import CalibrationLevel, ProductType, ObservationIntentType
 from caom2 import DerivedObservation
-from caom2utils.caom2blueprint import FitsWcsParser, ObsBlueprint, update_artifact_meta
+from caom2utils.caom2blueprint import update_artifact_meta
+from caom2utils.blueprints import ObsBlueprint
+from caom2utils.wcs_parsers import FitsWcsParser
 from caom2utils.data_util import get_local_headers_from_fits
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
@@ -2451,14 +2453,12 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
                                 f'Unexpected extension name pattern for artifact URI {p_artifact_key} in '
                                 f'{self._observation.observation_id}.'
                             )
-                features = mc.Features()
-                features.supports_latest_caom = True
                 for part in p_plane.artifacts[p_artifact_key].parts.values():
                     z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
                     for chunk in part.chunks:
                         z_plane.artifacts[z_artifact_key].parts[
                             part.name
-                        ].chunks.append(cc.copy_chunk(chunk, features))
+                        ].chunks.append(cc.copy_chunk(chunk))
                 z_plane.artifacts[z_artifact_key].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
                 z_plane.provenance = p_plane.provenance
                 z_plane.calibration_level = p_plane.calibration_level
