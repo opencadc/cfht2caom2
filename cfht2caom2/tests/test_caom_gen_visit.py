@@ -80,7 +80,7 @@ from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
 from cadcdata import FileInfo
 from caom2pipe import astro_composable as ac
-from caom2pipe.manage_composable import Observable, read_obs_from_file, get_keyword, write_obs_to_file
+from caom2pipe.manage_composable import get_keyword, Observable, read_obs_from_file, write_obs_to_file
 from caom2pipe import reader_composable as rdc
 from caom2utils import data_util
 from cfht2caom2 import CFHTName, fits2caom2_augmentation
@@ -143,6 +143,13 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     observation = fits2caom2_augmentation.visit(observation, **kwargs)
 
     _compare(test_name, observation, storage_name.obs_id)
+    if storage_name.file_name == '19BMfr.fringe.gri.40.00.fits':
+        assert len(test_observable.rejected.get_bad_metadata()) == 1, f'invalid TV_STOP'
+    else:
+        assert (
+            len(test_observable.rejected.get_bad_metadata()) == 0
+        ), f'should be no rejections {test_observable.rejected.get_bad_metadata()}'
+
     # assert False
 
 

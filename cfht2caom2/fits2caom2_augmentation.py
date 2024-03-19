@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -76,7 +75,7 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
     def __init__(self, observation, **kwargs):
         super().__init__(observation, **kwargs)
 
-    def _get_mapping(self, headers):
+    def _get_mapping(self, headers, _):
         return factory(headers, self._storage_name, self._clients, self._observable, self._observation, self._config)
 
     def _get_parser(self, headers, blueprint, uri):
