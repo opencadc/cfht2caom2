@@ -147,7 +147,8 @@ bounds there
 contained in bounds, gaps need to be captured. so keep bounds. if you decide
 to remove range, then advanced users would have to dig in the info to
 understand range is first and last bounds if i understand correctly.
-
+- SF - 19-03-24 - from the Spanish VO filter service, take the CFHT/Megaprime.<filter>  , not _sdss or _fil, and 
+not CFHT/Megacam.
 
 CFHT WCS:
 - CW - 28-04-20
@@ -885,8 +886,10 @@ class AuxiliaryType(cc.TelescopeMapping):
         pass
 
     def track_invalid_date(self, value, key):
-        self._logger.warning(f'Invalid date of {value} for {key}.')
-        self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
+        # want to check for and track broken metadata, so None is an acceptable date
+        if value is not None:
+            self._logger.warning(f'Invalid date of {value} for {key}.')
+            self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
 
     def update_chunk(self):
         self.update_observable()
@@ -1117,15 +1120,15 @@ class InstrumentType(AuxiliaryType):
         return self._headers[0].get('RA_DEG')
 
     def get_time_refcoord_delta_derived(self, ext):
-        mjd_obs = self.get_time_refcoord_val_derived(ext)
         tv_stop = self._headers[ext].get('TVSTOP')
         if tv_stop is None:
             # caom2IngestMegacamdetrend.py, l429
             # caom2IngestWircamdetrend.py, l422
             exp_time = 20.0
         else:
+            mjd_obs = self.get_time_refcoord_val_derived(ext)
             temp = cfht_time_helper(tv_stop)
-            if ac.is_good_date(temp, self._instrument_start_date):
+            if ac.is_good_date(temp, self._instrument_start_date, check_end_date=True):
                 mjd_end = temp.value
                 exp_time = mjd_end - mjd_obs
             else:
@@ -1156,11 +1159,9 @@ class InstrumentType(AuxiliaryType):
             if temp is None:
                 continue
             mjd_obs = cfht_time_helper(temp)
-            if ac.is_good_date(mjd_obs, self._instrument_start_date):
+            if ac.is_good_date(mjd_obs, self._instrument_start_date, True):
                 break
-        if mjd_obs is None:
-            self.track_invalid_date(mjd_obs, 'Chunk.time.axis.function.refCoord.val')
-        else:
+        if mjd_obs is not None:
             mjd_obs = mjd_obs.value
         return mjd_obs
 
@@ -1173,11 +1174,9 @@ class InstrumentType(AuxiliaryType):
                 if temp is None:
                     continue
                 result = cfht_time_helper(temp)
-                if ac.is_good_date(result, self._instrument_start_date):
+                if ac.is_good_date(result, self._instrument_start_date, True):
                     break
-        if result is None:
-            self.track_invalid_date(result, 'Chunk.time.axis.function.refCoord.val')
-        else:
+        if result is not None:
             result = result.value
         return result
 
@@ -1186,7 +1185,7 @@ class InstrumentType(AuxiliaryType):
 
     def _get_mjd_obs(self, ext):
         result = ac.to_mjd(self._headers[ext].get('MJD-OBS'))
-        if not ac.is_good_date(result, self._instrument_start_date):
+        if not ac.is_good_date(result, self._instrument_start_date, True):
             result = None
         return result
 
@@ -1203,7 +1202,7 @@ class InstrumentType(AuxiliaryType):
                         temp = f'{temp}T{temp2}'
                 mjd_obs = cfht_time_helper(temp)
 
-            if ac.is_good_date(mjd_obs, self._instrument_start_date):
+            if ac.is_good_date(mjd_obs, self._instrument_start_date, True):
                 if hasattr(mjd_obs, 'value'):
                     mjd_obs = mjd_obs.value
                 break
@@ -1600,7 +1599,7 @@ class EspadonsTemporal(InstrumentType):
                     if temp in ['1970-00-01', '1970-00-01T0:00:00', '1970-00-01T0:00:00.000']:
                         continue
                     mjd_obs = cfht_time_helper(temp)
-                if ac.is_good_date(mjd_obs, self._instrument_start_date):
+                if ac.is_good_date(mjd_obs, self._instrument_start_date, True):
                     break
         if mjd_obs is None:
             self.track_invalid_date(None, 'Chunk.time.axis.function.refCoord.val')
