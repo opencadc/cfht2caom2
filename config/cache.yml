@@ -67,8 +67,8 @@ filter_repair_lookup:
   Halpha.MP9603: Halpha
   Ha.MP9603: Halpha
   HaB.MP9603: Halpha
-  Halpha.MP9604: Halpha_Off_2
-  HaOFF.MP9604: Halpha_Off_2
+  Halpha.MP9604: Halpha_off
+  HaOFF.MP9604: Halpha_off
   J.WC8101: J
   Ks.WC8302: Ks
   N393.MP1111: N393.MP1111
@@ -80,18 +80,18 @@ filter_repair_lookup:
   PHG.MP9999: PHG.MP9999
   TiO.MP7701: TiO
   tio.MP7701: TiO
-  g.MP9401: g
-  g.MP9402: g_sdss
+  g.MP9401: gS
+  g.MP9402: g
   gri.MP9605: gri
-  i.MP9701: i1
-  i.MP9702: i
-  i.MP9703: i_sdss
-  r.MP9601: r
-  r.MP9602: r_sdss
-  u.MP9301: u
-  u.MP9302: u_sdss
-  z.MP9801: z
-  z.MP9901: z_sdss
+  i.MP9701: iS
+  i.MP9702: iS2
+  i.MP9703: i
+  r.MP9601: rS
+  r.MP9602: r
+  u.MP9301: uS
+  u.MP9302: u
+  z.MP9801: zS
+  z.MP9901: z
 project_titles:
   09BC26: 'The Next Generation Virgo Survey -- Infrared: K_s-Band Observations of
     the Central 4 deg^2'
