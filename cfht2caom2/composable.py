@@ -88,13 +88,13 @@ DATA_VISITORS = [
     cleanup_augmentation,
 ]
 
-def can_use_single_visit(config):
+def can_use_single_visit(task_types):
     return (
-        len(config.task_types) > 1
+        len(task_types) > 1
         and (
-            (TaskType.STORE in config.task_types and TaskType.INGEST in config.task_types)
-            or (TaskType.INGEST in config.task_types and TaskType.MODIFY in config.task_types)
-            or (TaskType.SCRAPE in config.task_types and TaskType.MODIFY in config.task_types)
+            (TaskType.STORE in task_types and TaskType.INGEST in task_types)
+            or (TaskType.INGEST in task_types and TaskType.MODIFY in task_types)
+            or (TaskType.SCRAPE in task_types and TaskType.MODIFY in task_types)
         )
     )
 
