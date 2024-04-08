@@ -71,8 +71,7 @@ import sys
 import traceback
 
 from caom2pipe import client_composable as clc
-from caom2pipe.execute_composable import can_use_single_visit
-from caom2pipe.manage_composable import CadcException, Config, StorageName
+from caom2pipe.manage_composable import CadcException, Config, StorageName, TaskType
 from caom2pipe.reader_composable import Hdf5FileMetadataReader
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cleanup_augmentation
@@ -88,6 +87,16 @@ DATA_VISITORS = [
     preview_augmentation,
     cleanup_augmentation,
 ]
+
+def can_use_single_visit(config):
+    return (
+        len(config.task_types) > 1
+        and (
+            (TaskType.STORE in config.task_types and TaskType.INGEST in config.task_types)
+            or (TaskType.INGEST in config.task_types and TaskType.MODIFY in config.task_types)
+            or (TaskType.SCRAPE in config.task_types and TaskType.MODIFY in config.task_types)
+        )
+    )
 
 
 def _common_init():
