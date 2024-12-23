@@ -86,12 +86,13 @@ from caom2utils import data_util
 from caom2 import SimpleObservation, Algorithm, Instrument
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
-from caom2pipe.data_source_composable import StateRunnerMeta
+from caom2pipe.data_source_composable import LocalFilesDataSourceRunnerMeta, RunnerMeta
 from caom2pipe import manage_composable as mc
-from caom2pipe.manage_composable import exec_cmd_array
-from caom2pipe.run_composable import run_by_state
-from cfht2caom2 import composable, cfht_name, metadata
-from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
+from caom2pipe.manage_composable import exec_cmd_array, TaskType
+from caom2pipe.run_composable import run_by_state_runner_meta
+from cfht2caom2 import composable, metadata
+from cfht2caom2.cfht_name import CFHTName
+# from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSourceRunnerMeta
 import test_caom_gen_visit
 
 TEST_DIR = f'{test_caom_gen_visit.TEST_DATA_DIR}/composable_test'
@@ -319,14 +320,14 @@ def test_run_store_retry_rejected_entry(clients_mock, cache_mock, vo_mock, test_
 
 
 @patch(
-    'cfht2caom2.cfht_data_source.CFHTLocalFilesDataSource.end_dt',
+    'cfht2caom2.cfht_data_source.CFHTLocalFilesDataSourceRunnerMeta.end_dt',
     new_callable=PropertyMock(return_value=datetime(year=2019, month=3, day=7, hour=19, minute=5))
 )
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch(
-    'caom2pipe.data_source_composable.ListDirTimeBoxDataSource.'
+    'caom2pipe.data_source_composable.LocalFilesDataSourceRunnerMeta.'
     'get_time_box_work',
     autospec=True,
 )
@@ -339,49 +340,41 @@ def test_run_state(
     clients_mock,
     end_time_mock,
     test_config,
+    tmp_path,
+    change_test_dir,
 ):
     # it's a WIRCAM file
     test_obs_id = '2281792'
     test_f_name = f'{test_obs_id}p.fits.fz'
+    test_config.change_working_directory(tmp_path)
+    test_config.interval = 7200
+    test_config.task_types = [TaskType.SCRAPE]
+    test_config.use_local_files = True
 
-    try:
-        test_state_fqn = f'{TEST_DIR}/state.yml'
-        start_time = datetime(year=2019, month=3, day=3, hour=19, minute=5)
-        mc.State.write_bookmark(test_state_fqn, test_config.bookmark, start_time)
-        util_headers_mock.side_effect = ac.make_headers_from_file
-        run_mock.return_value = 0
-        get_work_mock.side_effect = _mock_dir_listing
-        getcwd_orig = os.getcwd
-        os.getcwd = Mock(return_value=TEST_DIR)
+    test_state_fqn = f'{tmp_path}/state.yml'
+    start_time = datetime(year=2019, month=3, day=3, hour=19, minute=5)
+    mc.State.write_bookmark(test_state_fqn, test_config.bookmark, start_time)
+    mc.Config.write_to_file(test_config)
+    util_headers_mock.side_effect = ac.make_headers_from_file
+    run_mock.return_value = (0, None)
+    get_work_mock.side_effect = _mock_dir_listing
 
-        try:
-            # execution
-            test_result = composable._run_state()
-            assert test_result == 0, 'mocking correct execution'
-        finally:
-            os.getcwd = getcwd_orig
-
-        assert run_mock.called, 'should have been called'
-        args, kwargs = run_mock.call_args
-        test_storage = args[0]
-        assert isinstance(test_storage, cfht_name.CFHTName), type(
-            test_storage
-        )
-        assert (
-            test_storage.obs_id == test_obs_id
-        ), f'wrong obs id {test_storage.obs_id}'
-        assert test_storage.file_name == test_f_name, 'wrong file name'
-        assert (
-            test_storage.file_uri == f'cadc:CFHT/{test_f_name}'
-        ), 'wrong uri'
-    finally:
-        _cleanup(TEST_DIR, test_obs_id)
+    # execution
+    test_result = composable._run_state()
+    assert test_result == 0, 'mocking correct execution'
+    assert run_mock.called, 'should have been called'
+    args, kwargs = run_mock.call_args
+    test_storage = args[0]
+    assert isinstance(test_storage, CFHTName), type(test_storage)
+    assert test_storage.obs_id == test_obs_id, f'wrong obs id {test_storage.obs_id}'
+    assert test_storage.file_name == test_f_name, 'wrong file name'
+    assert test_storage.file_uri == f'cadc:CFHT/{test_f_name}', 'wrong uri'
 
 
 # common definitions for the test_run_state_compression* tests
-class LocalFilesDataSourceCleanupTest(CFHTLocalFilesDataSource):
-    def __init__(self, config, cadc_client, metadata_reader, builder):
-        super().__init__(config, cadc_client, metadata_reader, False, builder)
+class LocalFilesDataSourceCleanupTest(LocalFilesDataSourceRunnerMeta):
+    def __init__(self, config, cadc_client):
+        super().__init__(config, cadc_client, False, CFHTName)
 
     def _move_action(self, source, destination):
         uris = {
@@ -405,8 +398,8 @@ class LocalFilesDataSourceCleanupTest(CFHTLocalFilesDataSource):
         f_name = os.path.basename(source)
         lookup = uris.get(f_name)
         assert lookup is not None, f'unexpected f_name {f_name}'
-        assert lookup[0] == source, f'source {source}'
-        assert lookup[1] == destination, f'destination {destination}'
+        assert lookup[0] == source, f'source {source} {f_name}'
+        assert lookup[1] == destination, f'destination {destination} {f_name}'
 
 
 def _mock_dir_list(
@@ -414,13 +407,21 @@ def _mock_dir_list(
 ):
     result = deque()
     # BITPIX -32, no recompression
-    result.append(StateRunnerMeta('/test_files/781920i.fits.gz', datetime(2019, 10, 23, 16, 27, 19)))
+    result.append(
+        RunnerMeta(CFHTName(source_names=['/test_files/781920i.fits.gz']), datetime(2019, 10, 23, 16, 27, 19))
+    )
     # BITPIX 16, recompression
-    result.append(StateRunnerMeta('/test_files/1681594g.fits.gz', datetime(2019, 10, 23, 16, 27, 20)))
+    result.append(
+        RunnerMeta(CFHTName(source_names=['/test_files/1681594g.fits.gz']), datetime(2019, 10, 23, 16, 27, 20))
+    )
     # already uncompressed, no decompression or recompression
-    result.append(StateRunnerMeta('/test_files/1028439o.fits', datetime(2019, 10, 23, 16, 27, 21)))
+    result.append(
+        RunnerMeta(CFHTName(source_names=['/test_files/1028439o.fits']), datetime(2019, 10, 23, 16, 27, 21))
+    )
     # already compressed, no decompression or recompression
-    result.append(StateRunnerMeta('/test_files/2359320o.fits.fz', datetime(2019, 10, 23, 16, 27, 22)))
+    result.append(
+        RunnerMeta(CFHTName(source_names=['/test_files/2359320o.fits.fz']), datetime(2019, 10, 23, 16, 27, 22))
+    )
     return result
 
 
@@ -466,11 +467,11 @@ info_calls = [
 ]
 
 
-@patch('caom2pipe.manage_composable.ExecutionReporter')
+@patch('caom2pipe.manage_composable.ExecutionReporter2')
 @patch('caom2pipe.astro_composable.get_vo_table')
 @patch('caom2pipe.client_composable.ClientCollection')
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('caom2pipe.data_source_composable.ListDirTimeBoxDataSource.get_time_box_work', autospec=True)
+@patch('caom2pipe.data_source_composable.LocalFilesDataSourceRunnerMeta.get_time_box_work', autospec=True)
 def test_run_state_compression_cleanup(
     get_work_mock,
     cache_mock,
@@ -479,6 +480,7 @@ def test_run_state_compression_cleanup(
     reporter_mock,
     test_config,
     tmp_path,
+    change_test_dir,
 ):
     # this test works with FITS files, not header-only versions of FITS
     # files, because it's testing the decompression/recompression cycle
@@ -487,6 +489,8 @@ def test_run_state_compression_cleanup(
 
     clients_mock.return_value.data_client.info.side_effect = info_returns
     vo_table_mock.side_effect = test_caom_gen_visit._vo_mock
+    reporter_mock.return_value.observable.rejected.is_bad_metadata.return_value = False
+    type(reporter_mock.return_value._observable).meta_producer = PropertyMock(return_value='test/0.1.2')
 
     def _check_uris(obs):
         file_info = uris.get(obs.observation_id)
@@ -529,90 +533,90 @@ def test_run_state_compression_cleanup(
     test_config.cleanup_success_destination = '/test_files/success'
     test_config.cleanup_failure_destination = '/test_files/failure'
     test_config.logging_level = 'INFO'
-
-    cwd = os.getcwd()
-    os.chdir(tmp_path)
+    mc.Config.write_to_file(test_config)
+    with open(test_config.proxy_fqn, 'w') as f:
+        f.write('test content')
+    # execution
     try:
-        mc.Config.write_to_file(test_config)
-        with open(test_config.proxy_fqn, 'w') as f:
-            f.write('test content')
-        # execution
-        try:
-            test_config, test_clients, test_reader, test_build, test_source_ignore = composable._common_init()
-            test_source = LocalFilesDataSourceCleanupTest(
-                test_config, test_clients.data_client, test_reader, test_build
-            )
-            test_result = run_by_state(
-                config=test_config,
-                name_builder=test_build,
-                meta_visitors=composable.META_VISITORS,
-                data_visitors=composable.DATA_VISITORS,
-                clients=test_clients,
-                sources=[test_source],
-                metadata_reader=test_reader,
-            )
-            assert test_result == 0, 'expecting correct execution'
-        except Exception as e:
-            error(e)
-            error(format_exc())
-            raise e
+        test_config, test_clients, _ = composable._common_init()
+        test_source = LocalFilesDataSourceCleanupTest(test_config, test_clients.data_client)
+        test_result = run_by_state_runner_meta(
+            config=test_config,
+            meta_visitors=composable.META_VISITORS,
+            data_visitors=composable.DATA_VISITORS,
+            clients=test_clients,
+            sources=[test_source],
+            organizer_module_name='cfht2caom2.cfht_name',
+            organizer_class_name='CFHTOrganizeExecutesRunnerMeta',
+            storage_name_ctor=CFHTName,
+        )
+        assert test_result == 0, 'expecting correct execution'
+    except Exception as e:
+        error(e)
+        error(format_exc())
+        raise e
 
-        clients_mock.return_value.data_client.put.assert_called(), 'put'
-        assert (
-            clients_mock.return_value.data_client.put.call_count == 15
-        ), 'put call count, including the previews'
-        put_calls = [
-            call(f'{tmp_path}/781920', 'cadc:CFHT/781920i.fits'),
-            call(f'{tmp_path}/781920', 'cadc:CFHT/781920i_preview_1024.jpg'),
-            call(f'{tmp_path}/781920', 'cadc:CFHT/781920i_preview_256.jpg'),
-            call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g.fits.fz'),
-            call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g_preview_256.jpg'),
-            call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g_preview_1024.jpg'),
-            call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g_preview_zoom_1024.jpg'),
-            call('/test_files', 'cadc:CFHT/1028439o.fits'),
-            call(f'{tmp_path}/1028439', 'cadc:CFHT/1028439o_preview_256.jpg'),
-            call(f'{tmp_path}/1028439', 'cadc:CFHT/1028439o_preview_1024.jpg'),
-            call(f'{tmp_path}/1028439', 'cadc:CFHT/1028439o_preview_zoom_1024.jpg'),
-            call('/test_files', 'cadc:CFHT/2359320o.fits.fz'),
-            call(f'{tmp_path}/2359320', 'cadc:CFHT/2359320o_preview_256.jpg'),
-            call(f'{tmp_path}/2359320', 'cadc:CFHT/2359320o_preview_1024.jpg'),
-            call(f'{tmp_path}/2359320', 'cadc:CFHT/2359320o_preview_zoom_1024.jpg'),
-        ]
-        clients_mock.return_value.data_client.put.assert_has_calls(put_calls), 'wrong put args'
-        clients_mock.return_value.data_client.info.assert_called(), 'info'
-        assert (
-            clients_mock.return_value.data_client.info.call_count == 4
-        ), 'info call count, only checking _post_store_check_md5sum'
-        clients_mock.return_value.data_client.info.assert_has_calls(info_calls), 'wrong info args'
+    clients_mock.return_value.data_client.put.assert_called(), 'put'
+    assert (
+        clients_mock.return_value.data_client.put.call_count == 15
+    ), 'put call count, including the previews'
+    put_calls = [
+        call(f'{tmp_path}/781920', 'cadc:CFHT/781920i.fits'),
+        call(f'{tmp_path}/781920', 'cadc:CFHT/781920i_preview_1024.jpg'),
+        call(f'{tmp_path}/781920', 'cadc:CFHT/781920i_preview_256.jpg'),
+        call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g.fits.fz'),
+        call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g_preview_256.jpg'),
+        call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g_preview_1024.jpg'),
+        call(f'{tmp_path}/1681594', 'cadc:CFHT/1681594g_preview_zoom_1024.jpg'),
+        call('/test_files', 'cadc:CFHT/1028439o.fits'),
+        call(f'{tmp_path}/1028439', 'cadc:CFHT/1028439o_preview_256.jpg'),
+        call(f'{tmp_path}/1028439', 'cadc:CFHT/1028439o_preview_1024.jpg'),
+        call(f'{tmp_path}/1028439', 'cadc:CFHT/1028439o_preview_zoom_1024.jpg'),
+        call('/test_files', 'cadc:CFHT/2359320o.fits.fz'),
+        call(f'{tmp_path}/2359320', 'cadc:CFHT/2359320o_preview_256.jpg'),
+        call(f'{tmp_path}/2359320', 'cadc:CFHT/2359320o_preview_1024.jpg'),
+        call(f'{tmp_path}/2359320', 'cadc:CFHT/2359320o_preview_zoom_1024.jpg'),
+    ]
+    clients_mock.return_value.data_client.put.assert_has_calls(put_calls), 'wrong put args'
+    clients_mock.return_value.data_client.info.assert_called(), 'info'
+    assert (
+        clients_mock.return_value.data_client.info.call_count == 4
+    ), 'info call count, only checking _post_store_check_md5sum'
+    clients_mock.return_value.data_client.info.assert_has_calls(info_calls), 'wrong info args'
 
-        # LocalStore, get_head should not be called
-        clients_mock.return_value.data_client.get_head.assert_not_called()
-        # LocalStore, get should not be called
-        clients_mock.return_value.data_client.get.assert_not_called()
+    # LocalStore, get_head should not be called
+    clients_mock.return_value.data_client.get_head.assert_not_called()
+    # LocalStore, get should not be called
+    clients_mock.return_value.data_client.get.assert_not_called()
 
-        assert clients_mock.return_value.metadata_client.read.called, 'read'
-        assert clients_mock.return_value.metadata_client.read.call_count == 4, 'meta read call count, ingest + modify'
-        read_calls = [
-            call('CFHT', '781920'),
-            call('CFHT', '1681594'),
-            call('CFHT', '1028439'),
-            call('CFHT', '2359320'),
-        ]
-        clients_mock.return_value.metadata_client.read.assert_has_calls(read_calls), 'wrong read args'
+    assert clients_mock.return_value.metadata_client.read.called, 'read'
+    assert clients_mock.return_value.metadata_client.read.call_count == 4, 'meta read call count, ingest + modify'
+    read_calls = [
+        call('CFHT', '781920'),
+        call('CFHT', '1681594'),
+        call('CFHT', '1028439'),
+        call('CFHT', '2359320'),
+    ]
+    clients_mock.return_value.metadata_client.read.assert_has_calls(read_calls), 'wrong read args'
 
-        assert clients_mock.return_value.metadata_client.create.called, 'create'
-        assert clients_mock.return_value.metadata_client.create.call_count == 4, 'meta create call count'
-        create_calls = [call(ANY)]
-        clients_mock.return_value.metadata_client.create.assert_has_calls(create_calls), 'wrong create args'
+    assert clients_mock.return_value.metadata_client.create.called, 'create'
+    assert clients_mock.return_value.metadata_client.create.call_count == 4, 'meta create call count'
+    create_calls = [call(ANY)]
+    clients_mock.return_value.metadata_client.create.assert_has_calls(create_calls), 'wrong create args'
 
-        for obs_id in ['781920', '1681594', '1028439', '2359320']:
-            test_obs = mc.read_obs_from_file(f'{test_config.working_directory}/logs/{obs_id}.xml')
-            _check_uris(test_obs)
-        # capture_todo is not called because the data source is mocked
-        assert reporter_mock.return_value.capture_success.called, 'capture_success'
-        assert reporter_mock.return_value.capture_success.call_count == 4, 'capture_success call count'
-    finally:
-        os.chdir(cwd)
+    for obs_id in ['781920', '1681594', '1028439', '2359320']:
+        test_obs = mc.read_obs_from_file(f'{test_config.working_directory}/logs/{obs_id}.xml')
+        _check_uris(test_obs)
+    # capture_todo not called because the data source is mocked => "Number of Inputes" == 0 is a valid expectation
+    assert reporter_mock.return_value.capture_success.called, 'capture_success'
+    assert reporter_mock.return_value.capture_success.call_count == 4, 'capture_success call count'
+    capture_success_calls = [
+        call('781920', '781920i.fits.gz', ANY),
+        call('1681594', '1681594g.fits.gz', ANY),
+        call('1028439', '1028439o.fits', ANY),
+        call('2359320', '2359320o.fits.fz', ANY),
+    ]
+    reporter_mock.return_value.capture_success.assert_has_calls(capture_success_calls), 'capture_success calls'
 
 
 @patch('cfht2caom2.preview_augmentation.visit')
@@ -1093,15 +1097,14 @@ def _mock_get_file_info(file_id):
         )
 
 
-def _mock_dir_listing(
-    arg1, output_file='', data_only=True, response_format='arg4'
-):
+def _mock_dir_listing(arg1, output_file='', data_only=True, response_format='arg4'):
     return [
-        StateRunnerMeta(
-            os.path.join(os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz'),
+        RunnerMeta(
+            CFHTName(source_names=[os.path.join(os.path.join(TEST_DIR, 'test_files'), '2281792p.fits.fz')]),
             datetime(year=2019, month=10, day=23, hour=16, minute=27, second=19),
         ),
     ]
+
 
 
 def _mock_header_read(file_name):

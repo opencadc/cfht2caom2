@@ -133,6 +133,7 @@ def test_preview_augment(test_config, test_data_dir):
         'visit_obs_start_sitelle_hdf5.xml': ['2384125z.hdf5'],
         'visit_obs_start_spirou_p_bad_flux.xml': ['2446341p.fits'],
         'visit_obs_start_spirou_new_v.xml': ['2886318v.fits'],
+        'visit_obs_start_spirou_new_new_v.xml': ['3062083v.fits'],
     }
 
     test_checksums = {
@@ -232,12 +233,7 @@ def test_preview_augment(test_config, test_data_dir):
         else:
             assert False, 'do not understand instrument'
         for f_name in value:
-            test_name = cfht_name.CFHTName(
-                file_name=f_name, instrument=instrument
-            )
-            test_name.source_names = [
-                os.path.join(TEST_FILES_DIR, f_name)
-            ]
+            test_name = cfht_name.CFHTName(source_names=[os.path.join(TEST_FILES_DIR, f_name)], instrument=instrument)
             kwargs['storage_name'] = test_name
             check_number = 1
             if test_name.suffix == 'p' and instrument is md.Inst.SITELLE:
@@ -245,7 +241,7 @@ def test_preview_augment(test_config, test_data_dir):
             assert (
                 len(obs.planes[test_name.product_id].artifacts)
                 == check_number
-            ), f'initial condition {f_name}'
+            ), f'initial condition {f_name} {test_name.product_id}'
 
             try:
                 from datetime import datetime

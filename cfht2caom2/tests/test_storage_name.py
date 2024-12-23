@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -72,20 +71,20 @@ from cfht2caom2 import CFHTName
 
 
 def test_is_valid(test_config):
-    assert CFHTName(file_name='1944968p.fits.fz', instrument='SITELLE').is_valid()
+    assert CFHTName(source_names=['1944968p.fits.fz'], instrument='SITELLE').is_valid()
 
-    test_subject = CFHTName(file_name='2463796o.fits.fz', instrument='MegaCam')
+    test_subject = CFHTName(source_names=['2463796o.fits.fz'], instrument='MegaCam')
     assert test_subject.obs_id == '2463796', 'wrong obs id'
     assert test_subject.file_id == '2463796o', 'wrong file id'
     assert (test_subject.file_uri == 'cadc:CFHT/2463796o.fits.fz'), 'wrong uri'
-    assert test_subject.source_names == [], 'not local'
+    assert test_subject.source_names == ['2463796o.fits.fz'], 'not local'
     assert test_subject.simple, f'should be simple {test_subject}'
     assert test_subject.suffix == 'o', f'suffix {test_subject}'
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert test_subject.raw_time, 'raw time'
 
     StorageName.scheme = 'cadc'
-    test_subject = CFHTName(file_name='1944968p.fits.fz', instrument='SITELLE')
+    test_subject = CFHTName(source_names=['1944968p.fits.fz'], instrument='SITELLE')
     assert test_subject.obs_id == '1944968', 'wrong obs id'
     assert test_subject.file_id == '1944968p', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/1944968p.fits.fz', 'uri'
@@ -95,7 +94,7 @@ def test_is_valid(test_config):
     assert not test_subject.raw_time, 'raw time'
 
     StorageName.scheme = 'cadc'
-    test_subject = CFHTName(file_name='2460503p.fits.gz', instrument='ESPaDOnS')
+    test_subject = CFHTName(source_names=['2460503p.fits.gz'], instrument='ESPaDOnS')
     assert test_subject.obs_id == '2460503', 'wrong obs id'
     assert test_subject.file_id == '2460503p', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/2460503p.fits', 'wrong uri'
@@ -105,7 +104,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2452990p.fits.fz', instrument='MegaPrime')
+    test_subject = CFHTName(source_names=['2452990p.fits.fz'], instrument='MegaPrime')
     assert test_subject.obs_id == '2452990', 'wrong obs id'
     assert test_subject.file_id == '2452990p', 'wrong file id'
     assert (test_subject.file_uri == 'cadc:CFHT/2452990p.fits.fz'), 'wrong uri'
@@ -114,7 +113,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2384125z.hdf5', instrument='SITELLE')
+    test_subject = CFHTName(source_names=['2384125z.hdf5'], instrument='SITELLE')
     assert test_subject.obs_id == '2384125', 'wrong obs id'
     assert test_subject.file_id == '2384125z', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/2384125z.hdf5', 'wrong uri'
@@ -123,7 +122,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2384125p.fits.fz', instrument='SITELLE')
+    test_subject = CFHTName(source_names=['2384125p.fits.fz'], instrument='SITELLE')
     assert test_subject.obs_id == '2384125', 'wrong obs id'
     assert test_subject.file_id == '2384125p', 'wrong file id'
     assert (test_subject.file_uri == 'cadc:CFHT/2384125p.fits.fz'), 'wrong uri'
@@ -132,7 +131,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='979412p.fits.fz', instrument='MegaPrime')
+    test_subject = CFHTName(source_names=['979412p.fits.fz'], instrument='MegaPrime')
     assert test_subject.obs_id == '979412', 'wrong obs id'
     assert test_subject.file_id == '979412p', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/979412p.fits.fz', 'wrong uri'
@@ -141,7 +140,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='979412b.fits.fz', instrument='MegaPrime')
+    test_subject = CFHTName(source_names=['979412b.fits.fz'], instrument='MegaPrime')
     assert test_subject.obs_id == '979412', 'wrong obs id'
     assert test_subject.file_id == '979412b', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/979412b.fits.fz', 'wrong uri'
@@ -150,7 +149,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2003A.frpts.z.36.00.fits.fz', instrument='MegaPrime')
+    test_subject = CFHTName(source_names=['2003A.frpts.z.36.00.fits.fz'], instrument='MegaPrime')
     assert test_subject.obs_id == '2003A.frpts.z.36.00', 'wrong obs id'
     assert test_subject.file_id == '2003A.frpts.z.36.00', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/2003A.frpts.z.36.00.fits.fz', 'wrong uri'
@@ -160,7 +159,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number is None, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='02AE10.bias.0.36.00.fits', instrument='MegaPrime')
+    test_subject = CFHTName(source_names=['02AE10.bias.0.36.00.fits'], instrument='MegaPrime')
     assert test_subject.obs_id == '02AE10.bias.0.36.00', 'wrong obs id'
     assert test_subject.file_id == '02AE10.bias.0.36.00', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/02AE10.bias.0.36.00.fits', 'wrong uri'
@@ -170,7 +169,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number is None, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2455409p.fits', instrument='SPIRou')
+    test_subject = CFHTName(source_names=['2455409p.fits'], instrument='SPIRou')
     assert test_subject.obs_id == '2455409', 'wrong obs id'
     assert test_subject.file_id == '2455409p', 'wrong file id'
     assert test_subject.file_uri == 'cadc:CFHT/2455409p.fits', 'wrong uri'
@@ -179,7 +178,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2238502i.fits.fz', instrument='ESPaDOnS')
+    test_subject = CFHTName(source_names=['2238502i.fits.fz'], instrument='ESPaDOnS')
     assert test_subject.obs_id == '2238502', 'wrong obs id'
     assert test_subject.suffix == 'i', f'suffix {test_subject}'
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
@@ -189,7 +188,7 @@ def test_is_valid(test_config):
 
     StorageName.scheme = 'cadc'
     test_subject = CFHTName(
-        file_name='2602045r.fits.fz',
+        source_names=['2602045r.fits.fz'],
         instrument='SPIRou',
         bitpix=-32,
     )
@@ -210,10 +209,9 @@ def test_is_valid(test_config):
     # decompression, no recompression
     StorageName.scheme = 'cadc'
     test_subject = CFHTName(
-        file_name='2602045r.fits.gz',
+        source_names=['cadc:CFHT/2602045r.fits.gz'],
         instrument='SPIRou',
         bitpix=-32,
-        source_names=['cadc:CFHT/2602045r.fits.gz'],
     )
     assert test_subject.file_uri == 'cadc:CFHT/2602045r.fits', 'wrong file uri'
     assert test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits', 'wrong destination uri'
@@ -227,10 +225,9 @@ def test_is_valid(test_config):
 
     # decompression plus recompression
     test_subject = CFHTName(
-        file_name='2602045r.fits.gz',
+        source_names=['2602045r.fits.gz'],
         instrument='SPIRou',
         bitpix=32,
-        source_names=['2602045r.fits.gz'],
     )
     assert test_subject.file_uri == 'cadc:CFHT/2602045r.fits.fz', 'wrong file uri'
     assert test_subject.destination_uris[0] == 'cadc:CFHT/2602045r.fits.fz', 'wrong destination uri'
@@ -244,7 +241,7 @@ def test_is_valid(test_config):
 
     # flag/diag
     test_subject = CFHTName(
-        file_name='1013552p_flag.fits.fz', instrument='MegaPrime', source_names=['1013552p_flag.fits.fz']
+        source_names=['1013552p_flag.fits.fz'], instrument='MegaPrime'
     )
     assert test_subject.file_uri == 'cadc:CFHT/1013552p_flag.fits.fz', 'wrong file uri'
     assert test_subject.destination_uris[0] == 'cadc:CFHT/1013552p_flag.fits.fz', 'wrong destination uri'
@@ -257,9 +254,7 @@ def test_is_valid(test_config):
     assert test_subject.raw_time, 'raw time'
 
     # flag/diag
-    test_subject = CFHTName(
-        file_name='695816p_diag.fits', instrument='MegaPrime', source_names=['695816p_diag.fits']
-    )
+    test_subject = CFHTName(source_names=['695816p_diag.fits'], instrument='MegaPrime')
     assert test_subject.file_uri == 'cadc:CFHT/695816p_diag.fits', 'wrong file uri'
     assert test_subject.destination_uris[0] == 'cadc:CFHT/695816p_diag.fits', 'wrong destination uri'
     assert test_subject.thumb_uri == 'cadc:CFHT/695816p_preview_256.jpg', 'wrong thumb uri'
@@ -270,7 +265,7 @@ def test_is_valid(test_config):
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert not test_subject.raw_time, 'raw time'
 
-    test_subject = CFHTName(file_name='2513728g.fits', instrument='SPIRou')
+    test_subject = CFHTName(source_names=['2513728g.fits'], instrument='SPIRou')
     assert test_subject.file_uri == 'cadc:CFHT/2513728g.fits', 'wrong file uri'
     assert test_subject.destination_uris[0] == 'cadc:CFHT/2513728g.fits', 'wrong destination uri'
     assert test_subject.thumb_uri == 'cadc:CFHT/2513728g_preview_256.jpg', 'wrong thumb uri'
@@ -280,3 +275,8 @@ def test_is_valid(test_config):
     assert test_subject.simple, f'should be simple {test_subject}'
     assert test_subject.sequence_number == test_subject.obs_id, f'sequence number {test_subject}'
     assert test_subject.raw_time, 'raw time'
+
+    test_subject = CFHTName(source_names=['695816p_diag.fits'], instrument='MegaPrime')
+    assert test_subject.obs_id == '695816', 'wrong obs id'
+    assert test_subject.product_id == '695816p', 'wrong product id'
+    assert test_subject.suffix == 'p', 'wrong suffix'

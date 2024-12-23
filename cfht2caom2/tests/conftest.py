@@ -94,3 +94,8 @@ def test_data_dir():
     this_dir = dirname(realpath(__file__))
     fqn = join(this_dir, 'data')
     return fqn
+
+
+@pytest.fixture()
+def change_test_dir(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)

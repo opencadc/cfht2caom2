@@ -71,17 +71,16 @@ import sys
 import traceback
 
 from caom2pipe import client_composable as clc
-from caom2pipe.manage_composable import CadcException, Config, StorageName, TaskType
-from caom2pipe.reader_composable import Hdf5FileMetadataReader
+from caom2pipe.data_source_composable import LocalFilesDataSourceRunnerMeta
+from caom2pipe.manage_composable import Config, StorageName, TaskType
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
-from cfht2caom2 import fits2caom2_augmentation
-from cfht2caom2.cfht_builder import CFHTBuilder, CFHTLocalBuilder
-from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
+from cfht2caom2 import file2caom2_augmentation
+from cfht2caom2.cfht_name import CFHTName
 
 
-META_VISITORS = [fits2caom2_augmentation]
+META_VISITORS = [file2caom2_augmentation]
 DATA_VISITORS = [
     espadons_energy_augmentation,
     preview_augmentation,
@@ -105,37 +104,29 @@ def _common_init():
     StorageName.collection = config.collection
     StorageName.scheme = config.scheme
     clients = clc.ClientCollection(config)
-    if can_use_single_visit(config.task_types):
-        reader = Hdf5FileMetadataReader()
-    else:
-        raise CadcException(f'cfht2caom2 does not work with these task types: {config.task_types}')
-    if config.use_local_files:
-        builder = CFHTLocalBuilder(config.collection, config.working_directory, reader)
-    else:
-        builder = CFHTBuilder(config.collection)
     sources = []
     if config.use_local_files:
-        source = CFHTLocalFilesDataSource(
+        source = LocalFilesDataSourceRunnerMeta(
             config,
             clients.data_client,
-            reader,
             recursive=config.recurse_data_sources,
-            builder=builder,
+            storage_name_ctor=CFHTName,
         )
         sources.append(source)
-    return config, clients, reader, builder, sources
+    return config, clients, sources
 
 
 def _run_state():
-    config, clients, reader, builder, sources = _common_init()
-    return rc.run_by_state(
+    config, clients, sources = _common_init()
+    return rc.run_by_state_runner_meta(
         config=config,
-        name_builder=builder,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
-        clients=clients,
         sources=sources,
-        metadata_reader=reader,
+        clients=clients,
+        organizer_module_name='cfht2caom2.cfht_name',
+        organizer_class_name='CFHTOrganizeExecutesRunnerMeta',
+        storage_name_ctor=CFHTName,
     )
 
 

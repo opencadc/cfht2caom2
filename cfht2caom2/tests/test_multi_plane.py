@@ -66,17 +66,19 @@
 # ***********************************************************************
 #
 
+import logging
+import traceback
 import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
-from caom2pipe.manage_composable import Observable
-from caom2pipe import reader_composable as rdc
-from cfht2caom2 import cfht_name, fits2caom2_augmentation, metadata
+from caom2utils.data_util import get_local_file_headers, get_local_file_info
+from caom2pipe.manage_composable import CadcException, ExecutionReporter, Observable
+from cfht2caom2 import cfht_name, file2caom2_augmentation, metadata
 from glob import glob
 from os.path import basename, dirname
 
-from mock import patch
+from mock import Mock, patch
 import test_caom_gen_visit
 
 
@@ -120,20 +122,11 @@ def pytest_generate_tests(metafunc):
 
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('cfht2caom2.instruments.get_local_headers_from_fits')
-@patch('caom2utils.data_util.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(
-    vo_mock, local_headers_mock1, local_headers_mock2, cache_mock, expected_fqn, test_data_dir, test_config
-):
+def test_visitor(vo_mock, cache_mock, expected_fqn, test_data_dir, test_config, tmp_path, change_test_dir):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = test_caom_gen_visit._vo_mock
-    # during cfht2caom2 operation, want to use astropy on FITS files
-    # but during testing want to use headers and built-in Python file
-    # operations
-    local_headers_mock1.side_effect = test_caom_gen_visit._local_headers
-    local_headers_mock2.side_effect = test_caom_gen_visit._local_headers
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
     instr = basename(dirname(expected_fqn))
@@ -145,39 +138,48 @@ def test_visitor(
         'wircam': metadata.Inst.WIRCAM,
     }.get(instr)
     test_name = basename(expected_fqn).replace('.expected.xml', '')
-    observation = None
+
+    test_config.change_working_directory(tmp_path.as_posix())
+    test_config.use_local_files = True
+    test_config.log_to_file = True
+    test_config.data_sources = [tmp_path.as_posix()]
+
+    test_reporter = ExecutionReporter(test_config, Observable(test_config))
+    clients_mock = Mock()
+    test_subject = cfht_name.CFHTMetaVisitRunnerMeta(
+        clients_mock, test_config, [file2caom2_augmentation], test_reporter
+    )
+    test_subject._observation = None
+
     for f_name in LOOKUP[test_name]:
         if 'hdf5' in f_name:
             source_names = [f'/test_files/{f_name}']
         else:
-            source_names = [
-                f'{test_caom_gen_visit.TEST_DATA_DIR}/multi_plane/{instr}/{f_name}.header'
-            ]
-        storage_name = cfht_name.CFHTName(
-            file_name=f_name,
-            instrument=instrument,
-            source_names=source_names,
-        )
-        metadata_reader = rdc.FileMetadataReader()
-        metadata_reader.set(storage_name)
-        if 'hdf5' in f_name:
-            metadata_reader.file_info[
-                storage_name.file_uri
-            ].file_type = 'application/x-hdf5'
-        else:
-            metadata_reader.file_info[
-                storage_name.file_uri
-            ].file_type = 'application/fits'
-        test_config.rejected_file_name = 'rejected.yml'
-        test_config.rejected_directory = test_data_dir
-        test_observable = Observable(test_config)
-        kwargs = {
-            'storage_name': storage_name,
-            'metadata_reader': metadata_reader,
-            'observable': test_observable,
-            'config': test_config,
-        }
+            source_names = [f'{test_caom_gen_visit.TEST_DATA_DIR}/multi_plane/{instr}/{f_name}.header' ]
 
-        observation = fits2caom2_augmentation.visit(observation, **kwargs)
+        def _mock_repo_read(collection, obs_id):
+            return test_subject._observation
+        clients_mock.metadata_client.read.side_effect = _mock_repo_read
 
-    test_caom_gen_visit._compare(expected_fqn, observation, test_name)
+        def _read_header_mock(ignore1):
+            return get_local_file_headers(source_names[0])
+        clients_mock.data_client.get_head.side_effect = _read_header_mock
+
+        def _info_mock(uri):
+            temp = get_local_file_info(source_names[0])
+            if storage_name.hdf5:
+                temp.file_type = 'application/x-hdf5'
+            else:
+                temp.file_type = 'application/fits'
+            return temp
+        clients_mock.data_client.info.side_effect = _info_mock
+
+        storage_name = cfht_name.CFHTName(source_names=source_names, instrument=instrument)
+        context = {'storage_name': storage_name}
+        try:
+            test_subject.execute(context)
+        except CadcException as e:
+            logging.error(traceback.format_exc())
+            assert False
+
+    test_caom_gen_visit._compare(expected_fqn, test_subject._observation, test_name)

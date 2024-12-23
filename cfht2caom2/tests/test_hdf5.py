@@ -71,14 +71,13 @@ import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
-from mock import patch
+from mock import Mock, patch
 from os.path import basename, dirname,join, realpath
 
 from cadcdata import FileInfo
-from caom2pipe.manage_composable import Observable
-from caom2pipe.reader_composable import Hdf5FileMetadataReader
+from caom2pipe.manage_composable import ExecutionReporter, Observable
 from cfht2caom2 import CFHTName
-from cfht2caom2 import fits2caom2_augmentation, metadata
+from cfht2caom2 import file2caom2_augmentation, metadata
 import test_caom_gen_visit
 
 
@@ -94,33 +93,34 @@ def pytest_generate_tests(metafunc):
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, cache_mock, test_name, test_config):
+def test_visitor(vo_mock, cache_mock, test_name, test_config, tmp_path, change_test_dir):
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
     vo_mock.side_effect = test_caom_gen_visit._vo_mock
     # cache_mock there so there are no update cache calls - so the tests
     # work without a network connection
+    test_config.change_working_directory(tmp_path.as_posix())
     storage_name = CFHTName(
-        file_name=basename(test_name),
         instrument=metadata.Inst.SITELLE,
         source_names=[test_name],
     )
     file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
-    metadata_reader = Hdf5FileMetadataReader()
-    metadata_reader.working_directory = SITELLE_DIR
-    metadata_reader.set_headers(storage_name)
-    metadata_reader._file_info = {storage_name.file_uri: file_info}
-    test_config.rejected_fqn = '/tmp/rejected.yml'
-    test_observable = Observable(test_config)
+    storage_name.file_info[storage_name.file_uri] = file_info
+    import h5py
+    f_in = h5py.File(test_name)
+    storage_name.metadata[storage_name.file_uri] = [f_in.attrs]
+    storage_name._descriptors[storage_name.file_uri] = f_in
+    test_reporter = ExecutionReporter(test_config, Observable(test_config))
     kwargs = {
-        'storage_name': storage_name,
-        'metadata_reader': metadata_reader,
-        'observable': test_observable,
+        'working_directory': tmp_path,
         'config': test_config,
+        'clients': Mock(),
+        'storage_name': storage_name,
+        'reporter': test_reporter,
     }
     storage_name._bitpix = -32
     observation = None
-    observation = fits2caom2_augmentation.visit(observation, **kwargs)
+    observation = file2caom2_augmentation.visit(observation, **kwargs)
 
     test_caom_gen_visit._compare(test_name, observation, storage_name.obs_id)
     # assert False

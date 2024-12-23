@@ -147,7 +147,7 @@ bounds there
 contained in bounds, gaps need to be captured. so keep bounds. if you decide
 to remove range, then advanced users would have to dig in the info to
 understand range is first and last bounds if i understand correctly.
-- SF - 19-03-24 - from the Spanish VO filter service, take the CFHT/Megaprime.<filter>  , not _sdss or _fil, and 
+- SF - 19-03-24 - from the Spanish VO filter service, take the CFHT/Megaprime.<filter>  , not _sdss or _fil, and
 not CFHT/Megacam.
 
 CFHT WCS:
@@ -194,7 +194,7 @@ from caom2 import DerivedObservation
 from caom2utils.caom2blueprint import update_artifact_meta
 from caom2utils.blueprints import ObsBlueprint
 from caom2utils.wcs_parsers import FitsWcsParser
-from caom2utils.data_util import get_local_headers_from_fits
+from caom2utils.data_util import get_local_file_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
@@ -269,7 +269,7 @@ class CFHTValueRepair(mc.ValueRepairCache):
         self._logger = logging.getLogger(self.__class__.__name__)
 
 
-class AuxiliaryType(cc.TelescopeMapping):
+class AuxiliaryType(cc.TelescopeMapping2):
     value_repair = CFHTValueRepair()
 
     def __init__(self, headers, cfht_name, clients, observable, observation, config):
@@ -732,7 +732,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         self._logger.info(f'Using {derived_type} to look for Plane.provenance.inputs.')
         return derived_type
 
-    def update(self, file_info):
+    def update(self):
         """Called to fill multiple CAOM model elements and/or attributes, must
         have this signature for import_module loading and execution.
 
@@ -741,7 +741,6 @@ class AuxiliaryType(cc.TelescopeMapping):
         multiple elements of the CAOM model (mapping cardinality n:n).
 
         :param observation A CAOM Observation model instance.
-        :param file_info cadcdata.FileInfo instance
         """
         self._logger.debug('Begin update.')
 
@@ -800,7 +799,7 @@ class AuxiliaryType(cc.TelescopeMapping):
             for artifact in plane.artifacts.values():
                 if artifact.uri != self._storage_name.file_uri:
                     continue
-                update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, self._storage_name.file_info.get(self._storage_name.file_uri))
 
                 for part in artifact.parts.values():
                     for chunk in part.chunks:
@@ -1352,7 +1351,7 @@ class InstrumentType(AuxiliaryType):
                         f'{self._storage_name.file_name} in {self._observation.observation_id}'
                     )
                     if os.path.exists(self._storage_name.source_names[0]):
-                        unmodified_headers = get_local_headers_from_fits(self._storage_name.source_names[0])
+                        unmodified_headers = get_local_file_headers(self._storage_name.source_names[0])
                     elif self._clients is not None and self._clients.data_client is not None:
                         unmodified_headers = self._clients.data_client.get_head(self._storage_name.file_uri)
 
@@ -2293,7 +2292,7 @@ class SitelleHdf5(InstrumentType):
                 result = md.cache.get_program(bits[5])
         return result
 
-    def update(self, file_info):
+    def update(self):
         self._logger.debug('Begin update.')
 
         if not isinstance(self._observation, DerivedObservation):
@@ -2314,7 +2313,7 @@ class SitelleHdf5(InstrumentType):
             for artifact in plane.artifacts.values():
                 if artifact.uri != self._storage_name.file_uri:
                     continue
-                update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, self._storage_name.file_info.get(self._storage_name.file_uri))
 
                 for part in artifact.parts.values():
                     for chunk in part.chunks:
@@ -2473,7 +2472,7 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
 
         self._logger.debug('End _update_sitelle_plane')
 
-    def update(self, file_info):
+    def update(self):
         self._logger.debug('Begin update.')
 
         if not isinstance(self._observation, DerivedObservation):
@@ -2489,7 +2488,7 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
             for artifact in plane.artifacts.values():
                 if artifact.uri != self._storage_name.file_uri:
                     continue
-                update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, self._storage_name.file_info.get(self._storage_name.file_uri))
 
         self._update_sitelle_plane()
         self._logger.debug('Done update.')
@@ -3233,8 +3232,8 @@ class WircamTemporal(InstrumentType):
                 self._chunk.time.axis.function.naxis = mc.to_int(n_exp)
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
-    def update(self, file_info):
-        super().update(file_info)
+    def update(self):
+        super().update()
         self._update_plane_post()
         return self._observation
 
@@ -3645,7 +3644,6 @@ def is_wircam_spectral_temporal(storage_name, headers):
 
 
 def factory(headers, cfht_name, clients, observable, observation, config):
-    set_storage_name_values(cfht_name, headers)
     if cfht_name.instrument is md.Inst.ESPADONS:
         if cfht_name.suffix in ['b', 'c', 'd', 'f', 'x']:
             # CW - Ignore position wcs if a calibration file - suffix list from caom2IngestEspadons.py, l389

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -67,12 +66,15 @@
 # ***********************************************************************
 #
 
-from logging import getLogger
+import logging
+
 from os.path import basename
 from re import match
 from urllib.parse import urlparse
 
-from caom2pipe.manage_composable import build_uri, CadcException, StorageName
+from caom2utils.data_util import get_local_file_info, get_local_file_headers
+from caom2pipe.execute_composable import MetaVisitRunnerMeta, NoFheadStoreVisitRunnerMeta, OrganizeExecutesRunnerMeta
+from caom2pipe.manage_composable import build_uri, CadcException, get_keyword, StorageName, TaskType
 from cfht2caom2.metadata import Inst
 
 
@@ -123,28 +125,20 @@ class CFHTName(StorageName):
 
     def __init__(
         self,
-        obs_id=None,
-        file_name=None,
+        bitpix=None,
         instrument=None,
         source_names=[],
-        bitpix=None,
     ):
         self._instrument = Inst(instrument)
-        self._file_id = None
-        self._file_name = None
-        self._obs_id = None
         self._suffix = None
         # make recompression decisions based on bitpix
         self._bitpix = bitpix
-        super().__init__(
-            obs_id=obs_id,
-            file_name=file_name.replace('.header', ''),
-            source_names=source_names,
-        )
-        self._logger = getLogger(self.__class__.__name__)
-        self._logger.debug(self)
+        self._descriptors = {}
+        super().__init__(source_names=source_names)
 
     def __str__(self):
+        f_info_keys = '\n                  '.join(ii for ii in self.file_info.keys())
+        metadata_keys = '\n                  '.join(ii for ii in self.metadata.keys())
         return (
             f'\n'
             f'      instrument: {self.instrument}\n'
@@ -157,6 +151,8 @@ class CFHTName(StorageName):
             f'        file_uri: {self.file_uri}\n'
             f'      product_id: {self.product_id}\n'
             f'          suffix: {self.suffix}\n'
+            f'  file_info keys: {f_info_keys}\n'
+            f'   metadata keys: {metadata_keys}'
         )
 
     def _get_uri(self, file_name, scheme):
@@ -344,6 +340,9 @@ class CFHTName(StorageName):
     def suffix(self):
         return self._suffix
 
+    def descriptor(self, key):
+        return self._descriptors.get(key)
+
     def set_destination_uris(self):
 
         def _set_extension(for_entry):
@@ -424,3 +423,270 @@ class CFHTName(StorageName):
             .replace('.gz', '')
             .replace('.hdf5', '')
         )
+
+
+def get_instrument(headers, entry):
+    """
+    SF - 15-04-20 - slack - what if there's no INSTRUME or DETECTOR
+    keyword?
+    something like: if CFHT: if has(INSTRUME) then
+    MEGA else if NEXTEND>30 then MEGA else...
+
+    On MegaPrime vs MegaCam values from SVO:
+    megaprime == full instrument (optics+camera) ,
+    megacam == camera
+
+    SVO has mistakes (they say megacam=CCD+mirror+optics), but i think the
+    Megaprime entry has a lot more filters. So to be consistent, we should
+    always use the Megaprime entry
+
+    SGo - make the 'always use Megaprime' happen here by setting the
+    instrument to MegaPrime.
+
+    :param headers: astropy fits headers
+    :param entry: string for error logging
+    :return: md.Inst instance
+    """
+    if StorageName.is_hdf5(entry):
+        inst = Inst.SITELLE
+    else:
+        nextend = None
+        detector = None
+        instrument = headers[0].get('INSTRUME')
+        if instrument is None:
+            if len(headers) > 1:
+                instrument = headers[1].get('INSTRUME')
+            if instrument is None:
+                instrument = headers[0].get('DETECTOR')
+                if instrument is None:
+                    if len(headers) > 1:
+                        instrument = headers[1].get('DETECTOR')
+                    if instrument is None:
+                        nextend = headers[0].get('NEXTEND')
+        elif instrument == 'Unknown':
+            detector = headers[0].get('DETECTOR')
+        if (instrument is None and nextend is not None and nextend > 30) or '_diag' in entry:
+            inst = Inst.MEGAPRIME
+        else:
+            msg = (
+                f'Unknown value for instrument {instrument}, detector '
+                f'{detector} and nextend {nextend} for {entry}.'
+            )
+
+            try:
+                inst = Inst(instrument)
+            except ValueError:
+                if (
+                    instrument == 'CFHT MegaPrime'
+                    or instrument == 'megacam'
+                ):
+                    inst = Inst.MEGAPRIME
+                elif instrument == 'Unknown' and detector is not None:
+                    if detector == 'OLAPA':
+                        # SF 24-06-20
+                        # ok to hack ESPADONS name for OLAPA
+                        inst = Inst.ESPADONS
+                    else:
+                        try:
+                            inst = Inst(detector)
+                        except ValueError:
+                            # SF 24-06-20
+                            # nasty hacks: all the 48 failed espadons
+                            # files have a PATHNAME with espadon in it
+                            #
+                            # so you may add PATHNAME check if everything
+                            # else fails
+                            pathname = headers[0].get('PATHNAME')
+                            if 'espadons' in pathname:
+                                inst = Inst.ESPADONS
+                            else:
+                                raise CadcException(msg)
+                else:
+                    raise CadcException(msg)
+    logging.debug(f'Instrument is {inst}')
+    return inst
+
+
+class CFHTMetaVisitRunnerMeta(MetaVisitRunnerMeta):
+    """
+    Defines the pipeline step for Collection creation or augmentation by a visitor of metadata into CAOM.
+    """
+
+    def __init__(
+        self,
+        clients,
+        config,
+        meta_visitors,
+        reporter,
+    ):
+        super().__init__(
+            clients=clients,
+            config=config,
+            meta_visitors=meta_visitors,
+            reporter=reporter,
+        )
+
+    def _set_preconditions(self):
+        """This is probably not the best approach, but I want to think about where the optimal location for the
+        retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
+        self._logger.debug(f'Begin _set_preconditions for {self._storage_name.file_name}')
+        for index, source_name in enumerate(self._storage_name.source_names):
+            uri = self._storage_name.destination_uris[index]
+            if uri not in self._storage_name.file_info:
+                self._storage_name.file_info[uri] = self._clients.data_client.info(uri)
+            if uri not in self._storage_name.metadata:
+                self._storage_name.metadata[uri] = []
+                if '.fits' in source_name:
+                    self._storage_name._metadata[uri] = self._clients.data_client.get_head(uri)
+                elif self._storage_name.hdf5:
+                    if uri not in self._storage_name._descriptors:
+                        # local import to limit exposure in Docker builds
+                        import h5py
+                        f_in = h5py.File(source_name)
+                        self._storage_name._descriptors[uri] = f_in
+                        # Laurie Rosseau-Nepton - 26-04-23
+                        # The standard_spectrum is related to flux calibration used on the data. The other one is
+                        # for the science data and is the one that should be used.
+                        if len(f_in.attrs) > 50:
+                            self._logger.debug(f'Found attrs for {source_name}')
+                            self._storage_name._metadata[uri] = [f_in.attrs]
+                        else:
+                            self._logger.warning(f'No attrs for {source_name}.')
+                            self._storage_name._metadata[uri] = []
+
+            self._storage_name._instrument = get_instrument(
+                self._storage_name.metadata.get(uri), self._storage_name._file_name
+            )
+            if not self._storage_name.hdf5:
+                self._storage_name._bitpix = get_keyword(self._storage_name.metadata.get(uri), 'BITPIX')
+
+        # ensure the destination uris have the correct extensions based on BITPIX values
+        self._storage_name.set_destination_uris()
+        self._logger.debug('End _set_preconditions')
+
+
+class CFHTNoFheadStoreVisitRunnerMeta(NoFheadStoreVisitRunnerMeta):
+
+    def __init__(self, clients, config, data_visitors, meta_visitors, reporter, store_transferrer):
+        super().__init__(config, clients, store_transferrer, meta_visitors, data_visitors, reporter)
+
+    def _set_preconditions(self):
+        """This is probably not the best approach, but I want to think about where the optimal location for the
+        retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
+        self._logger.debug(f'Begin _set_preconditions for {self._storage_name.file_name}')
+        #
+        # because of decompression, the destination URIs are unknown until after access to keywords in the headers
+        # is available, so don't rely on the destination URIs
+        #
+        # source names do not change, so start with them
+        #
+        for source_name in self._storage_name.source_names:
+            if source_name not in self._storage_name.file_info:
+                self._storage_name.file_info[source_name] = get_local_file_info(source_name)
+            if source_name not in self._storage_name.metadata:
+                self._storage_name.metadata[source_name] = []
+                if '.fits' in source_name:
+                    self._storage_name._metadata[source_name] = get_local_file_headers(source_name)
+                elif self._storage_name.hdf5:
+                    if source_name not in self._storage_name._descriptors:
+                        # local import to limit exposure in Docker builds
+                        import h5py
+                        f_in = h5py.File(source_name)
+                        self._storage_name._descriptors[source_name] = f_in
+                        # Laurie Rosseau-Nepton - 26-04-23
+                        # The standard_spectrum is related to flux calibration used on the data. The other one is
+                        # for the science data and is the one that should be used.
+                        if len(f_in.attrs) > 50:
+                            self._logger.debug(f'Found attrs for {source_name}')
+                            self._storage_name._metadata[source_name] = [f_in.attrs]
+                        else:
+                            self._logger.warning(f'No attrs for {source_name}.')
+                            self._storage_name._metadata[source_name] = []
+
+            self._storage_name._instrument = get_instrument(
+                self._storage_name.metadata.get(source_name), self._storage_name._file_name
+            )
+            if not self._storage_name.hdf5:
+                self._storage_name._bitpix = get_keyword(self._storage_name.metadata.get(source_name), 'BITPIX')
+
+        # ensure the destination uris have the correct extensions based on BITPIX values
+        self._storage_name.set_destination_uris()
+
+        # now reset the storage name instance to use the destination URIs, because common code expects URIs
+        file_info = self._storage_name.file_info
+        metadata = self._storage_name.metadata
+        descriptors = self._storage_name._descriptors
+        self._storage_name.file_info = {}
+        self._storage_name.metadata = {}
+        self._storage_name._descriptors = {}
+        for index, source_name in enumerate(self._storage_name.source_names):
+            uri = self._storage_name.destination_uris[index]
+            self._storage_name.file_info[uri] = file_info.get(source_name)
+            self._storage_name.metadata[uri] = metadata.get(source_name)
+            self._storage_name._descriptors[uri] = descriptors.get(source_name)
+        self._logger.debug('End _set_preconditions')
+
+
+class CFHTOrganizeExecutesRunnerMeta(OrganizeExecutesRunnerMeta):
+    """A class that extends OrganizeExecutes to handle the choosing of the correct executors based on the config.yml.
+    Attributes:
+        _needs_delete (bool): if True, the CAOM repo action is delete/create instead of update.
+        _reporter: An instance responsible for reporting the execution status.
+    Methods:
+        _choose():
+            Determines which descendants of CaomExecute to instantiate based on the content of the config.yml
+            file for an application.
+    """
+
+    def __init__(
+            self,
+            config,
+            meta_visitors,
+            data_visitors,
+            needs_delete=False,
+            store_transfer=None,
+            modify_transfer=None,
+            clients=None,
+            reporter=None,
+    ):
+        super().__init__(
+            config,
+            meta_visitors,
+            data_visitors,
+            store_transfer=store_transfer,
+            modify_transfer=modify_transfer,
+            clients=clients,
+            reporter=reporter,
+            needs_delete=needs_delete,
+        )
+
+    def _choose(self):
+        """The logic that decides which descendants of CaomExecute to instantiate. This is based on the content of
+        the config.yml file for an application.
+        """
+        super()._choose()
+        if self._needs_delete:
+            raise CadcException('No need identified for this yet.')
+
+        if self.can_use_single_visit():
+            if TaskType.STORE in self.task_types:
+                self._logger.debug(f'Choosing executor CFHTNoFheadStoreVisitRunnerMeta for {self.task_types}.')
+                self._executors = []  # over-ride the default choice.
+                self._executors.append(
+                    CFHTNoFheadStoreVisitRunnerMeta(
+                        self._clients,
+                        self.config,
+                        self._data_visitors,
+                        self._meta_visitors,
+                        self._reporter,
+                        self._store_transfer,
+                    )
+                )
+        else:
+            for task_type in self.task_types:
+                if task_type == TaskType.INGEST:
+                    self._logger.debug(f'Choosing executor CFHTMetaVisitRunnerMeta for {task_type}.')
+                    self._executors = []  # over-ride the default choice.
+                    self._executors.append(
+                        CFHTMetaVisitRunnerMeta(self._clients, self.config, self._meta_visitors, self._reporter)
+                    )
