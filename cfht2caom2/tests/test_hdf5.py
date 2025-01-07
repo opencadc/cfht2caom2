@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -72,10 +72,10 @@ import warnings
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
 from mock import Mock, patch
-from os.path import basename, dirname,join, realpath
+from os.path import dirname,join, realpath
 
 from cadcdata import FileInfo
-from caom2pipe.manage_composable import ExecutionReporter, Observable
+from caom2pipe.manage_composable import ExecutionReporter2
 from cfht2caom2 import CFHTName
 from cfht2caom2 import file2caom2_augmentation, metadata
 import test_caom_gen_visit
@@ -110,7 +110,7 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config, tmp_path, change_t
     f_in = h5py.File(test_name)
     storage_name.metadata[storage_name.file_uri] = [f_in.attrs]
     storage_name._descriptors[storage_name.file_uri] = f_in
-    test_reporter = ExecutionReporter(test_config, Observable(test_config))
+    test_reporter = ExecutionReporter2(test_config)
     kwargs = {
         'working_directory': tmp_path,
         'config': test_config,

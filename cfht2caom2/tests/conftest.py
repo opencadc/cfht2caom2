@@ -83,6 +83,7 @@ def test_config():
     config.scheme = SCHEME
     config.logging_level = 'INFO'
     config.time_zone = 'UTC'
+    config.data_source_extensions = ['.fits', '.fits.gz', '.fits.fz', '.hdf5']
     StorageName.collection = config.collection
     StorageName.preview_scheme = config.preview_scheme
     StorageName.scheme = config.scheme

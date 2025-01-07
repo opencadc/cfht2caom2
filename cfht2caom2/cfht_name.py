@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2020.                            (c) 2020.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -68,12 +68,14 @@
 
 import logging
 
-from os.path import basename
+from os.path import basename, join
 from re import match
 from urllib.parse import urlparse
 
 from caom2utils.data_util import get_local_file_info, get_local_file_headers
+from caom2pipe.execute_composable import CaomExecuteRunnerMeta
 from caom2pipe.execute_composable import MetaVisitRunnerMeta, NoFheadStoreVisitRunnerMeta, OrganizeExecutesRunnerMeta
+from caom2pipe.execute_composable import NoFheadScrapeRunnerMeta, NoFheadVisitRunnerMeta
 from caom2pipe.manage_composable import build_uri, CadcException, get_keyword, StorageName, TaskType
 from cfht2caom2.metadata import Inst
 
@@ -372,7 +374,12 @@ class CFHTName(StorageName):
             # for file names that have _flag or _diag in them
             self._suffix = self._file_id.split('_')[0][-1]
 
-    def set_obs_id(self):
+    def set_metadata(self, **kwargs):
+        self._instrument = get_instrument(self._metadata.get(self.file_uri), self._file_name)
+        if not self.hdf5:
+            self._bitpix = get_keyword(self._metadata.get(self.file_uri), 'BITPIX')
+
+    def set_obs_id(self, **kwargs):
         self._obs_id = CFHTName.get_obs_id(self._file_id)
         if self._obs_id == self._file_id and self.sequence_number is not None:
             self._obs_id = self.sequence_number
@@ -547,7 +554,9 @@ class CFHTMetaVisitRunnerMeta(MetaVisitRunnerMeta):
                         # Laurie Rosseau-Nepton - 26-04-23
                         # The standard_spectrum is related to flux calibration used on the data. The other one is
                         # for the science data and is the one that should be used.
-                        if len(f_in.attrs) > 50:
+                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
+                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
+                            # that have sufficient metadata to describe WCS.
                             self._logger.debug(f'Found attrs for {source_name}')
                             self._storage_name._metadata[uri] = [f_in.attrs]
                         else:
@@ -596,7 +605,9 @@ class CFHTNoFheadStoreVisitRunnerMeta(NoFheadStoreVisitRunnerMeta):
                         # Laurie Rosseau-Nepton - 26-04-23
                         # The standard_spectrum is related to flux calibration used on the data. The other one is
                         # for the science data and is the one that should be used.
-                        if len(f_in.attrs) > 50:
+                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
+                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
+                            # that have sufficient metadata to describe WCS.
                             self._logger.debug(f'Found attrs for {source_name}')
                             self._storage_name._metadata[source_name] = [f_in.attrs]
                         else:
@@ -625,6 +636,231 @@ class CFHTNoFheadStoreVisitRunnerMeta(NoFheadStoreVisitRunnerMeta):
             self._storage_name.metadata[uri] = metadata.get(source_name)
             self._storage_name._descriptors[uri] = descriptors.get(source_name)
         self._logger.debug('End _set_preconditions')
+
+
+class CFHTNoFheadScrapeRunnerMeta(NoFheadScrapeRunnerMeta):
+    """Defines a pipeline step for all the operations that require access to the file on disk for metdata and data
+    operations. This is to support HDF5 operations, since at the time of writing, there is no --fhead metadata
+    retrieval option for HDF5 files.
+
+    """
+
+    def __init__(self, config, data_visitors, meta_visitors, reporter):
+        super().__init__(config, data_visitors, meta_visitors, reporter)
+
+    def _set_preconditions(self):
+        """This is probably not the best approach, but I want to think about where the optimal location for the
+        retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
+        self._logger.debug(f'Begin _set_preconditions for {self._storage_name.file_name}')
+        #
+        # because of decompression, the destination URIs are unknown until after access to keywords in the headers
+        # is available, so don't rely on the destination URIs
+        #
+        # source names do not change, so start with them
+        #
+        for source_name in self._storage_name.source_names:
+            if source_name not in self._storage_name.file_info:
+                self._storage_name.file_info[source_name] = get_local_file_info(source_name)
+            if source_name not in self._storage_name.metadata:
+                self._storage_name.metadata[source_name] = []
+                if '.fits' in source_name:
+                    self._storage_name._metadata[source_name] = get_local_file_headers(source_name)
+                elif self._storage_name.hdf5:
+                    if source_name not in self._storage_name._descriptors:
+                        # local import to limit exposure in Docker builds
+                        import h5py
+                        f_in = h5py.File(source_name)
+                        self._storage_name._descriptors[source_name] = f_in
+                        # Laurie Rosseau-Nepton - 26-04-23
+                        # The standard_spectrum is related to flux calibration used on the data. The other one is
+                        # for the science data and is the one that should be used.
+                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
+                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
+                            # that have sufficient metadata to describe WCS.
+                            self._logger.debug(f'Found attrs for {source_name}')
+                            self._storage_name._metadata[source_name] = [f_in.attrs]
+                        else:
+                            self._logger.warning(f'No attrs for {source_name}.')
+                            self._storage_name._metadata[source_name] = []
+
+            self._storage_name._instrument = get_instrument(
+                self._storage_name.metadata.get(source_name), self._storage_name._file_name
+            )
+            if not self._storage_name.hdf5:
+                self._storage_name._bitpix = get_keyword(self._storage_name.metadata.get(source_name), 'BITPIX')
+
+        # ensure the destination uris have the correct extensions based on BITPIX values
+        self._storage_name.set_destination_uris()
+
+        # now reset the storage name instance to use the destination URIs, because common code expects URIs
+        file_info = self._storage_name.file_info
+        metadata = self._storage_name.metadata
+        descriptors = self._storage_name._descriptors
+        self._storage_name.file_info = {}
+        self._storage_name.metadata = {}
+        self._storage_name._descriptors = {}
+        for index, source_name in enumerate(self._storage_name.source_names):
+            uri = self._storage_name.destination_uris[index]
+            self._storage_name.file_info[uri] = file_info.get(source_name)
+            self._storage_name.metadata[uri] = metadata.get(source_name)
+            self._storage_name._descriptors[uri] = descriptors.get(source_name)
+
+        self._logger.debug('End _set_preconditions')
+
+
+class CFHTNoFheadVisitRunnerMeta(NoFheadVisitRunnerMeta):
+    """Defines a pipeline step for all the operations that require access to the file on disk for metdata and data
+    operations. This is to support HDF5 operations, since at the time of writing, there is no --fhead metadata
+    retrieval option for HDF5 files.
+
+    """
+
+    def __init__(
+        self,
+        clients,
+        config,
+        data_visitors,
+        meta_visitors,
+        modify_transferrer,
+        reporter,
+    ):
+        super().__init__(clients, config, data_visitors, meta_visitors, modify_transferrer, reporter)
+
+    def _set_preconditions(self):
+        """This is probably not the best approach, but I want to think about where the optimal location for the
+        retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
+        self._logger.debug(f'Begin _set_preconditions for {self._storage_name.file_name}')
+        #
+        # for the INGEST + MODIFY combination, it is ok to rely on the destination URIs, since they are all known
+        # now, and will not be further affected by decompression work. This URI will work with SI retrieval.
+        #
+        for index, source_name in enumerate(self._storage_name.source_names):
+            uri = self._storage_name.destination_uris[index]
+            local_fqn = join(self._working_dir, basename(uri))
+            if uri not in self._storage_name.file_info:
+                self._storage_name.file_info[uri] = get_local_file_info(local_fqn)
+            if uri not in self._storage_name.metadata:
+                self._storage_name.metadata[uri] = []
+                if '.fits' in source_name:
+                    self._storage_name._metadata[uri] = get_local_file_headers(local_fqn)
+                elif self._storage_name.hdf5:
+                    if uri not in self._storage_name._descriptors:
+                        # local import to limit exposure in Docker builds
+                        import h5py
+                        f_in = h5py.File(local_fqn)
+                        self._storage_name._descriptors[uri] = f_in
+                        # Laurie Rosseau-Nepton - 26-04-23
+                        # The standard_spectrum is related to flux calibration used on the data. The other one is
+                        # for the science data and is the one that should be used.
+                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
+                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
+                            # that have sufficient metadata to describe WCS.
+                            self._logger.debug(f'Found attrs for {source_name}')
+                            self._storage_name._metadata[uri] = [f_in.attrs]
+                        else:
+                            self._logger.warning(f'No attrs for {source_name}.')
+                            self._storage_name._metadata[uri] = []
+
+        self._storage_name.set_metadata()
+        self._logger.debug('End _set_preconditions')
+
+
+class CFHTNoFheadLocalVisitRunnerMeta(CaomExecuteRunnerMeta):
+
+    def __init__(self, clients, config, data_visitors, meta_visitors, reporter):
+        super().__init__(clients, config, meta_visitors, reporter)
+        self._data_visitors = data_visitors
+
+    def _set_preconditions(self):
+        """This is probably not the best approach, but I want to think about where the optimal location for the
+        retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
+        self._logger.debug(f'Begin _set_preconditions for {self._storage_name.file_name}')
+        #
+        # for the INGEST + MODIFY combination, it is ok to rely on the destination URIs, since they are all known
+        # now, and will not be further affected by decompression work. This URI will work with SI retrieval.
+        #
+        for index, source_name in enumerate(self._storage_name.source_names):
+            uri = self._storage_name.destination_uris[index]
+            if uri not in self._storage_name.file_info:
+                self._storage_name.file_info[uri] = get_local_file_info(source_name)
+            if uri not in self._storage_name.metadata:
+                self._storage_name.metadata[uri] = []
+                if '.fits' in source_name:
+                    self._storage_name._metadata[uri] = get_local_file_headers(source_name)
+                elif self._storage_name.hdf5:
+                    if uri not in self._storage_name._descriptors:
+                        # local import to limit exposure in Docker builds
+                        import h5py
+                        f_in = h5py.File(source_name)
+                        self._storage_name._descriptors[uri] = f_in
+                        # Laurie Rosseau-Nepton - 26-04-23
+                        # The standard_spectrum is related to flux calibration used on the data. The other one is
+                        # for the science data and is the one that should be used.
+                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
+                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
+                            # that have sufficient metadata to describe WCS.
+                            self._logger.debug(f'Found attrs for {source_name}')
+                            self._storage_name._metadata[uri] = [f_in.attrs]
+                        else:
+                            self._logger.warning(f'No attrs for {source_name}.')
+                            self._storage_name._metadata[uri] = []
+
+        self._storage_name.set_metadata()
+        self._logger.debug('End _set_preconditions')
+
+    def execute(self, context):
+        self._logger.debug('begin execute with the steps:')
+        self.storage_name = context.get('storage_name')
+
+        self._logger.debug('set the preconditions')
+        self._set_preconditions()
+
+        self._logger.debug('get the observation for the existing model')
+        self._caom2_read()
+
+        self._logger.debug('execute the meta visitors')
+        self._visit_meta()
+
+        self._logger.debug('execute the data visitors')
+        self._visit_data()
+
+        self._logger.debug('write the observation to disk for debugging')
+        self._write_model()
+
+        self._logger.debug('store the updated xml')
+        self._caom2_store()
+
+        self._logger.debug('End execute.')
+
+
+class CFHTStoreIngestRunnerMeta(CFHTNoFheadStoreVisitRunnerMeta):
+
+    def __init__(self, clients, config, meta_visitors, reporter, store_transferrer):
+        super().__init__(clients, config, None, meta_visitors, reporter, store_transferrer)
+
+    def execute(self, context):
+        self._logger.debug('begin execute with the steps:')
+        self.storage_name = context.get('storage_name')
+
+        self._logger.debug('set the preconditions')
+        self._set_preconditions()
+
+        self._logger.debug('store the input files')
+        self._store_data()
+
+        self._logger.debug('get the observation for the existing model')
+        self._caom2_read()
+
+        self._logger.debug('execute the meta visitors')
+        self._visit_meta()
+
+        self._logger.debug('write the observation to disk for debugging')
+        self._write_model()
+
+        self._logger.debug('store the updated xml')
+        self._caom2_store()
+
+        self._logger.debug('End execute.')
 
 
 class CFHTOrganizeExecutesRunnerMeta(OrganizeExecutesRunnerMeta):
@@ -669,24 +905,84 @@ class CFHTOrganizeExecutesRunnerMeta(OrganizeExecutesRunnerMeta):
             raise CadcException('No need identified for this yet.')
 
         if self.can_use_single_visit():
-            if TaskType.STORE in self.task_types:
-                self._logger.debug(f'Choosing executor CFHTNoFheadStoreVisitRunnerMeta for {self.task_types}.')
-                self._executors = []  # over-ride the default choice.
+            if TaskType.SCRAPE in self.task_types:
+                self._logger.debug(
+                    f'Over-riding with executor CFHTNoFheadScrapeRunnerMeta for tasks {self.task_types}.'
+                )
+                self._executors = []
                 self._executors.append(
-                    CFHTNoFheadStoreVisitRunnerMeta(
-                        self._clients,
+                    CFHTNoFheadScrapeRunnerMeta(
                         self.config,
-                        self._data_visitors,
                         self._meta_visitors,
+                        self._data_visitors,
                         self._reporter,
-                        self._store_transfer,
                     )
                 )
+            elif TaskType.STORE in self.task_types:
+                if TaskType.MODIFY in self.task_types:
+                    self._logger.debug(
+                        f'Over-riding with executor CFHTNoFheadStoreVisitRunnerMeta for {self.task_types}.'
+                    )
+                    self._executors = []
+                    self._executors.append(
+                        CFHTNoFheadStoreVisitRunnerMeta(
+                            self._clients,
+                            self.config,
+                            self._data_visitors,
+                            self._meta_visitors,
+                            self._reporter,
+                            self._store_transfer,
+                        )
+                    )
+                else:
+                    self._logger.debug(
+                        f'Over-riding with executor CFHTStoreIngestRunnerMeta for {self.task_types}.'
+                    )
+                    self._executors = []
+                    self._executors.append(
+                        CFHTStoreIngestRunnerMeta(
+                            self._clients,
+                            self.config,
+                            self._meta_visitors,
+                            self._reporter,
+                            self._store_transfer,
+                        )
+                    )
+            else:
+                if self.config.use_local_files:
+                    self._logger.debug(
+                        f'Over-riding with executor CFHTNoFheadLocalVisitRunnerMeta for tasks {self.task_types}.'
+                    )
+                    self._executors = []
+                    self._executors.append(
+                        CFHTNoFheadLocalVisitRunnerMeta(
+                            self._clients,
+                            self.config,
+                            self._data_visitors,
+                            self._meta_visitors,
+                            self._reporter,
+                        )
+                    )
+                else:
+                    self._logger.debug(
+                        f'Over-riding with executor CFHTNoFheadVisitRunnerMeta for tasks {self.task_types}.'
+                    )
+                    self._executors = []
+                    self._executors.append(
+                        CFHTNoFheadVisitRunnerMeta(
+                            self._clients,
+                            self.config,
+                            self._data_visitors,
+                            self._meta_visitors,
+                            self._modify_transfer,
+                            self._reporter,
+                        )
+                    )
         else:
             for task_type in self.task_types:
                 if task_type == TaskType.INGEST:
-                    self._logger.debug(f'Choosing executor CFHTMetaVisitRunnerMeta for {task_type}.')
-                    self._executors = []  # over-ride the default choice.
+                    self._logger.debug(f'Over-riding with executor CFHTMetaVisitRunnerMeta for {task_type}.')
+                    self._executors = []
                     self._executors.append(
                         CFHTMetaVisitRunnerMeta(self._clients, self.config, self._meta_visitors, self._reporter)
                     )

@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2020.                            (c) 2020.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -88,7 +88,7 @@ def test_visit(test_config, test_data_dir):
         is None
     ), 'expect to assign'
     test_storage_name = cn.CFHTName(
-        file_name=f_name, instrument=md.Inst.ESPADONS
+        source_names=[f_name], instrument=md.Inst.ESPADONS
     )
     test_storage_name.source_names = [
         join(TEST_FILES_DIR, f_name).replace('.gz', ''),

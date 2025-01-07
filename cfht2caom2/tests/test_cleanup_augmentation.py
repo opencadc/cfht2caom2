@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -70,13 +70,12 @@ from os import path
 from caom2pipe.caom_composable import get_all_artifact_keys
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import cleanup_augmentation, cfht_name, Inst
-import test_caom_gen_visit
 
 
 def test_cleanup_augmentation(test_data_dir):
     test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_start_cleanup.xml'))
     assert len(test_obs.planes) == 3, 'initial conditions failed'
-    storage_name = cfht_name.CFHTName(file_name='abc.fits.fz')
+    storage_name = cfht_name.CFHTName(source_names=['abc.fits.fz'])
     kwargs = {'storage_name': storage_name}
     test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
     assert len(test_obs.planes) == 2, 'post-test conditions failed'
@@ -88,7 +87,7 @@ def test_cleanup_augmentation(test_data_dir):
 def test_cleanup_augmentation_png(test_data_dir):
     test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_start_png_cleanup.xml'))
     assert len(test_obs.planes) == 5, 'initial conditions failed'
-    storage_name = cfht_name.CFHTName(file_name='2368534s.fits')
+    storage_name = cfht_name.CFHTName(source_names=['2368534s.fits'])
     storage_name._instrument = Inst.SPIROU
     kwargs = {'storage_name': storage_name}
     test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
@@ -116,7 +115,7 @@ def test_cleanup_augmentation_bad_artifact_uris(test_data_dir):
     ), 'plane 2 initial conditions failed'
 
     for f_name in [f1, f2]:
-        storage_name = cfht_name.CFHTName(file_name=f_name)
+        storage_name = cfht_name.CFHTName(source_names=[f_name])
         kwargs = {'storage_name': storage_name}
         test_obs = cleanup_augmentation.visit(test_obs, **kwargs)
     assert len(test_obs.planes) == 2, 'post-test conditions failed'
@@ -128,9 +127,7 @@ def test_cleanup_augmentation_bad_artifact_uris(test_data_dir):
 
 def test_cleanup_edge_case(test_data_dir):
     test_obs = mc.read_obs_from_file(path.join(test_data_dir, 'visit/visit_obs_edge_case_cleanup.xml'))
-    storage_name = cfht_name.CFHTName(
-        file_name='2014318p.fits.fz', instrument=Inst.WIRCAM
-    )
+    storage_name = cfht_name.CFHTName(source_names=['2014318p.fits.fz'], instrument=Inst.WIRCAM)
     kwargs = {'storage_name': storage_name}
     test_plane = test_obs.planes[storage_name.product_id]
     assert len(test_plane.artifacts) == 7, 'initial condition'

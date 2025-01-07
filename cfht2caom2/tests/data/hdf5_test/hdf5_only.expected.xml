@@ -10,6 +10,12 @@
       <caom2:productID>2384125z</caom2:productID>
       <caom2:dataProductType>cube</caom2:dataProductType>
       <caom2:calibrationLevel>2</caom2:calibrationLevel>
+      <caom2:provenance>
+        <caom2:name>ORBS</caom2:name>
+        <caom2:project>STANDARD PIPELINE</caom2:project>
+        <caom2:producer>CFHT</caom2:producer>
+        <caom2:reference>http://ascl.net/1409.007</caom2:reference>
+      </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="a3c93072-da43-47c1-b810-aa9f42b5f581" caom2:metaProducer="cfht2caom2/0.3">
           <caom2:uri>cadc:CFHT/2384125z.hdf5</caom2:uri>

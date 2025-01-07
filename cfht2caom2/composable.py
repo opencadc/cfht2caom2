@@ -103,6 +103,8 @@ def _common_init():
     config.get_executors()
     StorageName.collection = config.collection
     StorageName.scheme = config.scheme
+    StorageName.preview_scheme = config.preview_scheme
+    StorageName.data_source_extensions = config.data_source_extensions
     clients = clc.ClientCollection(config)
     sources = []
     if config.use_local_files:
@@ -142,30 +144,29 @@ def run_state():
         sys.exit(-1)
 
 
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
+def _run():
+    """Run the processing for observations using a todo file to identify the work to be done. StorageName
+    construction is incomplete with a todo file, because the instrument name and BITPIX are required.
 
     :return 0 if successful, -1 if there's any sort of failure. Return status
         is used by airflow for task instance management and reporting.
     """
-    config, clients, reader, builder, sources = _common_init()
-    return rc.run_by_todo(
+    config, clients, sources = _common_init()
+    return rc.run_by_todo_runner_meta(
         config,
-        builder,
+        sources=sources,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
-        sources=sources,
-        metadata_reader=reader,
+        organizer_module_name='cfht2caom2.cfht_name',
+        organizer_class_name='CFHTOrganizeExecutesRunnerMeta',
+        storage_name_ctor=CFHTName,
     )
 
 
-def run_by_builder():
+def run():
     try:
-        result = _run_by_builder()
+        result = _run()
         sys.exit(result)
     except Exception as e:
         logging.error(e)

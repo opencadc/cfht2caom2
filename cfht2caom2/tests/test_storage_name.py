@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -66,6 +66,9 @@
 # ***********************************************************************
 #
 
+from glob import glob
+
+from caom2utils.data_util import get_local_file_headers
 from caom2pipe.manage_composable import StorageName
 from cfht2caom2 import CFHTName
 
@@ -280,3 +283,25 @@ def test_is_valid(test_config):
     assert test_subject.obs_id == '695816', 'wrong obs id'
     assert test_subject.product_id == '695816p', 'wrong product id'
     assert test_subject.suffix == 'p', 'wrong suffix'
+
+
+def test_suffixes(test_data_dir, test_config):
+    # ensure every test file can be identified as Simple or Derived
+    for plane_name in ['single_plane', 'multi_plane']:
+        for instrument in ['espadons', 'mega', 'sitelle', 'spirou' ,'wircam']:
+            test_config.use_local_files = True
+
+            plane_list = glob(f'{test_data_dir}/{plane_name}/{instrument}/*.header')
+            for entry in plane_list:
+                test_subject = CFHTName(source_names=[entry])
+                assert test_subject is not None, 'ctor'
+                test_subject.metadata = {test_subject.file_uri: get_local_file_headers(entry)}
+                test_subject.set_metadata()
+                found_one = False
+                if test_subject.simple:
+                    assert not test_subject.derived, f'not derived {test_subject}'
+                    found_one = True
+                if test_subject.derived:
+                    assert not test_subject.simple, f'not simple {test_subject}'
+                    found_one = True
+                assert found_one, f'{entry} neither derived nor simple {test_subject}'

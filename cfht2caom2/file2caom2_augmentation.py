@@ -77,17 +77,19 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2VisitorRunnerMeta):
 
     def _get_mapping(self, dest_uri):
         return factory(
-            self._storage_name.metadata.get(self._storage_name.file_uri),  # TODO
-            self._storage_name,
-            self._clients,
-            self._reporter._observable,  # TODO
-            self._observation,
-            self._config,
+            self._storage_name, self._clients, self._reporter, self._observation, self._config
         )
 
     def _get_parser(self, blueprint, uri):
-        if self._storage_name.hdf5 and len(self._storage_name.metadata) > 0:
-            parser = caom2blueprint.Hdf5Parser(blueprint, uri, self._storage_name._descriptors.get(uri))
+        if self._storage_name.hdf5:
+            if (
+                len(self._storage_name.metadata) > 0
+                and len(self._storage_name.metadata.get(self._storage_name.file_uri)) > 0
+            ):
+                # second check => has f_in.attrs been passed through?
+                parser = caom2blueprint.Hdf5Parser(blueprint, uri, self._storage_name._descriptors.get(uri))
+            else:
+                parser = caom2blueprint.BlueprintParser(blueprint, uri)
         elif '_diag' in self._storage_name.file_name:
             parser = caom2blueprint.BlueprintParser(blueprint, uri)
         else:
