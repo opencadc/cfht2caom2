@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -108,12 +108,7 @@ def _common_init():
     clients = clc.ClientCollection(config)
     sources = []
     if config.use_local_files:
-        source = LocalFilesDataSourceRunnerMeta(
-            config,
-            clients.data_client,
-            recursive=config.recurse_data_sources,
-            storage_name_ctor=CFHTName,
-        )
+        source = LocalFilesDataSourceRunnerMeta(config, clients.data_client, storage_name_ctor=CFHTName)
         sources.append(source)
     return config, clients, sources
 

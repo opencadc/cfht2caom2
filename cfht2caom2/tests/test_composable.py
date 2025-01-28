@@ -390,7 +390,7 @@ def test_run_state(
 # common definitions for the test_run_state_compression* tests
 class LocalFilesDataSourceCleanupTest(LocalFilesDataSourceRunnerMeta):
     def __init__(self, config, cadc_client):
-        super().__init__(config, cadc_client, False, CFHTName)
+        super().__init__(config, cadc_client, CFHTName)
 
     def _move_action(self, source, destination):
         uris = {
