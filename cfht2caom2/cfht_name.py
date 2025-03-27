@@ -121,7 +121,19 @@ class CFHTName(StorageName):
     - WIRCam OBSTYPE
     - WIRCam ingestion order
     - WIRCam provenance
-    """
+
+    Test cases:
+
+    Source Name   | Interim Name       | Name at               | Move
+    at CFHT:      | for checking       | CADC:                 | Name at
+                  | md5sum:            |                       | CFHT
+                  |                    |                       |
+    /a/ab.fits    | /a/ab.fits         | cadc:CFHT/ab.fits     | /a/s/ab.fits
+    /a/cd.fits.gz | /tmp/cd/cd.fits    | cadc:CFHT/cd.fits     | /a/s/cd.fits.gz
+    /a/ef.fits.gz | /tmp/ef/ef.fits.fz | cadc:CFHT/ef.fits.fz  | /a/s/ef.fits.gz
+    /a/gh.fits.fz | /a/gh.fits.fz      | cadc:CFHT/gh.fits.fz  | /a/s/gh.fits.fz
+
+        """
 
     CFHT_NAME_PATTERN = '*'
 

@@ -90,8 +90,8 @@
                       </caom2:error2>
                       <caom2:function>
                         <caom2:dimension>
-                          <caom2:naxis1>2088</caom2:naxis1>
-                          <caom2:naxis2>4608</caom2:naxis2>
+                          <caom2:naxis1>1</caom2:naxis1>
+                          <caom2:naxis2>1</caom2:naxis2>
                         </caom2:dimension>
                         <caom2:refCoord>
                           <caom2:coord1>

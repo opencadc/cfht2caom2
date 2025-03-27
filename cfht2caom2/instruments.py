@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -1387,6 +1387,13 @@ class InstrumentType(AuxiliaryType):
 
 
 class EspadonsTemporal(InstrumentType):
+    """
+    Energy - NAXIS1
+    Observable - NAXIS2
+    Spatial - NAXIS3, NAXIS4
+    Time - NAXIS5
+    Polarization - NAXIS6
+    """
     def __init__(self, cfht_name, clients, reporter, observation, config):
         super().__init__(cfht_name, clients, reporter, observation, config)
         # SF 18-11-22 espadons is 2004
@@ -1420,7 +1427,7 @@ class EspadonsTemporal(InstrumentType):
         """
         super().accumulate_blueprint(bp)
 
-        bp.configure_time_axis(3)
+        bp.configure_time_axis(5)
         self.accumulate_time_chunk_blueprint(bp)
 
         # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
@@ -1602,27 +1609,29 @@ class EspadonsTemporal(InstrumentType):
         return mjd_obs
 
     def make_axes_consistent(self):
-        if not (self._chunk.naxis is not None and self._chunk.position is None):
-            if self._chunk.energy is not None:
-                self._chunk.energy_axis = None
-            if self._chunk.time is not None:
-                self._chunk.time_axis = None
-        if self._chunk.naxis is None:
-            if self._chunk.observable_axis is not None:
-                self._chunk.observable_axis = None
-            if self._chunk.polarization_axis is not None:
-                self._chunk.polarization_axis = None
-        else:
-            if self._chunk.time is not None and self._chunk.position is None:
-                self._chunk.naxis = None
-                self._chunk.time_axis = None
+        self._logger.debug('Begin make_axes_consistent')
+        # the energyAxis set to None is here because the metadata-only ingest needs to pass the server-side
+        # naxis + *Axis value checks
+        #
+        # this information will be temporarily mis-leading in the database, but the
+        # espadons_energy_augmentation makes it correct and consistent
+        self._chunk.naxis = None1351
+        if self._chunk.energy is not None:
+            self._chunk.energy_axis = None
+        if self._chunk.time is not None:
+            self._chunk.time_axis = None
+        if self._chunk.observable_axis is not None:
+            self._chunk.observable_axis = None
+        if self._chunk.polarization_axis is not None:
+            self._chunk.polarization_axis = None
+        self._logger.debug('End make_axes_consistent')
 
     def reset_position(self):
+        self._logger.debug('Begin reset_position')
         if self._chunk.position is not None:
             # conform to stricter WCS validation
             self._chunk.position_axis_1 = None
             self._chunk.position_axis_2 = None
-            self._chunk.naxis = None
             # CW - Ignore position wcs if missing spatial indicator keywords
             radecsys = self._headers[self._extension].get('RADECSYS')
             if not (
@@ -1631,6 +1640,7 @@ class EspadonsTemporal(InstrumentType):
                 and self._headers[self._extension].get('DEC_DEG') is not None
             ):
                 cc.reset_position(self._chunk)
+        self._logger.debug('End reset_position')
 
     def update_observable(self):
         self._logger.debug(
@@ -1676,13 +1686,14 @@ class EspadonsTemporal(InstrumentType):
         # caom2IngestEspadons.py, l714
         if self._storage_name.suffix == 'i':
             self._update_plane_provenance()
+        self._logger.debug('End update_plane')
 
 
 class EspadonsSpectralTemporal(EspadonsTemporal):
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
         if self._storage_name.suffix is not None:
-            bp.configure_energy_axis(4)
+            bp.configure_energy_axis(1)
             # caom2IngestEspadons.py l636
             naxis1 = 213542
             # caom2IngestEspadons.py l639
@@ -1714,23 +1725,35 @@ class EspadonsSpectralTemporal(EspadonsTemporal):
 class EspadonsSpatialSpectralTemporal(EspadonsSpectralTemporal):
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
-        bp.configure_position_axes((1, 2))
+        bp.configure_position_axes((3, 4))
         self.accumulate_spatial_chunk_blueprint(bp)
         self._logger.debug('Done accumulate_blueprint.')
 
 
 class EspadonsI(EspadonsTemporal):
+    """
+    There is no energy axis configuration in this class because chunk.energy is filled in by the
+    espadons_energy_augmentation class. The augmentation requires access to the data on disk.
+    """
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
-        bp.configure_position_axes((1, 2))
+        bp.configure_position_axes((3, 4))
         self.accumulate_spatial_chunk_blueprint(bp)
         self._logger.debug('Done accumulate_blueprint.')
 
 
 class EspadonsPolarization(EspadonsTemporal):
+    """
+    There is no energy axis configuration in this class because chunk.energy is filled in by the
+    espadons_energy_augmentation class. The augmentation requires access to the data on disk.
+
+    This file type is the reason the model supports multiple chunks in one part. There is one array with an energy
+    dimension and then the other dimension are actually different quantities, so different things stored in
+    different slices of the array, hence different chunks that are subsets of the array.
+    """
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
-        bp.configure_position_axes((1, 2))
+        bp.configure_position_axes((3, 4))
         self.accumulate_spatial_chunk_blueprint(bp)
 
         bp.configure_polarization_axis(6)
@@ -3674,4 +3697,4 @@ def factory(cfht_name, clients, reporter, observation, config):
         reporter._observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
     logging.debug(f'Created {temp.__class__.__name__} mapping.')
-    return temp
+    return [temp]

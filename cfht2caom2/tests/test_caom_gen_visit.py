@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -81,7 +81,7 @@ from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
 from caom2pipe.manage_composable import (
     CadcException,
-    ExecutionReporter,
+    ExecutionReporter2,
     Observable,
     read_obs_from_file,
     TaskType,
@@ -127,7 +127,7 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config, tmp_path, change_t
     test_config.use_local_files = True
     test_config.log_to_file = True
     test_config.data_sources = [tmp_path.as_posix()]
-    test_reporter = ExecutionReporter(test_config, Observable(test_config))
+    test_reporter = ExecutionReporter2(test_config)
     expected_fqn = f'{test_name}/{basename(test_name)}.expected.xml'
     in_fqn = expected_fqn.replace('.expected', '.in')
     actual_fqn = expected_fqn.replace('expected', 'actual')
