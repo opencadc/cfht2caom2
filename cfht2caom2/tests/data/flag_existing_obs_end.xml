@@ -1,10 +1,10 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-0270-013ecb631bef" caom2:lastModified="2023-06-28T00:31:29.905" caom2:maxLastModified="2023-06-28T00:31:29.905" caom2:metaChecksum="md5:93b806c9f407853b327b6cfd90bbdd76" caom2:accMetaChecksum="md5:61f691c13de1a2a36d8ae5c54cc301d8" caom2:metaProducer="cfht2caom2/0.6.1">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-0270-013ecb631bef" caom2:lastModified="2023-06-28T00:31:29.905" caom2:maxLastModified="2023-06-28T00:31:29.905" caom2:metaChecksum="md5:93b806c9f407853b327b6cfd90bbdd76" caom2:accMetaChecksum="md5:61f691c13de1a2a36d8ae5c54cc301d8" caom2:metaProducer="cfht2caom2/0.6.1">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>1013501</caom2:observationID>
   <caom2:metaRelease>2008-08-01T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>1013501</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>master_detrend</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>
@@ -4921,33 +4921,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/1014201</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014197</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014196</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014190</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014204</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014189</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014195</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013936</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013933</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013937</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013935</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013605</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014200</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014194</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014199</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014198</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013608</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013609</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013607</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014193</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014192</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013934</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014203</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014202</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013606</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1013604</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1014191</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

@@ -1,10 +1,10 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="9736feef-9a03-4e30-a091-6ba0aca2f91c" caom2:lastModified="2023-04-19T21:57:53.054" caom2:maxLastModified="2023-04-20T15:52:50.248" caom2:metaChecksum="md5:2340cb0bf9747563076b075e5fec3332" caom2:accMetaChecksum="md5:f7aac6399f6130f3942681731368a73c" caom2:metaProducer="cfht2caom2/0.6.1">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="9736feef-9a03-4e30-a091-6ba0aca2f91c" caom2:lastModified="2023-04-19T21:57:53.054" caom2:maxLastModified="2023-04-20T15:52:50.248" caom2:metaChecksum="md5:2340cb0bf9747563076b075e5fec3332" caom2:accMetaChecksum="md5:f7aac6399f6130f3942681731368a73c" caom2:metaProducer="cfht2caom2/0.6.1">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2446124</caom2:observationID>
   <caom2:metaRelease>2019-10-03T07:40:28.000</caom2:metaRelease>
   <caom2:sequenceNumber>2446124</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>drs</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>

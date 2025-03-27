@@ -374,7 +374,7 @@ class AuxiliaryType(cc.TelescopeMapping2):
         bp.set('Plane.calibrationLevel', calibration_level)
         bp.set('Plane.dataRelease', 'get_plane_data_release()')
         bp.set('Plane.metaRelease', 'get_meta_release()')
-        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
+        bp.add_attribute('Plane.provenance.lastExecuted', 'PROCDATE')
         bp.set_default('Plane.provenance.producer', 'CFHT')
         bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
         bp.clear('Plane.provenance.runID')
@@ -562,14 +562,6 @@ class AuxiliaryType(cc.TelescopeMapping2):
             result = md.cache.get_title(run_id)
         return result
 
-    def get_provenance_last_executed(self, ext):
-        result = self._headers[ext].get('PROCDATE')
-        if result is not None:
-            # format like 2018-06-05HST17:21:20
-            tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
-            # replace is because CAOM2 is non-aware
-            result = mc.make_datetime(result)
-        return result
 
     def get_provenance_version(self, ext):
         result = self._headers[ext].get('IIWIVER')
@@ -764,20 +756,6 @@ class AuxiliaryType(cc.TelescopeMapping2):
             self._logger.debug('Done hdf5 update.')
             return self._observation
 
-        derived_type = self._find_derived_type(self._observation.observation_id)
-        if self._storage_name.derived and not isinstance(self._observation, DerivedObservation):
-            self._logger.info(f'{self._observation.observation_id} will be changed to a Derived Observation.')
-            algorithm_name = self._observation.algorithm.name
-            if self._storage_name.instrument != md.Inst.ESPADONS and self._storage_name.suffix != 'i':
-                algorithm_name = 'master_detrend'
-            if self._storage_name.suffix == 'p' and self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
-                algorithm_name = 'polarization'
-            elif self._storage_name.instrument is md.Inst.SITELLE:
-                algorithm_name = 'scan'
-            elif self._storage_name.instrument is md.Inst.SPIROU:
-                algorithm_name = 'drs'
-            self._observation = cc.change_to_composite(self._observation, algorithm_name)
-
         if (
             self._storage_name.instrument is md.Inst.SITELLE
             and self._storage_name.suffix == 'v'
@@ -811,7 +789,8 @@ class AuxiliaryType(cc.TelescopeMapping2):
                         self.chunk = chunk
                         self.update_chunk()
 
-            if isinstance(self._observation, DerivedObservation) and plane.provenance is not None:
+            derived_type = self._find_derived_type(self._observation.observation_id)
+            if plane.provenance is not None:
                 if derived_type is ProvenanceType.IMCMB:
                     cc.update_plane_provenance(
                         plane,
@@ -849,9 +828,9 @@ class AuxiliaryType(cc.TelescopeMapping2):
 
             self.update_plane()
 
-        # relies on update_plane_provenance being called
-        if isinstance(self._observation, DerivedObservation):
-            cc.update_observation_members(self._observation)
+        # # relies on update_plane_provenance being called
+        # if isinstance(self._observation, DerivedObservation):
+        #     cc.update_observation_members(self._observation)
         InstrumentType.value_repair.repair(self._observation)
         self._logger.debug('Done update.')
         return self._observation
@@ -1430,12 +1409,11 @@ class EspadonsTemporal(InstrumentType):
         bp.configure_time_axis(5)
         self.accumulate_time_chunk_blueprint(bp)
 
-        # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
-        bp.set('Observation.algorithm.name', 'get_algorithm_name()')
         bp.add_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
         bp.set('Plane.dataProductType', DataProductType.SPECTRUM)
         bp.set('Plane.provenance.keywords', 'get_provenance_keywords()')
+        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
         bp.set('Plane.provenance.name', 'get_provenance_name()')
         bp.set('Plane.provenance.project', 'get_provenance_project()')
         bp.set('Plane.provenance.reference', 'get_provenance_reference()')
@@ -1445,15 +1423,6 @@ class EspadonsTemporal(InstrumentType):
         bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()')
 
         self._logger.debug('Done accumulate_blueprint.')
-
-    def get_algorithm_name(self, ext):
-        """
-        Can't do the repair of the value with CFHTValueRepair, because algorithm.name is immutable.
-        """
-        result = self._headers[ext].get('REDUCTIO', 'exposure')
-        if result == 'Polar':
-            result = 'polarization'
-        return result.lower()
 
     def get_chunk_position_equinox(self, ext):
         equinox = self._headers[ext].get('EQUINOX')
@@ -1496,8 +1465,6 @@ class EspadonsTemporal(InstrumentType):
             for comment in comments:
                 if 'Upena processing date:' in comment:
                     result = comment.split('Upena processing date: ')[1]
-                    # format like Fri Mar 13 22:51:55 HST 2009
-                    tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
                     result = mc.make_datetime(result)
                     break
                 elif 'opera-' in comment:
@@ -1615,7 +1582,7 @@ class EspadonsTemporal(InstrumentType):
         #
         # this information will be temporarily mis-leading in the database, but the
         # espadons_energy_augmentation makes it correct and consistent
-        self._chunk.naxis = None1351
+        self._chunk.naxis = None
         if self._chunk.energy is not None:
             self._chunk.energy_axis = None
         if self._chunk.time is not None:
@@ -1790,6 +1757,7 @@ class MegaTemporal(InstrumentType):
         bp.configure_time_axis(3)
         self.accumulate_time_chunk_blueprint(bp)
 
+        bp.add_attribute('Plane.provenance.lastExecuted', 'DATEPROC')
         bp.set_default('Plane.provenance.name', 'ELIXIR')
         bp.set_default('Plane.provenance.reference', 'http://www.cfht.hawaii.edu/Instruments/Elixir/')
         self._logger.debug('Done accumulate_blueprint.')
@@ -1808,14 +1776,6 @@ class MegaTemporal(InstrumentType):
         # the flags ones are similar as 2003A.mask.0.36.02  of object type mask.
         if '_flag' in self._storage_name.file_id:
             result = 'MASK'
-        return result
-
-    def get_provenance_last_executed(self, ext):
-        result = super().get_provenance_last_executed(ext)
-        if result is None:
-            result = self._headers[ext].get('DATEPROC')
-            if result is not None:
-                result = mc.make_datetime(result)
         return result
 
     def make_axes_consistent(self):
@@ -1939,6 +1899,7 @@ class SitelleTemporal(InstrumentType):
         if self._storage_name.suffix == 'z':
             bp.set('Artifact.productType', ProductType.SCIENCE)
 
+        bp.add_attribute('Plane.provenance.lastExecuted', 'DATE')
         bp.set_default('Plane.provenance.name', 'ORBS')
         bp.set_default(
             'Plane.provenance.reference', 'http://ascl.net/1409.007'
@@ -2024,7 +1985,6 @@ class SitelleSpectralTemporal(SitelleTemporal):
         self._logger.debug(f'Begin _update_sitelle_plane for {self._observation.observation_id}')
         if self._storage_name.suffix not in ['p', 'z']:
             return
-#         if len(next(iter(self._storage_name.metadata))) > 50:
 
         # if the 'p' plane exists, copy the metadata to the 'z' plane
         z_plane_key = self._storage_name.product_id.replace('p', 'z')
@@ -2466,8 +2426,6 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
     def update(self):
         self._logger.debug('Begin update.')
 
-        if not isinstance(self._observation, DerivedObservation):
-            self._observation = cc.change_to_composite(self._observation, 'scan')
 
         idx = 0
         self.extension = idx
@@ -2612,10 +2570,6 @@ class Spirou(InstrumentType):
         Add in WCS for 's' files, and spatial WCS for 'g' files.
         """
         super().accumulate_blueprint(bp)
-        algorithm_name = 'exposure'
-        if self._storage_name.derived:
-            algorithm_name = 'drs'
-        bp.set('Observation.algorithm.name', algorithm_name)
 
         bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.add_attribute('Observation.target_position.coordsys', 'RADECSYS')
@@ -3045,6 +2999,7 @@ class WircamTemporal(InstrumentType):
             bp.set('Plane.provenance.keywords', 'skysubtraction=yes')
         elif self._storage_name.suffix == 's':
             bp.set('Plane.provenance.keywords', 'skysubtraction=no')
+        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
         bp.set_default('Plane.provenance.name', 'IIWI')
         bp.set_default(
             'Plane.provenance.reference',
@@ -3077,6 +3032,13 @@ class WircamTemporal(InstrumentType):
             or 'deadpix' in self._storage_name.file_uri
         ):
             result = 'BPM'
+        return result
+
+    def get_provenance_last_executed(self, ext):
+        result = self._headers[ext].get('PROCDATE')
+        if result:
+            # format like PROCDATE= '2019-11-27HST14:15:30'
+            result = mc.make_datetime(result)
         return result
 
     def _update_plane_post(self):

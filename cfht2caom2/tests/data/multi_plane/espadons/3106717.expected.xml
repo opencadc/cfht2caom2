@@ -1,10 +1,10 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="e9c2f12a-a216-45be-8470-100bb9055430" caom2:lastModified="2025-02-15T13:29:16.393" caom2:maxLastModified="2025-02-15T13:29:16.393" caom2:metaChecksum="md5:390dd2f0b6b841a56baea9da6dd70f35" caom2:accMetaChecksum="md5:1d770bfa71c5a879b9a5e1fb3c108029" caom2:metaProducer="cfht2caom2/0.6.3">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="e9c2f12a-a216-45be-8470-100bb9055430" caom2:lastModified="2025-02-15T13:29:16.393" caom2:maxLastModified="2025-02-15T13:29:16.393" caom2:metaChecksum="md5:390dd2f0b6b841a56baea9da6dd70f35" caom2:accMetaChecksum="md5:1d770bfa71c5a879b9a5e1fb3c108029" caom2:metaProducer="cfht2caom2/0.6.3">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>3106717</caom2:observationID>
   <caom2:metaRelease>2025-01-16T10:15:31.000</caom2:metaRelease>
   <caom2:sequenceNumber>3106717</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>intensity</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>
@@ -525,9 +525,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/3106718</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/3106719</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/3106720</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

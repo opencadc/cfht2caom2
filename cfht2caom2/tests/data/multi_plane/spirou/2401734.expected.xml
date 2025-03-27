@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="355c5c4b-ceab-489d-958f-1d9fc224e04b" caom2:lastModified="2019-06-05T21:58:09.049" caom2:maxLastModified="2020-01-28T01:23:32.524" caom2:metaChecksum="md5:40f8a4ded344eba06331fff391711c73" caom2:accMetaChecksum="md5:7e2fb63e87d824c88d01fb9c311af487" caom2:metaProducer="cfht2caom2/0.3.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="355c5c4b-ceab-489d-958f-1d9fc224e04b" caom2:lastModified="2019-06-05T21:58:09.049" caom2:maxLastModified="2020-01-28T01:23:32.524" caom2:metaChecksum="md5:40f8a4ded344eba06331fff391711c73" caom2:accMetaChecksum="md5:7e2fb63e87d824c88d01fb9c311af487" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2401734</caom2:observationID>
   <caom2:metaRelease>2024-01-31T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2401734</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>drs</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>

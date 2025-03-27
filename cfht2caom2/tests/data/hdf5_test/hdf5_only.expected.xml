@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="14f34b1b-9857-44b5-a005-fc53c2917747" caom2:metaProducer="cfht2caom2/0.3">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="14f34b1b-9857-44b5-a005-fc53c2917747" caom2:metaProducer="cfht2caom2/0.3">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2384125</caom2:observationID>
   <caom2:algorithm>
-    <caom2:name>scan</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:planes>
     <caom2:plane caom2:id="2fe684d6-69c7-4563-b437-8075599ac404" caom2:metaProducer="cfht2caom2/0.3">

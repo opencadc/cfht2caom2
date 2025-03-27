@@ -56,6 +56,7 @@
         <caom2:producer>CFHT</caom2:producer>
         <caom2:runID>18As01</caom2:runID>
         <caom2:reference>http://ascl.net/1409.007</caom2:reference>
+        <caom2:lastExecuted>2018-05-09T18:28:05.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="00000000-0000-0000-8d97-016346af4af0" caom2:lastModified="2018-05-09T20:54:44.543" caom2:maxLastModified="2018-05-09T20:54:44.543" caom2:metaChecksum="md5:f802c56ad9e84b79073319224ed4486a" caom2:accMetaChecksum="md5:abc63fbdb2fc264466e03c1b00b0f09b" caom2:metaProducer="cfht2caom2/0.3.2">
