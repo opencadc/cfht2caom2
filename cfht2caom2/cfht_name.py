@@ -83,17 +83,6 @@ from cfht2caom2.metadata import Inst
 __all__ = ['CFHTName']
 
 
-# TODO - is this still required?
-# minimize the number of times the code tries to figure out which instrument
-# generated the file being ingested
-#
-# declare the global here, so that it survives the importlib.import_module
-# done by fits2caom2
-# key - Artifact uri
-# value - CFHTName instance
-cfht_names = {}
-
-
 class CFHTName(StorageName):
     """Naming rules:
     - support mixed-case file name storage, and mixed-case obs id values

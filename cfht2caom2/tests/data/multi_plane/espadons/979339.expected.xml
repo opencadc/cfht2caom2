@@ -78,22 +78,6 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-9d43-01408b10d444" caom2:lastModified="2013-08-17T06:57:51.687" caom2:maxLastModified="2013-08-17T06:57:51.687" caom2:metaChecksum="md5:3abbe250e71b1272fc60971db25c653a" caom2:accMetaChecksum="md5:cdaf8a61ec9ad06668f51c0f5fdd02f2" caom2:metaProducer="cfht2caom2/0.3.2">
-                  <caom2:observable>
-                    <caom2:dependent>
-                      <caom2:axis>
-                        <caom2:ctype>flux</caom2:ctype>
-                        <caom2:cunit>counts</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>2</caom2:bin>
-                    </caom2:dependent>
-                    <caom2:independent>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>nm</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>1</caom2:bin>
-                    </caom2:independent>
-                  </caom2:observable>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>

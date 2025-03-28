@@ -175,14 +175,12 @@ SF 12-04-21
 
 """
 
-import copy
 import logging
 import math
 import os
 
 from astropy import units
 from astropy.io import fits
-from dateutil import tz
 from enum import Enum
 from re import match
 
@@ -867,7 +865,6 @@ class AuxiliaryType(cc.TelescopeMapping2):
             self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
 
     def update_chunk(self):
-        self.update_observable()
         self.update_polarization()
         self.update_time()
         self.update_position()
@@ -877,9 +874,6 @@ class AuxiliaryType(cc.TelescopeMapping2):
         self.make_axes_consistent()
 
     def update_energy(self):
-        pass
-
-    def update_observable(self):
         pass
 
     def update_observation(self):
@@ -1368,7 +1362,7 @@ class InstrumentType(AuxiliaryType):
 class EspadonsTemporal(InstrumentType):
     """
     Energy - NAXIS1
-    Observable - NAXIS2
+    Observable - NAXIS2 - set in espadons_energy_augmentation.py
     Spatial - NAXIS3, NAXIS4
     Time - NAXIS5
     Polarization - NAXIS6
@@ -1587,8 +1581,6 @@ class EspadonsTemporal(InstrumentType):
             self._chunk.energy_axis = None
         if self._chunk.time is not None:
             self._chunk.time_axis = None
-        if self._chunk.observable_axis is not None:
-            self._chunk.observable_axis = None
         if self._chunk.polarization_axis is not None:
             self._chunk.polarization_axis = None
         self._logger.debug('End make_axes_consistent')
@@ -1608,45 +1600,6 @@ class EspadonsTemporal(InstrumentType):
             ):
                 cc.reset_position(self._chunk)
         self._logger.debug('End reset_position')
-
-    def update_observable(self):
-        self._logger.debug(
-            f'Begin update_observable for {self._storage_name.obs_id}'
-        )
-        if self._storage_name.suffix in ['i', 'p']:
-            # caom2IngestEspadons.py, l828
-            # CW Set up observable axes, row 1 is wavelength, row 2 is
-            # normalized flux, row 3 ('p' only) is Stokes spectrum
-
-            # this check is here, because it's quite difficult to find the
-            # 'right' chunk, and blind updating generally causes both chunks
-            # to have the same metadata values.
-            if self._chunk.observable is None:
-                independent_axis = Axis('WAVE', 'nm')
-                independent = Slice(independent_axis, 1)
-                dependent_axis = Axis('flux', 'counts')
-                dependent = Slice(dependent_axis, 2)
-                self._chunk.observable = ObservableAxis(
-                    dependent, independent
-                )
-                self._chunk.observable_axis = 2
-
-                if (
-                    self._storage_name.suffix == 'p'
-                    and len(self.part.chunks) == 1
-                ):
-                    # caom2IngestEspadons.py, l863
-                    dependent_axis = Axis('polarized flux', 'percent')
-                    dependent = Slice(dependent_axis, 3)
-                    new_chunk = copy.deepcopy(self._chunk)
-                    new_chunk.observable = ObservableAxis(
-                        dependent, independent
-                    )
-                    new_chunk._id = Chunk._gen_id()
-                    self.part.chunks.append(new_chunk)
-        self._logger.debug(
-            f'End _update_observable for {self._storage_name.obs_id}'
-        )
 
     def update_plane(self):
         super().update_plane()
