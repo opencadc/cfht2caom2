@@ -169,7 +169,8 @@ def _do_energy(artifact, science_fqn, storage_name):
         dependent = Slice(dependent_axis, 2)
         chunk.observable = ObservableAxis(dependent, independent)
         chunk.observable_axis = 2
-    count += 1
+        count += 1
+        logging.info('Chunk 0 updated')
 
     if storage_name.suffix == 'p' and len(artifact.parts['0'].chunks) == 1:
         # caom2IngestEspadons.py, l863
@@ -183,6 +184,7 @@ def _do_energy(artifact, science_fqn, storage_name):
         new_chunk._id = Chunk._gen_id()
         artifact.parts['0'].chunks.append(new_chunk)
         count += 1
+        logging.info('Chunk 1 added')
 
     logging.info(f'Done reading energy, changed {count} chunks.')
     return count
