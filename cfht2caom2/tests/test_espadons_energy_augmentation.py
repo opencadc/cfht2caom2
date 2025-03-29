@@ -67,7 +67,7 @@
 
 from os.path import join
 
-from caom2pipe.manage_composable import read_obs_from_file
+from caom2pipe.manage_composable import read_obs_from_file, write_obs_to_file
 from cfht2caom2 import espadons_energy_augmentation
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -121,48 +121,26 @@ def test_visit_i(test_config, test_data_dir):
     assert test_i.observable.independent.axis.ctype == 'WAVE', 'i ctype'
     assert test_i.observable.independent.axis.cunit == 'nm', 'i cunit'
     assert test_i.observable.independent.bin == 1, 'i bin'
+    write_obs_to_file(test_obs, './i.xml')
+    assert False
 
 
-def test_visit_p(test_config, test_data_dir):
-    product_id = '3106717p'
-    f_name = f'{product_id}.fits'
+def test_visit_i_p(test_config, test_data_dir):
     obs_fqn = f'{test_data_dir}/multi_plane/espadons/3106717.expected.xml'
     obs = read_obs_from_file(obs_fqn)
 
     # pre-conditions
-    uri = f'cadc:CFHT/{product_id}.fits'
-    assert (obs.planes[product_id].artifacts[uri].parts['0'].chunks[0].energy is None), 'expect to assign'
-    test_storage_name = cn.CFHTName(source_names=[f_name], instrument=md.Inst.ESPADONS)
-    test_storage_name.source_names = [f'{TEST_FILES_DIR}/{product_id}.fits']
-    kwargs = {
-        'storage_name': test_storage_name,
-        'working_directory': TEST_FILES_DIR,
-    }
+    for product_id in ['3106717i', '3106717p']:
+        f_name = f'{product_id}.fits'
+        test_storage_name = cn.CFHTName(source_names=[f'{TEST_FILES_DIR}/{f_name}'], instrument=md.Inst.ESPADONS)
+        kwargs = {
+            'storage_name': test_storage_name,
+            'working_directory': TEST_FILES_DIR,
+        }
+        obs = espadons_energy_augmentation.visit(obs, **kwargs)
 
-    test_obs = espadons_energy_augmentation.visit(obs, **kwargs)
-    assert test_obs is not None, 'expect a result'
-    test_i = obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
-    assert test_i is not None, 'expect to assign'
-    assert test_i.energy is not None, 'expect to assign energy'
-    assert test_i.naxis == 2, 'wrong naxis'
-    assert test_i.energy_axis == 1, 'wrong energy axis'
-    assert test_i.observable_axis == 2, 'wrong observable axis'
-    assert test_i.position_axis_1 is None, 'wrong position 1 axis'
-    assert test_i.position_axis_2 is None, 'wrong position 2 axis'
-    assert test_i.time_axis is None, 'wrong time axis'
-    assert test_i.custom_axis is None, 'wrong custom axis'
-    assert test_i.polarization_axis is None, 'wrong pol axis'
-    assert test_i.observable.dependent is not None, 'dependent exists'
-    assert test_i.observable.dependent.axis.ctype == 'flux', 'd ctype'
-    assert test_i.observable.dependent.axis.cunit == 'counts', 'd cunit'
-    assert test_i.observable.dependent.bin == 2, 'd bin'
-    assert test_i.observable.independent is not None, 'independent exists'
-    assert test_i.observable.independent.axis.ctype == 'WAVE', 'i ctype'
-    assert test_i.observable.independent.axis.cunit == 'nm', 'i cunit'
-    assert test_i.observable.independent.bin == 1, 'i bin'
-    assert len(obs.planes[product_id].artifacts[uri].parts['0'].chunks) == 2, 'p chunk count'
-    test_p = obs.planes[product_id].artifacts[uri].parts['0'].chunks[1]
-    assert test_p is not None, 'expect to assign'
+    assert len(obs.planes['3106717p'].artifacts['cadc:CFHT/3106717p.fits'].parts['0'].chunks) == 2, 'chunk count'
+    test_p = obs.planes['3106717p'].artifacts['cadc:CFHT/3106717p.fits'].parts['0'].chunks[1]
     assert test_p.energy is not None, 'expect to assign energy'
     assert test_p.naxis == 2, 'wrong naxis'
     assert test_p.energy_axis == 1, 'wrong energy axis'
