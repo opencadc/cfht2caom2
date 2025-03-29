@@ -67,7 +67,7 @@
 
 from os.path import join
 
-from caom2pipe.manage_composable import read_obs_from_file, write_obs_to_file
+from caom2pipe.manage_composable import read_obs_from_file
 from cfht2caom2 import espadons_energy_augmentation
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
@@ -121,16 +121,29 @@ def test_visit_i(test_config, test_data_dir):
     assert test_i.observable.independent.axis.ctype == 'WAVE', 'i ctype'
     assert test_i.observable.independent.axis.cunit == 'nm', 'i cunit'
     assert test_i.observable.independent.bin == 1, 'i bin'
-    write_obs_to_file(test_obs, './i.xml')
-    assert False
 
 
 def test_visit_i_p(test_config, test_data_dir):
-    obs_fqn = f'{test_data_dir}/multi_plane/espadons/3106717.expected.xml'
+    obs_fqn = f'{test_data_dir}/espadons_fix_chunks.xml'
     obs = read_obs_from_file(obs_fqn)
 
-    # pre-conditions
-    for product_id in ['3106717i', '3106717p']:
+    p_product_id = '3106717p'
+    uri = 'cadc:CFHT/3106717p.fits'
+    # preconditions - the observable should be wrong to start with, and this test to assert that the
+    # 'p' plane chunk 2 observable gets fixed
+    assert len(obs.planes[p_product_id].artifacts[uri].parts['0'].chunks) == 2, 'chunk count'
+    test_p_pre = obs.planes[p_product_id].artifacts[uri].parts['0'].chunks[1]
+    assert test_p_pre.observable is not None, 'exists'
+    assert test_p_pre.observable.dependent is not None, 'dependent exists'
+    assert test_p_pre.observable.dependent.axis.ctype == 'flux', 'd ctype'
+    assert test_p_pre.observable.dependent.axis.cunit == 'counts', 'd cunit'
+    assert test_p_pre.observable.dependent.bin == 2, 'd bin'
+    assert test_p_pre.observable.independent is not None, 'independent exists'
+    assert test_p_pre.observable.independent.axis.ctype == 'WAVE', 'i ctype'
+    assert test_p_pre.observable.independent.axis.cunit == 'nm', 'i cunit'
+    assert test_p_pre.observable.independent.bin == 1, 'i bin'
+
+    for product_id in ['3106717p', '3106717i']:
         f_name = f'{product_id}.fits'
         test_storage_name = cn.CFHTName(source_names=[f'{TEST_FILES_DIR}/{f_name}'], instrument=md.Inst.ESPADONS)
         kwargs = {
@@ -139,8 +152,8 @@ def test_visit_i_p(test_config, test_data_dir):
         }
         obs = espadons_energy_augmentation.visit(obs, **kwargs)
 
-    assert len(obs.planes['3106717p'].artifacts['cadc:CFHT/3106717p.fits'].parts['0'].chunks) == 2, 'chunk count'
-    test_p = obs.planes['3106717p'].artifacts['cadc:CFHT/3106717p.fits'].parts['0'].chunks[1]
+    assert len(obs.planes[p_product_id].artifacts[uri].parts['0'].chunks) == 2, 'chunk count'
+    test_p = obs.planes[p_product_id].artifacts[uri].parts['0'].chunks[1]
     assert test_p.energy is not None, 'expect to assign energy'
     assert test_p.naxis == 2, 'wrong naxis'
     assert test_p.energy_axis == 1, 'wrong energy axis'

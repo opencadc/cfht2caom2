@@ -172,7 +172,11 @@ def _do_energy(artifact, science_fqn, storage_name):
         count += 1
         logging.info('Chunk 0 updated')
 
-    if storage_name.suffix == 'p' and len(artifact.parts['0'].chunks) == 1:
+    if storage_name.suffix == 'p':
+        if len(artifact.parts['0'].chunks) == 2:
+            # replace the existing value
+            artifact.parts['0'].chunks.pop(1)
+
         # caom2IngestEspadons.py, l863
         dependent_axis = Axis('polarized flux', 'percent')
         dependent = Slice(dependent_axis, 3)

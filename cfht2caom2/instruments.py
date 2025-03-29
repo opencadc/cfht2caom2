@@ -905,7 +905,7 @@ class AuxiliaryType(cc.TelescopeMapping2):
         self._logger.debug(
             f'Begin _update_plane_provenance for {self._storage_name.obs_id}'
         )
-        obs_uri_ignore, plane_uri = cc.make_plane_uri(
+        _, plane_uri = cc.make_plane_uri(
             self._storage_name.obs_id, f'{self._storage_name.obs_id}o', self._storage_name.collection
         )
         self.plane.provenance.inputs.add(plane_uri)

@@ -646,9 +646,6 @@ class CFHTNoFheadScrapeRunnerMeta(NoFheadScrapeRunnerMeta):
 
     """
 
-    def __init__(self, config, data_visitors, meta_visitors, reporter):
-        super().__init__(config, data_visitors, meta_visitors, reporter)
-
     def _set_preconditions(self):
         """This is probably not the best approach, but I want to think about where the optimal location for the
         retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
@@ -716,16 +713,6 @@ class CFHTNoFheadVisitRunnerMeta(NoFheadVisitRunnerMeta):
 
     """
 
-    def __init__(
-        self,
-        clients,
-        config,
-        data_visitors,
-        meta_visitors,
-        modify_transferrer,
-        reporter,
-    ):
-        super().__init__(clients, config, data_visitors, meta_visitors, modify_transferrer, reporter)
 
     def _set_preconditions(self):
         """This is probably not the best approach, but I want to think about where the optimal location for the
