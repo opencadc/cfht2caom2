@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -71,20 +71,29 @@ from caom2pipe import caom_composable as cc
 from cfht2caom2.instruments import factory
 
 
-class CFHTFits2caom2Visitor(cc.Fits2caom2Visitor):
+class CFHTFits2caom2Visitor(cc.Fits2caom2VisitorRunnerMeta):
     def __init__(self, observation, **kwargs):
         super().__init__(observation, **kwargs)
 
-    def _get_mapping(self, headers, _):
-        return factory(headers, self._storage_name, self._clients, self._observable, self._observation, self._config)
+    def _get_mappings(self, dest_uri):
+        return factory(
+            self._storage_name, self._clients, self._reporter, self._observation, self._config
+        )
 
-    def _get_parser(self, headers, blueprint, uri):
-        if self._storage_name.hdf5 and len(headers) > 0:
-            parser = caom2blueprint.Hdf5Parser(blueprint, uri, self._metadata_reader.descriptors.get(uri))
+    def _get_parser(self, blueprint, uri):
+        if self._storage_name.hdf5:
+            if (
+                len(self._storage_name.metadata) > 0
+                and len(self._storage_name.metadata.get(self._storage_name.file_uri)) > 0
+            ):
+                # second check => has f_in.attrs been passed through?
+                parser = caom2blueprint.Hdf5Parser(blueprint, uri, self._storage_name._descriptors.get(uri))
+            else:
+                parser = caom2blueprint.BlueprintParser(blueprint, uri)
         elif '_diag' in self._storage_name.file_name:
             parser = caom2blueprint.BlueprintParser(blueprint, uri)
         else:
-            parser = super()._get_parser(headers, blueprint, uri)
+            parser = super()._get_parser(blueprint, uri)
         self._logger.debug(f'Using a {parser.__class__.__name__} for {self._storage_name.file_uri}')
         return parser
 

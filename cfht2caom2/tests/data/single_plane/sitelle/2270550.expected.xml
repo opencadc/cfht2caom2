@@ -40,6 +40,7 @@
         <caom2:project>STANDARD PIPELINE</caom2:project>
         <caom2:producer>CFHT</caom2:producer>
         <caom2:reference>http://ascl.net/1409.007</caom2:reference>
+        <caom2:lastExecuted>2018-05-09T01:14:30.000</caom2:lastExecuted>
       </caom2:provenance>
       <caom2:artifacts>
         <caom2:artifact caom2:id="ee5b5771-b4a7-46c3-bb40-ce52f6359fc5" caom2:lastModified="2022-06-22T17:45:11.025" caom2:maxLastModified="2022-06-22T17:45:11.025" caom2:metaChecksum="md5:69fc0345359449e7dcfe223b5373d517" caom2:accMetaChecksum="md5:6a1df8a3c7fd3356c280aceaa1459f69" caom2:metaProducer="cfht2caom2/0.3.7">

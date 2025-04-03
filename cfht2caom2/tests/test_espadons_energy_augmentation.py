@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2020.                            (c) 2020.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -75,7 +75,7 @@ from cfht2caom2 import metadata as md
 TEST_FILES_DIR = '/test_files'
 
 
-def test_visit(test_config, test_data_dir):
+def test_visit_i(test_config, test_data_dir):
     product_id = '2460606i'
     f_name = f'{product_id}.fits.gz'
     obs_fqn = f'{test_data_dir}/multi_plane/espadons/2460606.expected.xml'
@@ -88,7 +88,7 @@ def test_visit(test_config, test_data_dir):
         is None
     ), 'expect to assign'
     test_storage_name = cn.CFHTName(
-        file_name=f_name, instrument=md.Inst.ESPADONS
+        source_names=[f_name], instrument=md.Inst.ESPADONS
     )
     test_storage_name.source_names = [
         join(TEST_FILES_DIR, f_name).replace('.gz', ''),
@@ -97,21 +97,77 @@ def test_visit(test_config, test_data_dir):
         'storage_name': test_storage_name,
         'working_directory': TEST_FILES_DIR,
     }
-    cn.cfht_names[uri] = test_storage_name
 
     test_obs = espadons_energy_augmentation.visit(obs, **kwargs)
     assert test_obs is not None, 'expect a result'
-    # assert test_result.get('chunks') == 1, 'expect 1 updated chunk'
-    test_reference = (
-        obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
-    )
-    assert test_reference is not None, 'expect to assign'
-    assert test_reference.energy is not None, 'expect to assign energy'
-    assert test_reference.naxis == 2, 'wrong naxis'
-    assert test_reference.energy_axis == 1, 'wrong energy axis'
-    assert test_reference.observable_axis == 2, 'wrong observable axis'
-    assert test_reference.position_axis_1 is None, 'wrong position 1 axis'
-    assert test_reference.position_axis_2 is None, 'wrong position 2 axis'
-    assert test_reference.time_axis is None, 'wrong time axis'
-    assert test_reference.custom_axis is None, 'wrong custom axis'
-    assert test_reference.polarization_axis is None, 'wrong pol axis'
+    test_i = obs.planes[product_id].artifacts[uri].parts['0'].chunks[0]
+    assert test_i is not None, 'expect to assign'
+    assert test_i.energy is not None, 'expect to assign energy'
+    assert test_i.naxis == 2, 'wrong naxis'
+    assert test_i.energy_axis == 1, 'wrong energy axis'
+    assert test_i.observable_axis == 2, 'wrong observable axis'
+    assert test_i.position_axis_1 is None, 'wrong position 1 axis'
+    assert test_i.position_axis_2 is None, 'wrong position 2 axis'
+    assert test_i.time_axis is None, 'wrong time axis'
+    assert test_i.custom_axis is None, 'wrong custom axis'
+    assert test_i.polarization_axis is None, 'wrong pol axis'
+    assert len(obs.planes[product_id].artifacts[uri].parts['0'].chunks) == 1, 'i chunk count'
+    assert test_i.observable is not None, 'exists'
+    assert test_i.observable.dependent is not None, 'dependent exists'
+    assert test_i.observable.dependent.axis.ctype == 'flux', 'd ctype'
+    assert test_i.observable.dependent.axis.cunit == 'counts', 'd cunit'
+    assert test_i.observable.dependent.bin == 2, 'd bin'
+    assert test_i.observable.independent is not None, 'independent exists'
+    assert test_i.observable.independent.axis.ctype == 'WAVE', 'i ctype'
+    assert test_i.observable.independent.axis.cunit == 'nm', 'i cunit'
+    assert test_i.observable.independent.bin == 1, 'i bin'
+
+
+def test_visit_i_p(test_config, test_data_dir):
+    obs_fqn = f'{test_data_dir}/espadons_fix_chunks.xml'
+    obs = read_obs_from_file(obs_fqn)
+
+    p_product_id = '3106717p'
+    uri = 'cadc:CFHT/3106717p.fits'
+    # preconditions - the observable should be wrong to start with, and this test to assert that the
+    # 'p' plane chunk 2 observable gets fixed
+    assert len(obs.planes[p_product_id].artifacts[uri].parts['0'].chunks) == 2, 'chunk count'
+    test_p_pre = obs.planes[p_product_id].artifacts[uri].parts['0'].chunks[1]
+    assert test_p_pre.observable is not None, 'exists'
+    assert test_p_pre.observable.dependent is not None, 'dependent exists'
+    assert test_p_pre.observable.dependent.axis.ctype == 'flux', 'd ctype'
+    assert test_p_pre.observable.dependent.axis.cunit == 'counts', 'd cunit'
+    assert test_p_pre.observable.dependent.bin == 2, 'd bin'
+    assert test_p_pre.observable.independent is not None, 'independent exists'
+    assert test_p_pre.observable.independent.axis.ctype == 'WAVE', 'i ctype'
+    assert test_p_pre.observable.independent.axis.cunit == 'nm', 'i cunit'
+    assert test_p_pre.observable.independent.bin == 1, 'i bin'
+
+    for product_id in ['3106717p', '3106717i']:
+        f_name = f'{product_id}.fits'
+        test_storage_name = cn.CFHTName(source_names=[f'{TEST_FILES_DIR}/{f_name}'], instrument=md.Inst.ESPADONS)
+        kwargs = {
+            'storage_name': test_storage_name,
+            'working_directory': TEST_FILES_DIR,
+        }
+        obs = espadons_energy_augmentation.visit(obs, **kwargs)
+
+    assert len(obs.planes[p_product_id].artifacts[uri].parts['0'].chunks) == 2, 'chunk count'
+    test_p = obs.planes[p_product_id].artifacts[uri].parts['0'].chunks[1]
+    assert test_p.energy is not None, 'expect to assign energy'
+    assert test_p.naxis == 2, 'wrong naxis'
+    assert test_p.energy_axis == 1, 'wrong energy axis'
+    assert test_p.observable_axis == 2, 'wrong observable axis'
+    assert test_p.position_axis_1 is None, 'wrong position 1 axis'
+    assert test_p.position_axis_2 is None, 'wrong position 2 axis'
+    assert test_p.time_axis is None, 'wrong time axis'
+    assert test_p.custom_axis is None, 'wrong custom axis'
+    assert test_p.polarization_axis is None, 'wrong pol axis'
+    assert test_p.observable.dependent is not None, 'dependent exists'
+    assert test_p.observable.dependent.axis.ctype == 'polarized flux', 'd ctype'
+    assert test_p.observable.dependent.axis.cunit == 'percent', 'd cunit'
+    assert test_p.observable.dependent.bin == 3, 'd bin'
+    assert test_p.observable.independent is not None, 'independent exists'
+    assert test_p.observable.independent.axis.ctype == 'WAVE', 'i ctype'
+    assert test_p.observable.independent.axis.cunit == 'nm', 'i cunit'
+    assert test_p.observable.independent.bin == 1, 'i bin'

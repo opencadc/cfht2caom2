@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-443c-01409a440263" caom2:lastModified="2017-12-05T00:39:01.200" caom2:maxLastModified="2019-11-06T03:23:36.157" caom2:metaChecksum="md5:a5abc372ee7cee91f6afd540e649c5d6" caom2:accMetaChecksum="md5:0b38820bd6964685a0f7990265a6d207" caom2:metaProducer="cfht2caom2/0.3.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-443c-01409a440263" caom2:lastModified="2017-12-05T00:39:01.200" caom2:maxLastModified="2019-11-06T03:23:36.157" caom2:metaChecksum="md5:a5abc372ee7cee91f6afd540e649c5d6" caom2:accMetaChecksum="md5:0b38820bd6964685a0f7990265a6d207" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>02AE10.bias.0.36.00</caom2:observationID>
   <caom2:metaRelease>2003-02-07T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>688197</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>master_detrend</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>BIAS</caom2:type>
   <caom2:intent>calibration</caom2:intent>
@@ -1153,17 +1153,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/689189</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688198</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/689188</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688491</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688200</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688196</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688201</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/687977</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688982</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688199</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/688197</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

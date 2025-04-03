@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="84a035d3-268b-49ef-9b7e-fca09fb23af7" caom2:lastModified="2023-09-18T23:40:28.347" caom2:metaProducer="cfht2caom2/0.6.1">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="84a035d3-268b-49ef-9b7e-fca09fb23af7" caom2:lastModified="2023-09-18T23:40:28.347" caom2:metaProducer="cfht2caom2/0.6.1">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>851428</caom2:observationID>
   <caom2:metaRelease>2006-06-08T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>851428</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>polarization</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>calibration</caom2:intent>
@@ -76,120 +76,6 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="36c43d58-2a07-49e4-bc24-81d9b3e82e9f" caom2:metaProducer="cfht2caom2/0.6.1">
-                  <caom2:observable>
-                    <caom2:dependent>
-                      <caom2:axis>
-                        <caom2:ctype>flux</caom2:ctype>
-                        <caom2:cunit>counts</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>2</caom2:bin>
-                    </caom2:dependent>
-                    <caom2:independent>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>nm</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>1</caom2:bin>
-                    </caom2:independent>
-                  </caom2:observable>
-                  <caom2:position>
-                    <caom2:axis>
-                      <caom2:axis1>
-                        <caom2:ctype>RA---TAN</caom2:ctype>
-                        <caom2:cunit>deg</caom2:cunit>
-                      </caom2:axis1>
-                      <caom2:axis2>
-                        <caom2:ctype>DEC--TAN</caom2:ctype>
-                        <caom2:cunit>deg</caom2:cunit>
-                      </caom2:axis2>
-                      <caom2:error1>
-                        <caom2:syser>2.78e-05</caom2:syser>
-                        <caom2:rnder>2.78e-05</caom2:rnder>
-                      </caom2:error1>
-                      <caom2:error2>
-                        <caom2:syser>2.78e-05</caom2:syser>
-                        <caom2:rnder>2.78e-05</caom2:rnder>
-                      </caom2:error2>
-                      <caom2:function>
-                        <caom2:dimension>
-                          <caom2:naxis1>1</caom2:naxis1>
-                          <caom2:naxis2>1</caom2:naxis2>
-                        </caom2:dimension>
-                        <caom2:refCoord>
-                          <caom2:coord1>
-                            <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>358.769</caom2:val>
-                          </caom2:coord1>
-                          <caom2:coord2>
-                            <caom2:pix>1.0</caom2:pix>
-                            <caom2:val>28.630389</caom2:val>
-                          </caom2:coord2>
-                        </caom2:refCoord>
-                        <caom2:cd11>-0.000444</caom2:cd11>
-                        <caom2:cd12>0.0</caom2:cd12>
-                        <caom2:cd21>0.0</caom2:cd21>
-                        <caom2:cd22>0.000444</caom2:cd22>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:coordsys>FK5</caom2:coordsys>
-                    <caom2:equinox>2000.0</caom2:equinox>
-                  </caom2:position>
-                  <caom2:time>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>TIME</caom2:ctype>
-                        <caom2:cunit>d</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:error>
-                        <caom2:syser>1e-07</caom2:syser>
-                        <caom2:rnder>1e-07</caom2:rnder>
-                      </caom2:error>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>0.02222222222222222</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>0.5</caom2:pix>
-                          <caom2:val>53894.605</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                    <caom2:timesys>UTC</caom2:timesys>
-                    <caom2:exposure>1920.0</caom2:exposure>
-                    <caom2:resolution>1920.0</caom2:resolution>
-                  </caom2:time>
-                  <caom2:polarization>
-                    <caom2:axis>
-                      <caom2:axis>
-                        <caom2:ctype>STOKES</caom2:ctype>
-                      </caom2:axis>
-                      <caom2:function>
-                        <caom2:naxis>1</caom2:naxis>
-                        <caom2:delta>1.0</caom2:delta>
-                        <caom2:refCoord>
-                          <caom2:pix>1.0</caom2:pix>
-                          <caom2:val>3.0</caom2:val>
-                        </caom2:refCoord>
-                      </caom2:function>
-                    </caom2:axis>
-                  </caom2:polarization>
-                </caom2:chunk>
-                <caom2:chunk caom2:id="2b528e56-b8d4-409d-906c-293f2043fda3" caom2:metaProducer="cfht2caom2/0.6.1">
-                  <caom2:observable>
-                    <caom2:dependent>
-                      <caom2:axis>
-                        <caom2:ctype>polarized flux</caom2:ctype>
-                        <caom2:cunit>percent</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>3</caom2:bin>
-                    </caom2:dependent>
-                    <caom2:independent>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>nm</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>1</caom2:bin>
-                    </caom2:independent>
-                  </caom2:observable>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -278,9 +164,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/851429</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/851431</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/851430</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

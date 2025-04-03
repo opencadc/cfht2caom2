@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-927a-0140a46f7006" caom2:lastModified="2017-11-02T16:24:27.237" caom2:maxLastModified="2017-11-02T16:24:27.237" caom2:metaChecksum="md5:2615c78be3af24a4c40204fdaf41a044" caom2:accMetaChecksum="md5:ae1fe364975298a5f45cc3fea0d05b99" caom2:metaProducer="cfht2caom2/0.3.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-927a-0140a46f7006" caom2:lastModified="2017-11-02T16:24:27.237" caom2:maxLastModified="2017-11-02T16:24:27.237" caom2:metaChecksum="md5:2615c78be3af24a4c40204fdaf41a044" caom2:accMetaChecksum="md5:ae1fe364975298a5f45cc3fea0d05b99" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2003A.frpts.z.36.00</caom2:observationID>
   <caom2:metaRelease>2003-03-29T01:34:54.000</caom2:metaRelease>
   <caom2:algorithm>
-    <caom2:name>master_detrend</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>FRINGE</caom2:type>
   <caom2:intent>calibration</caom2:intent>

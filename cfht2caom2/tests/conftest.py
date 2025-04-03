@@ -83,6 +83,7 @@ def test_config():
     config.scheme = SCHEME
     config.logging_level = 'INFO'
     config.time_zone = 'UTC'
+    config.data_source_extensions = ['.fits', '.fits.gz', '.fits.fz', '.hdf5']
     StorageName.collection = config.collection
     StorageName.preview_scheme = config.preview_scheme
     StorageName.scheme = config.scheme
@@ -94,3 +95,8 @@ def test_data_dir():
     this_dir = dirname(realpath(__file__))
     fqn = join(this_dir, 'data')
     return fqn
+
+
+@pytest.fixture()
+def change_test_dir(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)

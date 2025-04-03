@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-6513-0160b7abfaf7" caom2:lastModified="2018-01-02T20:35:42.430" caom2:maxLastModified="2019-11-06T07:20:21.120" caom2:metaChecksum="md5:b342e11b2ccb703b18b0b2ea4bc456f8" caom2:accMetaChecksum="md5:f3fea2d750850e5fa13cb06d80e596c1" caom2:metaProducer="cfht2caom2/0.3.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-6513-0160b7abfaf7" caom2:lastModified="2018-01-02T20:35:42.430" caom2:maxLastModified="2019-11-06T07:20:21.120" caom2:metaChecksum="md5:b342e11b2ccb703b18b0b2ea4bc456f8" caom2:accMetaChecksum="md5:f3fea2d750850e5fa13cb06d80e596c1" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2238502</caom2:observationID>
   <caom2:metaRelease>2018-01-02T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2238502</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>intensity</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>
@@ -77,22 +77,6 @@
               <caom2:name>0</caom2:name>
               <caom2:chunks>
                 <caom2:chunk caom2:id="00000000-0000-0000-53c9-0160b896347b" caom2:lastModified="2018-01-02T22:29:18.727" caom2:maxLastModified="2018-01-02T22:29:18.727" caom2:metaChecksum="md5:00f19de4d7501ab004140748cd32d01a" caom2:accMetaChecksum="md5:aed6f68ba0c0f512b7aa598796a92e8d" caom2:metaProducer="cfht2caom2/0.3.2">
-                  <caom2:observable>
-                    <caom2:dependent>
-                      <caom2:axis>
-                        <caom2:ctype>flux</caom2:ctype>
-                        <caom2:cunit>counts</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>2</caom2:bin>
-                    </caom2:dependent>
-                    <caom2:independent>
-                      <caom2:axis>
-                        <caom2:ctype>WAVE</caom2:ctype>
-                        <caom2:cunit>nm</caom2:cunit>
-                      </caom2:axis>
-                      <caom2:bin>1</caom2:bin>
-                    </caom2:independent>
-                  </caom2:observable>
                   <caom2:position>
                     <caom2:axis>
                       <caom2:axis1>
@@ -166,5 +150,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members/>
 </caom2:Observation>

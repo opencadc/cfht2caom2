@@ -1,10 +1,10 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="a929ce79-dcc6-40a0-ba2d-ff6b75bd593d" caom2:lastModified="2019-12-18T01:10:27.156" caom2:maxLastModified="2020-01-13T09:12:27.448" caom2:metaChecksum="md5:2b67f2f734af60da0a83f0b6e78d66e2" caom2:accMetaChecksum="md5:f55ca2422cd14f4059e1f430958d164e">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="a929ce79-dcc6-40a0-ba2d-ff6b75bd593d" caom2:lastModified="2019-12-18T01:10:27.156" caom2:maxLastModified="2020-01-13T09:12:27.448" caom2:metaChecksum="md5:2b67f2f734af60da0a83f0b6e78d66e2" caom2:accMetaChecksum="md5:f55ca2422cd14f4059e1f430958d164e">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>2455409</caom2:observationID>
   <caom2:metaRelease>2024-01-31T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2455409</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>polarization</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>OBJECT</caom2:type>
   <caom2:intent>science</caom2:intent>
@@ -941,9 +941,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/2455410</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2455411</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2455412</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

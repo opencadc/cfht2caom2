@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ***********************************************************************
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
@@ -146,6 +145,7 @@ class CFHTCache(mc.Cache):
         return CFHTCache.semester(run_id) in self._cached_semesters
 
     def _try_to_append_to_cache(self, run_id):
+        logging.debug(f'Begin _try_to_append_to_cache for {run_id}')
         if run_id is None or run_id == '':
             # the case of no value for run_id
             return
@@ -198,6 +198,7 @@ class CFHTCache(mc.Cache):
         if updated_content:
             self.save()
         self._cached_semesters.append(CFHTCache.semester(run_id))
+        logging.debug('End _try_to_append_to_cache')
 
     def get_title(self, run_id):
         result = self._project_titles.get(run_id)

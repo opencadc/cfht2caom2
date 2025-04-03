@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2020.                            (c) 2020.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -65,10 +65,11 @@
 #
 # ***********************************************************************
 
+import copy
 import logging
 
 from astropy.io import fits
-from caom2 import Observation, CoordAxis1D, SpectralWCS, Axis
+from caom2 import Axis, Chunk, CoordAxis1D, ObservableAxis, Observation, Slice, SpectralWCS
 from caom2pipe import astro_composable as ac
 from caom2pipe import manage_composable as mc
 from cfht2caom2 import metadata as md
@@ -99,13 +100,15 @@ def visit(observation, **kwargs):
                 if storage_name.file_uri == artifact.uri:
                     count += _do_energy(artifact, science_fqn, storage_name)
         logging.info(
-            f'Completed ESPaDOnS energy augmentation for {count} artifacts in '
-            f'{observation.observation_id}.'
+            f'Completed ESPaDOnS energy augmentation for {count} chunks in {observation.observation_id}.'
         )
     return observation
 
 
-def _do_energy(artifact, science_fqn, cfht_name):
+def _do_energy(artifact, science_fqn, storage_name):
+    # CW l826
+    # Set up observable axes, row 1 is wavelength, row 2 is normalized flux, row 3 ('p' only) is Stokes spectrum
+
     # PD slack 08-01-20
     # espadons is a special case because using bounds allows one to
     # define "tiles" and then the SODA cutout service can extract the
@@ -134,6 +137,7 @@ def _do_energy(artifact, science_fqn, cfht_name):
 
     # read in the complete fits file, including the data
     logging.info(f'Reading ESPaDOnS energy data from {science_fqn}.')
+    count = 0
     hdus = fits.open(science_fqn, memmap=True, lazy_load_hdus=False)
     if hdus[0].data is not None:
         wave = hdus[0].data[0, :].copy()
@@ -157,19 +161,37 @@ def _do_energy(artifact, science_fqn, cfht_name):
     )
     chunk.energy_axis = 1
     chunk.naxis = hdr.get('NAXIS')
-    if (
-        chunk.naxis is not None
-        and chunk.naxis == 2
-        and chunk.observable is not None
-    ):
+    logging.info(f'chunk.naxis is {chunk.naxis}')
+    if chunk.naxis is not None and chunk.naxis == 2:
+        independent_axis = Axis('WAVE', 'nm')
+        independent = Slice(independent_axis, 1)
+        dependent_axis = Axis('flux', 'counts')
+        dependent = Slice(dependent_axis, 2)
+        chunk.observable = ObservableAxis(dependent, independent)
         chunk.observable_axis = 2
-        chunk.position_axis_1 = None
-        chunk.position_axis_2 = None
-        chunk.time_axis = None
-        chunk.custom_axis = None
-        if cfht_name.suffix != 'p':
-            chunk.polarization_axis = None
-    return 1
+        count += 1
+        logging.info('Chunk 0 updated')
+
+    if storage_name.suffix == 'p':
+        if len(artifact.parts['0'].chunks) == 2:
+            # replace the existing value
+            artifact.parts['0'].chunks.pop(1)
+
+        # caom2IngestEspadons.py, l863
+        dependent_axis = Axis('polarized flux', 'percent')
+        dependent = Slice(dependent_axis, 3)
+        independent_axis = Axis('WAVE', 'nm')
+        independent = Slice(independent_axis, 1)
+        new_chunk = copy.deepcopy(chunk)
+        new_chunk.observable = ObservableAxis(dependent, independent)
+        new_chunk.energy = chunk.energy
+        new_chunk._id = Chunk._gen_id()
+        artifact.parts['0'].chunks.append(new_chunk)
+        count += 1
+        logging.info('Chunk 1 added')
+
+    logging.info(f'Done reading energy, changed {count} chunks.')
+    return count
 
 
 def get_energy_resolving_power(header):

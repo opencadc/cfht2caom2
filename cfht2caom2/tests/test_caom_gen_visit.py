@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -68,22 +68,28 @@
 
 import glob
 import logging
+import traceback
 import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
 from astropy.wcs import FITSFixedWarning
-from mock import patch
+from mock import Mock, patch
 from os import unlink
 from os.path import basename, dirname, exists, join, realpath
 
 from astropy.io.votable import parse_single_table
 from caom2.diff import get_differences
-from cadcdata import FileInfo
-from caom2pipe import astro_composable as ac
-from caom2pipe.manage_composable import get_keyword, Observable, read_obs_from_file, write_obs_to_file
-from caom2pipe import reader_composable as rdc
-from caom2utils import data_util
-from cfht2caom2 import CFHTName, fits2caom2_augmentation
+from caom2pipe.manage_composable import (
+    CadcException,
+    ExecutionReporter2,
+    Observable,
+    read_obs_from_file,
+    TaskType,
+    write_obs_to_file,
+)
+from caom2utils.data_util import get_local_file_headers, get_local_file_info
+from cfht2caom2.cfht_name import CFHTName, CFHTMetaVisitRunnerMeta
+from cfht2caom2 import file2caom2_augmentation
 from cfht2caom2 import metadata as md
 
 
@@ -98,9 +104,8 @@ def pytest_generate_tests(metafunc):
 
 
 @patch('cfht2caom2.metadata.CFHTCache._try_to_append_to_cache')
-@patch('cfht2caom2.instruments.get_local_headers_from_fits')
 @patch('caom2pipe.astro_composable.get_vo_table')
-def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config, tmp_path):
+def test_visitor(vo_mock, cache_mock, test_name, test_config, tmp_path, change_test_dir):
     # cache_mock there so there are no update cache calls - so the tests work without a network connection
     warnings.simplefilter('ignore', category=AstropyUserWarning)
     warnings.simplefilter('ignore', category=FITSFixedWarning)
@@ -108,7 +113,6 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
     # during cfht2caom2 operation, want to use astropy on FITS files
     # but during testing want to use headers and built-in Python file
     # operations
-    local_headers_mock.side_effect = _local_headers
     instr = dirname(basename(test_name))
     instrument = {
         'espadons': md.Inst.ESPADONS,
@@ -117,38 +121,65 @@ def test_visitor(vo_mock, local_headers_mock, cache_mock, test_name, test_config
         'spirou': md.Inst.SPIROU,
         'wircam': md.Inst.WIRCAM,
     }.get(instr)
-    storage_name = CFHTName(
-        file_name=basename(test_name).replace('.header', ''),
-        instrument=instrument,
-        source_names=[test_name],
-    )
-    file_info = FileInfo(
-        id=storage_name.file_uri, file_type='application/fits'
-    )
-    headers = ac.make_headers_from_file(test_name)
-    metadata_reader = rdc.Hdf5FileMetadataReader()
-    metadata_reader._headers = {storage_name.file_uri: headers}
-    metadata_reader._file_info = {storage_name.file_uri: file_info}
-    test_config.rejected_file_name = 'rejected.yml'
-    test_config.rejected_directory = tmp_path.as_posix()
-    test_observable = Observable(test_config)
-    kwargs = {
-        'storage_name': storage_name,
-        'metadata_reader': metadata_reader,
-        'observable': test_observable,
-        'config': test_config,
-    }
-    storage_name._bitpix = get_keyword(headers, 'BITPIX')
-    observation = None
-    observation = fits2caom2_augmentation.visit(observation, **kwargs)
+    test_config.change_working_directory(tmp_path.as_posix())
+    test_config.proxy_file_name = 'test_proxy.pem'
+    test_config.task_types = [TaskType.SCRAPE]
+    test_config.use_local_files = True
+    test_config.log_to_file = True
+    test_config.data_sources = [tmp_path.as_posix()]
+    test_reporter = ExecutionReporter2(test_config)
+    expected_fqn = f'{test_name}/{basename(test_name)}.expected.xml'
+    in_fqn = expected_fqn.replace('.expected', '.in')
+    actual_fqn = expected_fqn.replace('expected', 'actual')
+    if exists(actual_fqn):
+        unlink(actual_fqn)
 
-    _compare(test_name, observation, storage_name.obs_id)
-    if storage_name.file_name == '19BMfr.fringe.gri.40.00.fits':
-        assert len(test_observable.rejected.get_bad_metadata()) == 1, f'invalid TV_STOP'
+    observation = None
+    if exists(in_fqn):
+        observation = read_obs_from_file(in_fqn)
+
+    with open(test_config.proxy_fqn, 'w') as f:
+        f.write('test content')
+
+    clients_mock = Mock()
+    test_subject = CFHTMetaVisitRunnerMeta(clients_mock, test_config, [file2caom2_augmentation], test_reporter)
+    test_subject._observation = observation
+
+    test_set = [test_name]
+    for entry in test_set:
+        def _mock_repo_read(collection, obs_id):
+            return test_subject._observation
+        clients_mock.metadata_client.read.side_effect = _mock_repo_read
+
+        def _read_header_mock(ignore1):
+            return get_local_file_headers(entry)
+        clients_mock.data_client.get_head.side_effect = _read_header_mock
+
+        def _info_mock(uri):
+            temp = get_local_file_info(entry)
+            if storage_name.hdf5:
+                temp.file_type = 'application/x-hdf5'
+            else:
+                temp.file_type = 'application/fits'
+            temp.size = None  # because the previous tests did not set file size
+            return temp
+        clients_mock.data_client.info.side_effect = _info_mock
+
+        storage_name = CFHTName(source_names=[entry], instrument=instrument)
+        context = {'storage_name': storage_name}
+        try:
+            test_subject.execute(context)
+        except CadcException as e:
+            logging.error(traceback.format_exc())
+            assert False
+
+    _compare(test_name, test_subject._observation, storage_name.obs_id)
+    if storage_name.file_name == '19BMfr.fringe.gri.40.00.fits.header':
+        assert len(test_reporter._observable.rejected.get_bad_metadata()) == 1, f'invalid TV_STOP'
     else:
         assert (
-            len(test_observable.rejected.get_bad_metadata()) == 0
-        ), f'should be no rejections {test_observable.rejected.get_bad_metadata()}'
+            len(test_reporter._observable.rejected.get_bad_metadata()) == 0
+        ), f'should be no rejections {test_reporter._observable.rejected.get_bad_metadata()}'
 
     # assert False
 
@@ -176,22 +207,6 @@ def _compare(test_name, observation, obs_id):
         else:
             write_obs_to_file(observation, actual_fqn)
             assert False, f'No expected file {expected_fqn} for {obs_id}'
-
-
-def _local_headers(fqn):
-    from urllib.parse import urlparse
-    from astropy.io import fits
-
-    file_uri = urlparse(fqn)
-    try:
-        fits_header = open(file_uri.path).read()
-        headers = data_util.make_headers_from_string(fits_header)
-    except UnicodeDecodeError:
-        hdulist = fits.open(fqn, memmap=True, lazy_load_hdus=True)
-        hdulist.verify('fix')
-        hdulist.close()
-        headers = [h.header for h in hdulist]
-    return headers
 
 
 def _vo_mock(url):

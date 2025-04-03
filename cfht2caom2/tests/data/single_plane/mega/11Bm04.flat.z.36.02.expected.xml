@@ -1,10 +1,10 @@
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="00000000-0000-0000-da13-014d9c394210" caom2:lastModified="2017-11-02T22:30:12.983" caom2:maxLastModified="2017-11-02T22:30:12.983" caom2:metaChecksum="md5:d4aeef9dd3183cc99e3644f82bd2d695" caom2:accMetaChecksum="md5:78a85244218cce03ac6ace35a498ce60">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="00000000-0000-0000-da13-014d9c394210" caom2:lastModified="2017-11-02T22:30:12.983" caom2:maxLastModified="2017-11-02T22:30:12.983" caom2:metaChecksum="md5:d4aeef9dd3183cc99e3644f82bd2d695" caom2:accMetaChecksum="md5:78a85244218cce03ac6ace35a498ce60">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>11Bm04.flat.z.36.02</caom2:observationID>
   <caom2:metaRelease>2012-01-26T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>1521699</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>master_detrend</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>FLAT</caom2:type>
   <caom2:intent>calibration</caom2:intent>
@@ -2152,31 +2152,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/1521704</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521862</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521879</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1522037</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521701</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521702</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521876</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521700</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521699</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521859</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1522039</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1522038</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521873</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521861</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521874</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521697</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521698</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521703</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521696</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521860</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521877</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521878</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521705</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1522036</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/1521875</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>

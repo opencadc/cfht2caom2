@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2019.                            (c) 2019.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -71,17 +71,16 @@ import sys
 import traceback
 
 from caom2pipe import client_composable as clc
-from caom2pipe.manage_composable import CadcException, Config, StorageName, TaskType
-from caom2pipe.reader_composable import Hdf5FileMetadataReader
+from caom2pipe.data_source_composable import LocalFilesDataSourceRunnerMeta
+from caom2pipe.manage_composable import Config, StorageName, TaskType
 from caom2pipe import run_composable as rc
 from cfht2caom2 import cleanup_augmentation
 from cfht2caom2 import espadons_energy_augmentation, preview_augmentation
-from cfht2caom2 import fits2caom2_augmentation
-from cfht2caom2.cfht_builder import CFHTBuilder, CFHTLocalBuilder
-from cfht2caom2.cfht_data_source import CFHTLocalFilesDataSource
+from cfht2caom2 import file2caom2_augmentation
+from cfht2caom2.cfht_name import CFHTName
 
 
-META_VISITORS = [fits2caom2_augmentation]
+META_VISITORS = [file2caom2_augmentation]
 DATA_VISITORS = [
     espadons_energy_augmentation,
     preview_augmentation,
@@ -104,38 +103,27 @@ def _common_init():
     config.get_executors()
     StorageName.collection = config.collection
     StorageName.scheme = config.scheme
+    StorageName.preview_scheme = config.preview_scheme
+    StorageName.data_source_extensions = config.data_source_extensions
     clients = clc.ClientCollection(config)
-    if can_use_single_visit(config.task_types):
-        reader = Hdf5FileMetadataReader()
-    else:
-        raise CadcException(f'cfht2caom2 does not work with these task types: {config.task_types}')
-    if config.use_local_files:
-        builder = CFHTLocalBuilder(config.collection, config.working_directory, reader)
-    else:
-        builder = CFHTBuilder(config.collection)
     sources = []
     if config.use_local_files:
-        source = CFHTLocalFilesDataSource(
-            config,
-            clients.data_client,
-            reader,
-            recursive=config.recurse_data_sources,
-            builder=builder,
-        )
+        source = LocalFilesDataSourceRunnerMeta(config, clients.data_client, storage_name_ctor=CFHTName)
         sources.append(source)
-    return config, clients, reader, builder, sources
+    return config, clients, sources
 
 
 def _run_state():
-    config, clients, reader, builder, sources = _common_init()
-    return rc.run_by_state(
+    config, clients, sources = _common_init()
+    return rc.run_by_state_runner_meta(
         config=config,
-        name_builder=builder,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
-        clients=clients,
         sources=sources,
-        metadata_reader=reader,
+        clients=clients,
+        organizer_module_name='cfht2caom2.cfht_name',
+        organizer_class_name='CFHTOrganizeExecutesRunnerMeta',
+        storage_name_ctor=CFHTName,
     )
 
 
@@ -151,30 +139,29 @@ def run_state():
         sys.exit(-1)
 
 
-def _run_by_builder():
-    """Run the processing for observations using a todo file to identify the
-    work to be done, but with the support of a Builder, so that StorageName
-    instances can be provided. This is important here, because the
-    instrument name needs to be provided to the StorageName constructor.
+def _run():
+    """Run the processing for observations using a todo file to identify the work to be done. StorageName
+    construction is incomplete with a todo file, because the instrument name and BITPIX are required.
 
     :return 0 if successful, -1 if there's any sort of failure. Return status
         is used by airflow for task instance management and reporting.
     """
-    config, clients, reader, builder, sources = _common_init()
-    return rc.run_by_todo(
+    config, clients, sources = _common_init()
+    return rc.run_by_todo_runner_meta(
         config,
-        builder,
+        sources=sources,
         meta_visitors=META_VISITORS,
         data_visitors=DATA_VISITORS,
         clients=clients,
-        sources=sources,
-        metadata_reader=reader,
+        organizer_module_name='cfht2caom2.cfht_name',
+        organizer_class_name='CFHTOrganizeExecutesRunnerMeta',
+        storage_name_ctor=CFHTName,
     )
 
 
-def run_by_builder():
+def run():
     try:
-        result = _run_by_builder()
+        result = _run()
         sys.exit(result)
     except Exception as e:
         logging.error(e)

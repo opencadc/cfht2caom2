@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2023.                            (c) 2023.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -69,11 +69,10 @@
 from cadcdata import FileInfo
 from caom2.diff import get_differences
 from caom2pipe.astro_composable import make_headers_from_file
-from caom2pipe.manage_composable import Observable, read_obs_from_file, write_obs_to_file
-from caom2pipe.reader_composable import Hdf5FileMetadataReader
+from caom2pipe.manage_composable import ExecutionReporter2, read_obs_from_file, write_obs_to_file
 from cfht2caom2.metadata import Inst
 from cfht2caom2.cfht_name import CFHTName
-from cfht2caom2 import fits2caom2_augmentation
+from cfht2caom2 import file2caom2_augmentation
 
 import pytest
 from mock import Mock, patch
@@ -81,31 +80,28 @@ from test_caom_gen_visit import _vo_mock
 
 
 @pytest.fixture()
-def test_kwargs(test_data_dir, test_config):
+def test_kwargs(test_data_dir, test_config, tmp_path):
     test_f_name = '1013501p_flag.fits.fz'
     test_fqn = f'{test_data_dir}/{test_f_name}.txt'
     test_storage_name = CFHTName(
-        file_name = test_f_name,
         instrument = Inst.MEGAPRIME,
         source_names = [f'{test_config.scheme}:{test_config.collection}/{test_f_name}'],
     )
     file_info = FileInfo(id=test_storage_name.file_uri, md5sum='abc')
     headers = make_headers_from_file(test_fqn)
-    reader = Hdf5FileMetadataReader()
-    reader._headers = {test_storage_name.file_uri: headers}
-    reader._file_info = {test_storage_name.file_uri: file_info}
+    test_storage_name.metadata = {test_storage_name.file_uri: headers}
+    test_storage_name.file_info = {test_storage_name.file_uri: file_info}
     test_clients = Mock(autospec=True)
 
     def _get_head_mock(ignore):
         return make_headers_from_file(test_fqn)
 
     test_clients.data_client.get_head.side_effect = _get_head_mock
-    test_config.rejected_file_name = 'rejected.yml'
-    test_config.rejected_directory = '/tmp'
+    test_config.change_working_directory(tmp_path.as_posix())
     kwargs = {
+        'working_directory': tmp_path,
         'clients': test_clients,
-        'metadata_reader': reader,
-        'observable': Observable(test_config),
+        'reporter': ExecutionReporter2(test_config),
         'storage_name': test_storage_name,
         'config': test_config,
     }
@@ -116,7 +112,7 @@ def test_kwargs(test_data_dir, test_config):
 @patch('caom2pipe.astro_composable.get_vo_table')
 def test_new_flag_observation(vo_mock, cache_mock, test_kwargs, test_data_dir):
     vo_mock.side_effect = _vo_mock
-    test_obs = fits2caom2_augmentation.visit(None, **test_kwargs)
+    test_obs = file2caom2_augmentation.visit(None, **test_kwargs)
     write_obs_to_file(test_obs, f'{test_data_dir}/x.xml')
     expected_obs = read_obs_from_file(f'{test_data_dir}/flag_no_obs.xml')
     test_result = get_differences(test_obs, expected_obs)
@@ -131,7 +127,7 @@ def test_new_flag_observation(vo_mock, cache_mock, test_kwargs, test_data_dir):
 def test_add_flag_to_existing_observation(vo_mock, cache_mock, test_kwargs, test_data_dir):
     vo_mock.side_effect = _vo_mock
     test_obs = read_obs_from_file(f'{test_data_dir}/flag_existing_obs_start.xml')
-    test_obs = fits2caom2_augmentation.visit(test_obs, **test_kwargs)
+    test_obs = file2caom2_augmentation.visit(test_obs, **test_kwargs)
     expected_obs = read_obs_from_file(f'{test_data_dir}/flag_existing_obs_end.xml')
     test_result = get_differences(test_obs, expected_obs)
     msg = None

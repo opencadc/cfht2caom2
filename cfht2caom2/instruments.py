@@ -2,7 +2,7 @@
 # ******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 # *************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 #
-#  (c) 2021.                            (c) 2021.
+#  (c) 2025.                            (c) 2025.
 #  Government of Canada                 Gouvernement du Canada
 #  National Research Council            Conseil national de recherches
 #  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -147,7 +147,7 @@ bounds there
 contained in bounds, gaps need to be captured. so keep bounds. if you decide
 to remove range, then advanced users would have to dig in the info to
 understand range is first and last bounds if i understand correctly.
-- SF - 19-03-24 - from the Spanish VO filter service, take the CFHT/Megaprime.<filter>  , not _sdss or _fil, and 
+- SF - 19-03-24 - from the Spanish VO filter service, take the CFHT/Megaprime.<filter>  , not _sdss or _fil, and
 not CFHT/Megacam.
 
 CFHT WCS:
@@ -175,14 +175,12 @@ SF 12-04-21
 
 """
 
-import copy
 import logging
 import math
 import os
 
 from astropy import units
 from astropy.io import fits
-from dateutil import tz
 from enum import Enum
 from re import match
 
@@ -194,14 +192,13 @@ from caom2 import DerivedObservation
 from caom2utils.caom2blueprint import update_artifact_meta
 from caom2utils.blueprints import ObsBlueprint
 from caom2utils.wcs_parsers import FitsWcsParser
-from caom2utils.data_util import get_local_headers_from_fits
+from caom2utils.data_util import get_local_file_headers
 from caom2pipe import astro_composable as ac
 from caom2pipe import caom_composable as cc
 from caom2pipe import manage_composable as mc
 from caom2pipe import translate_composable as tc
 from cfht2caom2 import cfht_name as cn
 from cfht2caom2 import metadata as md
-from cfht2caom2.cfht_builder import set_storage_name_values
 from cfht2caom2.espadons_energy_augmentation import get_energy_resolving_power
 
 __all__ = ['factory', 'InstrumentType']
@@ -269,15 +266,13 @@ class CFHTValueRepair(mc.ValueRepairCache):
         self._logger = logging.getLogger(self.__class__.__name__)
 
 
-class AuxiliaryType(cc.TelescopeMapping):
+class AuxiliaryType(cc.TelescopeMapping2):
     value_repair = CFHTValueRepair()
 
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(cfht_name, headers, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # keep because of MegaCam/MegaPrime
         self._name = cfht_name.instrument.value
-        self._storage_name = cfht_name
-        self._headers = headers
         self._chunk = None
         self._part = None
         self._plane = None
@@ -377,7 +372,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         bp.set('Plane.calibrationLevel', calibration_level)
         bp.set('Plane.dataRelease', 'get_plane_data_release()')
         bp.set('Plane.metaRelease', 'get_meta_release()')
-        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
+        bp.add_attribute('Plane.provenance.lastExecuted', 'PROCDATE')
         bp.set_default('Plane.provenance.producer', 'CFHT')
         bp.set('Plane.provenance.project', 'STANDARD PIPELINE')
         bp.clear('Plane.provenance.runID')
@@ -565,14 +560,6 @@ class AuxiliaryType(cc.TelescopeMapping):
             result = md.cache.get_title(run_id)
         return result
 
-    def get_provenance_last_executed(self, ext):
-        result = self._headers[ext].get('PROCDATE')
-        if result is not None:
-            # format like 2018-06-05HST17:21:20
-            tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
-            # replace is because CAOM2 is non-aware
-            result = mc.make_datetime(result)
-        return result
 
     def get_provenance_version(self, ext):
         result = self._headers[ext].get('IIWIVER')
@@ -732,7 +719,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         self._logger.info(f'Using {derived_type} to look for Plane.provenance.inputs.')
         return derived_type
 
-    def update(self, file_info):
+    def update(self):
         """Called to fill multiple CAOM model elements and/or attributes, must
         have this signature for import_module loading and execution.
 
@@ -741,7 +728,6 @@ class AuxiliaryType(cc.TelescopeMapping):
         multiple elements of the CAOM model (mapping cardinality n:n).
 
         :param observation A CAOM Observation model instance.
-        :param file_info cadcdata.FileInfo instance
         """
         self._logger.debug('Begin update.')
 
@@ -768,20 +754,6 @@ class AuxiliaryType(cc.TelescopeMapping):
             self._logger.debug('Done hdf5 update.')
             return self._observation
 
-        derived_type = self._find_derived_type(self._observation.observation_id)
-        if self._storage_name.derived and not isinstance(self._observation, DerivedObservation):
-            self._logger.info(f'{self._observation.observation_id} will be changed to a Derived Observation.')
-            algorithm_name = self._observation.algorithm.name
-            if self._storage_name.instrument != md.Inst.ESPADONS and self._storage_name.suffix != 'i':
-                algorithm_name = 'master_detrend'
-            if self._storage_name.suffix == 'p' and self._storage_name.instrument in [md.Inst.ESPADONS, md.Inst.SPIROU]:
-                algorithm_name = 'polarization'
-            elif self._storage_name.instrument is md.Inst.SITELLE:
-                algorithm_name = 'scan'
-            elif self._storage_name.instrument is md.Inst.SPIROU:
-                algorithm_name = 'drs'
-            self._observation = cc.change_to_composite(self._observation, algorithm_name)
-
         if (
             self._storage_name.instrument is md.Inst.SITELLE
             and self._storage_name.suffix == 'v'
@@ -800,7 +772,7 @@ class AuxiliaryType(cc.TelescopeMapping):
             for artifact in plane.artifacts.values():
                 if artifact.uri != self._storage_name.file_uri:
                     continue
-                update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, self._storage_name.file_info.get(self._storage_name.file_uri))
 
                 for part in artifact.parts.values():
                     for chunk in part.chunks:
@@ -815,7 +787,8 @@ class AuxiliaryType(cc.TelescopeMapping):
                         self.chunk = chunk
                         self.update_chunk()
 
-            if isinstance(self._observation, DerivedObservation) and plane.provenance is not None:
+            derived_type = self._find_derived_type(self._observation.observation_id)
+            if plane.provenance is not None:
                 if derived_type is ProvenanceType.IMCMB:
                     cc.update_plane_provenance(
                         plane,
@@ -853,9 +826,6 @@ class AuxiliaryType(cc.TelescopeMapping):
 
             self.update_plane()
 
-        # relies on update_plane_provenance being called
-        if isinstance(self._observation, DerivedObservation):
-            cc.update_observation_members(self._observation)
         InstrumentType.value_repair.repair(self._observation)
         self._logger.debug('Done update.')
         return self._observation
@@ -892,7 +862,6 @@ class AuxiliaryType(cc.TelescopeMapping):
             self._observable.rejected.record(mc.Rejected.BAD_METADATA, self._storage_name.file_name)
 
     def update_chunk(self):
-        self.update_observable()
         self.update_polarization()
         self.update_time()
         self.update_position()
@@ -902,9 +871,6 @@ class AuxiliaryType(cc.TelescopeMapping):
         self.make_axes_consistent()
 
     def update_energy(self):
-        pass
-
-    def update_observable(self):
         pass
 
     def update_observation(self):
@@ -936,7 +902,7 @@ class AuxiliaryType(cc.TelescopeMapping):
         self._logger.debug(
             f'Begin _update_plane_provenance for {self._storage_name.obs_id}'
         )
-        obs_uri_ignore, plane_uri = cc.make_plane_uri(
+        _, plane_uri = cc.make_plane_uri(
             self._storage_name.obs_id, f'{self._storage_name.obs_id}o', self._storage_name.collection
         )
         self.plane.provenance.inputs.add(plane_uri)
@@ -981,9 +947,6 @@ class AuxiliaryType(cc.TelescopeMapping):
 
 
 class InstrumentType(AuxiliaryType):
-
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_spectral_chunk_blueprint(self, bp):
         # hard-coded values from:
@@ -1352,7 +1315,7 @@ class InstrumentType(AuxiliaryType):
                         f'{self._storage_name.file_name} in {self._observation.observation_id}'
                     )
                     if os.path.exists(self._storage_name.source_names[0]):
-                        unmodified_headers = get_local_headers_from_fits(self._storage_name.source_names[0])
+                        unmodified_headers = get_local_file_headers(self._storage_name.source_names[0])
                     elif self._clients is not None and self._clients.data_client is not None:
                         unmodified_headers = self._clients.data_client.get_head(self._storage_name.file_uri)
 
@@ -1394,8 +1357,15 @@ class InstrumentType(AuxiliaryType):
 
 
 class EspadonsTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    """
+    Energy - NAXIS1
+    Observable - NAXIS2 - set in espadons_energy_augmentation.py
+    Spatial - NAXIS3, NAXIS4
+    Time - NAXIS5
+    Polarization - NAXIS6
+    """
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # SF 18-11-22 espadons is 2004
         self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
 
@@ -1427,15 +1397,14 @@ class EspadonsTemporal(InstrumentType):
         """
         super().accumulate_blueprint(bp)
 
-        bp.configure_time_axis(3)
+        bp.configure_time_axis(5)
         self.accumulate_time_chunk_blueprint(bp)
 
-        # bp.set('Observation.target.targetID', '_get_gaia_target_id()')
-        bp.set('Observation.algorithm.name', 'get_algorithm_name()')
         bp.add_attribute('Observation.target_position.coordsys', 'RADECSYS')
 
         bp.set('Plane.dataProductType', DataProductType.SPECTRUM)
         bp.set('Plane.provenance.keywords', 'get_provenance_keywords()')
+        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
         bp.set('Plane.provenance.name', 'get_provenance_name()')
         bp.set('Plane.provenance.project', 'get_provenance_project()')
         bp.set('Plane.provenance.reference', 'get_provenance_reference()')
@@ -1445,15 +1414,6 @@ class EspadonsTemporal(InstrumentType):
         bp.set('Chunk.time.axis.function.refCoord.val', 'get_time_refcoord_val()')
 
         self._logger.debug('Done accumulate_blueprint.')
-
-    def get_algorithm_name(self, ext):
-        """
-        Can't do the repair of the value with CFHTValueRepair, because algorithm.name is immutable.
-        """
-        result = self._headers[ext].get('REDUCTIO', 'exposure')
-        if result == 'Polar':
-            result = 'polarization'
-        return result.lower()
 
     def get_chunk_position_equinox(self, ext):
         equinox = self._headers[ext].get('EQUINOX')
@@ -1496,8 +1456,6 @@ class EspadonsTemporal(InstrumentType):
             for comment in comments:
                 if 'Upena processing date:' in comment:
                     result = comment.split('Upena processing date: ')[1]
-                    # format like Fri Mar 13 22:51:55 HST 2009
-                    tz_info = tz.gettz('HST') if 'HST' in result else tz.UTC
                     result = mc.make_datetime(result)
                     break
                 elif 'opera-' in comment:
@@ -1609,27 +1567,27 @@ class EspadonsTemporal(InstrumentType):
         return mjd_obs
 
     def make_axes_consistent(self):
-        if not (self._chunk.naxis is not None and self._chunk.position is None):
-            if self._chunk.energy is not None:
-                self._chunk.energy_axis = None
-            if self._chunk.time is not None:
-                self._chunk.time_axis = None
-        if self._chunk.naxis is None:
-            if self._chunk.observable_axis is not None:
-                self._chunk.observable_axis = None
-            if self._chunk.polarization_axis is not None:
-                self._chunk.polarization_axis = None
-        else:
-            if self._chunk.time is not None and self._chunk.position is None:
-                self._chunk.naxis = None
-                self._chunk.time_axis = None
+        self._logger.debug('Begin make_axes_consistent')
+        # the energyAxis set to None is here because the metadata-only ingest needs to pass the server-side
+        # naxis + *Axis value checks
+        #
+        # this information will be temporarily mis-leading in the database, but the
+        # espadons_energy_augmentation makes it correct and consistent
+        self._chunk.naxis = None
+        if self._chunk.energy is not None:
+            self._chunk.energy_axis = None
+        if self._chunk.time is not None:
+            self._chunk.time_axis = None
+        if self._chunk.polarization is not None:
+            self._chunk.polarization_axis = None
+        self._logger.debug('End make_axes_consistent')
 
     def reset_position(self):
+        self._logger.debug('Begin reset_position')
         if self._chunk.position is not None:
             # conform to stricter WCS validation
             self._chunk.position_axis_1 = None
             self._chunk.position_axis_2 = None
-            self._chunk.naxis = None
             # CW - Ignore position wcs if missing spatial indicator keywords
             radecsys = self._headers[self._extension].get('RADECSYS')
             if not (
@@ -1638,63 +1596,21 @@ class EspadonsTemporal(InstrumentType):
                 and self._headers[self._extension].get('DEC_DEG') is not None
             ):
                 cc.reset_position(self._chunk)
-
-    def update_observable(self):
-        self._logger.debug(
-            f'Begin update_observable for {self._storage_name.obs_id}'
-        )
-        if self._storage_name.suffix in ['i', 'p']:
-            # caom2IngestEspadons.py, l828
-            # CW Set up observable axes, row 1 is wavelength, row 2 is
-            # normalized flux, row 3 ('p' only) is Stokes spectrum
-
-            # this check is here, because it's quite difficult to find the
-            # 'right' chunk, and blind updating generally causes both chunks
-            # to have the same metadata values.
-            if self._chunk.observable is None:
-                independent_axis = Axis('WAVE', 'nm')
-                independent = Slice(independent_axis, 1)
-                dependent_axis = Axis('flux', 'counts')
-                dependent = Slice(dependent_axis, 2)
-                self._chunk.observable = ObservableAxis(
-                    dependent, independent
-                )
-                self._chunk.observable_axis = 2
-
-                if (
-                    self._storage_name.suffix == 'p'
-                    and len(self.part.chunks) == 1
-                ):
-                    # caom2IngestEspadons.py, l863
-                    dependent_axis = Axis('polarized flux', 'percent')
-                    dependent = Slice(dependent_axis, 3)
-                    new_chunk = copy.deepcopy(self._chunk)
-                    new_chunk.observable = ObservableAxis(
-                        dependent, independent
-                    )
-                    new_chunk._id = Chunk._gen_id()
-                    self.part.chunks.append(new_chunk)
-        self._logger.debug(
-            f'End _update_observable for {self._storage_name.obs_id}'
-        )
+        self._logger.debug('End reset_position')
 
     def update_plane(self):
         super().update_plane()
         # caom2IngestEspadons.py, l714
         if self._storage_name.suffix == 'i':
             self._update_plane_provenance()
+        self._logger.debug('End update_plane')
 
 
 class EspadonsSpectralTemporal(EspadonsTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
-        # SF 18-11-22 espadons is 2004
-        self._instrument_start_time = mc.make_datetime('2004-01-01 00:00:00')
-
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
         if self._storage_name.suffix is not None:
-            bp.configure_energy_axis(4)
+            bp.configure_energy_axis(1)
             # caom2IngestEspadons.py l636
             naxis1 = 213542
             # caom2IngestEspadons.py l639
@@ -1724,34 +1640,37 @@ class EspadonsSpectralTemporal(EspadonsTemporal):
 
 
 class EspadonsSpatialSpectralTemporal(EspadonsSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
-
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
-        bp.configure_position_axes((1, 2))
+        bp.configure_position_axes((3, 4))
         self.accumulate_spatial_chunk_blueprint(bp)
         self._logger.debug('Done accumulate_blueprint.')
 
 
 class EspadonsI(EspadonsTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
-
+    """
+    There is no energy axis configuration in this class because chunk.energy is filled in by the
+    espadons_energy_augmentation class. The augmentation requires access to the data on disk.
+    """
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
-        bp.configure_position_axes((1, 2))
+        bp.configure_position_axes((3, 4))
         self.accumulate_spatial_chunk_blueprint(bp)
         self._logger.debug('Done accumulate_blueprint.')
 
 
 class EspadonsPolarization(EspadonsTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    """
+    There is no energy axis configuration in this class because chunk.energy is filled in by the
+    espadons_energy_augmentation class. The augmentation requires access to the data on disk.
 
+    This file type is the reason the model supports multiple chunks in one part. There is one array with an energy
+    dimension and then the other dimension are actually different quantities, so different things stored in
+    different slices of the array, hence different chunks that are subsets of the array.
+    """
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
-        bp.configure_position_axes((1, 2))
+        bp.configure_position_axes((3, 4))
         self.accumulate_spatial_chunk_blueprint(bp)
 
         bp.configure_polarization_axis(6)
@@ -1765,8 +1684,8 @@ class EspadonsPolarization(EspadonsTemporal):
 
 
 class MegaTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/MegaPrime/ says 2008
         # but existing metadata has a minimum value of 2001-01-25 00:00:00 for 10Bm02.flat.z.36.01.fits
         self._instrument_start_date = mc.make_datetime('2001-01-24 00:00:00')
@@ -1788,6 +1707,7 @@ class MegaTemporal(InstrumentType):
         bp.configure_time_axis(3)
         self.accumulate_time_chunk_blueprint(bp)
 
+        bp.add_attribute('Plane.provenance.lastExecuted', 'DATEPROC')
         bp.set_default('Plane.provenance.name', 'ELIXIR')
         bp.set_default('Plane.provenance.reference', 'http://www.cfht.hawaii.edu/Instruments/Elixir/')
         self._logger.debug('Done accumulate_blueprint.')
@@ -1806,14 +1726,6 @@ class MegaTemporal(InstrumentType):
         # the flags ones are similar as 2003A.mask.0.36.02  of object type mask.
         if '_flag' in self._storage_name.file_id:
             result = 'MASK'
-        return result
-
-    def get_provenance_last_executed(self, ext):
-        result = super().get_provenance_last_executed(ext)
-        if result is None:
-            result = self._headers[ext].get('DATEPROC')
-            if result is not None:
-                result = mc.make_datetime(result)
         return result
 
     def make_axes_consistent(self):
@@ -1851,8 +1763,6 @@ class MegaTemporal(InstrumentType):
 
 
 class MegaSpectralRangeTemporal(MegaTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def update_energy(self):
         # SGo - use range for energy with filter information
@@ -1867,8 +1777,8 @@ class MegaSpectralRangeTemporal(MegaTemporal):
 
 
 class Mega(MegaSpectralRangeTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         self._filter_name = None
 
     def accumulate_blueprint(self, bp):
@@ -1888,9 +1798,6 @@ class MegaFlag(MegaTemporal):
     """
     Use this class when adding an Artifact for a '*p_flag.fits' file to an existing Observation instance.
     """
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
-
     def accumulate_blueprint(self, bp):
         """Configure the MegaCam/MegaPrime-specific ObsBlueprint at the CAOM model
         Observation level.
@@ -1902,8 +1809,8 @@ class MegaFlag(MegaTemporal):
 
 
 class SitelleTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
         self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
@@ -1942,6 +1849,7 @@ class SitelleTemporal(InstrumentType):
         if self._storage_name.suffix == 'z':
             bp.set('Artifact.productType', ProductType.SCIENCE)
 
+        bp.add_attribute('Plane.provenance.lastExecuted', 'DATE')
         bp.set_default('Plane.provenance.name', 'ORBS')
         bp.set_default(
             'Plane.provenance.reference', 'http://ascl.net/1409.007'
@@ -2022,8 +1930,76 @@ class SitelleTemporal(InstrumentType):
 
 
 class SitelleSpectralTemporal(SitelleTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+
+    def _update_sitelle_plane(self):
+        """for the SITELLE HDF5 files that do not have sufficient metadata in the hdf5 file to generate a stand-alone
+        Plane record, if the 'p' plane already exists in the CAOM record, copy the 'p' Plane metadata to the 'z'
+        plane"""
+        self._logger.debug(f'Begin _update_sitelle_plane for {self._observation.observation_id}')
+        if self._storage_name.suffix not in ['p', 'z']:
+            return
+
+        # create the identifiers to find the plane to copy from 'p', and the plane to copy to 'z'
+        # handle the case where the current file being ingested is a 'p' file being added to an Observation with a
+        # pre-existing 'z' plane, and the case where the current file being ingested is a 'z' file being added to
+        # an Observation with a pre-existing 'p' plane.
+        z_plane_key = self._storage_name.product_id.replace('p', 'z')
+        p_plane_key = self._storage_name.product_id.replace('z', 'p')
+        o_plane_key = self._storage_name.product_id.replace('z', 'o')
+        temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
+        z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
+
+        # fix the plane-level information for the z plane
+        z_plane = self._observation.planes.get(z_plane_key)
+        if z_plane:
+            if z_artifact_key in z_plane.artifacts.keys():
+                if len(z_plane.artifacts[z_artifact_key].parts) != 0:
+                    # skip for the 'z' artifacts where hdf5 file has sufficient metadata to describe its own WCS
+                    return
+                z_plane.data_product_type = DataProductType.CUBE
+                z_plane.calibration_level = CalibrationLevel.CALIBRATED
+                z_plane.meta_producer = mc.get_version('cfht2caom2')
+                self._observation.meta_producer = z_plane.meta_producer
+                z_plane.artifacts[z_artifact_key].meta_producer = z_plane.meta_producer
+                p_plane = self._observation.planes.get(p_plane_key)
+                if p_plane:
+                    # replicate the plane-level information from the p plane to the z plane
+                    temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
+                    temp = temp.replace('z', 'p', 1)
+                    if temp not in p_plane.artifacts.keys():
+                        temp = self._storage_name.file_uri.replace('.hdf5', '.fits')
+                    p_artifact_key = temp
+
+                    self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
+                    if p_artifact_key not in p_plane.artifacts.keys():
+                        p_artifact_key = self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits')
+                        if p_artifact_key not in p_plane.artifacts.keys():
+                            p_artifact_key = (
+                                self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits.header')
+                            )
+                            if p_artifact_key not in p_plane.artifacts.keys():
+                                raise mc.CadcException(
+                                    f'Unexpected extension name pattern for artifact URI {p_artifact_key} in '
+                                    f'{self._observation.observation_id}.'
+                                )
+                    for part in p_plane.artifacts[p_artifact_key].parts.values():
+                        z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
+                        for chunk in part.chunks:
+                            z_plane.artifacts[z_artifact_key].parts[part.name].chunks.append(cc.copy_chunk(chunk))
+                    z_plane.artifacts[z_artifact_key].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
+                    z_plane.provenance = p_plane.provenance
+                    z_plane.calibration_level = p_plane.calibration_level
+                    z_plane.data_product_type = p_plane.data_product_type
+                    z_plane.data_release = p_plane.data_release
+                    z_plane.meta_producer = p_plane.meta_producer
+                    z_plane.meta_release = p_plane.meta_release
+                elif o_plane_key in self._observation.planes.keys():
+                    self._logger.info(f'Copying release metadata from {o_plane_key}.')
+                    o_plane = self._observation.planes[o_plane_key]
+                    z_plane.data_release = o_plane.data_release
+                    z_plane.meta_release = o_plane.meta_release
+
+        self._logger.debug('End _update_sitelle_plane')
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2080,8 +2056,6 @@ class SitelleSpectralTemporal(SitelleTemporal):
 
 
 class SitelleSpatialRangeSpectralTemporal(SitelleSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def update_position(self):
         if self._chunk.position is None:
@@ -2142,8 +2116,6 @@ class SitelleSpatialRangeSpectralTemporal(SitelleSpectralTemporal):
 
 
 class SitelleSpatialFunctionSpectralTemporal(SitelleSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2155,8 +2127,8 @@ class SitelleSpatialFunctionSpectralTemporal(SitelleSpectralTemporal):
 
 
 class SitelleHdf5(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Sitelle/ says 2015-07-15 00:00:00.000
         # but existing metadata has a minimum value of 2015-07-08 05:27:09.146880 for 1819176o.fits
         self._instrument_start_date = mc.make_datetime('2015-07-07 00:00:00.000')
@@ -2293,7 +2265,7 @@ class SitelleHdf5(InstrumentType):
                 result = md.cache.get_program(bits[5])
         return result
 
-    def update(self, file_info):
+    def update(self):
         self._logger.debug('Begin update.')
 
         if not isinstance(self._observation, DerivedObservation):
@@ -2314,7 +2286,7 @@ class SitelleHdf5(InstrumentType):
             for artifact in plane.artifacts.values():
                 if artifact.uri != self._storage_name.file_uri:
                     continue
-                update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, self._storage_name.file_info.get(self._storage_name.file_uri))
 
                 for part in artifact.parts.values():
                     for chunk in part.chunks:
@@ -2385,8 +2357,6 @@ class SitelleHdf5(InstrumentType):
 
 
 class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2408,76 +2378,9 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
             bp.set('Artifact.productType', ProductType.SCIENCE)
         self._logger.debug('End accumulate_blueprint.')
 
-    def _update_sitelle_plane(self):
-        self._logger.debug(f'Begin _update_sitelle_plane for {self._observation.observation_id}')
-        if self._storage_name.suffix not in ['p', 'z']:
-            return
-
-        # if the 'p' plane exists, copy the metadata to the 'z' plane
-        z_plane_key = self._storage_name.product_id.replace('p', 'z')
-        p_plane_key = self._storage_name.product_id.replace('z', 'p')
-        o_plane_key = self._storage_name.product_id.replace('z', 'o')
-        temp_z_uri = self._storage_name.file_uri.replace('p', 'z', 1)
-        z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
-
-        # fix the plane-level information for the z plane
-        if z_plane_key in self._observation.planes.keys():
-            z_plane = self._observation.planes[z_plane_key]
-            z_plane.data_product_type = DataProductType.CUBE
-            z_plane.calibration_level = CalibrationLevel.CALIBRATED
-            z_plane.meta_producer = mc.get_version('cfht2caom2')
-            self._observation.meta_producer = z_plane.meta_producer
-            z_plane.artifacts[
-                z_artifact_key
-            ].meta_producer = z_plane.meta_producer
-            if p_plane_key in self._observation.planes.keys():
-                # replicate the plane-level information from the p plane to the
-                # z plane
-                p_plane = self._observation.planes[p_plane_key]
-                temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
-                temp = temp.replace('z', 'p', 1)
-                if temp not in p_plane.artifacts.keys():
-                    temp = self._storage_name.file_uri.replace('.hdf5', '.fits')
-                p_artifact_key = temp
-
-                self._logger.debug(f'Looking for artifact key: {p_artifact_key}.')
-                if p_artifact_key not in p_plane.artifacts.keys():
-                    p_artifact_key = self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits')
-                    if p_artifact_key not in p_plane.artifacts.keys():
-                        p_artifact_key = (
-                            self._storage_name.file_uri.replace('z', 'p', 1).replace('.hdf5', '.fits.header')
-                        )
-                        if p_artifact_key not in p_plane.artifacts.keys():
-                            raise mc.CadcException(
-                                f'Unexpected extension name pattern for artifact URI {p_artifact_key} in '
-                                f'{self._observation.observation_id}.'
-                            )
-                for part in p_plane.artifacts[p_artifact_key].parts.values():
-                    z_plane.artifacts[z_artifact_key].parts.add(cc.copy_part(part))
-                    for chunk in part.chunks:
-                        z_plane.artifacts[z_artifact_key].parts[
-                            part.name
-                        ].chunks.append(cc.copy_chunk(chunk))
-                z_plane.artifacts[z_artifact_key].meta_producer = p_plane.artifacts[p_artifact_key].meta_producer
-                z_plane.provenance = p_plane.provenance
-                z_plane.calibration_level = p_plane.calibration_level
-                z_plane.data_product_type = p_plane.data_product_type
-                z_plane.data_release = p_plane.data_release
-                z_plane.meta_producer = p_plane.meta_producer
-                z_plane.meta_release = p_plane.meta_release
-            elif o_plane_key in self._observation.planes.keys():
-                self._logger.info(f'Copying release metadata from {o_plane_key}.')
-                o_plane = self._observation.planes[o_plane_key]
-                z_plane.data_release = o_plane.data_release
-                z_plane.meta_release = o_plane.meta_release
-
-        self._logger.debug('End _update_sitelle_plane')
-
-    def update(self, file_info):
+    def update(self):
         self._logger.debug('Begin update.')
 
-        if not isinstance(self._observation, DerivedObservation):
-            self._observation = cc.change_to_composite(self._observation, 'scan')
 
         idx = 0
         self.extension = idx
@@ -2489,7 +2392,7 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
             for artifact in plane.artifacts.values():
                 if artifact.uri != self._storage_name.file_uri:
                     continue
-                update_artifact_meta(artifact, file_info)
+                update_artifact_meta(artifact, self._storage_name.file_info.get(self._storage_name.file_uri))
 
         self._update_sitelle_plane()
         self._logger.debug('Done update.')
@@ -2497,8 +2400,6 @@ class SitelleNoHdf5Metadata(SitelleSpatialFunctionSpectralTemporal):
 
 
 class SitelleP(SitelleSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the Sitelle-specific ObsBlueprint at the CAOM model
@@ -2591,10 +2492,17 @@ class SitelleP(SitelleSpectralTemporal):
             self._chunk.position.axis.error2 = CoordError(0.0000278, 0.0000278)
         self._logger.debug(f'End update_position for {self._storage_name.obs_id}')
 
+    def update(self):
+        self._logger.debug('Begin update.')
+        super().update()
+        self._update_sitelle_plane()
+        self._logger.debug('Done update.')
+        return self._observation
+
 
 class Spirou(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # TODO self._header = headers[extension]
         self._header = None
         # https://www.cfht.hawaii.edu/Instruments/SPIRou/SPIRou_news.php says 2019-02-13 00:00:00.000
@@ -2617,10 +2525,6 @@ class Spirou(InstrumentType):
         Add in WCS for 's' files, and spatial WCS for 'g' files.
         """
         super().accumulate_blueprint(bp)
-        algorithm_name = 'exposure'
-        if self._storage_name.derived:
-            algorithm_name = 'drs'
-        bp.set('Observation.algorithm.name', algorithm_name)
 
         bp.set('Observation.target.targetID', '_get_gaia_target_id()')
         bp.add_attribute('Observation.target_position.coordsys', 'RADECSYS')
@@ -2798,8 +2702,6 @@ class Spirou(InstrumentType):
 
 
 class SpirouTemporal(Spirou):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -2811,8 +2713,6 @@ class SpirouTemporal(Spirou):
 
 
 class SpirouSpectralTemporal(SpirouTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -2820,8 +2720,6 @@ class SpirouSpectralTemporal(SpirouTemporal):
 
 
 class SpirouSpatialSpectralTemporal(SpirouSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         super().accumulate_blueprint(bp)
@@ -2829,8 +2727,6 @@ class SpirouSpatialSpectralTemporal(SpirouSpectralTemporal):
 
 
 class SpirouG(Spirou):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the SPIRou-specific ObsBlueprint at the CAOM model
@@ -2914,8 +2810,6 @@ class SpirouG(Spirou):
 
 
 class SpirouPolarization(Spirou):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the SPIRou-specific ObsBlueprint at the CAOM model
@@ -3043,8 +2937,8 @@ class SpirouPolarization(Spirou):
 
 
 class WircamTemporal(InstrumentType):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
+    def __init__(self, cfht_name, clients, reporter, observation, config):
+        super().__init__(cfht_name, clients, reporter, observation, config)
         # https://www.cfht.hawaii.edu/Instruments/Imaging/WIRCam/ says November 2006
         # but existing metadata has a minimum value of 2000-07-21 00:00:00 for mastertwilightflat_Ks_13Aw01_v200.fits
         self._instrument_start_date = mc.make_datetime('2000-07-20 00:00:00.000')
@@ -3060,6 +2954,7 @@ class WircamTemporal(InstrumentType):
             bp.set('Plane.provenance.keywords', 'skysubtraction=yes')
         elif self._storage_name.suffix == 's':
             bp.set('Plane.provenance.keywords', 'skysubtraction=no')
+        bp.set('Plane.provenance.lastExecuted', 'get_provenance_last_executed()')
         bp.set_default('Plane.provenance.name', 'IIWI')
         bp.set_default(
             'Plane.provenance.reference',
@@ -3092,6 +2987,13 @@ class WircamTemporal(InstrumentType):
             or 'deadpix' in self._storage_name.file_uri
         ):
             result = 'BPM'
+        return result
+
+    def get_provenance_last_executed(self, ext):
+        result = self._headers[ext].get('PROCDATE')
+        if result:
+            # format like PROCDATE= '2019-11-27HST14:15:30'
+            result = mc.make_datetime(result)
         return result
 
     def _update_plane_post(self):
@@ -3233,15 +3135,13 @@ class WircamTemporal(InstrumentType):
                 self._chunk.time.axis.function.naxis = mc.to_int(n_exp)
         self._logger.debug(f'End update_time for {self._storage_name.obs_id}')
 
-    def update(self, file_info):
-        super().update(file_info)
+    def update(self):
+        super().update()
         self._update_plane_post()
         return self._observation
 
 
 class WircamSpectralTemporal(WircamTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3253,8 +3153,6 @@ class WircamSpectralTemporal(WircamTemporal):
 
 
 class Wircam(WircamSpectralTemporal):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the WIRCam-specific ObsBlueprint at the CAOM model
@@ -3267,8 +3165,6 @@ class Wircam(WircamSpectralTemporal):
 
 class WircamG(WircamTemporal):
     """suffix == 'g'"""
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def accumulate_blueprint(self, bp):
         """Configure the telescope-specific ObsBlueprint at the CAOM model Observation level.
@@ -3476,8 +3372,6 @@ class WircamG(WircamTemporal):
 
 
 class WircamO(Wircam):
-    def __init__(self, headers, cfht_name, clients, observable, observation, config):
-        super().__init__(headers, cfht_name, clients, observable, observation, config)
 
     def update_position(self):
         self._logger.debug(f'Begin update_position for {self._storage_name.obs_id}')
@@ -3595,7 +3489,7 @@ def get_filter_md(filter_name, storage_name):
     return filter_md, updated_filter_name
 
 
-def is_mega_temporal(headers, storage_name):
+def is_mega_temporal(storage_name):
     # CW
     # Ignore energy wcs if some type of calibration file or filter='None' or 'Open' or there is no filter match
         # if not (
@@ -3604,6 +3498,7 @@ def is_mega_temporal(headers, storage_name):
         #     or ac.FilterMetadataCache.get_fwhm(filter_md) is None
         #     or self._observation.type in ['DARK']
         # ):
+    headers = storage_name.metadata.get(storage_name.file_uri)
     filter_name = mc.get_keyword(headers, 'FILTER')
     filter_md, updated_filter_name = get_filter_md(filter_name, storage_name)
     obs_type = mc.get_keyword(headers, 'OBSTYPE')
@@ -3631,8 +3526,9 @@ def is_spirou_spectral_temporal(headers):
     return result
 
 
-def is_wircam_spectral_temporal(storage_name, headers):
+def is_wircam_spectral_temporal(storage_name):
     result = False
+    headers = storage_name.metadata.get(storage_name.file_uri)
     obs_type = mc.get_keyword(headers, 'OBSTYPE')
     if (
         storage_name.suffix == 'f'
@@ -3644,78 +3540,78 @@ def is_wircam_spectral_temporal(storage_name, headers):
     return result
 
 
-def factory(headers, cfht_name, clients, observable, observation, config):
-    set_storage_name_values(cfht_name, headers)
+def factory(cfht_name, clients, reporter, observation, config):
     if cfht_name.instrument is md.Inst.ESPADONS:
         if cfht_name.suffix in ['b', 'c', 'd', 'f', 'x']:
             # CW - Ignore position wcs if a calibration file - suffix list from caom2IngestEspadons.py, l389
             # 'b', 'd', 'c', 'f', 'x'
-            temp = EspadonsSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+            temp = EspadonsSpectralTemporal(cfht_name, clients, reporter, observation, config)
         elif cfht_name.suffix == 'p':
-            temp = EspadonsPolarization(headers, cfht_name, clients, observable, observation, config)
+            temp = EspadonsPolarization(cfht_name, clients, reporter, observation, config)
         elif cfht_name.suffix == 'i':
-            temp = EspadonsI(headers, cfht_name, clients, observable, observation, config)
+            temp = EspadonsI(cfht_name, clients, reporter, observation, config)
         else:
-            temp = EspadonsSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+            temp = EspadonsSpatialSpectralTemporal(cfht_name, clients, reporter, observation, config)
     elif cfht_name.instrument in [md.Inst.MEGAPRIME, md.Inst.MEGACAM]:
         if '_diag' in cfht_name.file_name:
             # SF 16-03-23 record the diag ones as catalogues,  artifact of the *p ones - same behaviour as for the
             # preview images
-            temp = AuxiliaryType(headers, cfht_name, clients, observable, observation, config)
+            temp = AuxiliaryType(cfht_name, clients, reporter, observation, config)
         elif '_flag' in cfht_name.file_name:
             if observation is None:
-                temp = MegaTemporal(headers, cfht_name, clients, observable, observation, config)
+                temp = MegaTemporal(cfht_name, clients, reporter, observation, config)
             else:
-                temp = MegaFlag(headers, cfht_name, clients, observable, observation, config)
-        elif cfht_name.suffix in ['b', 'd', 'l'] or is_mega_temporal(headers, cfht_name):
-            temp = MegaTemporal(headers, cfht_name, clients, observable, observation, config)
+                temp = MegaFlag(cfht_name, clients, reporter, observation, config)
+        elif cfht_name.suffix in ['b', 'd', 'l'] or is_mega_temporal(cfht_name):
+            temp = MegaTemporal(cfht_name, clients, reporter, observation, config)
         elif cfht_name.suffix == 'f':
-            temp = MegaSpectralRangeTemporal(headers, cfht_name, clients, observable, observation, config)
+            temp = MegaSpectralRangeTemporal(cfht_name, clients, reporter, observation, config)
         else:
-            temp = Mega(headers, cfht_name, clients, observable, observation, config)
+            temp = Mega(cfht_name, clients, reporter, observation, config)
     elif cfht_name.instrument is md.Inst.SITELLE:
         if cfht_name.hdf5:
-            if len(headers) > 0:
+            # if len(headers) > 0:
+            if len(cfht_name.metadata.get(cfht_name.file_uri)) > 0:
                 # len => could be an h5 file with no attrs, in which case the metadata gets copied from the 'p'
                 # artifact
-                temp = SitelleHdf5(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleHdf5(cfht_name, clients, reporter, observation, config)
             else:
-                temp = SitelleNoHdf5Metadata(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleNoHdf5Metadata(cfht_name, clients, reporter, observation, config)
         else:
             if cfht_name.suffix == 'p':
-                temp = SitelleP(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleP(cfht_name, clients, reporter, observation, config)
             elif cfht_name.suffix in ['a', 'o', 'x']:
-                temp = SitelleSpatialRangeSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleSpatialRangeSpectralTemporal(cfht_name, clients, reporter, observation, config)
             elif cfht_name.suffix in ['f']:
-                temp = SitelleSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleSpectralTemporal(cfht_name, clients, reporter, observation, config)
             elif cfht_name.suffix in ['b', 'd']:
                 # CW, SF 18-12-19 - SITELLE biases and darks have no energy, all other observation types do
-                temp = SitelleTemporal(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleTemporal(cfht_name, clients, reporter, observation, config)
             else:
-                temp = SitelleSpatialFunctionSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+                temp = SitelleSpatialFunctionSpectralTemporal(cfht_name, clients, reporter, observation, config)
     elif cfht_name.instrument is md.Inst.SPIROU:
         if cfht_name.suffix == 'g':
-            temp = SpirouG(headers, cfht_name, clients, observable, observation, config)
+            temp = SpirouG(cfht_name, clients, reporter, observation, config)
         elif cfht_name.suffix == 'p':
-            temp = SpirouPolarization(headers, cfht_name, clients, observable, observation, config)
+            temp = SpirouPolarization(cfht_name, clients, reporter, observation, config)
         elif cfht_name.suffix == 'd':
-            temp = SpirouTemporal(headers, cfht_name, clients, observable, observation, config)
-        elif is_spirou_spectral_temporal(headers):
-            temp = SpirouSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+            temp = SpirouTemporal(cfht_name, clients, reporter, observation, config)
+        elif is_spirou_spectral_temporal(cfht_name.metadata.get(cfht_name.file_uri)):
+            temp = SpirouSpectralTemporal(cfht_name, clients, reporter, observation, config)
         else:
-            temp = SpirouSpatialSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+            temp = SpirouSpatialSpectralTemporal(cfht_name, clients, reporter, observation, config)
     elif cfht_name.instrument is md.Inst.WIRCAM:
         if cfht_name.suffix == 'g':
-            temp = WircamG(headers, cfht_name, clients, observable, observation, config)
+            temp = WircamG(cfht_name, clients, reporter, observation, config)
         else:
-            if is_wircam_spectral_temporal(cfht_name, headers):
-                temp = WircamSpectralTemporal(headers, cfht_name, clients, observable, observation, config)
+            if is_wircam_spectral_temporal(cfht_name):
+                temp = WircamSpectralTemporal(cfht_name, clients, reporter, observation, config)
             elif cfht_name.suffix == 'o':
-                temp = WircamO(headers, cfht_name, clients, observable, observation, config)
+                temp = WircamO(cfht_name, clients, reporter, observation, config)
             else:
-                temp = Wircam(headers, cfht_name, clients, observable, observation, config)
+                temp = Wircam(cfht_name, clients, reporter, observation, config)
     else:
-        observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
+        reporter._observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
     logging.debug(f'Created {temp.__class__.__name__} mapping.')
-    return temp
+    return [temp]

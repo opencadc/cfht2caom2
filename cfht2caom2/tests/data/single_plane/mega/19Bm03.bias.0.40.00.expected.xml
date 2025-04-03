@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:DerivedObservation" caom2:id="f7e4887b-bab2-46c9-9bb5-625997838465" caom2:metaProducer="cfht2caom2/0.3.2">
+<caom2:Observation xmlns:caom2="http://www.opencadc.org/caom2/xml/v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="caom2:SimpleObservation" caom2:id="f7e4887b-bab2-46c9-9bb5-625997838465" caom2:metaProducer="cfht2caom2/0.3.2">
   <caom2:collection>CFHT</caom2:collection>
   <caom2:observationID>19Bm03.bias.0.40.00</caom2:observationID>
   <caom2:metaRelease>2019-11-28T00:00:00.000</caom2:metaRelease>
   <caom2:sequenceNumber>2463132</caom2:sequenceNumber>
   <caom2:algorithm>
-    <caom2:name>master_detrend</caom2:name>
+    <caom2:name>exposure</caom2:name>
   </caom2:algorithm>
   <caom2:type>BIAS</caom2:type>
   <caom2:intent>calibration</caom2:intent>
@@ -2385,36 +2385,4 @@
       </caom2:artifacts>
     </caom2:plane>
   </caom2:planes>
-  <caom2:members>
-    <caom2:observationURI>caom:CFHT/2463444</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463475</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463438</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463846</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463440</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463136</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463446</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463442</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463478</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463133</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463479</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463477</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463439</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463480</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463848</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463481</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463443</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463139</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463441</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463847</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463852</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463140</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463132</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463134</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463137</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463476</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463482</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463135</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463445</caom2:observationURI>
-    <caom2:observationURI>caom:CFHT/2463138</caom2:observationURI>
-  </caom2:members>
 </caom2:Observation>
