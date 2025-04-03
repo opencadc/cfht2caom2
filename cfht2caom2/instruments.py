@@ -826,9 +826,6 @@ class AuxiliaryType(cc.TelescopeMapping2):
 
             self.update_plane()
 
-        # # relies on update_plane_provenance being called
-        # if isinstance(self._observation, DerivedObservation):
-        #     cc.update_observation_members(self._observation)
         InstrumentType.value_repair.repair(self._observation)
         self._logger.debug('Done update.')
         return self._observation
@@ -1581,7 +1578,7 @@ class EspadonsTemporal(InstrumentType):
             self._chunk.energy_axis = None
         if self._chunk.time is not None:
             self._chunk.time_axis = None
-        if self._chunk.polarization_axis is not None:
+        if self._chunk.polarization is not None:
             self._chunk.polarization_axis = None
         self._logger.debug('End make_axes_consistent')
 
@@ -1935,11 +1932,17 @@ class SitelleTemporal(InstrumentType):
 class SitelleSpectralTemporal(SitelleTemporal):
 
     def _update_sitelle_plane(self):
+        """for the SITELLE HDF5 files that do not have sufficient metadata in the hdf5 file to generate a stand-alone
+        Plane record, if the 'p' plane already exists in the CAOM record, copy the 'p' Plane metadata to the 'z'
+        plane"""
         self._logger.debug(f'Begin _update_sitelle_plane for {self._observation.observation_id}')
         if self._storage_name.suffix not in ['p', 'z']:
             return
 
-        # if the 'p' plane exists, copy the metadata to the 'z' plane
+        # create the identifiers to find the plane to copy from 'p', and the plane to copy to 'z'
+        # handle the case where the current file being ingested is a 'p' file being added to an Observation with a
+        # pre-existing 'z' plane, and the case where the current file being ingested is a 'z' file being added to
+        # an Observation with a pre-existing 'p' plane.
         z_plane_key = self._storage_name.product_id.replace('p', 'z')
         p_plane_key = self._storage_name.product_id.replace('z', 'p')
         o_plane_key = self._storage_name.product_id.replace('z', 'o')
@@ -1947,8 +1950,8 @@ class SitelleSpectralTemporal(SitelleTemporal):
         z_artifact_key = f'{cn.CFHTName.remove_extensions(temp_z_uri)}.hdf5'
 
         # fix the plane-level information for the z plane
-        if z_plane_key in self._observation.planes.keys():
-            z_plane = self._observation.planes[z_plane_key]
+        z_plane = self._observation.planes.get(z_plane_key)
+        if z_plane:
             if z_artifact_key in z_plane.artifacts.keys():
                 if len(z_plane.artifacts[z_artifact_key].parts) != 0:
                     # skip for the 'z' artifacts where hdf5 file has sufficient metadata to describe its own WCS
@@ -1958,10 +1961,9 @@ class SitelleSpectralTemporal(SitelleTemporal):
                 z_plane.meta_producer = mc.get_version('cfht2caom2')
                 self._observation.meta_producer = z_plane.meta_producer
                 z_plane.artifacts[z_artifact_key].meta_producer = z_plane.meta_producer
-                if p_plane_key in self._observation.planes.keys():
-                    # replicate the plane-level information from the p plane to the
-                    # z plane
-                    p_plane = self._observation.planes[p_plane_key]
+                p_plane = self._observation.planes.get(p_plane_key)
+                if p_plane:
+                    # replicate the plane-level information from the p plane to the z plane
                     temp = self._storage_name.file_uri.replace('.hdf5', '.fits.fz')
                     temp = temp.replace('z', 'p', 1)
                     if temp not in p_plane.artifacts.keys():

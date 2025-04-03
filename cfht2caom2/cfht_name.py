@@ -66,6 +66,7 @@
 # ***********************************************************************
 #
 
+import h5py
 import logging
 
 from os.path import basename, join
@@ -460,17 +461,11 @@ def get_instrument(headers, entry):
     else:
         nextend = None
         detector = None
-        instrument = headers[0].get('INSTRUME')
+        instrument = get_keyword(headers, 'INSTRUME')
         if instrument is None:
-            if len(headers) > 1:
-                instrument = headers[1].get('INSTRUME')
+            instrument = get_keyword(headers, 'DETECTOR')
             if instrument is None:
-                instrument = headers[0].get('DETECTOR')
-                if instrument is None:
-                    if len(headers) > 1:
-                        instrument = headers[1].get('DETECTOR')
-                    if instrument is None:
-                        nextend = headers[0].get('NEXTEND')
+                nextend = headers[0].get('NEXTEND')
         elif instrument == 'Unknown':
             detector = headers[0].get('DETECTOR')
         if (instrument is None and nextend is not None and nextend > 30) or '_diag' in entry:
@@ -515,6 +510,32 @@ def get_instrument(headers, entry):
     return inst
 
 
+def set_local_preconditions(storage_name, source_fqn, uri, logger):
+    """Retrieve FileInfo and header metadata into memory from files on disk. These files have extension names and
+    compression as expected and support by CADC's Storage Inventory system."""
+    if uri not in storage_name.file_info:
+        storage_name.file_info[uri] = get_local_file_info(source_fqn)
+    if uri not in storage_name.metadata:
+        storage_name.metadata[uri] = []
+        if '.fits' in source_fqn:
+            storage_name._metadata[uri] = get_local_file_headers(source_fqn)
+        elif storage_name.hdf5:
+            if uri not in storage_name._descriptors:
+                f_in = h5py.File(source_fqn)
+                storage_name._descriptors[uri] = f_in
+                # Laurie Rosseau-Nepton - 26-04-23
+                # The standard_spectrum is related to flux calibration used on the data. The other one is
+                # for the science data and is the one that should be used.
+                if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
+                    # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
+                    # that have sufficient metadata to describe WCS.
+                    logger.debug(f'Found attrs for {source_fqn}')
+                    storage_name._metadata[uri] = [f_in.attrs]
+                else:
+                    logger.warning(f'No attrs for {source_fqn}.')
+                    storage_name._metadata[uri] = []
+
+
 class CFHTMetaVisitRunnerMeta(MetaVisitRunnerMeta):
     """
     Defines the pipeline step for Collection creation or augmentation by a visitor of metadata into CAOM.
@@ -548,8 +569,6 @@ class CFHTMetaVisitRunnerMeta(MetaVisitRunnerMeta):
                     self._storage_name._metadata[uri] = self._clients.data_client.get_head(uri)
                 elif self._storage_name.hdf5:
                     if uri not in self._storage_name._descriptors:
-                        # local import to limit exposure in Docker builds
-                        import h5py
                         f_in = h5py.File(source_name)
                         self._storage_name._descriptors[uri] = f_in
                         # Laurie Rosseau-Nepton - 26-04-23
@@ -564,13 +583,8 @@ class CFHTMetaVisitRunnerMeta(MetaVisitRunnerMeta):
                             self._logger.warning(f'No attrs for {source_name}.')
                             self._storage_name._metadata[uri] = []
 
-            self._storage_name._instrument = get_instrument(
-                self._storage_name.metadata.get(uri), self._storage_name._file_name
-            )
-            if not self._storage_name.hdf5:
-                self._storage_name._bitpix = get_keyword(self._storage_name.metadata.get(uri), 'BITPIX')
-
         # ensure the destination uris have the correct extensions based on BITPIX values
+        self._storage_name.set_metadata()
         self._storage_name.set_destination_uris()
         self._logger.debug('End _set_preconditions')
 
@@ -591,30 +605,7 @@ class CFHTNoFheadStoreVisitRunnerMeta(NoFheadStoreVisitRunnerMeta):
         # source names do not change, so start with them
         #
         for source_name in self._storage_name.source_names:
-            if source_name not in self._storage_name.file_info:
-                self._storage_name.file_info[source_name] = get_local_file_info(source_name)
-            if source_name not in self._storage_name.metadata:
-                self._storage_name.metadata[source_name] = []
-                if '.fits' in source_name:
-                    self._storage_name._metadata[source_name] = get_local_file_headers(source_name)
-                elif self._storage_name.hdf5:
-                    if source_name not in self._storage_name._descriptors:
-                        # local import to limit exposure in Docker builds
-                        import h5py
-                        f_in = h5py.File(source_name)
-                        self._storage_name._descriptors[source_name] = f_in
-                        # Laurie Rosseau-Nepton - 26-04-23
-                        # The standard_spectrum is related to flux calibration used on the data. The other one is
-                        # for the science data and is the one that should be used.
-                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
-                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
-                            # that have sufficient metadata to describe WCS.
-                            self._logger.debug(f'Found attrs for {source_name}')
-                            self._storage_name._metadata[source_name] = [f_in.attrs]
-                        else:
-                            self._logger.warning(f'No attrs for {source_name}.')
-                            self._storage_name._metadata[source_name] = []
-
+            set_local_preconditions(self._storage_name, source_name, source_name, self._logger)
             self._storage_name._instrument = get_instrument(
                 self._storage_name.metadata.get(source_name), self._storage_name._file_name
             )
@@ -657,35 +648,13 @@ class CFHTNoFheadScrapeRunnerMeta(NoFheadScrapeRunnerMeta):
         # source names do not change, so start with them
         #
         for source_name in self._storage_name.source_names:
-            if source_name not in self._storage_name.file_info:
-                self._storage_name.file_info[source_name] = get_local_file_info(source_name)
-            if source_name not in self._storage_name.metadata:
-                self._storage_name.metadata[source_name] = []
-                if '.fits' in source_name:
-                    self._storage_name._metadata[source_name] = get_local_file_headers(source_name)
-                elif self._storage_name.hdf5:
-                    if source_name not in self._storage_name._descriptors:
-                        # local import to limit exposure in Docker builds
-                        import h5py
-                        f_in = h5py.File(source_name)
-                        self._storage_name._descriptors[source_name] = f_in
-                        # Laurie Rosseau-Nepton - 26-04-23
-                        # The standard_spectrum is related to flux calibration used on the data. The other one is
-                        # for the science data and is the one that should be used.
-                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
-                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
-                            # that have sufficient metadata to describe WCS.
-                            self._logger.debug(f'Found attrs for {source_name}')
-                            self._storage_name._metadata[source_name] = [f_in.attrs]
-                        else:
-                            self._logger.warning(f'No attrs for {source_name}.')
-                            self._storage_name._metadata[source_name] = []
-
+            set_local_preconditions(self._storage_name, source_name, source_name, self._logger)
             self._storage_name._instrument = get_instrument(
                 self._storage_name.metadata.get(source_name), self._storage_name._file_name
             )
             if not self._storage_name.hdf5:
                 self._storage_name._bitpix = get_keyword(self._storage_name.metadata.get(source_name), 'BITPIX')
+
 
         # ensure the destination uris have the correct extensions based on BITPIX values
         self._storage_name.set_destination_uris()
@@ -713,7 +682,6 @@ class CFHTNoFheadVisitRunnerMeta(NoFheadVisitRunnerMeta):
 
     """
 
-
     def _set_preconditions(self):
         """This is probably not the best approach, but I want to think about where the optimal location for the
         retrieve_file_info and retrieve_headers methods will be long-term. So, for the moment, use them here."""
@@ -722,33 +690,10 @@ class CFHTNoFheadVisitRunnerMeta(NoFheadVisitRunnerMeta):
         # for the INGEST + MODIFY combination, it is ok to rely on the destination URIs, since they are all known
         # now, and will not be further affected by decompression work. This URI will work with SI retrieval.
         #
-        for index, source_name in enumerate(self._storage_name.source_names):
+        for index, _ in enumerate(self._storage_name.source_names):
             uri = self._storage_name.destination_uris[index]
             local_fqn = join(self._working_dir, basename(uri))
-            if uri not in self._storage_name.file_info:
-                self._storage_name.file_info[uri] = get_local_file_info(local_fqn)
-            if uri not in self._storage_name.metadata:
-                self._storage_name.metadata[uri] = []
-                if '.fits' in source_name:
-                    self._storage_name._metadata[uri] = get_local_file_headers(local_fqn)
-                elif self._storage_name.hdf5:
-                    if uri not in self._storage_name._descriptors:
-                        # local import to limit exposure in Docker builds
-                        import h5py
-                        f_in = h5py.File(local_fqn)
-                        self._storage_name._descriptors[uri] = f_in
-                        # Laurie Rosseau-Nepton - 26-04-23
-                        # The standard_spectrum is related to flux calibration used on the data. The other one is
-                        # for the science data and is the one that should be used.
-                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
-                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
-                            # that have sufficient metadata to describe WCS.
-                            self._logger.debug(f'Found attrs for {source_name}')
-                            self._storage_name._metadata[uri] = [f_in.attrs]
-                        else:
-                            self._logger.warning(f'No attrs for {source_name}.')
-                            self._storage_name._metadata[uri] = []
-
+            set_local_preconditions(self._storage_name, local_fqn, uri, self._logger)
         self._storage_name.set_metadata()
         self._logger.debug('End _set_preconditions')
 
@@ -769,29 +714,7 @@ class CFHTNoFheadLocalVisitRunnerMeta(CaomExecuteRunnerMeta):
         #
         for index, source_name in enumerate(self._storage_name.source_names):
             uri = self._storage_name.destination_uris[index]
-            if uri not in self._storage_name.file_info:
-                self._storage_name.file_info[uri] = get_local_file_info(source_name)
-            if uri not in self._storage_name.metadata:
-                self._storage_name.metadata[uri] = []
-                if '.fits' in source_name:
-                    self._storage_name._metadata[uri] = get_local_file_headers(source_name)
-                elif self._storage_name.hdf5:
-                    if uri not in self._storage_name._descriptors:
-                        # local import to limit exposure in Docker builds
-                        import h5py
-                        f_in = h5py.File(source_name)
-                        self._storage_name._descriptors[uri] = f_in
-                        # Laurie Rosseau-Nepton - 26-04-23
-                        # The standard_spectrum is related to flux calibration used on the data. The other one is
-                        # for the science data and is the one that should be used.
-                        if len(f_in.attrs) >= 20 and 'NAXIS' in f_in.attrs:
-                            # 20 is the not-so-random boundary I picked to differentiate between the hdf5 files
-                            # that have sufficient metadata to describe WCS.
-                            self._logger.debug(f'Found attrs for {source_name}')
-                            self._storage_name._metadata[uri] = [f_in.attrs]
-                        else:
-                            self._logger.warning(f'No attrs for {source_name}.')
-                            self._storage_name._metadata[uri] = []
+            set_local_preconditions(self._storage_name, source_name, uri, self._logger)
 
         self._storage_name.set_metadata()
         self._logger.debug('End _set_preconditions')

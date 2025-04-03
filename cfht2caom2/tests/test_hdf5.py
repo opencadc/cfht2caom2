@@ -67,6 +67,7 @@
 #
 
 import glob
+import h5py
 import warnings
 
 from astropy.utils.exceptions import AstropyUserWarning
@@ -106,7 +107,6 @@ def test_visitor(vo_mock, cache_mock, test_name, test_config, tmp_path, change_t
     )
     file_info = FileInfo(id=storage_name.file_uri, file_type='application/x-hdf5')
     storage_name.file_info[storage_name.file_uri] = file_info
-    import h5py
     f_in = h5py.File(test_name)
     storage_name.metadata[storage_name.file_uri] = [f_in.attrs]
     storage_name._descriptors[storage_name.file_uri] = f_in
