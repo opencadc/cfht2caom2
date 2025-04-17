@@ -449,7 +449,8 @@ class AuxiliaryType(cc.TelescopeMapping2):
         # "calibration" phot & astr std & acquisitions/align are calibration.
         # from caom2IngestWircam.py, l731
         result = ObservationIntentType.CALIBRATION
-        obs_type = self.get_obs_type(ext)
+        # use the direct keyword access so specialization doesn't break the following if condition
+        obs_type = self._headers[ext].get('OBSTYPE')
         if obs_type is None:
             # no 'OBSTYPE' keyword, so fits2caom2 will set the value to
             # science
@@ -1440,6 +1441,20 @@ class EspadonsTemporal(InstrumentType):
                 # caom2IngestMegacaomdetrend.py, l438
                 exptime = 0.0
         return exptime
+
+    def get_obs_intent(self, ext):
+        result = super().get_obs_intent(ext)
+        obs_type = self.get_obs_type(ext)
+        if obs_type in ['BIAS', 'FLAT']:
+            result = ObservationIntentType.CALIBRATION
+        return result
+
+    def get_obs_type(self, ext):
+        obs_type = mc.get_keyword(self._headers, 'OBSTYPE')
+        obj = mc.get_keyword(self._headers, 'OBJECT')
+        if 'flat' in obj.lower():
+            obs_type = 'FLAT'
+        return obs_type
 
     def get_provenance_keywords(self, ext):
         result = None
