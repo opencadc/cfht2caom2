@@ -293,7 +293,10 @@ class CFHTName(StorageName):
             Inst.SPIROU: ['a', 'c', 'd', 'f', 'g', 'o', 'r', 'x'],
             Inst.WIRCAM: ['a', 'd', 'f', 'g', 'm', 'o', 'x', 'w', 'v'],
         }
-        if self._suffix is not None and self._suffix in s.get(self._instrument):
+        if (
+            self._instrument == Inst.UNSUPPORTED
+            or (self._suffix is not None and self._suffix in s.get(self._instrument))
+        ):
             result = True
         else:
             # _flag has inputs/members metadata
@@ -316,7 +319,14 @@ class CFHTName(StorageName):
             Inst.WIRCAM: ['p', 's', 'y'],
         }
         # diag is not Derived because it's treated as an Auxiliary file, and has no inputs/members metadata
-        if self._suffix is not None and self._suffix in d.get(self._instrument) and '_diag' not in self._file_id:
+        if (
+            self._instrument == Inst.UNSUPPORTED
+            or (
+                self._suffix is not None
+                and self._suffix in d.get(self._instrument)
+                and '_diag' not in self._file_id
+            )
+        ):
             result = True
         else:
             result = '.' in self._file_id
@@ -503,9 +513,11 @@ def get_instrument(headers, entry):
                             if 'espadons' in pathname:
                                 inst = Inst.ESPADONS
                             else:
-                                raise CadcException(msg)
+                                logging.warning(msg)
+                                inst = Inst.UNSUPPORTED
                 else:
-                    raise CadcException(msg)
+                    logging.warning(msg)
+                    inst = Inst.UNSUPPORTED
     logging.debug(f'Instrument is {inst}')
     return inst
 

@@ -184,7 +184,7 @@ from astropy.io import fits
 from enum import Enum
 from re import match
 
-from caom2 import Axis, Slice, ObservableAxis, Chunk, DataProductType
+from caom2 import Axis, Chunk, DataProductType
 from caom2 import CoordAxis2D, CoordRange2D, RefCoord, SpatialWCS, Coord2D
 from caom2 import TemporalWCS, CoordAxis1D, CoordFunction1D, CoordError
 from caom2 import CalibrationLevel, ProductType, ObservationIntentType
@@ -489,7 +489,7 @@ class AuxiliaryType(cc.TelescopeMapping2):
             date_obs = self._headers[ext].get('DATE-OBS')
             run_id = self._get_run_id(ext)
             if run_id is not None:
-                if run_id == 'SMEARING':
+                if run_id == 'SMEARING' or run_id == 'setup':
                     result = self._headers[ext].get('DATE')
                 elif (
                     len(run_id) >= 4 and (run_id[3].lower() == 'e' or run_id[3].lower() == 'q')
@@ -1422,6 +1422,8 @@ class EspadonsTemporal(InstrumentType):
             if equinox == 200.0:
                 # SF - 22-12-20 - fix the CAOM values, leave the headers be
                 equinox = 2000.0
+        if equinox == 0.0:
+            equinox = None
         return equinox
 
     def get_energy_resolving_power(self, ext):
@@ -3412,6 +3414,24 @@ class WircamO(Wircam):
         self._logger.debug(f'End update_position')
 
 
+class Unsupprted(AuxiliaryType):
+    """This class is used to handle unsupported instrument types. It is the minimual information to make a file
+    findable in the CAOM2 model."""
+
+    def get_meta_release(self, ext):
+        result = super().get_meta_release(ext)
+        if result is None:
+            for keyword in ['HSTTIME']:
+                # 'Wed Jun 13 14:00:44 HST 1990'
+                result = self._headers[ext].get(keyword)
+                if result in ['1970-00-01', '1970-00-01T0:00:00'] or result is None:
+                    continue
+                else:
+                    result = mc.make_datetime(result)
+                    break
+        return result
+
+
 def _repair_comment_provenance_value(value, obs_id):
     logging.debug(f'Begin _repair_comment_provenance_value for {obs_id}')
     results = []
@@ -3627,6 +3647,7 @@ def factory(cfht_name, clients, reporter, observation, config):
                 temp = Wircam(cfht_name, clients, reporter, observation, config)
     else:
         reporter._observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
-        raise mc.CadcException(f'No support for unexpected instrument {cfht_name.instrument}.')
+        logging.warning(f'Minimal mapping support for unexpected instrument {cfht_name.instrument}.')
+        temp = Unsupprted(cfht_name, clients, reporter, observation, config)
     logging.debug(f'Created {temp.__class__.__name__} mapping.')
     return [temp]
