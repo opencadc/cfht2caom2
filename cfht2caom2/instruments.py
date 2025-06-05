@@ -3414,7 +3414,7 @@ class WircamO(Wircam):
         self._logger.debug(f'End update_position')
 
 
-class Unsupprted(AuxiliaryType):
+class Unsupported(AuxiliaryType):
     """This class is used to handle unsupported instrument types. It is the minimual information to make a file
     findable in the CAOM2 model."""
 
@@ -3648,6 +3648,8 @@ def factory(cfht_name, clients, reporter, observation, config):
     else:
         reporter._observable.rejected.record(mc.Rejected.NO_INSTRUMENT, cfht_name.file_name)
         logging.warning(f'Minimal mapping support for unexpected instrument {cfht_name.instrument}.')
-        temp = Unsupprted(cfht_name, clients, reporter, observation, config)
+        # SF - 05-06-25 - we do want to be transparent. If a file does not end up being properly ingested, making
+        # them findable is still a chance for users to tell us what is wrong with them.
+        temp = Unsupported(cfht_name, clients, reporter, observation, config)
     logging.debug(f'Created {temp.__class__.__name__} mapping.')
     return [temp]

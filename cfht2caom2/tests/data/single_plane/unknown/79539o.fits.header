@@ -1,0 +1,45 @@
+SIMPLE  =                    T / Basic FITS format                              
+BITPIX  =                   16 / FITS bits per pixel                            
+NAXIS   =                    2 / X and Y coords                                 
+NAXIS1  =                  200 / # pixels/row                                   
+NAXIS2  =                  200 / # rows                                         
+OBSERVER= 'Galileo '                                                            
+ORIGIN  = 'CFHT 3.6m'          / Canada-France-Hawaii Telescope                 
+INSTRUME= 'ccd     '           / instrument used                                
+RUNID   = '        '           / run identification number                      
+EXPNUM  =                79539 / exposure identification number                 
+OBJECT  = 'test    '           / object of observation                          
+COMMENT = '        '                                                            
+BSCALE  =                  1.0 / real = tape*bscale + bzero                     
+BZERO   =                  0.0                                                  
+X0      =                  158 / column address of starting pixel               
+Y0      =                  158 / row address of starting pixel                  
+XBIN    =                    1 / column binning factor                          
+YBIN    =                    1 / row binning factor                             
+CTYPE1  = 'PIXEL   '           / axis1 is in pixels                             
+CTYPE2  = 'PIXEL   '           / axis2 is in pixels                             
+OBSTYPE = 'object  '           / type of observation                            
+DETECTOR= 'fake CCD'           / detector used                                  
+ESCALE  =                   12 / NOMINAL scale (e-/ADCU)                        
+INTGAIN =                    0 / integrator (controller) gain                   
+MAXLIN  =                32767 / NOMINAL max linear value (ADCU)                
+TEMPERAS=                0.000 / detector-cryo temp. at start (deg. C)          
+PREFLASH=                    0 / detector preflash (milliseconds)               
+INTTIME =                1.000 / integration time (seconds)                     
+DARKTIME=                1.000 / total dark current time (seconds)              
+HSTTIME = 'Wed Jun 13 14:00:44 HST 1990'                                        
+HISTORY                                                                         
+DATEOBS = '00/00/00'           / date of data acquisition                       
+UTIME   = '00:00:00.0'         / universal time at start of exposure            
+JDATE   =             0.000000 / julian date at start of exposure               
+SIDTIME = '00:00:00.0'         / sidereal time at start of exposure             
+EPOCH   =                  0.0 / equinox of coordinates                         
+RA      = '00:00:00.0'         / object right ascension                         
+DEC     = ' 00:00:00.0'        / object declination                             
+AIRMASS =                  0.0 / airmass at start of exposure                   
+FOCUSID = 'Unknown '           / telescope focus in use                         
+FOCUSPOS=                    0 / focus encoder readout                          
+BONANGLE=                  0.0 / angle of bonnette                              
+XYPROBE = 'X = *****, Y = *****' / position of XY probe                         
+RELEASE = '032790  '           / SOFTWARE VERSION                               
+END                                                                             
