@@ -69,6 +69,7 @@
 from caom2utils import caom2blueprint
 from caom2pipe import caom_composable as cc
 from cfht2caom2.instruments import factory
+from cfht2caom2.metadata import Inst
 
 
 class CFHTFits2caom2Visitor(cc.Fits2caom2VisitorRunnerMeta):
@@ -93,7 +94,10 @@ class CFHTFits2caom2Visitor(cc.Fits2caom2VisitorRunnerMeta):
         elif '_diag' in self._storage_name.file_name:
             parser = caom2blueprint.BlueprintParser(blueprint, uri)
         else:
-            parser = super()._get_parser(blueprint, uri)
+            if self._storage_name.instrument == Inst.UNSUPPORTED:
+                parser = caom2blueprint.BlueprintParser(blueprint, uri)
+            else:
+                parser = super()._get_parser(blueprint, uri)
         self._logger.debug(f'Using a {parser.__class__.__name__} for {self._storage_name.file_uri}')
         return parser
 

@@ -1,0 +1,310 @@
+SIMPLE  =                    T / file does conform to FITS standard             
+BITPIX  =                   16 / number of bits per data pixel                  
+NAXIS   =                    0 / number of data axes                            
+EXTEND  =                    T / FITS dataset may contain extensions            
+COMMENT  FITS (Flexible Image Transport System) format is defined in 'Astronomy 
+COMMENT  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H  
+END                                                                             
+XTENSION= 'BINTABLE'           / binary table extension                         
+BITPIX  =                    8 / 8-bit bytes                                    
+NAXIS   =                    2 / 2-dimensional binary table                     
+NAXIS1  =                    8 / width of table in bytes                        
+NAXIS2  =                 4640 / number of rows in table                        
+PCOUNT  =              5486720 / size of special data area                      
+GCOUNT  =                    1 / one data group (required keyword)              
+TFIELDS =                    1 / number of fields in each row                   
+TTYPE1  = 'COMPRESSED_DATA'    / label for field   1                            
+TFORM1  = '1PB(1226)'          / data format of field: variable length array    
+ZIMAGE  =                    T / extension contains compressed image            
+ZSIMPLE =                    T / file does conform to FITS standard             
+ZBITPIX =                   16 / data type of original image                    
+ZNAXIS  =                    2 / dimension of original image                    
+ZNAXIS1 =                 2080 / length of original image axis                  
+ZNAXIS2 =                 4640 / length of original image axis                  
+ZTILE1  =                 2080 / size of tiles to be compressed                 
+ZTILE2  =                    1 / size of tiles to be compressed                 
+ZCMPTYPE= 'RICE_1  '           / compression algorithm                          
+ZNAME1  = 'BLOCKSIZE'          / compression block size                         
+ZVAL1   =                   32 / pixels per block                               
+ZNAME2  = 'BYTEPIX '           / bytes per pixel (1, 2, 4, or 8)                
+ZVAL2   =                    2 / bytes per pixel (1, 2, 4, or 8)                
+COMMENT                                                                         
+COMMENT  Observation summary                                                    
+COMMENT  -------------------                                                    
+COMMENT  file 828380o00, raster FULL, etype OBJECT, etime 01, filter Unknown    
+COMMENT                                                                         
+CMMTOBS = 'CFHT    '                                                            
+CMMTSEQ = '        '                                                            
+OBJECT  = 'CFHT    '                                                            
+OBSERVER= 'CFHT    '                                                            
+PI_NAME = 'CFHT    '                                                            
+RUNID   = 'setup   '                                                            
+COMMENT                                                                         
+COMMENT  Image data for chip 00                                                 
+COMMENT                                                                         
+FILENAME= '828380o '           / Base filename at acquisition                   
+PATHNAME= '/data/noeau/espadons/raw/09Dec05' / Original directory name at acquis
+EXTNAME = 'chip00  '           / Extension name                                 
+DATE    = '2005-12-10T01:57:56' / UTC Date of file creation                     
+HSTTIME = 'Fri Dec 09 15:57:56 HST 2005' / Local time in Hawaii                 
+ORIGIN  = 'CFHT    '           / Canada-France-Hawaii Telescope                 
+IMAGESWV= 'CFHT DetCom v3.60.2 (Dec 01 2005)' / Image creation software version 
+DETECTOR= 'EEV1    '           / Science Detector                               
+INSTRUME= 'ESPaDOnS'           / Instrument Name                                
+INSTMODE= 'Spectroscopy, star only, R=80,000' / Instrument Mode                 
+CCD     = 'Unknown '                                                            
+IMAGEID =                    0 / CCD chip number                                
+CHIPID  =                    0 / Use IMAGEID instead                            
+MAXLIN  =                65535                                                  
+SATURATE=                65535                                                  
+INHERIT =                    F / No need to inherit global keywords             
+TIMESYS = 'UTC     '           / Time System for DATExxxx                       
+TSYSOBS = 'UTC     '           / Time System for TIMExxx                        
+DATE-OBS= '2005-11-10'         / Date at start of observation (unix)            
+TIME-OBS= '1:57:55.409'        / Time at start of observation (unix)            
+DATEEND = '2005-11-10'         / Date at end of observation (unix)              
+TIMEEND = '1:57:56.444'        / Time at end of observation (unix)              
+OBSTYPE = 'OBJECT  '           / Observation/ Exposure type                     
+EXPTYPE = 'OBJECT  '           / OBSTYPE is the new name for this               
+EXPNUM  =               828380 / CFHT odometer number                           
+OBSID   =               828380 / CFHT odometer number                           
+EXPTIME =               1.0000 / Integration time (seconds)                     
+DARKTIME=               1.0000 / Dark current time (seconds)                    
+COMMENT                                                                         
+COMMENT  Detector array and CCD Information                                     
+COMMENT  ----------------------------------                                     
+CCDSUM  = '1 1     '           / Binning factors                                
+CCDBIN1 =                    1 / Binning factor along first axis                
+CCDBIN2 =                    1 / Binning factor along second axis               
+RASTER  = 'FULL    '                                                            
+BZERO   =              32768.0 / Zero factor                                    
+BSCALE  =                  1.0 / Scale factor                                   
+CONSWV  = 'E2A=137,DCU=49'     / Controller DSPID and SERNO versions            
+DETSTAT = 'detector temp is low' / Detector temp range (-138..-134)             
+DETTEM  =               -139.5 / Detector temp deg C = 773 + -0.292 * 3125      
+CCDSIZE = '[1:2048,1:4608]'                                                     
+CCDSEC  = '[1:2044,1:4605]'                                                     
+DATASEC = '[6:2049,5:4609]'                                                     
+BIASSEC = '[2050:2080,2:4640]' / Overscan area of frame                         
+SHUTOPEN=               0.0000 / Shutter blade opening time (msec)              
+SHUTCLOS=               0.0000 / Shutter blade closing time (msec)              
+FILTER  = 'Unknown '           / Name of filter in position                     
+FILTERID=                   -1 / Filter index (see also FILTER)                 
+FFLAMPON= 'OFF     '           / flatfield lamp status ON/OFF                   
+FFLAMP1 =                    5 / flatfield lamp 1 intensity                     
+FFLAMP2 =                   12 / flatfield lamp 2 intensity                     
+CLAMPON = 'OFF     '           / comparison lamp status ON/OFF                  
+COMMENT                                                                         
+COMMENT  ESPaDOnS Cassegrain Unit                                               
+COMMENT  ------------------------                                               
+COMMENT                                                                         
+EADCPOS = 'OUT     '           / ESPaDOnS ADC position IN/OUT of beam           
+EADC1BEG= '0       '           / ADC prism 1 position at start of exposure      
+EADC2BEG= '0       '           / ADC prism 2 position at start of exposure      
+EADC1END= '0       '           / ADC prism 1 position at end of exposure        
+EADC2END= '0       '           / ADC prism 2 position at end of exposure        
+ECALIBWH= 'P1      '           / ESPaDOnS calibration wheel position (# and deg)
+ERHOMB1 = 'P1      '           / ESPaDOnS rhomb 1 position (# and deg)          
+ERHOMB2 = 'P1      '           / ESPaDOnS rhomb 2 position (# and deg)          
+EFABPERO= 'P1      '           / ESPaDOnS Fabry Perot position (# and deg)      
+EWEDWOL = 'WED     '           / ESPaDOnS Wedge/Wollaston slide position WED/WOL
+ETEMPPOL=                12.27 / ESPaDOnS polarimeter temperature deg C         
+ETEMPCB =                10.17 / ESPaDOnS calibration box temperature deg C     
+COMMENT                                                                         
+COMMENT  ESPaDOnS Guider                                                        
+COMMENT  ---------------                                                        
+COMMENT                                                                         
+EGUIDING= 'OFF     '           / ESPaDOnS guiding state ON/OFF                  
+EGUISEE =             -9999.90 / ESPaDOnS guider seeing estimate                
+COMMENT                                                                         
+COMMENT  ESPaDOnS Spectrograph                                                  
+COMMENT  ---------------------                                                  
+COMMENT                                                                         
+ECAMFOC =                -3.34 / ESPaDOnS camera focus position (mm)            
+EHARTPOS= 'OUT     '           / ESPaDOnS hartmann position FULL/DOWN/UP/OUT    
+ESLIPOS = 'P4      '           / ESPaDOnS slicer bench position (# and mm)      
+EHALOPOS= 'OUT     '           / ESPaDOnS halogen lamp position IN/OUT          
+EHALOGEN= 'OFF     '           / ESPaDOnS halogen lamp state ON/OFF             
+ESLICER = 'P4      '           / ESPaDOnS slicer position (# and deg)           
+EDEKKER = 'P7      '           / ESPaDOnS dekker position (# and mm)            
+EEMSHUT = 'OPEN    '           / ESPaDOnS exposure meter shutter OPEN/CLOSED    
+EEMSTATE= 'ON      '           / ESPaDOnS exposure meter state ON/OFF           
+EEMCNTS =                 1687 / ESPaDOnS exposure meter counts at end          
+ETSP1BEG=                14.65 / ESPaDOnS down mirror temp at start (deg C)     
+ETSP2BEG=                14.75 / ESPaDOnS camera temp at start (deg C)          
+ETSP3BEG=                14.81 / ESPaDOnS up mirror temp at start (deg C)       
+ETSP4BEG=                13.82 / ESPaDOnS hygrometer temp at start (deg C)      
+EPRSPBEG=                -1.81 / ESPaDOnS relative pressure at start (mb)       
+ERHSPBEG=                36.45 / ESPaDOnS relative humidity at start (%)        
+ETSP1END=                14.65 / ESPaDOnS down mirror temp at end (deg C)       
+ETSP2END=                14.75 / ESPaDOnS camera temp at end (deg C)            
+ETSP3END=                14.81 / ESPaDOnS up mirror temp at end (deg C)         
+ETSP4END=                13.82 / ESPaDOnS hygrometer temp at end (deg C)        
+EPRSPEND=                36.45 / ESPaDOnS relative pressure at end (mb)         
+ERHSPEND=                -1.81 / ESPaDOnS relative humidity at end (%)          
+EREADSPD= 'Normal: 5.22e noise, 1.33e/ADU, 40s' / ESPaDOnS det read out xslow/sl
+TESPMIRE=                 1.31 / 03 temp, surface, primary mirror east deg C    
+TESPMIRW=                 1.15 / 02 temp, surface, primary mirror west deg C    
+TESPMIRS=                 1.00 / 01 temp, surface, primary mirror west side degC
+TEAPMCLW=                 1.80 / 54 temp, air, primary mirror cell west deg C   
+TEAMIRCI=                 2.77 / 58 temp, air, mirror cooling in at unit deg C  
+TEAMIRCO=                 1.79 / 27 temp, air, mirror cooling out at cell deg C 
+TEAPMSPN=                 1.57 / 65 temp, air, mirror spigot north cass deg C   
+TEAPMSPS=                 2.07 / 64 temp, air, mirror spigot nouth M3 deg C     
+TEATRNGE=                 1.76 / 23 temp, air, top ring east deg C              
+TEATRNGW=                 3.18 / 06 temp, air, top ring west deg C              
+TEANRLSB=                11.65 / 19 temp, air, north rail support beam deg C    
+TESHRSET=              9999.00 / 08 temp, surface, horseshoe east top deg C     
+TESTTRSH=                 3.08 / 97 temp, surface, telescope truss S high deg C 
+TESTTRNM=                 2.89 / 94 temp, surface, telescope truss N mid deg C  
+TESTTREM=                 3.02 / 95 temp, surface, telescope truss E mid deg C  
+TESTTRWM=                 3.06 / 96 temp, surface, telescope truss W mid deg C  
+TESTTRSL=                 3.19 / 98 temp, surface, telescope truss S low deg C  
+TESTTRSE=                 2.40 / 69 temp, surface, telescope truss SE lower degC
+TEALOWWS=                 3.58 / 38 temp, air, dome lower weather stat side degC
+TEATOPWS=                 2.24 / 36 temp, air, dome top weather stat side deg C 
+TEATOPOP=                 3.55 / 37 temp, air, dome top opposite weath side degC
+TEA2INCH=                 2.96 / 45 temp, air, two inches above fifth floor degC
+TEA2INEB=                 3.18 / 53 temp, air, two inches up by electronics degC
+TEA6FOOT=                 3.66 / 43 temp, air, six feet above fifth floor deg C 
+TESCONRM=                -0.01 / 61 temp, surface, floor above control room degC
+TESPIERN=                 4.67 / 59 temp, surface, floor by north pier deg C    
+TESPIERS=                 4.69 / 60 temp, surface, floor by south pier deg C    
+TEAWTHRT=                 2.37 / 35 temp, air, weathertron deg C                
+TEMPERAT=                 2.41 / 86 temp, air, weather tower deg C              
+WINDSPED=                27.22 / 84 wind speed, weather tower knots             
+WINDDIR =                62.62 / 85 wind direction, weather tower deg (N=0 E=90)
+RELHUMID=                 7.30 / 87 relative humidity, weather tower %          
+PRESSURE=               612.39 / 31 barometric pressure, control room mb        
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+COMMENT  Reserved space.  This line can be used to add a new FITS card.         
+END                                                                             
