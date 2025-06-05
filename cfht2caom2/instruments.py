@@ -3415,7 +3415,7 @@ class WircamO(Wircam):
 
 
 class Unsupported(AuxiliaryType):
-    """This class is used to handle unsupported instrument types. It is the minimual information to make a file
+    """This class is used to handle unsupported instrument types. It is the minimal information to make a file
     findable in the CAOM2 model."""
 
     def get_meta_release(self, ext):
